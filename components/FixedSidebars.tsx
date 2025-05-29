@@ -3,6 +3,7 @@ import React from 'react';
 import { SOCIAL_LINKS, EMAIL_ADDRESS } from '../constants';
 import { GithubIcon, LinkedInIcon } from './Layout'; // Assuming these are kept or similar
 import { FiTwitter, FiInstagram, FiCodepen, FiEdit3 } from 'react-icons/fi'; // Example other icons, Added FiEdit3
+import { SiMedium } from 'react-icons/si';
 
 // Helper to get icon component
 const getSocialIcon = (iconName: string) => {
@@ -13,7 +14,8 @@ const getSocialIcon = (iconName: string) => {
     case "FiTwitter": return <FiTwitter {...props} />;
     case "FiInstagram": return <FiInstagram {...props} />;
     case "FiCodepen": return <FiCodepen {...props} />;
-    case "FiEdit3": return <FiEdit3 {...props} />; // Added case for Medium icon
+    case "SiMedium": return <SiMedium {...props} />; 
+    case "FiEdit3": return <FiEdit3 {...props} />; // Added case for pencil icon
     default: return null;
   }
 };

@@ -1,23 +1,23 @@
 
-import { NavLink, HeroContent, AboutContent, Project, Article, ContactLink, ExperienceItem } from './types'; // Simplified types needed for new design
+import { NavLink, HeroContent, AboutContent, Project, Article, ExperienceItem } from './types'; // Simplified types needed for new design
 
-export const ENGINEER_NAME = "Alex K. Sterling";
-export const ENGINEER_TITLE = "Senior Software Engineer";
+export const ENGINEER_NAME = "Lim Chee Kin";
+export const ENGINEER_TITLE = "Business & Technology Solutions Architect";
 export const SITE_TITLE = `${ENGINEER_NAME} | ${ENGINEER_TITLE}`;
-export const GITHUB_USERNAME = "alexsterlingdev"; // Replace with actual GitHub username
-export const EMAIL_ADDRESS = "alex.sterling.dev@example.com";
+export const GITHUB_USERNAME = "limcheekin";
+export const EMAIL_ADDRESS = "limcheekin@vobject.com";
 
 export const NAV_LINKS: NavLink[] = [
   { name: "About", href: "#about" },
-  { name: "Work", href: "#projects" }, // "Work" or "Experience" often used, linking to projects
+  { name: "Work", href: "#projects" }, 
   { name: "Insights", href: "#insights" },
   { name: "Contact", href: "#contact" },
 ];
 
 export const SOCIAL_LINKS = [
     { name: "GitHub", url: `https://github.com/${GITHUB_USERNAME}`, iconName: "FiGithub" },
-    { name: "LinkedIn", url: "https://linkedin.com/in/alexsterlingdev", iconName: "FiLinkedin" },
-    { name: "Medium", url: "https://medium.com/@yourusername", iconName: "FiEdit3" }, // Added Medium link
+    { name: "LinkedIn", url: "https://linkedin.com/in/limcheekin", iconName: "FiLinkedin" },
+    { name: "Medium", url: "https://medium.com/@limcheekin", iconName: "SiMedium" },
     // Add more social links if needed e.g. Twitter, Codepen
 ];
 
@@ -25,7 +25,7 @@ export const HERO_CONTENT: HeroContent = {
   greeting: "Hi, my name is",
   name: ENGINEER_NAME + ".",
   tagline: "I build things for the web.",
-  introduction: `I'm a software engineer specializing in building (and occasionally designing) exceptional digital experiences. Currently, I’m focused on building accessible, human-centered products at Upstatement. My commitment is to "Go the Extra Mile", leveraging "Specialized Knowledge" and "Accurate Thinking".`,
+  introduction: `I'm a holistic software professional specializing in combines the understanding of business needs with technical implementation and design. My experience covers the entire software development lifecycle, from ideation and requirements to delivery, testing, and client interaction. Currently, I’m focused on building accessible, human-centered AI products for clients. My commitment is to "build better software faster for business", leveraging my leadership and expertise across business and technical domains.`,
   ctaButton: "Get In Touch",
 };
 
