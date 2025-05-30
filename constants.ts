@@ -1,293 +1,256 @@
 
-import { NavLink, HeroContent, AboutContent, Project, Article, ExperienceItem } from './types'; // Simplified types needed for new design
+import { NavLink, HeroContent, AboutContent, Project, Article, ContactLink, ExperienceItem } from './types';
 
 export const ENGINEER_NAME = "Lim Chee Kin";
-export const ENGINEER_TITLE = "Business & Technology Solutions Architect";
+export const ENGINEER_TITLE = "Senior Tech Lead, AI Engineer, and Solution Architect";
 export const SITE_TITLE = `${ENGINEER_NAME} | ${ENGINEER_TITLE}`;
 export const GITHUB_USERNAME = "limcheekin";
 export const EMAIL_ADDRESS = "limcheekin@vobject.com";
 
 export const NAV_LINKS: NavLink[] = [
   { name: "About", href: "#about" },
-  { name: "Work", href: "#projects" }, 
+  { name: "Work", href: "#projects" },
   { name: "Insights", href: "#insights" },
   { name: "Contact", href: "#contact" },
 ];
 
-export const SOCIAL_LINKS = [
+export const SOCIAL_LINKS: ContactLink[] = [
     { name: "GitHub", url: `https://github.com/${GITHUB_USERNAME}`, iconName: "FiGithub" },
     { name: "LinkedIn", url: "https://linkedin.com/in/limcheekin", iconName: "FiLinkedin" },
     { name: "Medium", url: "https://medium.com/@limcheekin", iconName: "SiMedium" },
-    // Add more social links if needed e.g. Twitter, Codepen
 ];
 
 export const HERO_CONTENT: HeroContent = {
   greeting: "Hi, my name is",
   name: ENGINEER_NAME + ".",
-  tagline: "I build things for the web.",
-  introduction: `I'm a holistic software professional specializing in combines the understanding of business needs with technical implementation and design. My experience covers the entire software development lifecycle, from ideation and requirements to delivery, testing, and client interaction. Currently, I’m focused on building accessible, human-centered AI products for clients. My commitment is to "build better software faster for business", leveraging my leadership and expertise across business and technical domains.`,
+  tagline: "AI Engineer & Solution Architect.",
+  introduction: `I'm a ${ENGINEER_TITLE} with over 25 years of experience, currently focusing intensively on AI engineering. I specialize in building and leading multinational teams to deliver complex software solutions, architecting open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications. I am committed to standardizing processes and driving innovation through privacy-preserving and democratized AI.`,
   ctaButton: "Get In Touch",
 };
 
 export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
   {
     id: "exp1",
-    period: "2018 - Present",
-    jobTitle: "Lead Software Architect",
-    company: "Future Systems Corp.",
-    companyUrl: "https://example.com/futuresystems",
+    period: "2021 - Present",
+    jobTitle: "Founder, AI Engineer & Solution Architect",
+    company: "RAG.WTF & AI Initiatives",
     descriptionPoints: [
-      "Architected and led the development of a cloud-native SaaS platform serving over 10,000 enterprise clients, focusing on scalability and resilience.",
-      "Pioneered the adoption of microservices architecture, improving deployment velocity by 40% and system modularity.",
-      "Mentored a team of 15+ engineers, fostering a culture of innovation and continuous learning.",
-      "Defined technology roadmaps and drove R&D initiatives in AI-driven analytics and serverless computing."
+      "Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF (to be open-sourced) as a platform for secure, personalized knowledge discovery and management.",
+      "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models, enabling significant cost reduction and eliminating vendor lock-in.",
+      "Developed 'Talk To AI' application, integrating HuggingFace's FastRTC for low-latency real-time voice AI interactions; engineered a flexible backend supporting local and cloud-based STT, LLM, and TTS APIs.",
+      "Pioneered and operationalized a self-hosted AI infrastructure (Coolify, Docker), running multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.) and STT/TTS for data privacy and operational control.",
+      "Advocated for and implemented robust data sovereignty by integrating embedded database solutions like SurrealDB.wasm with RAG.WTF.",
+      "Strategically utilized Modal.com for scalable, serverless AI/ML workloads, complementing local AI capabilities.",
+      "Previously initiated Talking Book YouTube channel (AI-powered summaries and Telegram bot) and Fluwix (Flutter showcases)."
     ],
-    skills: ["System Architecture", "Microservices", "Kubernetes", "AWS", "Go", "Python", "Leadership"]
+    skills: ["Open-Source AI", "RAG", "Python", "Text Embeddings", "FastRTC", "Docker", "Local LLMs", "SurrealDB.wasm", "Modal.com", "FastAPI", "Flutter", "Voice AI", "Solution Architecture"]
   },
   {
     id: "exp2",
-    period: "2012 - 2018",
-    jobTitle: "Senior Full-Stack Engineer",
-    company: "Innovatech Solutions",
-    companyUrl: "https://example.com/innovatech",
+    period: "2013 - 2020",
+    jobTitle: "Senior Java Tech Lead",
+    company: "DXC Technology",
     descriptionPoints: [
-      "Developed and maintained critical features for a high-traffic e-commerce platform, handling millions of transactions daily.",
-      "Led the frontend revamp using React and Redux, enhancing user experience and performance.",
-      "Integrated third-party APIs for payment processing, shipping, and analytics.",
-      "Championed Agile methodologies and Test-Driven Development practices within the team."
+      "Led a 6-developer international team (China, Europe, Malaysia) to deliver the Analytic Console for the Agile Process Automation (APA) platform (VueJS, Spring Boot, GoLang, MongoDB, AWS), contributing millions to company revenue.",
+      "Headed a 5-developer international team (US, Malaysia) to create the EPIC Configurator for internal Enterprise Invoice Processing (JQuery UI, Grails Framework, Oracle DB), significantly streamlining configuration processes.",
+      "Implemented a Divestiture and Acquisition (DnA) dashboard (AngularJS, Jersey, Spring, MongoDB, AWS) for critical real-time data insights supporting strategic executive decision-making.",
+      "Prototyped an Intelligent Voice Agent (Conversational AI) leveraging Amazon Connect, AWS Lambda, Amazon Lex, Dialogflow, and Micronaut Framework."
     ],
-    skills: ["React", "Node.js", "TypeScript", "GraphQL", "MongoDB", "Java", "Spring Boot", "Agile"]
+    skills: ["Java", "Spring Boot", "VueJS", "GoLang", "MongoDB", "AWS", "JQuery UI", "Grails Framework", "Oracle DB", "AngularJS", "Micronaut", "Conversational AI", "Team Leadership"]
   },
   {
     id: "exp3",
-    period: "2005 - 2012",
-    jobTitle: "Software Engineer",
-    company: "DataStream Dynamics",
+    period: "2012 - 2013",
+    jobTitle: "Senior Java Tech Lead",
+    company: "Zurich Technology Services Malaysia",
     descriptionPoints: [
-      "Contributed to the development of data processing pipelines and analytics tools for large-scale datasets.",
-      "Worked on backend services using Java and Spring, optimizing for performance and reliability.",
-      "Designed and implemented database schemas and queries for PostgreSQL and Oracle.",
-      "Participated in the full software development lifecycle, from requirements gathering to deployment and support."
+      "Led a 5-member production support and development team for motor and property claims systems (IBM WebSphere, FileNet, DB2, Spring, GWT, Hibernate/JPA).",
+      "Resolved over 60 critical production issues within weeks, dramatically improving system stability and user satisfaction."
     ],
-    skills: ["Java", "Spring Framework", "SQL", "PostgreSQL", "Oracle", "ETL", "Data Analysis"]
+    skills: ["Java", "IBM WebSphere", "FileNet", "DB2", "Spring", "GWT", "Hibernate/JPA", "Production Support", "Team Leadership"]
   },
   {
     id: "exp4",
-    period: "2001 - 2005",
-    jobTitle: "Junior Web Developer",
-    company: "WebCraft Studios",
+    period: "2010 - 2012",
+    jobTitle: "Independent Software Professional",
+    company: "Self-Employed",
     descriptionPoints: [
-      "Developed client websites using HTML, CSS, JavaScript, and PHP.",
-      "Assisted senior developers in building and testing web applications.",
-      "Gained foundational experience in version control systems and web server administration.",
-      "Contributed to UI/UX design discussions and wireframing."
+      "Developed and maintained impactful open-source Grails Framework projects, including BPM workflow, form builder, and validation components.",
+      "Grails Activiti Plugin: BPM workflow system; grew the forum to 100+ members, addressed 100+ queries.",
+      "Grails Form Builder Plugin: Empowered non-programmers to create online forms.",
+      "JQuery Validation UI Plugin: Enhanced developer productivity with client-side validation.",
+      "Explore all 10+ projects at limcheekin.blogspot.com/p/my-grails-plugins.html."
     ],
-    skills: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "Apache"]
+    skills: ["Grails Framework", "Activiti BPM", "JQuery", "Open Source Development", "Plugin Development", "Groovy", "Java"]
   },
   {
     id: "exp5",
-    period: "1998 - 2001",
-    jobTitle: "Web Development Intern",
-    company: "Alpha Web Solutions",
-    companyUrl: "https://example.com/alphaweb",
+    period: "April 2008 - July 2010",
+    jobTitle: "Senior Solution Consultant",
+    company: "Penril Datability (M) Sdn. Bhd.",
     descriptionPoints: [
-      "Assisted in the design and development of early static websites for small businesses.",
-      "Learned foundational HTML, CSS, and JavaScript under mentorship.",
-      "Provided support for website updates and basic graphic design tasks.",
-      "Gained initial exposure to client communication and project requirements."
+      "Led the successful tender for a RM6 million Internet Banking System (IBS) for Kuwait Finance House (KFH).",
+      "Designed and proposed comprehensive IBS solutions, covering 24x7 web layers, external integrations (Payment Gateway, SMS, Email), application platform, 2-Factor Authentication (2FA), Enterprise Service Bus (ESB) for backend integration, and High-Availability infrastructure.",
+      "Led a 3-member team to develop KFH's information website using BroadVision 8.1 Business Agility Suites and Oracle 10g, including JSR168 compliant portlets like Prayer Times and Currency Converter.",
+      "Secured a RM2 million eCustody System tender from Malayan Banking Berhad.",
+      "Provided pre-sales support, product demonstrations, solution consultation, and Proof-Of-Concepts (POCs) to major financial and corporate clients (e.g., Maybank, BSN, BNM, Agrobank, ING, Bank Islam)."
     ],
-    skills: ["HTML", "CSS", "JavaScript (Basic)", "Photoshop", "Client Interaction"]
+    skills: ["Solution Consulting", "Tender Management", "Banking Systems", "Solution Architecture", "BroadVision", "Oracle 10g", "JSR168 Portlets", "BPMN", "Requirements Analysis", "Pre-Sales", "Team Leadership"]
   },
-   {
+  {
     id: "exp6",
-    period: "1996 - 1998",
-    jobTitle: "Early Tech Enthusiast",
-    company: "Personal Projects",
+    period: "April 2005 - Dec 2007",
+    jobTitle: "Technical Lead",
+    company: "CMG Online Sdn. Bhd.",
     descriptionPoints: [
-      "Explored early web technologies and programming languages as a hobbyist.",
-      "Built personal websites and small applications, fostering a foundational understanding of software development."
+      "Led an 8-member international team (China, India, Malaysia) to deliver a RM2 million Integrated Hospital Inventory System (IHIS4) for government hospitals, using AIX UNIX, JBoss 4.0, Oracle 10g, J2EE, Struts, and JasperReports.",
+      "Drove Quality Management Systems (QMS): introduced a Standard Development Environment (Eclipse, Subversion, JUnit, Ant), improving team productivity by 20%.",
+      "Actively participated in the CMMI Committee to define and implement CMMI Level 3 compliant organizational standards and processes.",
+      "Architected and developed a common technical foundation for the Integrated Hospital Information Systems (IHIS5) on AppFuse (J2EE, Spring Framework, Hibernate, JUnit, JMock), including reusable logging and auditing modules with Spring AOP."
     ],
-    skills: ["QBasic", "HTML", "Early JavaScript"]
+    skills: ["Technical Leadership", "J2EE", "JBoss", "Oracle 10g", "Struts", "JasperReports", "Spring Framework", "Hibernate", "Spring AOP", "AppFuse", "CMMI Level 3", "QMS", "SDLC", "Team Management"]
+  },
+  {
+    id: "exp7",
+    period: "May 2004 - March 2005",
+    jobTitle: "Founder and Senior Consultant",
+    company: "Media Trend",
+    descriptionPoints: [
+      "As Founder, led a startup providing web design, website development, web application development, and printing services.",
+      "Designed and developed websites for clients including Bright Pancar Enterprise and Marklon Industries Sdn. Bhd.",
+      "Provided printing services (name cards, brochures, cash sales receipts) for various companies."
+    ],
+    skills: ["Entrepreneurship", "Web Design", "Web Development", "Client Management", "Software Consulting"]
+  },
+  {
+    id: "exp8",
+    period: "October 2002 - April 2004",
+    jobTitle: "Software Engineer",
+    company: "Siemens Multimedia Sdn. Bhd.",
+    descriptionPoints: [
+      "Developed the core Voice4Info Portal (News Delivery over Phone), including Call Control Components using Java IDL, CORBA, Parlay API, and VoiceXML, collaborating with German colleagues on the Siemens Next Generation Network (NGN) platform.",
+      "Engineered iTalk, a Unified Phone Conferencing system with instant messaging-like features (presence, contact list, buddy list management).",
+      "Supervised and coordinated 4 groups of Multimedia University (MMU) final year students on IP telephony projects, ensuring functional prototypes for the Siemens NGN platform."
+    ],
+    skills: ["Java", "J2EE", "CORBA", "Parlay API", "VoiceXML", "Telephony Systems", "Siemens NGN", "Software Development", "Mentorship"]
+  },
+  {
+    id: "exp9",
+    period: "August 2001 - September 2002",
+    jobTitle: "System Engineer (Web Application Development)",
+    company: "Online One Corporation Berhad",
+    descriptionPoints: [
+      "Successfully deployed E-Treasury Management Systems to Hitachi Asia Ltd (Singapore) within 2 months, contributing RM1 million in revenue.",
+      "Developed Fund Transfer, Bank Reconciliation, and General Ledger modules for the E-Treasury system using Cold Fusion, HTML, JavaScript, JavaBean, JDBC, and Oracle 8i.",
+      "Engineered Business-to-Business (B2B) integration of National Panasonic of Malaysia's purchasing system using Active Server Page (ASP), SOAP, XML, IIS Web Server, and Oracle 8i."
+    ],
+    skills: ["Web Application Development", "Cold Fusion", "Oracle 8i", "ASP", "SOAP", "XML", "HTML", "JavaScript", "JDBC", "System Integration"]
+  },
+  {
+    id: "exp10",
+    period: "June 1999 - May 2000",
+    jobTitle: "System Engineer",
+    company: "Tee Yam Holding Sdn. Bhd.",
+    descriptionPoints: [
+      "Individually designed and developed a comprehensive Touch Screen based Point Of Sale (POS) system, Inventory Control System, and Customer Contact Management system using Visual Basic 6.0, ADO, COM, ActiveX Control, and Microsoft SQL Server 7.0.",
+      "Developed multimedia game systems, including a Horse Racing Game and Roulette Game, using Visual Basic 6.0, DirectX 7.0 SDK, ADO, and Microsoft Access 97."
+    ],
+    skills: ["Visual Basic 6.0", "MS SQL Server 7.0", "ADO", "COM", "ActiveX", "DirectX SDK", "POS Systems Development", "Inventory Control Systems", "Game Development"]
   }
 ];
 
-
 export const ABOUT_CONTENT: AboutContent = {
   introductionParagraphs: [
-    `Hello! I'm ${ENGINEER_NAME}, a software engineer with a passion for creating elegant and efficient solutions. My journey in tech has been driven by a "Definite Chief Aim" to not just write code, but to build systems that solve real-world problems and deliver tangible value.`,
-    `I thrive on "Accurate Thinking" and "Mastery of Detail", whether it's architecting complex backend systems or crafting intuitive user interfaces. I believe in the power of "Cooperation" and strive to foster "Master Mind" dynamics within teams.`,
-    `My core values include Integrity, a commitment to "Going the Extra Mile", and a dedication to "Continuous Self-Improvement".`
+    `Hello! I'm ${ENGINEER_NAME}, a ${ENGINEER_TITLE} with a deep passion for AI engineering. I bring over 25 years of experience delivering complex software solutions by aligning business needs with technical design and implementation.`,
+    `My expertise lies in architecting and implementing open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications. I'm dedicated to building and leading teams to innovate with privacy-preserving and democratized AI.`,
+    `I am committed to standardizing processes, driving innovation in the AI space, and continuously exploring new frontiers in technology.`
   ],
-  skills: ["TypeScript", "React", "Node.js", "Java", "Spring Boot", "AWS", "System Design"],
-  professionalPhotoUrl: "https://picsum.photos/seed/profilefixed/400/400", // Use a good quality professional photo
-  workExperience: WORK_EXPERIENCE_DATA, // Now references the expanded list
+  skills: ["AI Engineering", "RAG Systems", "LLM Integration", "Python", "Java", "Gemini API", "Docker", "AWS"],
+  professionalPhotoUrl: "https://picsum.photos/seed/limcheekinprofile/400/400", // Placeholder, replace with actual photo
+  workExperience: WORK_EXPERIENCE_DATA,
 };
 
 export const PROJECTS_DATA: Project[] = [
   {
     id: "proj1",
-    title: "Project Phoenix: FinTech Platform",
+    title: "RAG.WTF: Secure Knowledge Platform",
     featured: true,
-    overview: "A comprehensive financial reporting platform rebuilt from the ground up for scalability and performance. Leveraged microservices architecture and modern frontend technologies to deliver real-time analytics and reporting capabilities for GlobalBank Corp.",
-    technologies: ["Java", "Spring Boot", "React", "TypeScript", "Kafka", "PostgreSQL", "AWS"],
-    imageUrl: "https://picsum.photos/seed/project1fixed/700/450",
-    liveDemoUrl: "#", 
-    repoUrl: "#",
-    category: "FinTech"
+    overview: "Architected and built RAG.WTF, an open-source (to be) platform for secure, personalized knowledge discovery and management. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty.",
+    technologies: ["AI", "RAG", "Open Source", "Data Privacy", "Local AI", "SurrealDB.wasm", "Python"],
+    imageUrl: "https://picsum.photos/seed/ragwtf/700/450",
+    repoUrl: "#", // To be updated when open-sourced
+    category: "AI Platform"
   },
   {
     id: "proj2",
-    title: "AuraFlow: Analytics Dashboard",
+    title: "open-text-embeddings Python Library",
     featured: true,
-    overview: "Developed a cutting-edge real-time data visualization dashboard for Data Insights LLC, enabling clients to monitor marketing campaign performance with instant insights. Focused on intuitive UX and high-velocity data streams.",
-    technologies: ["Vue.js", "Node.js", "WebSocket", "MongoDB", "D3.js", "Azure"],
-    imageUrl: "https://picsum.photos/seed/project2fixed/700/450",
-    liveDemoUrl: "https://example.com/auraflow-demo",
-    repoUrl: "#",
-    category: "Data Analytics"
-  },
-  {
-    id: "proj4", // New project ID
-    title: "NovaLearn: E-Learning Suite",
-    featured: true, // Marked as featured
-    overview: "Architected and developed a scalable e-learning platform for a major educational institution, featuring interactive courses, progress tracking, and certification modules. Ensured WCAG AA accessibility compliance.",
-    technologies: ["Next.js", "TypeScript", "Strapi CMS", "PostgreSQL", "Vercel", "Accessibility"],
-    imageUrl: "https://picsum.photos/seed/project4fixed/700/450", // New image seed
-    liveDemoUrl: "https://example.com/novalearn-demo",
-    repoUrl: "https://github.com/alexsterlingdev/novalearn",
-    category: "EdTech"
+    overview: "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models (e.g., BGE, E5). Enables significant cost reduction and eliminates vendor lock-in for embedding generation.",
+    technologies: ["Python", "Text Embeddings", "Sentence Transformers", "OpenAI-compatible API", "Open Source", "NLP"],
+    imageUrl: "https://picsum.photos/seed/opentextembeddings/700/450",
+    repoUrl: `https://github.com/${GITHUB_USERNAME}/open-text-embeddings`, // Example, update if actual repo exists
+    category: "AI Library"
   },
   {
     id: "proj3",
-    title: "EcoTrack: Sustainability Initiative Platform",
-    featured: false, 
-    overview: "A web application designed to help organizations track and report their environmental impact metrics. Included features for data input, visualization, and automated report generation.",
-    technologies: ["Python (Django)", "PostgreSQL", "Chart.js", "Heroku"],
-    imageUrl: "https://picsum.photos/seed/project3fixed/700/450",
-    repoUrl: "https://github.com/alexsterlingdev/ecotrack",
-    category: "Sustainability"
+    title: "Talk To AI: Real-time Voice AI",
+    featured: true,
+    overview: "Developed 'Talk To AI', an application integrating HuggingFace's FastRTC for low-latency (<300ms) real-time voice AI interactions. Features a flexible backend supporting local (LocalAI, Whisper.cpp, Llama.cpp) and cloud-based STT, LLM, and TTS APIs (Groq, Microsoft Edge).",
+    technologies: ["Voice AI", "FastRTC", "HuggingFace", "STT", "LLM", "TTS", "LocalAI", "Groq API", "Python", "FastAPI"],
+    imageUrl: "https://picsum.photos/seed/talktoai/700/450",
+    liveDemoUrl: "#", // Placeholder
+    category: "AI Application"
   },
-  // Add more non-featured projects
+  {
+    id: "proj4",
+    title: "Grails Activiti BPM Plugin",
+    featured: false,
+    overview: "Developed and maintained an impactful open-source Grails Framework plugin for the Activiti BPM workflow system. Successfully grew the community forum to over 100 members and addressed numerous queries.",
+    technologies: ["Grails Framework", "Activiti BPM", "Open Source", "Java", "Groovy"],
+    imageUrl: "https://picsum.photos/seed/grailsactiviti/700/450",
+    repoUrl: "https://limcheekin.blogspot.com/p/my-grails-plugins.html",
+    category: "Open Source Plugin"
+  },
   {
     id: "proj5",
-    title: "Community Connect App",
+    title: "Self-Hosted AI Infrastructure",
     featured: false,
-    overview: "A mobile-first web app for local community engagement and event discovery.",
-    technologies: ["React Native", "Firebase", "Expo"],
-    imageUrl: "https://picsum.photos/seed/project5/700/450",
-    liveDemoUrl: "#",
-    repoUrl: "https://github.com/alexsterlingdev/community-connect",
-    category: "Social"
+    overview: "Pioneered and operationalized a self-hosted AI infrastructure using a dedicated local AI server (Coolify, Docker). Successfully runs multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.), embeddings, and STT/TTS services for complete data privacy and operational control.",
+    technologies: ["Docker", "Coolify", "Local LLMs", "Self-Hosting", "AI Infrastructure", "Ansible"],
+    imageUrl: "https://picsum.photos/seed/selfhostai/700/450",
+    category: "AI Infrastructure"
   },
   {
     id: "proj6",
-    title: "Personal Blog Engine",
+    title: "Analytic Console (APA Platform)",
     featured: false,
-    overview: "A lightweight, markdown-based static site generator for a personal blog.",
-    technologies: ["Node.js", "Markdown-it", "Handlebars"],
-    imageUrl: "https://picsum.photos/seed/project6/700/450",
-    repoUrl: "https://github.com/alexsterlingdev/my-blog-engine",
-    category: "Tooling"
-  },
-  {
-    id: "proj7",
-    title: "Recipe Finder AI",
-    featured: false,
-    overview: "An AI-powered recipe suggestion tool based on available ingredients.",
-    technologies: ["Python", "Flask", "Scikit-learn", "OpenAI API"],
-    imageUrl: "https://picsum.photos/seed/project7/700/450",
-    category: "AI/ML"
-  },
-  {
-    id: "proj8",
-    title: "Portfolio v1 (Legacy)",
-    featured: false,
-    overview: "My first portfolio website, built with vanilla HTML, CSS, and JavaScript.",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    imageUrl: "https://picsum.photos/seed/project8/700/450",
-    liveDemoUrl: "#",
-    category: "Web Development"
-  },
-  {
-    id: "proj9",
-    title: "Task Management CLI",
-    featured: false,
-    overview: "A command-line interface tool for managing daily tasks and to-do lists.",
-    technologies: ["Go", "Cobra"],
-    imageUrl: "https://picsum.photos/seed/project9/700/450",
-    repoUrl: "https://github.com/alexsterlingdev/task-cli",
-    category: "Productivity"
-  },
-  {
-    id: "proj10",
-    title: "Weather Widget UI",
-    featured: false,
-    overview: "A sleek user interface for a weather forecasting widget.",
-    technologies: ["Svelte", "Tailwind CSS", "OpenWeatherMap API"],
-    imageUrl: "https://picsum.photos/seed/project10/700/450",
-    category: "UI/UX"
-  },
-   {
-    id: "proj11",
-    title: "Data Scraper Utility",
-    featured: false,
-    overview: "A utility for scraping and organizing data from various web sources.",
-    technologies: ["Python", "Beautiful Soup", "Pandas"],
-    imageUrl: "https://picsum.photos/seed/project11/700/450",
-    category: "Data"
+    overview: "As Senior Java Tech Lead at DXC Technology, led a 6-developer international team to deliver the Analytic Console for the Agile Process Automation (APA) platform, contributing millions to company revenue.",
+    technologies: ["VueJS", "Spring Boot", "GoLang", "MongoDB", "AWS", "Agile", "Team Leadership"],
+    imageUrl: "https://picsum.photos/seed/apaconsole/700/450",
+    category: "Enterprise Platform"
   }
 ];
 
 export const ARTICLES_DATA: Article[] = [
   {
     id: "art1",
-    title: "The Art of 'Accurate Thinking' in Software Architecture",
-    summary: "An exploration of how precise problem definition and logical reasoning lead to robust and scalable software designs.",
-    type: "Article",
-    platform: "Medium",
-    url: "https://medium.com/your-article-link",
-    tags: ["Software Architecture", "Problem Solving"], 
-    imageUrl: "https://picsum.photos/seed/article1/400/200" 
+    title: "Talking Book: AI-Powered Summaries",
+    summary: "Initiated the Talking Book YouTube channel, featuring AI-powered summaries and a companion Telegram bot. This project explores applied AI for content transformation and developer tooling.",
+    type: "Article", // Re-purposed type for portfolio display
+    platform: "YouTube / Telegram",
+    url: "#", // Add actual link if available
+    tags: ["AI", "Content Generation", "YouTube", "Telegram Bot", "NLP"],
+    imageUrl: "https://picsum.photos/seed/talkingbook/400/200"
   },
   {
     id: "art2",
-    title: "Fostering 'Cooperation' in Distributed Engineering Teams",
-    summary: "A talk discussing strategies for building cohesive and effective remote teams.",
-    type: "Talk",
-    platform: "Tech Conference X",
-    url: "#",
-    tags: ["Team Dynamics", "Remote Work", "Leadership"],
-    imageUrl: "https://picsum.photos/seed/article2/400/200"
-  },
-  {
-    id: "art3",
-    title: "Going the Extra Mile: Beyond the 9-to-5 Developer Mindset",
-    summary: "Discussing the importance of dedication and proactive contribution in a software engineering career.",
-    type: "Article",
-    platform: "Dev.to",
-    url: "#",
-    tags: ["Career Growth", "Professionalism", "Mindset"],
-    imageUrl: "https://picsum.photos/seed/article3/400/200"
-  },
-  {
-    id: "art4",
-    title: "The Power of 'Specialized Knowledge' in Niche Technologies",
-    summary: "How deep expertise in specific areas can unlock unique opportunities and innovation.",
-    type: "Article",
-    platform: "Personal Blog",
-    url: "#",
-    tags: ["Expertise", "Technology Trends", "Learning"],
-    imageUrl: "https://picsum.photos/seed/article4/400/200"
-  },
-  {
-    id: "art5",
-    title: "Master Mind Alliances: Collaborating for Exponential Growth",
-    summary: "A reflection on how synergistic partnerships can accelerate learning and project success.",
-    type: "Slides",
-    platform: "Internal Tech Talk",
-    url: "#",
-    tags: ["Collaboration", "Networking", "Growth"],
-    imageUrl: "https://picsum.photos/seed/article5/400/200"
+    title: "Fluwix: Flutter Showcases",
+    summary: "Developed Fluwix, a project dedicated to showcasing various Flutter applications and exploring mobile development capabilities with the Flutter framework. Served as a practical exploration of UI/UX patterns in mobile.",
+    type: "Article", // Re-purposed type
+    platform: "Flutter Showcase",
+    url: "#", // Add actual link if available
+    tags: ["Flutter", "Mobile Development", "UI/UX Showcase", "Dart"],
+    imageUrl: "https://picsum.photos/seed/fluwix/400/200"
   }
 ];
 
@@ -295,7 +258,7 @@ export const ARTICLES_DATA: Article[] = [
 export const CONTACT_CONTENT = {
   title: "What's Next?",
   subtext: "Get In Touch",
-  paragraph: `Although I’m not currently looking for new opportunities, my inbox is always open. Whether you have a question, want to collaborate, or just want to say hi, I’ll try my best to get back to you! This reflects my "Pleasing Personality" and openness to "Cooperation".`,
+  paragraph: `My inbox is always open for AI discussions, collaborations, or just to connect. Whether you have a question about RAG, local AI, open-source initiatives, or AI engineering in general, I’ll do my best to get back to you!`,
   buttonText: "Say Hello",
 };
 
