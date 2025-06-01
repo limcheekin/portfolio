@@ -34,6 +34,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "2021 - Present",
     jobTitle: "Founder, AI Engineer & Solution Architect",
     company: "RAG.WTF & AI Initiatives",
+    companyUrl: "https://rag.wtf",
     descriptionPoints: [
       "Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF (to be open-sourced) as a platform for secure, personalized knowledge discovery and management.",
       "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models, enabling significant cost reduction and eliminating vendor lock-in.",
@@ -50,6 +51,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "2013 - 2020",
     jobTitle: "Senior Java Tech Lead",
     company: "DXC Technology",
+    companyUrl: "https://dxc.com/my/en",
     descriptionPoints: [
       "Led a 6-developer international team (China, Europe, Malaysia) to deliver the Analytic Console for the Agile Process Automation (APA) platform (VueJS, Spring Boot, GoLang, MongoDB, AWS), contributing millions to company revenue.",
       "Headed a 5-developer international team (US, Malaysia) to create the EPIC Configurator for internal Enterprise Invoice Processing (JQuery UI, Grails Framework, Oracle DB), significantly streamlining configuration processes.",
@@ -63,6 +65,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "2012 - 2013",
     jobTitle: "Senior Java Tech Lead",
     company: "Zurich Technology Services Malaysia",
+    companyUrl: "https://www.zurich.com.my/",
     descriptionPoints: [
       "Led a 5-member production support and development team for motor and property claims systems (IBM WebSphere, FileNet, DB2, Spring, GWT, Hibernate/JPA).",
       "Resolved over 60 critical production issues within weeks, dramatically improving system stability and user satisfaction."
@@ -88,6 +91,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "April 2008 - July 2010",
     jobTitle: "Senior Solution Consultant",
     company: "Penril Datability (M) Sdn. Bhd.",
+    companyUrl: "https://penril.net/",
     descriptionPoints: [
       "Led the successful tender for a RM6 million Internet Banking System (IBS) for Kuwait Finance House (KFH).",
       "Designed and proposed comprehensive IBS solutions, covering 24x7 web layers, external integrations (Payment Gateway, SMS, Email), application platform, 2-Factor Authentication (2FA), Enterprise Service Bus (ESB) for backend integration, and High-Availability infrastructure.",
@@ -102,6 +106,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "April 2005 - Dec 2007",
     jobTitle: "Technical Lead",
     company: "CMG Online Sdn. Bhd.",
+    companyUrl: "https://www.cmg.com.my/",
     descriptionPoints: [
       "Led an 8-member international team (China, India, Malaysia) to deliver a RM2 million Integrated Hospital Inventory System (IHIS4) for government hospitals, using AIX UNIX, JBoss 4.0, Oracle 10g, J2EE, Struts, and JasperReports.",
       "Drove Quality Management Systems (QMS): introduced a Standard Development Environment (Eclipse, Subversion, JUnit, Ant), improving team productivity by 20%.",
@@ -127,6 +132,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "October 2002 - April 2004",
     jobTitle: "Software Engineer",
     company: "Siemens Multimedia Sdn. Bhd.",
+    companyUrl: "https://www.siemens.com/my/en.html",
     descriptionPoints: [
       "Developed the core Voice4Info Portal (News Delivery over Phone), including Call Control Components using Java IDL, CORBA, Parlay API, and VoiceXML, collaborating with German colleagues on the Siemens Next Generation Network (NGN) platform.",
       "Engineered iTalk, a Unified Phone Conferencing system with instant messaging-like features (presence, contact list, buddy list management).",
@@ -139,6 +145,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "August 2001 - September 2002",
     jobTitle: "System Engineer (Web Application Development)",
     company: "Online One Corporation Berhad",
+    companyUrl: "http://greenoceancorp.com/bizsegments.html",
     descriptionPoints: [
       "Successfully deployed E-Treasury Management Systems to Hitachi Asia Ltd (Singapore) within 2 months, contributing RM1 million in revenue.",
       "Developed Fund Transfer, Bank Reconciliation, and General Ledger modules for the E-Treasury system using Cold Fusion, HTML, JavaScript, JavaBean, JDBC, and Oracle 8i.",
