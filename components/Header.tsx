@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
               <span className="text-green-accent">0{index + 1}.</span> {link.name}
             </RouterLink>
           ))}
-          <Button href="/resume.pdf" size="sm" target="_blank" rel="noopener noreferrer"> {/* Placeholder for Resume */}
+          <Button href="resume.pdf" size="sm" target="_blank" rel="noopener noreferrer"> {/* Placeholder for Resume */}
             Resume
           </Button>
         </nav>
@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
                 <span className="text-green-accent block mb-1">0{index + 1}.</span> {link.name}
               </RouterLink>
             ))}
-            <Button href="/resume.pdf" size="md" className="mt-6" target="_blank" rel="noopener noreferrer">
+            <Button href="resume.pdf" size="md" className="mt-6" target="_blank" rel="noopener noreferrer">
               Resume
             </Button>
           </nav>
