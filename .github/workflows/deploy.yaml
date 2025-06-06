@@ -26,7 +26,12 @@ jobs:
 
       - name: Build
         run: npm run build
-        
+
+      - name: Copy Resume PDF and Images
+        run: |
+          cp resume.pdf dist
+          cp -r images dist
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
