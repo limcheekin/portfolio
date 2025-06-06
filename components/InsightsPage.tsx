@@ -41,7 +41,7 @@ export const BlogSection: React.FC<SectionProps> = ({ id }) => {
   const displayedArticles = showAllArticles ? articles : articles.slice(0, initialArticleCount);
 
   return (
-    <SectionWrapper id={id} title="Writing & Speaking" titleNumber="03" contentClassName="max-w-2xl mx-auto">
+    <SectionWrapper id={id} title="Writing" titleNumber="03" contentClassName="max-w-2xl mx-auto">
       {articles.length > 0 ? (
         <>
           <ul className="space-y-1">
