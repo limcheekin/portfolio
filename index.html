@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lim Chee Kin | Senior Tech Lead, AI Engineer, and Solution Architect</title>
+
+  <meta name="description" content="Personal portfolio for Lim Chee Kin, a Senior Tech Lead, AI Engineer, and Solution Architect, showcasing skills, experience, and AI projects.">
+  <meta name="keywords" content="Lim Chee Kin, Senior Tech Lead, AI Engineer, Solution Architect, Portfolio, RAG, LLM, Python, Java, AI, Open Source">
+  <meta name="author" content="Lim Chee Kin">
+
+  <link rel="icon" href="/assets/favicon-BDs4XWUc.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon-D3qnDE2N.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon-DFNSv9vG.png">
+  <link rel="manifest" href="/assets/site-CvTXf-Ir.webmanifest">
+
+  <meta property="og:title" content="Lim Chee Kin | Senior Tech Lead, AI Engineer, and Solution Architect">
+  <meta property="og:description" content="Discover the portfolio of Lim Chee Kin, showcasing expertise in AI engineering, open-source AI, and leading software solutions.">
+  <meta property="og:image" content="https://limcheekin.github.io/portfolio/images/portfolio.png">
+  <meta property="og:url" content="https://limcheekin.github.io/portfolio/">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lim Chee Kin | Senior Tech Lead, AI Engineer, and Solution Architect">
+  <meta name="twitter:description" content="Explore Lim Chee Kin's work as an AI Engineer and Solution Architect, focusing on impactful tech and innovation.">
+  <meta name="twitter:image" content="https://limcheekin.github.io/portfolio/images/portfolio.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+      background-color: #0a192f; /* Base dark background */
+    }
+    body {
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      color: #ccd6f6; /* Lightest Slate - default text */
+    }
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a192f; /* Navy */
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #233554; /* Lightest Navy / Darker Slate */
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a8b2d1; /* Light Slate */
+    }
+    /* For consistent focus states */
+    *:focus-visible {
+        outline: 2px dashed #64ffda; /* Green Accent */
+        outline-offset: 2px;
+    }
+    /* Hide scrollbar for main page but allow scrolling */
+    /* Useful if sidebars have their own scroll behavior if content overflows */
+    /* body { scrollbar-width: none; -ms-overflow-style: none; } */
+    /* body::-webkit-scrollbar { display: none; } */
+
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'navy': '#0a192f',          // Main background
+            'light-navy': '#112240',    // Lighter background elements (e.g. project card)
+            'lightest-navy': '#233554', // Borders, lines, hover elements
+            'slate-text': '#8892b0',    // Secondary text (Slate)
+            'light-slate': '#a8b2d1',   // Main text (Light Slate)
+            'lightest-slate': '#ccd6f6',// Heading text (Lightest Slate)
+            'white-text': '#e6f1ff',    // Brightest text (rarely used)
+            'green-accent': '#64ffda',   // Accent color (Green/Teal)
+            'green-tint': 'rgba(100, 255, 218, 0.1)', // For transparent green effects like button hover
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+            mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+          },
+          typography: (theme) => ({
+            DEFAULT: {
+              css: {
+                color: theme('colors.light-slate'),
+                a: {
+                  color: theme('colors.green-accent'),
+                  textDecoration: 'none',
+                  transition: 'color 0.2s ease-in-out',
+                  '&:hover': {
+                    color: theme('colors.green-accent'),
+                    textDecorationThickness: '2px',
+                    textDecorationLine: 'underline'
+                  },
+                },
+                'h1, h2, h3, h4, h5, h6': {
+                  color: theme('colors.lightest-slate'),
+                  fontWeight: '600',
+                },
+                 h1: { fontSize: theme('fontSize.5xl') },
+                 h2: { fontSize: theme('fontSize.4xl') },
+                 h3: { fontSize: theme('fontSize.2xl') }, /* Adjusted for Brittany Chiang style section titles */
+                 p: { 
+                    color: theme('colors.slate-text'),
+                    fontSize: theme('fontSize.lg'),
+                    lineHeight: '1.75'
+                 },
+                strong: { color: theme('colors.lightest-slate')},
+                ul: {
+                    listStyleType: 'none',
+                    paddingLeft: '0',
+                },
+                'ul > li': {
+                    position: 'relative',
+                    paddingLeft: '1.75rem', // Space for the custom bullet
+                    color: theme('colors.slate-text'),
+                    marginBottom: theme('spacing.2'),
+                    '&::before': {
+                        content: '"▹"', // Custom bullet
+                        position: 'absolute',
+                        left: '0px',
+                        color: theme('colors.green-accent'),
+                        fontSize: theme('fontSize.lg'),
+                        lineHeight: '1.75',
+                    },
+                },
+              },
+            },
+          }),
+          transitionTimingFunction: {
+            'custom-ease': 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+          },
+          transitionDuration: {
+            '250': '250ms',
+          }
+        }
+      }
+    }
+  </script>
+
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.6.1",
+    "react-icons/": "https://esm.sh/react-icons@5.2.1/"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/assets/index-D6voidqO.js"></script>
+</head>
+<body class="bg-navy text-lightest-slate antialiased selection:bg-green-accent/30 selection:text-green-accent">
+  <div id="root"></div>
+</body>
+</html><link rel="stylesheet" href="index.css">
