@@ -168,97 +168,122 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
 
 export const ABOUT_CONTENT: AboutContent = {
   introductionParagraphs: [
-    `Hello! I'm ${ENGINEER_NAME}, a ${ENGINEER_TITLE} with a deep passion for AI engineering. I bring over 25 years of experience delivering complex software solutions by aligning business needs with technical design and implementation.`,
+    `Hello! I'm ${ENGINEER_NAME}, a ${ENGINEER_TITLE} with a deep passion for AI engineering. I bring over 25 years of experience delivering advance software solutions by aligning business needs with technical design and implementation.`,
     `My expertise lies in architecting and implementing open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications. I'm dedicated to building and leading teams to innovate with privacy-preserving and democratized AI.`,
     `I am committed to standardizing processes, driving innovation in the AI space, and continuously exploring new frontiers in technology.`
   ],
   skills: ["AI Engineering", "RAG Systems", "LLM Integration", "Python", "Java", "Gemini API", "Docker", "AWS"],
-  professionalPhotoUrl: "https://picsum.photos/seed/limcheekinprofile/400/400", // Placeholder, replace with actual photo
+  professionalPhotoUrl: "images/profile.png",
   workExperience: WORK_EXPERIENCE_DATA,
 };
 
 export const PROJECTS_DATA: Project[] = [
   {
     id: "proj1",
-    title: "RAG.WTF: Secure Knowledge Platform",
+    title: "RAG.WTF: Private Knowledge Platform",
     featured: true,
-    overview: "Architected and built RAG.WTF, an open-source (to be) platform for secure, personalized knowledge discovery and management. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty.",
-    technologies: ["AI", "RAG", "Open Source", "Data Privacy", "Local AI", "SurrealDB.wasm", "Python"],
-    imageUrl: "https://picsum.photos/seed/ragwtf/700/450",
-    repoUrl: "#", // To be updated when open-sourced
-    category: "AI Platform"
+    overview: "Architected and built RAG.WTF, an open-source platform for private, personalized knowledge discovery and management. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty.",
+    technologies: ["Open Source", "RAG", "Data Privacy", "Local AI", "Cloud AI", "surrealdb.wasm", "Flutter", "Dart"],
+    imageUrl: "images/rag-wtf.png",
+    repoUrl: "https://github.com/rag-wtf", 
+    category: "RAG"
   },
   {
     id: "proj2",
+    title: "TelegramGPT: AI Telegram Bot",
+    featured: true,
+    overview: "A Telegram bot powered by Google Gemini's API (Vertex AI / Google AI Studio). This bot leverages PostgreSQL for persistent conversation history and can integrate with self-hosted Speech-to-Text (STT) and Text-to-Speech (TTS) services.",
+    technologies: ["Open Source", "Telegram Bot", "Local AI", "Cloud AI", "Python", "Gemini API", "PostgreSQL", "TTS", "STT"],
+    imageUrl: "images/telegram-bot.png",
+    repoUrl: `https://github.com/${GITHUB_USERNAME}/TelegramGPT`,
+    liveDemoUrl: "https://t.me/think_and_grow_rich_bot",
+    category: "RAG"
+  },  
+  {
+    id: "proj3",
     title: "open-text-embeddings Python Library",
     featured: true,
     overview: "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models (e.g., BGE, E5). Enables significant cost reduction and eliminates vendor lock-in for embedding generation.",
-    technologies: ["Python", "Text Embeddings", "Sentence Transformers", "OpenAI-compatible API", "Open Source", "NLP"],
-    imageUrl: "https://picsum.photos/seed/opentextembeddings/700/450",
-    repoUrl: `https://github.com/${GITHUB_USERNAME}/open-text-embeddings`, // Example, update if actual repo exists
+    technologies: ["Open Source", "Python", "Text Embeddings", "Sentence Transformers", "OpenAI-compatible API", "NLP"],
+    imageUrl: "images/open-text-embeddings.png",
+    repoUrl: `https://github.com/${GITHUB_USERNAME}/open-text-embeddings`, 
+    liveDemoUrl: "https://pypi.org/project/open-text-embeddings/",
     category: "AI Library"
   },
   {
-    id: "proj3",
+    id: "proj4",
     title: "Talk To AI: Real-time Voice AI",
     featured: true,
     overview: "Developed 'Talk To AI', an application integrating HuggingFace's FastRTC for low-latency (<300ms) real-time voice AI interactions. Features a flexible backend supporting local (LocalAI, Whisper.cpp, Llama.cpp) and cloud-based STT, LLM, and TTS APIs (Groq, Microsoft Edge).",
-    technologies: ["Voice AI", "FastRTC", "HuggingFace", "STT", "LLM", "TTS", "LocalAI", "Groq API", "Python", "FastAPI"],
-    imageUrl: "https://picsum.photos/seed/talktoai/700/450",
-    liveDemoUrl: "#", // Placeholder
-    category: "AI Application"
-  },
-  {
-    id: "proj4",
-    title: "Grails Activiti BPM Plugin",
-    featured: false,
-    overview: "Developed and maintained an impactful open-source Grails Framework plugin for the Activiti BPM workflow system. Successfully grew the community forum to over 100 members and addressed numerous queries.",
-    technologies: ["Grails Framework", "Activiti BPM", "Open Source", "Java", "Groovy"],
-    imageUrl: "https://picsum.photos/seed/grailsactiviti/700/450",
-    repoUrl: "https://limcheekin.blogspot.com/p/my-grails-plugins.html",
-    category: "Open Source Plugin"
+    technologies: ["Open Source", "Voice AI", "FastRTC", "HuggingFace", "STT", "LLM", "TTS", "LocalAI", "Groq API", "Python", "FastAPI"],
+    imageUrl: "images/talk-to-ai.png",
+    repoUrl: `https://github.com/${GITHUB_USERNAME}/talk-to-ai`,
+    category: "Voice AI"
   },
   {
     id: "proj5",
+    title: "Talking Book",
+    featured: false,
+    overview: "Launched the Talking Book YouTube channel, focus primarily on insightful non-fiction, business, and self-improvement books, transforming key concepts into accessible and engaging formats such as engaging conversations, summaries, songs, and AI chats.",
+    technologies: ["Python", "Podcastfy", "LocalAI", "Kokoro-FASTAPI", "Google Slides"],
+    imageUrl: "https://picsum.photos/seed/grailsactiviti/700/450",
+    repoUrl: "https://github.com/limcheekin/talking-book",
+    liveDemoUrl: "https://limcheekin.github.io/talking-book/",
+    category: "AI Content Generation"
+  },
+  {
+    id: "proj6",  
     title: "Self-Hosted AI Infrastructure",
     featured: false,
-    overview: "Pioneered and operationalized a self-hosted AI infrastructure using a dedicated local AI server (Coolify, Docker). Successfully runs multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.), embeddings, and STT/TTS services for complete data privacy and operational control.",
-    technologies: ["Docker", "Coolify", "Local LLMs", "Self-Hosting", "AI Infrastructure", "Ansible"],
+    overview: "Pioneered and operationalized a self-hosted AI infrastructure using a dedicated local AI server (Coolify, Docker, OrangePi 5 Max). Successfully runs multiple local LLMs (Llama 3.2, DeepSeek-R1, Qwen3, etc.), embeddings, reranking, and STT/TTS services for complete data privacy and operational control.",
+    technologies: ["Docker", "Coolify", "LocalAI", "Self-Hosting", "AI Infrastructure", "Open LLMs", "Open WebUI"],
     imageUrl: "https://picsum.photos/seed/selfhostai/700/450",
     category: "AI Infrastructure"
   },
   {
-    id: "proj6",
-    title: "Analytic Console (APA Platform)",
+    id: "proj7",
+    title: "Fluwix: Flutter Showcases",
     featured: false,
-    overview: "As Senior Java Tech Lead at DXC Technology, led a 6-developer international team to deliver the Analytic Console for the Agile Process Automation (APA) platform, contributing millions to company revenue.",
-    technologies: ["VueJS", "Spring Boot", "GoLang", "MongoDB", "AWS", "Agile", "Team Leadership"],
+    overview: "A project dedicated to showcasing various Flutter applications and exploring mobile development capabilities with the Flutter framework.",
+    technologies: ["Open Source", "Flutter", "Dart", "Mobile Development", "Web Development", "UI/UX"],
     imageUrl: "https://picsum.photos/seed/apaconsole/700/450",
-    category: "Enterprise Platform"
+    repoUrl: "https://github.com/limcheekin/fluwix",
+    liveDemoUrl: "https://fluwix.com/",    
+    category: "Web and Mobile Platform"
   }
 ];
 
 export const ARTICLES_DATA: Article[] = [
   {
     id: "art1",
-    title: "Talking Book: AI-Powered Summaries",
-    summary: "Initiated the Talking Book YouTube channel, featuring AI-powered summaries and a companion Telegram bot. This project explores applied AI for content transformation and developer tooling.",
-    type: "Article", // Re-purposed type for portfolio display
-    platform: "YouTube / Telegram",
-    url: "#", // Add actual link if available
+    title: "Talking Book: Making Books Less Boring",
+    summary: "I created Talking Book to make reading more engaging and accessible, especially for my 9-year-old son with dyslexia. The platform offers quick summaries, chapter deep dives, and even catchy songs to help key concepts stick. We've also launched an AI chatbot on Telegram that lets you interact with books directly, making it easier to understand and remember their content.",  
+    type: "Article", 
+    platform: "YouTube, Telegram",
+    url: "https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2",
     tags: ["AI", "Content Generation", "YouTube", "Telegram Bot", "NLP"],
     imageUrl: "https://picsum.photos/seed/talkingbook/400/200"
   },
   {
     id: "art2",
-    title: "Fluwix: Flutter Showcases",
-    summary: "Developed Fluwix, a project dedicated to showcasing various Flutter applications and exploring mobile development capabilities with the Flutter framework. Served as a practical exploration of UI/UX patterns in mobile.",
-    type: "Article", // Re-purposed type
-    platform: "Flutter Showcase",
-    url: "#", // Add actual link if available
-    tags: ["Flutter", "Mobile Development", "UI/UX Showcase", "Dart"],
+    title: "Beyond the Cloud: How I Built My Own AI Server (and Why)",
+    summary: " I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models like Llama 3.2 and Phi-3.5 locally. This setup not only grants me privacy and control over my digital interactions but also lays the foundation for creating a digital twin that truly understands and mirrors my thought processes.",
+    type: "Article",
+    platform: "OrangePi 5 Max, LocalAI",
+    url: "https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3", 
+    tags: ["Local AI", "Private AI", "Self Hosted AI", "DIY AI"],
     imageUrl: "https://picsum.photos/seed/fluwix/400/200"
-  }
+  },  
+  {
+    id: "art3",
+    title: "Would you pay $1/month to Own Your AI Data?",
+    summary: "In the article, I argue that our AI conversations—filled with ideas, solutions, and creativity—are valuable assets that shouldn't be surrendered to Big Tech without control or ownership. To address this, I've set up a secure, personal Open WebUI instance that, for $1/month, offers users complete data sovereignty, access to a curated library of over 200 expert prompts, and the flexibility to connect preferred AI models using personal API keys. This initiative empowers individuals to reclaim their AI data, ensuring privacy, control, and enhanced productivity in their AI interactions.",
+    type: "Article",
+    platform: "Open WebUI",
+    url: "https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf", 
+    tags: ["Open WebUI", "Private AI", "Self Hosted AI", "Prompt Library"],
+    imageUrl: "https://picsum.photos/seed/fluwix/400/200"
+  }  
 ];
 
 
