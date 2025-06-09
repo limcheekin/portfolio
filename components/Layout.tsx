@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="text-center py-8 px-6">
       <a 
-        href="https://github.com/yourgithub/yourportfolio-repo" // Link to your portfolio's repo if public
+        href="https://github.com/limcheekin/portfolio"
         target="_blank" 
         rel="noopener noreferrer"
         className="font-mono text-xs text-slate-text hover:text-green-accent transition-colors duration-250"
