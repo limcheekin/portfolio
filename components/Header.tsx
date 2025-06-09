@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
             ))}
           </ol>
           <div className="ml-4">
-            <Button href="/resume.pdf" size="sm" target="_blank" rel="noopener noreferrer">
+            <Button href="resume.pdf" size="sm" target="_blank" rel="noopener noreferrer">
               Resume
             </Button>
           </div>
