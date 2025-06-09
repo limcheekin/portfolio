@@ -24,7 +24,7 @@ export const HERO_CONTENT: HeroContent = {
   greeting: "Hi, my name is",
   name: ENGINEER_NAME + ".",
   tagline: "AI Engineer & Solution Architect.",
-  introduction: `I'm a ${ENGINEER_TITLE} with over 25 years of experience, currently focusing intensively on AI engineering. I specialize in building and leading multinational teams to deliver complex software solutions, architecting open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications. I am committed to standardizing processes and driving innovation through privacy-preserving and democratized AI.`,
+  introduction: `I'm a ${ENGINEER_TITLE} with over 25 years of experience, currently focusing intensively on AI engineering. I specialize in building and leading multinational teams to deliver advance software solutions, architecting open-source AI, local AI infrastructure, and data sovereignty solutions.`,
   ctaButton: "Get In Touch",
 };
 

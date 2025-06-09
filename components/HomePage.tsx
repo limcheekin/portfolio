@@ -18,7 +18,7 @@ export const HeroSection: React.FC<SectionProps> = ({ id }) => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-text mb-6 md:mb-8 animate-fadeInUp" style={{ animationDelay: '300ms' }}>
           {HERO_CONTENT.tagline}
         </h2>
-        <p className="max-w-xl text-slate-text mb-10 md:mb-12 leading-relaxed animate-fadeInUp" style={{ animationDelay: '400ms' }}>
+        <p className="max-w-2xl text-slate-text mb-10 md:mb-12 leading-relaxed animate-fadeInUp" style={{ animationDelay: '400ms' }}>
           {HERO_CONTENT.introduction}
         </p>
         <div className="animate-fadeInUp" style={{ animationDelay: '500ms' }}>
