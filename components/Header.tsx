@@ -1,10 +1,7 @@
-
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { NAV_LINKS, ENGINEER_NAME } from '../constants';
-import { ThemeContext } from '../contexts/ThemeContext'; // If theme toggle is desired in header
 import { Button } from './Layout';
-import { FiMenu, FiX } from 'react-icons/fi'; // For mobile menu
 
 interface HeaderProps {
   isVisible: boolean;
@@ -13,26 +10,45 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  // const { theme, toggleTheme } = useContext(ThemeContext); // If adding theme toggle to header
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   useEffect(() => {
+    const mainContent = document.getElementById('main-content');
+    const footer = document.querySelector('footer');
+
     if (menuOpen) {
       document.body.style.overflow = 'hidden';
+      mainContent?.classList.add('blur-sm', 'brightness-50', 'pointer-events-none');
+      footer?.classList.add('blur-sm', 'brightness-50', 'pointer-events-none');
     } else {
       document.body.style.overflow = 'unset';
+      mainContent?.classList.remove('blur-sm', 'brightness-50', 'pointer-events-none');
+      footer?.classList.remove('blur-sm', 'brightness-50', 'pointer-events-none');
     }
+
+    const onResize = (e: UIEvent) => {
+      if ((e.currentTarget as Window).innerWidth > 768) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', onResize);
+
     return () => {
       document.body.style.overflow = 'unset';
+      mainContent?.classList.remove('blur-sm', 'brightness-50', 'pointer-events-none');
+      footer?.classList.remove('blur-sm', 'brightness-50', 'pointer-events-none');
+      window.removeEventListener('resize', onResize);
     };
   }, [menuOpen]);
-  
+
   const initials = ENGINEER_NAME.split(' ').map(n => n[0]).join('');
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 h-20 md:h-24 px-6 md:px-12
-                  bg-navy/80 backdrop-blur-md shadow-lg 
-                  transition-transform duration-300 ease-custom-ease
+      className={`fixed top-0 z-50 px-6 md:px-12 w-full h-24 flex items-center
+                  bg-navy/80 backdrop-blur-md shadow-md
+                  transition-transform duration-300 ease-in-out
                   ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
     >
       <div className="container mx-auto h-full flex items-center justify-between max-w-screen-xl">
@@ -43,63 +59,89 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
           onClick={() => setMenuOpen(false)}
           aria-label="Homepage"
         >
-          {initials[0]} {/* Just first initial for very small logo */}
+          {initials[0]}
         </RouterLink>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          {NAV_LINKS.map((link, index) => (
-            <RouterLink
-              key={link.name}
-              to={link.href}
-              className={`font-mono text-sm transition-colors duration-250
-                ${activeSection === link.href.substring(1) ? 'text-green-accent' : 'text-light-slate hover:text-green-accent'}`}
-            >
-              <span className="text-green-accent">0{index + 1}.</span> {link.name}
-            </RouterLink>
-          ))}
-          <Button href="resume.pdf" size="sm" target="_blank" rel="noopener noreferrer"> {/* Placeholder for Resume */}
-            Resume
-          </Button>
+        <nav className="hidden md:flex items-center">
+          <ol className="flex items-center space-x-6 lg:space-x-8 list-none p-0 m-0">
+            {NAV_LINKS.map((link, index) => (
+              <li key={link.name} className="relative font-mono text-sm">
+                <RouterLink
+                  to={link.href}
+                  className={`px-2.5 py-2 transition-colors duration-250
+                    ${activeSection === link.href.substring(1) ? 'text-green-accent' : 'text-light-slate hover:text-green-accent'}`}
+                >
+                  <span className="text-green-accent text-xs mr-1">0{index + 1}.</span>
+                  {link.name}
+                </RouterLink>
+              </li>
+            ))}
+          </ol>
+          <div className="ml-4">
+            <Button href="/resume.pdf" size="sm" target="_blank" rel="noopener noreferrer">
+              Resume
+            </Button>
+          </div>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button (Hamburger) */}
         <div className="md:hidden">
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 text-green-accent focus:outline-none"
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
+            onClick={toggleMenu}
+            className="relative z-50 p-4 -mr-4 text-green-accent focus:outline-none"
+            aria-label="Menu"
           >
-            {menuOpen ? <FiX className="w-7 h-7" /> : <FiMenu className="w-7 h-7" />}
+            <div className="w-7 h-6 relative">
+              <div
+                className={`absolute top-1/2 left-0 w-full h-0.5 bg-green-accent rounded-full transform -translate-y-1/2 transition-all duration-200
+                ${menuOpen ? 'rotate-45 w-full' : ''}`}
+                style={{
+                  top: menuOpen ? '50%' : '25%',
+                  transform: menuOpen ? 'rotate(45deg)' : 'translateY(-50%)'
+                }}
+              />
+              <div
+                className={`absolute top-1/2 left-0 w-full h-0.5 bg-green-accent rounded-full transform -translate-y-1/2 transition-all duration-200
+                ${menuOpen ? '-rotate-45 w-full' : 'w-5/6'}`}
+                 style={{
+                  transform: menuOpen ? 'rotate(-45deg)' : 'translateY(-50%)',
+                  width: menuOpen ? '100%' : '80%',
+                  top: menuOpen ? '50%' : '75%'
+                }}
+              />
+            </div>
           </button>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
-      {menuOpen && (
         <aside 
-            className="fixed inset-0 top-20 md:top-24 bg-navy p-6 z-40 flex flex-col items-center justify-center md:hidden animate-fadeIn"
-            onClick={() => setMenuOpen(false)}
+            className={`fixed top-0 bottom-0 right-0 h-screen w-3/4 max-w-sm bg-light-navy shadow-lg transform transition-transform duration-300 ease-in-out z-40
+            ${menuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}
+            aria-hidden={!menuOpen}
+            tabIndex={menuOpen ? 1 : -1}
         >
-          <nav className="flex flex-col items-center space-y-8">
-            {NAV_LINKS.map((link, index) => (
-              <RouterLink
-                key={link.name}
-                to={link.href}
-                onClick={() => setMenuOpen(false)}
-                className={`font-mono text-lg transition-colors duration-250
-                    ${activeSection === link.href.substring(1) ? 'text-green-accent' : 'text-lightest-slate hover:text-green-accent'}`}
-              >
-                <span className="text-green-accent block mb-1">0{index + 1}.</span> {link.name}
-              </RouterLink>
-            ))}
-            <Button href="resume.pdf" size="md" className="mt-6" target="_blank" rel="noopener noreferrer">
+          <nav className="flex flex-col items-center justify-center h-full text-center">
+            <ol className="list-none p-0 m-0 w-full">
+                {NAV_LINKS.map((link, index) => (
+                <li key={link.name} className="relative my-5 mx-auto font-mono text-lightest-slate text-lg">
+                    <RouterLink
+                    to={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block p-4"
+                    >
+                    <span className="text-green-accent block text-sm mb-1">0{index + 1}.</span>
+                    {link.name}
+                    </RouterLink>
+                </li>
+                ))}
+            </ol>
+            <a href="resume.pdf" className="font-mono text-lg border border-green-accent text-green-accent rounded py-4 px-12 mt-8">
               Resume
-            </Button>
+            </a>
           </nav>
         </aside>
-      )}
     </header>
   );
 };
