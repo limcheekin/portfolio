@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
                   transition-transform duration-300 ease-in-out
                   ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
     >
-      <div className="container mx-auto h-full flex items-center justify-between max-w-screen-xl">
+      <div className="container mx-auto h-full flex items-center justify-between">
         {/* Logo / Initials */}
         <RouterLink 
           to="/#hero" 
