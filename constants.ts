@@ -34,7 +34,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     period: "2021 - Present",
     jobTitle: "Founder, AI Engineer & Solution Architect",
     company: "RAG.WTF & AI Initiatives",
-    companyUrl: "https://rag.wtf",
+    companyUrl: "https://www.rag.wtf",
     descriptionPoints: [
       "Launched the Project Concord, a TypeScript-based, Dockerized Model ContextProtocol (MCP) server that bridges modern AI agents with legacy databasesby translating ambiguous schemas into clear, AI-friendly interfaces.",
       "Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF as a platform for secure, personalized knowledge discovery and management.",
