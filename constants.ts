@@ -36,15 +36,16 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
     company: "RAG.WTF & AI Initiatives",
     companyUrl: "https://rag.wtf",
     descriptionPoints: [
-      "Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF (to be open-sourced) as a platform for secure, personalized knowledge discovery and management.",
+      "Launched the Project Concord, a TypeScript-based, Dockerized Model ContextProtocol (MCP) server that bridges modern AI agents with legacy databasesby translating ambiguous schemas into clear, AI-friendly interfaces.",
+      "Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF as a platform for secure, personalized knowledge discovery and management.",
       "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models, enabling significant cost reduction and eliminating vendor lock-in.",
       "Developed 'Talk To AI' application, integrating HuggingFace's FastRTC for low-latency real-time voice AI interactions; engineered a flexible backend supporting local and cloud-based STT, LLM, and TTS APIs.",
       "Pioneered and operationalized a self-hosted AI infrastructure (Coolify, Docker), running multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.) and STT/TTS for data privacy and operational control.",
       "Advocated for and implemented robust data sovereignty by integrating embedded database solutions like SurrealDB.wasm with RAG.WTF.",
-      "Strategically utilized Modal.com for scalable, serverless AI/ML workloads, complementing local AI capabilities.",
+      "Strategically utilized TensorDock and Modal for scalable cloud GPU servers and serverless execution AI/ML workloads, complementing local AI capabilities.",
       "Previously initiated Talking Book YouTube channel (AI-powered summaries and Telegram bot) and Fluwix (Flutter showcases)."
     ],
-    skills: ["Open-Source AI", "RAG", "Python", "Text Embeddings", "FastRTC", "Docker", "Local LLMs", "SurrealDB.wasm", "Modal.com", "FastAPI", "Flutter", "Voice AI", "Solution Architecture"]
+    skills: ["Open-Source AI", "RAG", "MCP", "Python", "Text Embeddings", "FastRTC", "Docker", "Local LLMs", "SurrealDB.wasm", "Modal.com", "FastAPI", "Flutter", "Voice AI", "Solution Architecture"]
   },
   {
     id: "exp2",
@@ -256,6 +257,26 @@ export const PROJECTS_DATA: Project[] = [
 export const ARTICLES_DATA: Article[] = [
   {
     id: "art1",
+    title: "AI is Ready. Your Legacy Database Isn’t. Let’s Fix That.",
+    summary: "Project Concord is a high-performance, TypeScript-based MCP server designed to help AI systems work smoothly with older business databases by turning messy and unclear data into clean, reliable information. It focuses on safety, accuracy, and speed, with built-in checks, smart monitoring, and protective guards, all packaged for easy deployment in real-world environments.",  
+    type: "Article", 
+    platform: "MCP, Legacy Systems",
+    url: "",
+    tags: ["Legacy Modernization", "Enterprise AI", "Data Strategy", "Digital Transformation"],
+    imageUrl: "https://picsum.photos/seed/project-concord/400/200"
+  },  
+  {
+    id: "art2",
+    title: "Building Your First No-Code MCP Server: The Fabric Integration Story",
+    summary: "How I created a Model Context Protocol (MCP) server for Fabric REST API without writing a single line of code",  
+    type: "Article", 
+    platform: "MCP, Fabric",
+    url: "",
+    tags: ["Mcp Server", "MCP", "No Code", "Fabric", "Prompt Library"],
+    imageUrl: "https://picsum.photos/seed/no-code-mcp/400/200"
+  },
+  {
+    id: "art3",
     title: "Talking Book: Making Books Less Boring",
     summary: "I created Talking Book to make reading more engaging and accessible, especially for my 9-year-old son with dyslexia. The platform offers quick summaries, chapter deep dives, and even catchy songs to help key concepts stick. We've also launched an AI chatbot on Telegram that lets you interact with books directly, making it easier to understand and remember their content.",  
     type: "Article", 
@@ -265,7 +286,7 @@ export const ARTICLES_DATA: Article[] = [
     imageUrl: "https://picsum.photos/seed/talkingbook/400/200"
   },
   {
-    id: "art2",
+    id: "art4",
     title: "Beyond the Cloud: How I Built My Own AI Server (and Why)",
     summary: " I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models like Llama 3.2 and Phi-3.5 locally. This setup not only grants me privacy and control over my digital interactions but also lays the foundation for creating a digital twin that truly understands and mirrors my thought processes.",
     type: "Article",
@@ -275,7 +296,7 @@ export const ARTICLES_DATA: Article[] = [
     imageUrl: "https://picsum.photos/seed/fluwix/400/200"
   },  
   {
-    id: "art3",
+    id: "art5",
     title: "Would you pay $1/month to Own Your AI Data?",
     summary: "In the article, I argue that our AI conversations—filled with ideas, solutions, and creativity—are valuable assets that shouldn't be surrendered to Big Tech without control or ownership. To address this, I've set up a secure, personal Open WebUI instance that, for $1/month, offers users complete data sovereignty, access to a curated library of over 200 expert prompts, and the flexibility to connect preferred AI models using personal API keys. This initiative empowers individuals to reclaim their AI data, ensuring privacy, control, and enhanced productivity in their AI interactions.",
     type: "Article",
