@@ -121,32 +121,57 @@
 
             <section id="impact" class="mb-16">
                 <h2 class="text-3xl font-bold text-center mb-10 text-[#003F5C]">Projected 90-Day Impact</h2>
-                <div class="relative w-full">
-                    <div class="border-l-4 border-[#58508D] ml-6 md:ml-0 md:border-l-0 md:border-t-4 md:w-10/12 md:mx-auto">
-                        <div class="flex flex-col md:flex-row justify-between">
-                            <div class="flex md:flex-col items-center mb-8 md:mb-0 md:w-1/3">
-                                <div class="bg-[#58508D] rounded-full w-12 h-12 flex items-center justify-center text-white font-bold text-xl z-10 -ml-[26px] md:-mt-[26px] md:ml-0">1</div>
-                                <div class="ml-6 md:ml-0 md:mt-4 text-center p-3">
-                                    <h3 class="font-bold text-lg">First 30 Days</h3>
-                                    <p class="text-gray-600 text-sm">Deliver a containerized RAG proof-of-concept with a basic evaluation dashboard.</p>
-                                </div>
-                            </div>
-                             <div class="flex md:flex-col items-center mb-8 md:mb-0 md:w-1/3">
-                                <div class="bg-[#BC5090] rounded-full w-12 h-12 flex items-center justify-center text-white font-bold text-xl z-10 -ml-[26px] md:-mt-[26px] md:ml-0">2</div>
-                                <div class="ml-6 md:ml-0 md:mt-4 text-center p-3">
-                                    <h3 class="font-bold text-lg">First 60 Days</h3>
-                                    <p class="text-gray-600 text-sm">Integrate PoC into staging and establish a robust, automated evaluation pipeline.</p>
-                                </div>
-                            </div>
-                             <div class="flex md:flex-col items-center md:w-1/3">
-                                <div class="bg-[#FF6361] rounded-full w-12 h-12 flex items-center justify-center text-white font-bold text-xl z-10 -ml-[26px] md:-mt-[26px] md:ml-0">3</div>
-                                <div class="ml-6 md:ml-0 md:mt-4 text-center p-3">
-                                    <h3 class="font-bold text-lg">First 90 Days</h3>
-                                    <p class="text-gray-600 text-sm">Prepare for production release and begin knowledge-sharing sessions with the team.</p>
-                                </div>
-                            </div>
+                <div class="flex flex-col md:flex-row justify-center max-w-4xl mx-auto px-4">
+
+                    <!-- Step 1 -->
+                    <div class="flex md:flex-col items-center md:flex-1">
+                        <div class="flex md:flex-col items-center w-full">
+                            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-[#58508D] text-white font-bold text-xl rounded-full z-10">1</div>
+                            <!-- Mobile Connector -->
+                            <div class="w-1 h-24 bg-gray-300 md:hidden ml-5"></div>
+                        </div>
+                        <div class="pl-6 md:pl-0 md:pt-4 text-left md:text-center">
+                            <h3 class="font-bold text-lg">First 30 Days</h3>
+                            <p class="text-gray-600 text-sm">Deliver a containerized RAG proof-of-concept with a basic evaluation dashboard.</p>
                         </div>
                     </div>
+
+                    <!-- Desktop Connector -->
+                    <div class="hidden md:flex flex-1 items-center">
+                         <div class="w-full h-1 bg-gray-300" style="margin-top: -2.5rem;"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex md:flex-col items-center md:flex-1">
+                        <div class="flex md:flex-col items-center w-full">
+                            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-[#BC5090] text-white font-bold text-xl rounded-full z-10">2</div>
+                            <!-- Mobile Connector -->
+                            <div class="w-1 h-24 bg-gray-300 md:hidden ml-5"></div>
+                        </div>
+                        <div class="pl-6 md:pl-0 md:pt-4 text-left md:text-center">
+                            <h3 class="font-bold text-lg">First 60 Days</h3>
+                            <p class="text-gray-600 text-sm">Integrate PoC into staging and establish a robust, automated evaluation pipeline.</p>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Connector -->
+                    <div class="hidden md:flex flex-1 items-center">
+                        <div class="w-full h-1 bg-gray-300" style="margin-top: -2.5rem;"></div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="flex md:flex-col items-center md:flex-1">
+                         <div class="flex md:flex-col items-center w-full">
+                            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-[#FF6361] text-white font-bold text-xl rounded-full z-10">3</div>
+                             <!-- Mobile Connector (optional on last item) -->
+                            <div class="w-1 h-24 bg-transparent md:hidden ml-5"></div>
+                        </div>
+                        <div class="pl-6 md:pl-0 md:pt-4 text-left md:text-center">
+                            <h3 class="font-bold text-lg">First 90 Days</h3>
+                            <p class="text-gray-600 text-sm">Prepare for production release and begin knowledge-sharing sessions with the team.</p>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -282,3 +307,4 @@
     </script>
 </body>
 </html>
+
