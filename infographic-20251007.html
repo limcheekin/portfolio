@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Candidate Review: Lim Chee Kin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center py-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-[#003F5C]">Strategic Candidate Review</h1>
+            <p class="text-2xl md:text-3xl font-semibold text-[#58508D] mt-2">Lim Chee Kin</p>
+        </header>
+
+        <main>
+            <section id="verdict" class="mb-16">
+                <div class="bg-white rounded-lg shadow-2xl p-8 md:p-12 text-center border-t-8 border-[#FFA600]">
+                    <h2 class="text-2xl font-bold text-gray-500 uppercase tracking-widest">Executive Summary</h2>
+                    <p class="text-5xl md:text-7xl font-black text-[#003F5C] my-4">High-Confidence Hire</p>
+                    <p class="text-xl md:text-2xl font-light text-gray-600 max-w-3xl mx-auto">
+                        A potential <span class="font-semibold text-[#BC5090]">AI Systems Architect</span> whose specialization in open-source RAG systems represents a rare and valuable strategic opportunity.
+                    </p>
+                </div>
+            </section>
+            
+            <section id="strengths" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#003F5C]">Why He's a Strategic Asset</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-5xl mb-4">⚙️</div>
+                        <h3 class="text-xl font-bold mb-2 text-[#58508D]">Technical Excellence</h3>
+                        <p class="text-gray-600">Demonstrated mastery of the end-to-end RAG pipeline with a focus on quantitative evaluation, moving beyond prototypes to provably effective systems.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-5xl mb-4">🏛️</div>
+                        <h3 class="text-xl font-bold mb-2 text-[#BC5090]">Architectural Vision</h3>
+                        <p class="text-gray-600">Thinks in terms of flexible, scalable systems, preventing vendor lock-in and future-proofing the technology stack using gateways like LiteLLM.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-5xl mb-4">🛡️</div>
+                        <h3 class="text-xl font-bold mb-2 text-[#FF6361]">Financial & Security Advantage</h3>
+                        <p class="text-gray-600">Deep expertise in on-premise solutions enables maximum data privacy and significantly lower long-term operational costs.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile" class="mb-16">
+                 <h2 class="text-3xl font-bold text-center mb-10 text-[#003F5C]">Candidate Profile & Team Fit</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#58508D] text-center">Likely Persona</h3>
+                        <div class="flex items-center justify-center p-4">
+                            <span class="text-6xl mr-6">🛠️</span>
+                            <div>
+                                <p class="text-xl font-semibold">Pragmatic Builder</p>
+                                <p class="text-gray-600">Focuses on practical application and tangible results.</p>
+                            </div>
+                        </div>
+                         <div class="flex items-center justify-center p-4">
+                            <span class="text-6xl mr-6">🧭</span>
+                            <div>
+                                <p class="text-xl font-semibold">Self-Directed Problem-Solver</p>
+                                <p class="text-gray-600">Demonstrates initiative and robust open-source tool choices.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#BC5090] text-center">Ideal Team Dynamics</h3>
+                        <div class="flex flex-col items-center justify-center space-y-4 pt-4">
+                           <div class="flex items-center space-x-4">
+                               <div class="bg-gray-200 p-3 rounded-lg text-center">
+                                   <p class="font-semibold">Product Manager</p>
+                                   <p class="text-sm text-gray-600">(Business Context)</p>
+                               </div>
+                                <div class="text-2xl font-mono text-gray-400">&harr;</div>
+                               <div class="bg-[#FFA600] text-white p-4 rounded-lg text-center shadow-lg">
+                                   <p class="font-bold">Lim Chee Kin</p>
+                                   <p class="text-sm">(Technical Anchor)</p>
+                               </div>
+                           </div>
+                           <div class="text-2xl font-mono text-gray-400">&darr;</div>
+                            <div class="bg-gray-200 p-3 rounded-lg text-center">
+                               <p class="font-semibold">Junior Engineer</p>
+                               <p class="text-sm text-gray-600">(Mentee)</p>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="risks" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-2 text-[#003F5C]">Due Diligence: 4-Point Verification Plan</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">This visualization highlights key areas to probe during the interview. Higher values indicate a greater need for verification.</p>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="chart-container">
+                        <canvas id="riskRadarChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="impact" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#003F5C]">Projected 90-Day Impact</h2>
+                <div class="flex flex-col md:flex-row justify-center max-w-4xl mx-auto px-4">
+
+                    <!-- Step 1 -->
+                    <div class="flex md:flex-col items-center md:flex-1">
+                        <div class="flex md:flex-col items-center w-full">
+                            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-[#58508D] text-white font-bold text-xl rounded-full z-10">1</div>
+                            <!-- Mobile Connector -->
+                            <div class="w-1 h-24 bg-gray-300 md:hidden ml-5"></div>
+                        </div>
+                        <div class="pl-6 md:pl-0 md:pt-4 text-left md:text-center">
+                            <h3 class="font-bold text-lg">First 30 Days</h3>
+                            <p class="text-gray-600 text-sm">Deliver a containerized RAG proof-of-concept with a basic evaluation dashboard.</p>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Connector -->
+                    <div class="hidden md:flex flex-1 items-center">
+                         <div class="w-full h-1 bg-gray-300" style="margin-top: -2.5rem;"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex md:flex-col items-center md:flex-1">
+                        <div class="flex md:flex-col items-center w-full">
+                            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-[#BC5090] text-white font-bold text-xl rounded-full z-10">2</div>
+                            <!-- Mobile Connector -->
+                            <div class="w-1 h-24 bg-gray-300 md:hidden ml-5"></div>
+                        </div>
+                        <div class="pl-6 md:pl-0 md:pt-4 text-left md:text-center">
+                            <h3 class="font-bold text-lg">First 60 Days</h3>
+                            <p class="text-gray-600 text-sm">Integrate PoC into staging and establish a robust, automated evaluation pipeline.</p>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Connector -->
+                    <div class="hidden md:flex flex-1 items-center">
+                        <div class="w-full h-1 bg-gray-300" style="margin-top: -2.5rem;"></div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="flex md:flex-col items-center md:flex-1">
+                         <div class="flex md:flex-col items-center w-full">
+                            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-[#FF6361] text-white font-bold text-xl rounded-full z-10">3</div>
+                             <!-- Mobile Connector (optional on last item) -->
+                            <div class="w-1 h-24 bg-transparent md:hidden ml-5"></div>
+                        </div>
+                        <div class="pl-6 md:pl-0 md:pt-4 text-left md:text-center">
+                            <h3 class="font-bold text-lg">First 90 Days</h3>
+                            <p class="text-gray-600 text-sm">Prepare for production release and begin knowledge-sharing sessions with the team.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="next-steps">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#003F5C]">The Path Forward</h2>
+                <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-2xl p-8 border-l-8 border-[#FFA600]">
+                    <h3 class="text-2xl font-bold mb-6 text-[#58508D]">Immediate Actions</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-green-500 text-2xl mr-3">✅</span>
+                            <div>
+                                <h4 class="font-semibold">Schedule 90-Min Interview</h4>
+                                <p class="text-gray-600">Block time for a comprehensive technical session.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-green-500 text-2xl mr-3">✅</span>
+                            <div>
+                                <h4 class="font-semibold">Assemble Interview Panel</h4>
+                                <p class="text-gray-600">Include a Tech Lead, a peer AI Engineer, and the Hiring Manager.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-green-500 text-2xl mr-3">✅</span>
+                            <div>
+                                <h4 class="font-semibold">Conduct Post-Interview Debrief</h4>
+                                <p class="text-gray-600">Use the 'No-Hire' conditions as a final checklist to frame the decision.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center py-12 mt-8">
+            <p class="text-gray-500">This strategic review is based on the candidate's provided AI Stack analysis.</p>
+        </footer>
+    </div>
+
+    <script>
+        const wrapLabels = (label, maxLength) => {
+            const words = label.split(' ');
+            let line = '';
+            const lines = [];
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i] + ' ';
+                if (testLine.length > maxLength && i > 0) {
+                    lines.push(line.trim());
+                    line = words[i] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line.trim());
+            return lines;
+        };
+        
+        const riskData = {
+            labels: [
+                wrapLabels('Breadth of ML Experience', 16), 
+                wrapLabels('Model Customization (Fine-Tuning)', 16), 
+                wrapLabels('Production Cloud Architecture Depth', 16), 
+                wrapLabels('Problem-Solving & Iteration', 16)
+            ],
+            datasets: [{
+                label: 'Verification Level',
+                data: [2, 1.5, 2, 1],
+                backgroundColor: 'rgba(188, 80, 144, 0.2)',
+                borderColor: 'rgba(188, 80, 144, 1)',
+                pointBackgroundColor: 'rgba(188, 80, 144, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(188, 80, 144, 1)',
+                borderWidth: 2
+            }]
+        };
+
+        const riskRadarConfig = {
+            type: 'radar',
+            data: riskData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            },
+                             color: '#003F5C'
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            max: 3,
+                            stepSize: 1,
+                            display: false, 
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 3
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const riskRadarChartCtx = document.getElementById('riskRadarChart').getContext('2d');
+        new Chart(riskRadarChartCtx, riskRadarConfig);
+
+    </script>
+</body>
+</html>
+
