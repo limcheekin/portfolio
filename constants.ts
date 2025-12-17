@@ -32,7 +32,7 @@ export const WORK_EXPERIENCE_DATA: ExperienceItem[] = [
   {
     id: "exp1",
     period: "2021 - Present",
-    jobTitle: "Founder, AI Engineer & Solution Architect",
+    jobTitle: "AI Engineer & Solution Architect",
     company: "RAG.WTF & AI Initiatives",
     companyUrl: "https://www.rag.wtf",
     descriptionPoints: [
