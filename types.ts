@@ -65,3 +65,9 @@ export interface SectionProps {
   id: string;
   className?: string;
 }
+
+export interface ValueProp {
+  target: string;
+  benefit: string;
+  negative: string;
+}

@@ -1,5 +1,5 @@
 
-import { NavLink, HeroContent, AboutContent, Project, Article, ContactLink, ExperienceItem } from './types';
+import { NavLink, HeroContent, AboutContent, Project, Article, ContactLink, ExperienceItem, ValueProp} from './types';
 
 export const ENGINEER_NAME = "Lim Chee Kin";
 export const ENGINEER_TITLE = "Senior Tech Lead, AI Engineer, and Solution Architect";
@@ -24,7 +24,7 @@ export const HERO_CONTENT: HeroContent = {
   greeting: "Hi, my name is",
   name: ENGINEER_NAME + ".",
   tagline: "AI Engineer & Solution Architect.",
-  introduction: `I'm a ${ENGINEER_TITLE} with over 25 years of experience, currently focusing intensively on AI engineering. I specialize in building and leading multinational teams to deliver advance software solutions, architecting open-source AI, local AI infrastructure, and data sovereignty solutions.`,
+  introduction: `I'm a ${ENGINEER_TITLE} with over 25 years of experience, currently focusing intensively on AI engineering.`,
   ctaButton: "Get In Touch",
 };
 
@@ -317,3 +317,36 @@ export const CONTACT_CONTENT = {
 
 
 export const FOOTER_TEXT = `Designed & Built by ${ENGINEER_NAME}. Inspired by Brittany Chiang.`;
+
+export const VALUE_PROPS: ValueProp[] = [
+  {
+    target: "privacy-conscious enterprises",
+    benefit: "deploy local LLMs for trustworthy knowledge discovery",
+    negative: "exposing sensitive data to third-party"
+  },
+  {
+    target: "businesses",
+    benefit: "implement Retrieval-Augmented Generation (RAG) systems that provide accurate, contextual answers",
+    negative: "hallucinations"
+  },
+  {
+    target: "product teams",
+    benefit: "add voice-first, low-latency AI interactions to web apps",
+    negative: "ballooning infrastructure costs"
+  },
+  {
+    target: "organizations",
+    benefit: "run resilient hybrid AI (local + cloud) workloads at scale",
+    negative: "sacrificing data sovereignty"
+  },
+  {
+    target: "engineering leaders",
+    benefit: "integrate legacy databases with AI agents to unlock enterprise knowledge",
+    negative: "costly, risky migrations"
+  },
+  {
+    target: "engineering leaders",
+    benefit: "build high-performing multinational development teams",
+    negative: "cultural friction"
+  }
+];
