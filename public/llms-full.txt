@@ -1,0 +1,173 @@
+# Lim Chee Kin
+> Senior Tech Lead, AI Engineer, and Solution Architect with 25+ years of software industry experience. Passionate about Open-Source AI and Data Sovereignty.
+
+## About
+Lim Chee Kin is a Senior Tech Lead, AI Engineer, and Solution Architect based in Malaysia. With over 25 years in the software industry, he specializes in AI/ML solutions, enterprise software architecture, and open-source development. His current focus is building privacy-first AI systems and bridging legacy infrastructure with modern AI capabilities. He is dedicated to building and leading teams to innovate with privacy-preserving and democratized AI.
+
+## Core Skills
+- AI & Machine Learning (RAG, LLM deployment, embeddings, voice AI)
+- Python, Java, Spring, Micronaut, Flutter, Dart
+- React, TypeScript, GraphQL, VueJS, AngularJS
+- MongoDB, PostgreSQL, Oracle, SurrealDB
+- AWS, Docker, Coolify, DevOps
+- Model Context Protocol (MCP)
+- FastAPI, FastRTC, HuggingFace
+- Solution Architecture, Team Leadership
+
+## Value Propositions
+- I help privacy-conscious enterprises deploy local LLMs for trustworthy knowledge discovery without exposing sensitive data to third-party.
+- I help businesses implement Retrieval-Augmented Generation (RAG) systems that provide accurate, contextual answers without hallucinations.
+- I help product teams add voice-first, low-latency AI interactions to web apps without ballooning infrastructure costs.
+- I help organizations run resilient hybrid AI (local + cloud) workloads at scale without sacrificing data sovereignty.
+- I help engineering leaders integrate legacy databases with AI agents to unlock enterprise knowledge without costly, risky migrations.
+- I help engineering leaders build high-performing multinational development teams without cultural friction.
+
+## Featured Projects
+
+### RAG.WTF: Private Knowledge Platform
+- Repository: https://github.com/rag-wtf
+- Technologies: Open Source, RAG, Data Privacy, Local AI, Cloud AI, surrealdb.wasm, Flutter, Dart
+- Description: Architected and built RAG.WTF, an open-source platform for private, personalized knowledge discovery and management. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty.
+
+### TelegramGPT: AI Telegram Bot
+- Repository: https://github.com/limcheekin/TelegramGPT
+- Live Demo: https://t.me/think_and_grow_rich_bot
+- Technologies: Open Source, Telegram Bot, Local AI, Cloud AI, Python, Gemini API, PostgreSQL, TTS, STT
+- Description: A Telegram bot powered by Google Gemini's API (Vertex AI / Google AI Studio). This bot leverages PostgreSQL for persistent conversation history and can integrate with self-hosted Speech-to-Text (STT) and Text-to-Speech (TTS) services.
+
+### open-text-embeddings Python Library
+- Repository: https://github.com/limcheekin/open-text-embeddings
+- PyPI: https://pypi.org/project/open-text-embeddings/
+- Technologies: Open Source, Python, Text Embeddings, Sentence Transformers, OpenAI-compatible API, NLP
+- Description: Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models (e.g., BGE, E5). Enables significant cost reduction and eliminates vendor lock-in for embedding generation.
+
+### Talk To AI: Real-time Voice AI
+- Repository: https://github.com/limcheekin/talk-to-ai
+- Technologies: Open Source, Voice AI, FastRTC, HuggingFace, STT, LLM, TTS, LocalAI, Groq API, Python, FastAPI
+- Description: Developed 'Talk To AI', an application integrating HuggingFace's FastRTC for low-latency (<300ms) real-time voice AI interactions. Features a flexible backend supporting local (LocalAI, Whisper.cpp, Llama.cpp) and cloud-based STT, LLM, and TTS APIs (Groq, Microsoft Edge).
+
+## Other Projects
+
+### Talking Book
+- Repository: https://github.com/limcheekin/talking-book
+- Live Demo: https://limcheekin.github.io/talking-book/
+- Technologies: Python, Podcastfy, LocalAI, Kokoro-FASTAPI, Google Slides
+- Description: Launched the Talking Book YouTube channel, focus primarily on insightful non-fiction, business, and self-improvement books, transforming key concepts into accessible and engaging formats such as engaging conversations, summaries, songs, and AI chats.
+
+### Self-Hosted AI Infrastructure
+- Technologies: Docker, Coolify, LocalAI, Self-Hosting, AI Infrastructure, Open LLMs, Open WebUI
+- Description: Pioneered and operationalized a self-hosted AI infrastructure using a dedicated local AI server (Coolify, Docker, OrangePi 5 Max). Successfully runs multiple local LLMs (Llama 3.2, DeepSeek-R1, Qwen3, etc.), embeddings, reranking, and STT/TTS services for complete data privacy and operational control.
+
+### Fluwix: Flutter Showcases
+- Repository: https://github.com/limcheekin/fluwix
+- Live Demo: https://fluwix.com/
+- Technologies: Open Source, Flutter, Dart, Mobile Development, Web Development, UI/UX
+- Description: A project dedicated to showcasing various Flutter applications and exploring mobile development capabilities with the Flutter framework.
+
+## Full Work Experience
+
+### AI Engineer & Solution Architect — RAG.WTF & AI Initiatives (2021–Present)
+- Launched Project Concord, a TypeScript-based, Dockerized Model Context Protocol (MCP) server that bridges modern AI agents with legacy databases by translating ambiguous schemas into clear, AI-friendly interfaces.
+- Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF as a platform for secure, personalized knowledge discovery and management.
+- Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models, enabling significant cost reduction and eliminating vendor lock-in.
+- Developed 'Talk To AI' application, integrating HuggingFace's FastRTC for low-latency real-time voice AI interactions; engineered a flexible backend supporting local and cloud-based STT, LLM, and TTS APIs.
+- Pioneered and operationalized a self-hosted AI infrastructure (Coolify, Docker), running multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.) and STT/TTS for data privacy and operational control.
+- Advocated for and implemented robust data sovereignty by integrating embedded database solutions like SurrealDB.wasm with RAG.WTF.
+- Strategically utilized TensorDock and Modal for scalable cloud GPU servers and serverless execution AI/ML workloads, complementing local AI capabilities.
+- Previously initiated Talking Book YouTube channel (AI-powered summaries and Telegram bot) and Fluwix (Flutter showcases).
+- Skills: Open-Source AI, RAG, MCP, Python, Text Embeddings, FastRTC, Docker, Local LLMs, SurrealDB.wasm, Modal.com, FastAPI, Flutter, Voice AI, Solution Architecture
+
+### Senior Java Tech Lead — DXC Technology (2013–2020)
+- Led a 6-developer international team (China, Europe, Malaysia) to deliver the Analytic Console for the Agile Process Automation (APA) platform (VueJS, Spring Boot, GoLang, MongoDB, AWS), contributing millions to company revenue.
+- Headed a 5-developer international team (US, Malaysia) to create the EPIC Configurator for internal Enterprise Invoice Processing (JQuery UI, Grails Framework, Oracle DB), significantly streamlining configuration processes.
+- Implemented a Divestiture and Acquisition (DnA) dashboard (AngularJS, Jersey, Spring, MongoDB, AWS) for critical real-time data insights supporting strategic executive decision-making.
+- Prototyped an Intelligent Voice Agent (Conversational AI) leveraging Amazon Connect, AWS Lambda, Amazon Lex, Dialogflow, and Micronaut Framework.
+- Skills: Java, Spring Boot, VueJS, GoLang, MongoDB, AWS, JQuery UI, Grails Framework, Oracle DB, AngularJS, Micronaut, Conversational AI, Team Leadership
+
+### Senior Java Tech Lead — Zurich Technology Services Malaysia (2012–2013)
+- Led a 5-member production support and development team for motor and property claims systems (IBM WebSphere, FileNet, DB2, Spring, GWT, Hibernate/JPA).
+- Resolved over 60 critical production issues within weeks, dramatically improving system stability and user satisfaction.
+- Skills: Java, IBM WebSphere, FileNet, DB2, Spring, GWT, Hibernate/JPA, Production Support, Team Leadership
+
+### Independent Software Professional — Self-Employed (2010–2012)
+- Developed and maintained impactful open-source Grails Framework projects, including BPM workflow, form builder, and validation components.
+- Grails Activiti Plugin: BPM workflow system; grew the forum to 100+ members, addressed 100+ queries.
+- Grails Form Builder Plugin: Empowered non-programmers to create online forms.
+- JQuery Validation UI Plugin: Enhanced developer productivity with client-side validation.
+- Explore all 10+ projects at limcheekin.blogspot.com/p/my-grails-plugins.html.
+- Skills: Grails Framework, Activiti BPM, JQuery, Open Source Development, Plugin Development, Groovy, Java
+
+### Senior Solution Consultant — Penril Datability (M) Sdn. Bhd. (April 2008–July 2010)
+- Led the successful tender for a RM6 million Internet Banking System (IBS) for Kuwait Finance House (KFH).
+- Designed and proposed comprehensive IBS solutions, covering 24x7 web layers, external integrations (Payment Gateway, SMS, Email), application platform, 2-Factor Authentication (2FA), Enterprise Service Bus (ESB) for backend integration, and High-Availability infrastructure.
+- Led a 3-member team to develop KFH's information website using BroadVision 8.1 Business Agility Suites and Oracle 10g, including JSR168 compliant portlets like Prayer Times and Currency Converter.
+- Secured a RM2 million eCustody System tender from Malayan Banking Berhad.
+- Provided pre-sales support, product demonstrations, solution consultation, and Proof-Of-Concepts (POCs) to major financial and corporate clients (e.g., Maybank, BSN, BNM, Agrobank, ING, Bank Islam).
+- Skills: Solution Consulting, Tender Management, Banking Systems, Solution Architecture, BroadVision, Oracle 10g, JSR168 Portlets, BPMN, Requirements Analysis, Pre-Sales, Team Leadership
+
+### Technical Lead — CMG Online Sdn. Bhd. (April 2005–Dec 2007)
+- Led an 8-member international team (China, India, Malaysia) to deliver a RM2 million Integrated Hospital Inventory System (IHIS4) for government hospitals, using AIX UNIX, JBoss 4.0, Oracle 10g, J2EE, Struts, and JasperReports.
+- Drove Quality Management Systems (QMS): introduced a Standard Development Environment (Eclipse, Subversion, JUnit, Ant), improving team productivity by 20%.
+- Actively participated in the CMMI Committee to define and implement CMMI Level 3 compliant organizational standards and processes.
+- Architected and developed a common technical foundation for the Integrated Hospital Information Systems (IHIS5) on AppFuse (J2EE, Spring Framework, Hibernate, JUnit, JMock), including reusable logging and auditing modules with Spring AOP.
+- Skills: Technical Leadership, J2EE, JBoss, Oracle 10g, Struts, JasperReports, Spring Framework, Hibernate, Spring AOP, AppFuse, CMMI Level 3, QMS, SDLC, Team Management
+
+### Founder and Senior Consultant — Media Trend (May 2004–March 2005)
+- As Founder, led a startup providing web design, website development, web application development, and printing services.
+- Designed and developed websites for clients including Bright Pancar Enterprise and Marklon Industries Sdn. Bhd.
+- Provided printing services (name cards, brochures, cash sales receipts) for various companies.
+- Skills: Entrepreneurship, Web Design, Web Development, Client Management, Software Consulting
+
+### Software Engineer — Siemens Multimedia Sdn. Bhd. (October 2002–April 2004)
+- Developed the core Voice4Info Portal (News Delivery over Phone), including Call Control Components using Java IDL, CORBA, Parlay API, and VoiceXML, collaborating with German colleagues on the Siemens Next Generation Network (NGN) platform.
+- Engineered iTalk, a Unified Phone Conferencing system with instant messaging-like features (presence, contact list, buddy list management).
+- Supervised and coordinated 4 groups of Multimedia University (MMU) final year students on IP telephony projects, ensuring functional prototypes for the Siemens NGN platform.
+- Skills: Java, J2EE, CORBA, Parlay API, VoiceXML, Telephony Systems, Siemens NGN, Software Development, Mentorship
+
+### System Engineer (Web Application Development) — Online One Corporation Berhad (August 2001–September 2002)
+- Successfully deployed E-Treasury Management Systems to Hitachi Asia Ltd (Singapore) within 2 months, contributing RM1 million in revenue.
+- Developed Fund Transfer, Bank Reconciliation, and General Ledger modules for the E-Treasury system using Cold Fusion, HTML, JavaScript, JavaBean, JDBC, and Oracle 8i.
+- Engineered Business-to-Business (B2B) integration of National Panasonic of Malaysia's purchasing system using Active Server Page (ASP), SOAP, XML, IIS Web Server, and Oracle 8i.
+- Skills: Web Application Development, Cold Fusion, Oracle 8i, ASP, SOAP, XML, HTML, JavaScript, JDBC, System Integration
+
+### System Engineer — Tee Yam Holding Sdn. Bhd. (June 1999–May 2000)
+- Individually designed and developed a comprehensive Touch Screen based Point Of Sale (POS) system, Inventory Control System, and Customer Contact Management system using Visual Basic 6.0, ADO, COM, ActiveX Control, and Microsoft SQL Server 7.0.
+- Developed multimedia game systems, including a Horse Racing Game and Roulette Game, using Visual Basic 6.0, DirectX 7.0 SDK, ADO, and Microsoft Access 97.
+- Skills: Visual Basic 6.0, MS SQL Server 7.0, ADO, COM, ActiveX, DirectX SDK, POS Systems Development, Inventory Control Systems, Game Development
+
+## Articles
+
+### AI is Ready. Your Legacy Database Isn't. Let's Fix That.
+Project Concord is a high-performance, TypeScript-based MCP server designed to help AI systems work smoothly with older business databases by turning messy and unclear data into clean, reliable information. It focuses on safety, accuracy, and speed, with built-in checks, smart monitoring, and protective guards, all packaged for easy deployment in real-world environments.
+Tags: Legacy Modernization, Enterprise AI, Data Strategy, Digital Transformation
+
+### Building Your First No-Code MCP Server: The Fabric Integration Story
+How I created a Model Context Protocol (MCP) server for Fabric REST API without writing a single line of code.
+Tags: MCP Server, MCP, No Code, Fabric, Prompt Library
+
+### Talking Book: Making Books Less Boring
+URL: https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2
+I created Talking Book to make reading more engaging and accessible, especially for my 9-year-old son with dyslexia. The platform offers quick summaries, chapter deep dives, and even catchy songs to help key concepts stick. We've also launched an AI chatbot on Telegram that lets you interact with books directly, making it easier to understand and remember their content.
+Tags: AI, Content Generation, YouTube, Telegram Bot, NLP
+
+### Beyond the Cloud: How I Built My Own AI Server (and Why)
+URL: https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3
+I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models like Llama 3.2 and Phi-3.5 locally. This setup not only grants me privacy and control over my digital interactions but also lays the foundation for creating a digital twin that truly understands and mirrors my thought processes.
+Tags: Local AI, Private AI, Self Hosted AI, DIY AI
+
+### Would you pay $1/month to Own Your AI Data?
+URL: https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf
+Our AI conversations—filled with ideas, solutions, and creativity—are valuable assets that shouldn't be surrendered to Big Tech without control or ownership. I've set up a secure, personal Open WebUI instance that, for $1/month, offers users complete data sovereignty, access to a curated library of over 200 expert prompts, and the flexibility to connect preferred AI models using personal API keys.
+Tags: Open WebUI, Private AI, Self Hosted AI, Prompt Library
+
+## Contact
+- Email: limcheekin@vobject.com
+- GitHub: https://github.com/limcheekin
+- LinkedIn: https://linkedin.com/in/limcheekin
+- Medium: https://medium.com/@limcheekin
+
+## Technical
+- Portfolio: https://limcheekin.github.io/portfolio/
+- Sitemap: https://limcheekin.github.io/portfolio/sitemap.xml
+- Portfolio Data (JSON): https://limcheekin.github.io/portfolio/api/portfolio.json
+- Resume: https://limcheekin.github.io/portfolio/resume.pdf
