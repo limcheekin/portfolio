@@ -1,0 +1,6 @@
+# robots.txt for limcheekin.github.io/portfolio/
+
+User-agent: *
+Allow: /
+
+Sitemap: https://limcheekin.github.io/portfolio/sitemap.xml

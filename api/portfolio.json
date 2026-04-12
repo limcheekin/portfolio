@@ -1,0 +1,149 @@
+{
+  "name": "Lim Chee Kin",
+  "title": "Senior Tech Lead, AI Engineer, and Solution Architect",
+  "email": "limcheekin@vobject.com",
+  "url": "https://limcheekin.github.io/portfolio/",
+  "github": "https://github.com/limcheekin",
+  "linkedin": "https://linkedin.com/in/limcheekin",
+  "medium": "https://medium.com/@limcheekin",
+  "introduction": "I'm a Senior Tech Lead, AI Engineer, and Solution Architect with over 25 years of experience, currently focusing intensively on AI engineering.",
+  "about": [
+    "Hello! I'm Lim Chee Kin, a Senior Tech Lead, AI Engineer, and Solution Architect with a deep passion for AI engineering. I bring over 25 years of experience delivering advance software solutions by aligning business needs with technical design and implementation.",
+    "My expertise lies in architecting and implementing open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications. I'm dedicated to building and leading teams to innovate with privacy-preserving and democratized AI.",
+    "I am committed to standardizing processes, driving innovation in the AI space, and continuously exploring new frontiers in technology."
+  ],
+  "skills": ["AI Engineering", "RAG Systems", "LLM Integration", "Python", "Java", "Gemini API", "Docker", "AWS"],
+  "projects": [
+    {
+      "id": "proj1",
+      "title": "RAG.WTF: Private Knowledge Platform",
+      "featured": true,
+      "overview": "Architected and built RAG.WTF, an open-source platform for private, personalized knowledge discovery and management. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty.",
+      "technologies": ["Open Source", "RAG", "Data Privacy", "Local AI", "Cloud AI", "surrealdb.wasm", "Flutter", "Dart"],
+      "repoUrl": "https://github.com/rag-wtf",
+      "category": "RAG"
+    },
+    {
+      "id": "proj2",
+      "title": "TelegramGPT: AI Telegram Bot",
+      "featured": true,
+      "overview": "A Telegram bot powered by Google Gemini's API (Vertex AI / Google AI Studio). This bot leverages PostgreSQL for persistent conversation history and can integrate with self-hosted Speech-to-Text (STT) and Text-to-Speech (TTS) services.",
+      "technologies": ["Open Source", "Telegram Bot", "Local AI", "Cloud AI", "Python", "Gemini API", "PostgreSQL", "TTS", "STT"],
+      "repoUrl": "https://github.com/limcheekin/TelegramGPT",
+      "liveDemoUrl": "https://t.me/think_and_grow_rich_bot",
+      "category": "RAG"
+    },
+    {
+      "id": "proj3",
+      "title": "open-text-embeddings Python Library",
+      "featured": true,
+      "overview": "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models (e.g., BGE, E5). Enables significant cost reduction and eliminates vendor lock-in for embedding generation.",
+      "technologies": ["Open Source", "Python", "Text Embeddings", "Sentence Transformers", "OpenAI-compatible API", "NLP"],
+      "repoUrl": "https://github.com/limcheekin/open-text-embeddings",
+      "liveDemoUrl": "https://pypi.org/project/open-text-embeddings/",
+      "category": "AI Library"
+    },
+    {
+      "id": "proj4",
+      "title": "Talk To AI: Real-time Voice AI",
+      "featured": true,
+      "overview": "Developed 'Talk To AI', an application integrating HuggingFace's FastRTC for low-latency (<300ms) real-time voice AI interactions. Features a flexible backend supporting local and cloud-based STT, LLM, and TTS APIs.",
+      "technologies": ["Open Source", "Voice AI", "FastRTC", "HuggingFace", "STT", "LLM", "TTS", "LocalAI", "Groq API", "Python", "FastAPI"],
+      "repoUrl": "https://github.com/limcheekin/talk-to-ai",
+      "category": "Voice AI"
+    },
+    {
+      "id": "proj5",
+      "title": "Talking Book",
+      "featured": false,
+      "overview": "Launched the Talking Book YouTube channel, transforming key concepts from non-fiction, business, and self-improvement books into engaging formats such as conversations, summaries, songs, and AI chats.",
+      "technologies": ["Python", "Podcastfy", "LocalAI", "Kokoro-FASTAPI", "Google Slides"],
+      "repoUrl": "https://github.com/limcheekin/talking-book",
+      "liveDemoUrl": "https://limcheekin.github.io/talking-book/",
+      "category": "AI Content Generation"
+    },
+    {
+      "id": "proj6",
+      "title": "Self-Hosted AI Infrastructure",
+      "featured": false,
+      "overview": "Pioneered and operationalized a self-hosted AI infrastructure using a dedicated local AI server (Coolify, Docker, OrangePi 5 Max). Runs multiple local LLMs, embeddings, reranking, and STT/TTS services for complete data privacy and operational control.",
+      "technologies": ["Docker", "Coolify", "LocalAI", "Self-Hosting", "AI Infrastructure", "Open LLMs", "Open WebUI"],
+      "category": "AI Infrastructure"
+    },
+    {
+      "id": "proj7",
+      "title": "Fluwix: Flutter Showcases",
+      "featured": false,
+      "overview": "A project dedicated to showcasing various Flutter applications and exploring mobile development capabilities with the Flutter framework.",
+      "technologies": ["Open Source", "Flutter", "Dart", "Mobile Development", "Web Development", "UI/UX"],
+      "repoUrl": "https://github.com/limcheekin/fluwix",
+      "liveDemoUrl": "https://fluwix.com/",
+      "category": "Web and Mobile Platform"
+    }
+  ],
+  "articles": [
+    {
+      "id": "art1",
+      "title": "AI is Ready. Your Legacy Database Isn't. Let's Fix That.",
+      "summary": "Project Concord is a high-performance, TypeScript-based MCP server designed to help AI systems work smoothly with older business databases.",
+      "type": "Article",
+      "tags": ["Legacy Modernization", "Enterprise AI", "Data Strategy"]
+    },
+    {
+      "id": "art2",
+      "title": "Building Your First No-Code MCP Server: The Fabric Integration Story",
+      "summary": "How I created a Model Context Protocol (MCP) server for Fabric REST API without writing a single line of code.",
+      "type": "Article",
+      "tags": ["MCP", "No Code", "Fabric"]
+    },
+    {
+      "id": "art3",
+      "title": "Talking Book: Making Books Less Boring",
+      "summary": "I created Talking Book to make reading more engaging and accessible, with quick summaries, chapter deep dives, and catchy songs to help key concepts stick.",
+      "type": "Article",
+      "url": "https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2",
+      "tags": ["AI", "Content Generation", "YouTube", "Telegram Bot"]
+    },
+    {
+      "id": "art4",
+      "title": "Beyond the Cloud: How I Built My Own AI Server (and Why)",
+      "summary": "I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models locally.",
+      "type": "Article",
+      "url": "https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3",
+      "tags": ["Local AI", "Private AI", "Self Hosted AI"]
+    },
+    {
+      "id": "art5",
+      "title": "Would you pay $1/month to Own Your AI Data?",
+      "summary": "Our AI conversations are valuable assets that shouldn't be surrendered to Big Tech without control or ownership.",
+      "type": "Article",
+      "url": "https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf",
+      "tags": ["Open WebUI", "Private AI", "Self Hosted AI"]
+    }
+  ],
+  "workExperience": [
+    { "period": "2021-Present", "title": "AI Engineer & Solution Architect", "company": "RAG.WTF & AI Initiatives" },
+    { "period": "2013-2020", "title": "Senior Java Tech Lead", "company": "DXC Technology" },
+    { "period": "2012-2013", "title": "Senior Java Tech Lead", "company": "Zurich Technology Services Malaysia" },
+    { "period": "2010-2012", "title": "Independent Software Professional", "company": "Self-Employed" },
+    { "period": "2008-2010", "title": "Senior Solution Consultant", "company": "Penril Datability" },
+    { "period": "2005-2007", "title": "Technical Lead", "company": "CMG Online" },
+    { "period": "2004-2005", "title": "Founder and Senior Consultant", "company": "Media Trend" },
+    { "period": "2002-2004", "title": "Software Engineer", "company": "Siemens Multimedia" },
+    { "period": "2001-2002", "title": "System Engineer", "company": "Online One Corporation" },
+    { "period": "1999-2000", "title": "System Engineer", "company": "Tee Yam Holding" }
+  ],
+  "valuePropositions": [
+    "I help privacy-conscious enterprises deploy local LLMs for trustworthy knowledge discovery without exposing sensitive data to third-party.",
+    "I help businesses implement RAG systems that provide accurate, contextual answers without hallucinations.",
+    "I help product teams add voice-first, low-latency AI interactions to web apps without ballooning infrastructure costs.",
+    "I help organizations run resilient hybrid AI (local + cloud) workloads at scale without sacrificing data sovereignty.",
+    "I help engineering leaders integrate legacy databases with AI agents to unlock enterprise knowledge without costly, risky migrations.",
+    "I help engineering leaders build high-performing multinational development teams without cultural friction."
+  ],
+  "_meta": {
+    "generated": "2026-04-12",
+    "source": "limcheekin/portfolio constants.ts",
+    "format": "Static JSON API for agent consumption"
+  }
+}

@@ -1,0 +1,53 @@
+# Lim Chee Kin
+> Senior Tech Lead, AI Engineer, and Solution Architect with 25+ years of software industry experience. Passionate about Open-Source AI and Data Sovereignty.
+
+## About
+Lim Chee Kin is a Senior Tech Lead, AI Engineer, and Solution Architect based in Malaysia. With over 25 years in the software industry, he specializes in AI/ML solutions, enterprise software architecture, and open-source development. His current focus is building privacy-first AI systems and bridging legacy infrastructure with modern AI capabilities.
+
+## Core Skills
+- AI & Machine Learning (RAG, LLM deployment, embeddings, voice AI)
+- Python, Java, Spring, Micronaut, Flutter
+- MongoDB, PostgreSQL, Oracle
+- AWS, Docker, DevOps
+- React, TypeScript, GraphQL
+
+## Current Projects
+- [RAG.WTF](https://www.rag.wtf/): An open-source platform for private, personalized knowledge discovery and management using RAG systems
+- [Talk To AI](https://github.com/limcheekin/talk-to-ai): A real-time voice AI application for low-latency (<300ms) interactions, supporting local and cloud STT, LLM, and TTS services
+- [Project Concord](https://github.com/limcheekin/project-concord): A Model Context Protocol (MCP) server that connects modern AI agents with legacy database schemas
+- [TelegramGPT](https://github.com/limcheekin/TelegramGPT): AI-powered Telegram bot for natural language conversations
+- [open-text-embeddings](https://github.com/limcheekin/open-text-embeddings): Python library for open-source text embedding models
+
+## Past Contributions
+- [Fluwix](https://github.com/limcheekin/fluwix): Flutter showcase platform
+- 10+ Grails Framework plugins for the developer community
+
+## Work Experience
+- 2021-Present: AI Engineer & Solution Architect (RAG.WTF & AI Initiatives)
+- 2013-2020: Senior Java Tech Lead (DXC Technology)
+- 2012-2013: Senior Java Tech Lead (Zurich Technology Services Malaysia)
+- 2010-2012: Independent Software Professional
+- 2008-2010: Senior Solution Consultant (Penril Datability)
+- 2005-2007: Technical Lead (CMG Online)
+- 2004-2005: Founder and Senior Consultant (Media Trend)
+- 2002-2004: Software Engineer (Siemens Multimedia)
+- 2001-2002: System Engineer (Online One Corporation)
+- 1999-2000: System Engineer (Tee Yam Holding)
+
+## Articles
+- AI is Ready. Your Legacy Database Isn't. Let's Fix That. (coming soon)
+- Building Your First No-Code MCP Server: The Fabric Integration Story (coming soon)
+- [Talking Book: Making Books Less Boring](https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2)
+- [Beyond the Cloud: How I Built My Own AI Server (and Why)](https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3)
+- [Would you pay $1/month to Own Your AI Data?](https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf)
+
+## Contact
+- Email: limcheekin@vobject.com
+- GitHub: https://github.com/limcheekin
+- LinkedIn: https://linkedin.com/in/limcheekin
+- Medium: https://medium.com/@limcheekin
+
+## Technical
+- Portfolio: https://limcheekin.github.io/portfolio/
+- Sitemap: https://limcheekin.github.io/portfolio/sitemap.xml
+- Portfolio Data (JSON): https://limcheekin.github.io/portfolio/api/portfolio.json
