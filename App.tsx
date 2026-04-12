@@ -1,6 +1,6 @@
 
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { HashRouter, useLocation, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, useLocation, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { LeftSocialSidebar, RightEmailSidebar } from './components/FixedSidebars';
 import { Footer, SectionWrapper } from './components/Layout'; // SectionWrapper might be used for structure
@@ -147,10 +147,10 @@ const MainContentLayout: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ThemeProvider> {/* Keep ThemeProvider for potential future use or system preference handling */}
-      <HashRouter>
+      <BrowserRouter basename="/portfolio">
         <ScrollToHashElement />
         <MainContentLayout />
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   );
 };
