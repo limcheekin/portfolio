@@ -53,8 +53,9 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
     >
       <div className="container mx-auto h-full flex items-center justify-between">
         {/* Logo / Initials */}
-        <RouterLink 
-          to="/#hero" 
+        <RouterLink
+          to="/#hero"
+          data-testid="logo-link"
           className="text-2xl font-bold text-green-accent border-2 border-green-accent rounded w-10 h-10 md:w-12 md:h-12 flex items-center justify-center hover:bg-green-tint transition-colors duration-250"
           onClick={() => setMenuOpen(false)}
           aria-label="Homepage"
@@ -63,12 +64,13 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
         </RouterLink>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center">
+        <nav aria-label="Main navigation" data-testid="desktop-nav" className="hidden md:flex items-center">
           <ol className="flex items-center space-x-6 lg:space-x-8 list-none p-0 m-0">
             {NAV_LINKS.map((link, index) => (
               <li key={link.name} className="relative font-mono text-sm">
                 <RouterLink
                   to={link.href}
+                  data-testid={`nav-link-${link.href.substring(1)}`}
                   className={`px-2.5 py-2 transition-colors duration-250
                     ${activeSection === link.href.substring(1) ? 'text-green-accent' : 'text-light-slate hover:text-green-accent'}`}
                 >
@@ -79,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
             ))}
           </ol>
           <div className="ml-4">
-            <Button href="resume.pdf" size="sm" target="_blank" rel="noopener noreferrer">
+            <Button href="resume.pdf" size="sm" data-testid="resume-button" target="_blank" rel="noopener noreferrer">
               Resume
             </Button>
           </div>
@@ -89,6 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
         <div className="md:hidden">
           <button
             onClick={toggleMenu}
+            data-testid="mobile-menu-toggle"
             className="relative z-50 p-4 -mr-4 text-green-accent focus:outline-none"
             aria-label="Menu"
           >
@@ -116,13 +119,15 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
       </div>
 
       {/* Mobile Menu Overlay */}
-        <aside 
+        <nav
+            aria-label="Mobile navigation"
+            data-testid="mobile-nav"
             className={`fixed top-0 bottom-0 right-0 h-screen w-3/4 max-w-sm bg-light-navy shadow-lg transform transition-transform duration-300 ease-in-out z-40
             ${menuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}
             aria-hidden={!menuOpen}
             tabIndex={menuOpen ? 1 : -1}
         >
-          <nav className="flex flex-col items-center justify-center h-full text-center">
+          <div className="flex flex-col items-center justify-center h-full text-center">
             <ol className="list-none p-0 m-0 w-full">
                 {NAV_LINKS.map((link, index) => (
                 <li key={link.name} className="relative my-5 mx-auto font-mono text-lightest-slate text-lg">
@@ -140,8 +145,8 @@ export const Header: React.FC<HeaderProps> = ({ isVisible, activeSection }) => {
             <a href="resume.pdf" className="font-mono text-lg border border-green-accent text-green-accent rounded py-4 px-12 mt-8">
               Resume
             </a>
-          </nav>
-        </aside>
+          </div>
+        </nav>
     </header>
   );
 };

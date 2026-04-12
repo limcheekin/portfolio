@@ -7,7 +7,7 @@ import Banner from './Banner';
 
 export const HeroSection: React.FC<SectionProps> = ({ id }) => {
   return (
-    <section id={id} className="min-h-screen flex flex-col justify-center pt-24 md:pt-32 pb-20"> {/* Ensure enough padding top due to fixed header */}
+    <section id={id} data-testid="hero-section" className="min-h-screen flex flex-col justify-center pt-24 md:pt-32 pb-20"> {/* Ensure enough padding top due to fixed header */}
       {/* Content constrained by main layout in App.tsx */}
       <div> {/* Inner div for content flow */}
         <p className="font-mono text-base text-green-accent mb-4 md:mb-6 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
@@ -23,7 +23,7 @@ export const HeroSection: React.FC<SectionProps> = ({ id }) => {
          <Banner />
         </div>
         <div className="animate-fadeInUp" style={{ animationDelay: '500ms' }}>
-          <Button href={`mailto:${EMAIL_ADDRESS}`} size="lg">
+          <Button href={`mailto:${EMAIL_ADDRESS}`} size="lg" data-testid="hero-cta">
             {HERO_CONTENT.ctaButton}
           </Button>
         </div>
@@ -116,8 +116,9 @@ export const AboutSection: React.FC<SectionProps> = ({ id }) => {
               </div>
               {workExperience.length > initialExperienceCount && (
                 <div className="mt-10 text-center">
-                  <Button 
+                  <Button
                     onClick={() => setShowAllExperience(!showAllExperience)}
+                    data-testid="show-experience-toggle"
                     variant="secondary"
                     aria-expanded={showAllExperience}
                   >

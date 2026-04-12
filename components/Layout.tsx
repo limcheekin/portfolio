@@ -56,7 +56,7 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, title
 
   // Sections have significant vertical padding
   return (
-    <section id={id} className={`py-20 md:py-24 lg:py-28 ${className}`}>
+    <section id={id} data-testid={`section-${id}`} className={`py-20 md:py-24 lg:py-28 ${className}`}>
       {/* {fullWidth ? content : <div className="w-full">{content}</div>} */}
       {/* max-w-screen-lg and padding are handled by main layout in App.tsx now */}
       {content}

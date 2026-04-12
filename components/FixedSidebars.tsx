@@ -22,14 +22,15 @@ const getSocialIcon = (iconName: string) => {
 
 export const LeftSocialSidebar: React.FC = () => {
   return (
-    <div className="hidden md:flex fixed bottom-0 left-8 lg:left-10 right-auto z-10 w-10 flex-col items-center animate-fadeInUp" style={{ animationDelay: '800ms' }}>
+    <aside aria-label="Social links" className="hidden md:flex fixed bottom-0 left-8 lg:left-10 right-auto z-10 w-10 flex-col items-center animate-fadeInUp" style={{ animationDelay: '800ms' }}>
       <ul className="flex flex-col items-center space-y-5 after:content-[''] after:block after:w-px after:h-24 after:bg-slate-text after:mt-5">
         {SOCIAL_LINKS.map(social => (
           <li key={social.name}>
-            <a 
-              href={social.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href={social.url}
+              data-testid={`social-${social.name.toLowerCase()}`}
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label={social.name}
               title={social.name}
               className="block p-2 text-slate-text hover:text-green-accent hover:scale-110 transform transition-all duration-250 ease-custom-ease"
@@ -39,21 +40,22 @@ export const LeftSocialSidebar: React.FC = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </aside>
   );
 };
 
 export const RightEmailSidebar: React.FC = () => {
   return (
-    <div className="hidden md:flex fixed bottom-0 right-8 lg:right-10 left-auto z-10 w-10 flex-col items-center animate-fadeInUp" style={{ animationDelay: '800ms' }}>
+    <aside aria-label="Contact email" className="hidden md:flex fixed bottom-0 right-8 lg:right-10 left-auto z-10 w-10 flex-col items-center animate-fadeInUp" style={{ animationDelay: '800ms' }}>
       <div className="flex flex-col items-center space-y-5 after:content-[''] after:block after:w-px after:h-24 after:bg-slate-text after:mt-5">
-        <a 
+        <a
           href={`mailto:${EMAIL_ADDRESS}`}
+          data-testid="sidebar-email"
           className="font-mono text-xs text-slate-text hover:text-green-accent tracking-wider [writing-mode:vertical-rl] p-2 transform hover:translate-y-[-3px] transition-all duration-250 ease-custom-ease"
         >
           {EMAIL_ADDRESS}
         </a>
       </div>
-    </div>
+    </aside>
   );
 };

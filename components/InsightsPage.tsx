@@ -11,8 +11,9 @@ const ArticleListItem: React.FC<ArticleListItemProps> = ({ article }) => {
   return (
     <li className="mb-5 group relative transition-all duration-250 ease-custom-ease hover:!opacity-100 lg:hover:!opacity-100 lg:group-hover:opacity-100">
       <a 
-        href={article.url} 
-        target="_blank" 
+        href={article.url}
+        data-testid={`article-${article.id}`}
+        target="_blank"
         rel="noopener noreferrer"
         className="block p-5 rounded-md transition-all duration-250 ease-custom-ease hover:bg-light-navy hover:shadow-xl focus-visible:bg-light-navy focus-visible:shadow-xl"
         aria-label={`Read article: ${article.title}`}
@@ -53,6 +54,7 @@ export const BlogSection: React.FC<SectionProps> = ({ id }) => {
             <div className="mt-10 text-center">
               <Button
                 onClick={() => setShowAllArticles(!showAllArticles)}
+                data-testid="show-articles-toggle"
                 variant="secondary"
                 aria-expanded={showAllArticles}
               >

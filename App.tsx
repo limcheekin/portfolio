@@ -125,7 +125,7 @@ const MainContentLayout: React.FC = () => {
       <LeftSocialSidebar />
       <RightEmailSidebar />
       
-      <main id="main-content" className="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 py-0">
+      <main id="main-content" data-testid="main-content" data-active-section={activeSection} className="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 py-0">
         {/* py-0 because sections will have their own padding. max-w-screen-lg to constrain content width like Brittany's */}
         <Routes>
           <Route path="/*" element={

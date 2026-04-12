@@ -19,9 +19,10 @@ export const ContactSection: React.FC<SectionProps> = ({ id }) => {
       <div className="prose prose-slate dark:prose-invert max-w-lg mx-auto text-center mb-10">
         <p>{CONTACT_CONTENT.paragraph}</p>
       </div>
-      <Button 
-        href={`mailto:${EMAIL_ADDRESS}`} 
-        size="lg" // Brittany Chiang style large button
+      <Button
+        href={`mailto:${EMAIL_ADDRESS}`}
+        size="lg"
+        data-testid="contact-cta"
       >
         {CONTACT_CONTENT.buttonText}
       </Button>

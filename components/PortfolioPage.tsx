@@ -15,7 +15,7 @@ const FeaturedProject: React.FC<FeaturedProjectProps> = ({ project, index }) => 
   const isRepoAvailable = project.repoUrl && project.repoUrl !== "#";
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center mb-20 md:mb-28 group relative`}>
+    <div data-testid={`featured-project-${project.id}`} className={`grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center mb-20 md:mb-28 group relative`}>
       {/* Project Image */}
       <div className={`relative md:col-span-7 ${isEven ? 'md:order-2' : ''}`}>
         <a 
@@ -97,7 +97,7 @@ const OtherProjectCard: React.FC<OtherProjectCardProps> = ({ project }) => {
   const primaryLink = isDemoAvailable ? project.liveDemoUrl : (isRepoAvailable ? project.repoUrl : undefined);
 
   return (
-    <div className="flex flex-col h-full bg-light-navy rounded-md shadow-lg hover:shadow-xl transition-shadow duration-250 ease-custom-ease group p-6">
+    <div data-testid={`project-card-${project.id}`} className="flex flex-col h-full bg-light-navy rounded-md shadow-lg hover:shadow-xl transition-shadow duration-250 ease-custom-ease group p-6">
       <div className="flex justify-between items-center mb-4">
         <FolderIcon className="w-8 h-8 text-green-accent" />
         <div className="flex items-center gap-3">
@@ -176,8 +176,9 @@ export const ProjectsSection: React.FC<SectionProps> = ({ id }) => {
           </div>
           {otherProjects.length > initialOtherProjectsCount && (
             <div className="mt-12 text-center">
-              <Button 
+              <Button
                 onClick={() => setShowAllOtherProjects(!showAllOtherProjects)}
+                data-testid="show-projects-toggle"
                 variant="secondary"
                 aria-expanded={showAllOtherProjects}
               >
