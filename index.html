@@ -157,6 +157,11 @@
       "LLM Deployment", "Python", "Java", "Spring", "React", "TypeScript",
       "MongoDB", "PostgreSQL", "AWS", "Docker", "Model Context Protocol"
     ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "RAG.WTF & AI Initiatives",
+      "url": "https://www.rag.wtf"
+    },
     "sameAs": [
       "https://github.com/limcheekin",
       "https://linkedin.com/in/limcheekin",
@@ -173,6 +178,70 @@
     "url": "https://limcheekin.github.io/portfolio/",
     "description": "Personal portfolio for Lim Chee Kin, a Senior Tech Lead, AI Engineer, and Solution Architect",
     "author": { "@type": "Person", "name": "Lim Chee Kin" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Featured Projects by Lim Chee Kin",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@type": "SoftwareSourceCode",
+          "name": "RAG.WTF: Private Knowledge Platform",
+          "description": "An open-source platform for private, personalized knowledge discovery and management using Retrieval-Augmented Generation. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty.",
+          "codeRepository": "https://github.com/rag-wtf",
+          "programmingLanguage": ["Dart", "Flutter"],
+          "author": { "@type": "Person", "name": "Lim Chee Kin" },
+          "keywords": ["RAG", "Data Privacy", "Local AI", "Open Source", "SurrealDB"]
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "SoftwareSourceCode",
+          "name": "TelegramGPT: AI Telegram Bot",
+          "description": "A Telegram bot powered by Google Gemini's API with PostgreSQL for persistent conversation history, integrating self-hosted Speech-to-Text and Text-to-Speech services.",
+          "codeRepository": "https://github.com/limcheekin/TelegramGPT",
+          "url": "https://t.me/think_and_grow_rich_bot",
+          "programmingLanguage": ["Python"],
+          "author": { "@type": "Person", "name": "Lim Chee Kin" },
+          "keywords": ["Telegram Bot", "Gemini API", "STT", "TTS", "PostgreSQL"]
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@type": "SoftwareSourceCode",
+          "name": "open-text-embeddings",
+          "description": "A Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models (BGE, E5), enabling cost reduction and eliminating vendor lock-in for embedding generation.",
+          "codeRepository": "https://github.com/limcheekin/open-text-embeddings",
+          "url": "https://pypi.org/project/open-text-embeddings/",
+          "programmingLanguage": ["Python"],
+          "author": { "@type": "Person", "name": "Lim Chee Kin" },
+          "keywords": ["Text Embeddings", "Sentence Transformers", "NLP", "OpenAI-compatible API"]
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "item": {
+          "@type": "SoftwareSourceCode",
+          "name": "Talk To AI: Real-time Voice AI",
+          "description": "A real-time voice AI application integrating HuggingFace's FastRTC for low-latency (<300ms) interactions, with a flexible backend supporting local and cloud-based STT, LLM, and TTS APIs.",
+          "codeRepository": "https://github.com/limcheekin/talk-to-ai",
+          "programmingLanguage": ["Python"],
+          "author": { "@type": "Person", "name": "Lim Chee Kin" },
+          "keywords": ["Voice AI", "FastRTC", "HuggingFace", "LocalAI", "Real-time"]
+        }
+      }
+    ]
   }
   </script>
 
@@ -211,6 +280,30 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "You can reach Lim Chee Kin via email at limcheekin@vobject.com, through LinkedIn at linkedin.com/in/limcheekin, or via GitHub at github.com/limcheekin."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What technologies does Lim Chee Kin work with?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lim Chee Kin works with Python, Java, TypeScript, React, Flutter, and Dart for application development. For AI/ML, he uses RAG frameworks, LLM APIs (Gemini, local LLMs like Llama 3.2 and DeepSeek-R1), sentence transformers, FastRTC for voice AI, and the Model Context Protocol (MCP). His infrastructure stack includes Docker, Coolify, AWS, PostgreSQL, MongoDB, and SurrealDB."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Lim Chee Kin's approach to data sovereignty and private AI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lim Chee Kin advocates for data ownership and privacy through self-hosted AI infrastructure. He runs local LLMs, embeddings, and STT/TTS services on dedicated hardware (OrangePi 5 Max with Docker and Coolify), and integrates embedded databases like SurrealDB.wasm for client-side data sovereignty. His hybrid approach combines local AI for sensitive workloads with cloud GPU providers (TensorDock, Modal) for scalable compute."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is open-text-embeddings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "open-text-embeddings is a Python library created by Lim Chee Kin that provides an OpenAI-compatible API for diverse open-source sentence transformer models such as BGE and E5. It enables significant cost reduction and eliminates vendor lock-in for text embedding generation in RAG and NLP applications."
         }
       }
     ]

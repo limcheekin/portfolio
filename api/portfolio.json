@@ -85,53 +85,156 @@
     {
       "id": "art1",
       "title": "AI is Ready. Your Legacy Database Isn't. Let's Fix That.",
-      "summary": "Project Concord is a high-performance, TypeScript-based MCP server designed to help AI systems work smoothly with older business databases.",
+      "summary": "Project Concord is a high-performance, TypeScript-based MCP server designed to help AI systems work smoothly with older business databases by turning messy and unclear data into clean, reliable information. It focuses on safety, accuracy, and speed, with built-in checks, smart monitoring, and protective guards, all packaged for easy deployment in real-world environments.",
       "type": "Article",
-      "tags": ["Legacy Modernization", "Enterprise AI", "Data Strategy"]
+      "tags": ["Legacy Modernization", "Enterprise AI", "Data Strategy", "Digital Transformation"]
     },
     {
       "id": "art2",
       "title": "Building Your First No-Code MCP Server: The Fabric Integration Story",
       "summary": "How I created a Model Context Protocol (MCP) server for Fabric REST API without writing a single line of code.",
       "type": "Article",
-      "tags": ["MCP", "No Code", "Fabric"]
+      "tags": ["MCP", "No Code", "Fabric", "Prompt Library"]
     },
     {
       "id": "art3",
       "title": "Talking Book: Making Books Less Boring",
-      "summary": "I created Talking Book to make reading more engaging and accessible, with quick summaries, chapter deep dives, and catchy songs to help key concepts stick.",
+      "summary": "I created Talking Book to make reading more engaging and accessible, especially for my 9-year-old son with dyslexia. The platform offers quick summaries, chapter deep dives, and catchy songs to help key concepts stick. We've also launched an AI chatbot on Telegram.",
       "type": "Article",
       "url": "https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2",
-      "tags": ["AI", "Content Generation", "YouTube", "Telegram Bot"]
+      "tags": ["AI", "Content Generation", "YouTube", "Telegram Bot", "NLP"]
     },
     {
       "id": "art4",
       "title": "Beyond the Cloud: How I Built My Own AI Server (and Why)",
-      "summary": "I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models locally.",
+      "summary": "I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models like Llama 3.2 and Phi-3.5 locally. This setup grants privacy and control over digital interactions.",
       "type": "Article",
       "url": "https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3",
-      "tags": ["Local AI", "Private AI", "Self Hosted AI"]
+      "tags": ["Local AI", "Private AI", "Self Hosted AI", "DIY AI"]
     },
     {
       "id": "art5",
       "title": "Would you pay $1/month to Own Your AI Data?",
-      "summary": "Our AI conversations are valuable assets that shouldn't be surrendered to Big Tech without control or ownership.",
+      "summary": "Our AI conversations are valuable assets that shouldn't be surrendered to Big Tech. I've set up a secure, personal Open WebUI instance that offers complete data sovereignty, access to 200+ expert prompts, and the flexibility to connect preferred AI models.",
       "type": "Article",
       "url": "https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf",
-      "tags": ["Open WebUI", "Private AI", "Self Hosted AI"]
+      "tags": ["Open WebUI", "Private AI", "Self Hosted AI", "Prompt Library"]
     }
   ],
   "workExperience": [
-    { "period": "2021-Present", "title": "AI Engineer & Solution Architect", "company": "RAG.WTF & AI Initiatives" },
-    { "period": "2013-2020", "title": "Senior Java Tech Lead", "company": "DXC Technology" },
-    { "period": "2012-2013", "title": "Senior Java Tech Lead", "company": "Zurich Technology Services Malaysia" },
-    { "period": "2010-2012", "title": "Independent Software Professional", "company": "Self-Employed" },
-    { "period": "2008-2010", "title": "Senior Solution Consultant", "company": "Penril Datability" },
-    { "period": "2005-2007", "title": "Technical Lead", "company": "CMG Online" },
-    { "period": "2004-2005", "title": "Founder and Senior Consultant", "company": "Media Trend" },
-    { "period": "2002-2004", "title": "Software Engineer", "company": "Siemens Multimedia" },
-    { "period": "2001-2002", "title": "System Engineer", "company": "Online One Corporation" },
-    { "period": "1999-2000", "title": "System Engineer", "company": "Tee Yam Holding" }
+    {
+      "period": "2021-Present",
+      "title": "AI Engineer & Solution Architect",
+      "company": "RAG.WTF & AI Initiatives",
+      "companyUrl": "https://www.rag.wtf",
+      "descriptionPoints": [
+        "Launched Project Concord, a TypeScript-based MCP server bridging modern AI agents with legacy databases.",
+        "Championed open-source AI solutions focusing on data ownership, privacy, and local AI processing.",
+        "Engineered open-text-embeddings, a Python library for open-source sentence transformer models.",
+        "Developed Talk To AI with FastRTC for low-latency real-time voice AI interactions.",
+        "Operationalized self-hosted AI infrastructure running multiple local LLMs for data privacy.",
+        "Integrated SurrealDB.wasm for client-side data sovereignty in RAG.WTF."
+      ],
+      "skills": ["Open-Source AI", "RAG", "MCP", "Python", "FastRTC", "Docker", "Local LLMs", "SurrealDB.wasm", "FastAPI", "Voice AI"]
+    },
+    {
+      "period": "2013-2020",
+      "title": "Senior Java Tech Lead",
+      "company": "DXC Technology",
+      "companyUrl": "https://dxc.com/my/en",
+      "descriptionPoints": [
+        "Led 6-developer international team delivering Analytic Console for APA platform (VueJS, Spring Boot, GoLang, MongoDB, AWS).",
+        "Headed 5-developer team creating EPIC Configurator for Enterprise Invoice Processing.",
+        "Implemented Divestiture and Acquisition dashboard for strategic executive decision-making.",
+        "Prototyped Intelligent Voice Agent using Amazon Connect, AWS Lambda, and Amazon Lex."
+      ],
+      "skills": ["Java", "Spring Boot", "VueJS", "GoLang", "MongoDB", "AWS", "Team Leadership"]
+    },
+    {
+      "period": "2012-2013",
+      "title": "Senior Java Tech Lead",
+      "company": "Zurich Technology Services Malaysia",
+      "companyUrl": "https://www.zurich.com.my/",
+      "descriptionPoints": [
+        "Led 5-member team for motor and property claims systems (IBM WebSphere, FileNet, DB2, Spring).",
+        "Resolved 60+ critical production issues within weeks, dramatically improving system stability."
+      ],
+      "skills": ["Java", "IBM WebSphere", "FileNet", "DB2", "Spring", "Production Support"]
+    },
+    {
+      "period": "2010-2012",
+      "title": "Independent Software Professional",
+      "company": "Self-Employed",
+      "descriptionPoints": [
+        "Developed open-source Grails Framework projects: BPM workflow, form builder, validation components.",
+        "Grails Activiti Plugin grew to 100+ forum members with 100+ queries addressed."
+      ],
+      "skills": ["Grails Framework", "Activiti BPM", "JQuery", "Open Source Development", "Java"]
+    },
+    {
+      "period": "2008-2010",
+      "title": "Senior Solution Consultant",
+      "company": "Penril Datability (M) Sdn. Bhd.",
+      "companyUrl": "https://penril.net/",
+      "descriptionPoints": [
+        "Led successful RM6 million Internet Banking System tender for Kuwait Finance House.",
+        "Secured RM2 million eCustody System tender from Malayan Banking Berhad.",
+        "Provided pre-sales support and solution consultation to major financial clients."
+      ],
+      "skills": ["Solution Architecture", "Banking Systems", "Tender Management", "Pre-Sales"]
+    },
+    {
+      "period": "2005-2007",
+      "title": "Technical Lead",
+      "company": "CMG Online Sdn. Bhd.",
+      "companyUrl": "https://www.cmg.com.my/",
+      "descriptionPoints": [
+        "Led 8-member international team delivering RM2 million Integrated Hospital Inventory System.",
+        "Drove CMMI Level 3 compliance and improved team productivity by 20%."
+      ],
+      "skills": ["J2EE", "JBoss", "Oracle 10g", "Spring Framework", "CMMI Level 3"]
+    },
+    {
+      "period": "2004-2005",
+      "title": "Founder and Senior Consultant",
+      "company": "Media Trend",
+      "descriptionPoints": [
+        "Founded startup providing web design, development, and printing services."
+      ],
+      "skills": ["Entrepreneurship", "Web Design", "Web Development"]
+    },
+    {
+      "period": "2002-2004",
+      "title": "Software Engineer",
+      "company": "Siemens Multimedia Sdn. Bhd.",
+      "companyUrl": "https://www.siemens.com/my/en.html",
+      "descriptionPoints": [
+        "Developed Voice4Info Portal using Java IDL, CORBA, Parlay API, and VoiceXML.",
+        "Engineered iTalk Unified Phone Conferencing system."
+      ],
+      "skills": ["Java", "J2EE", "CORBA", "VoiceXML", "Telephony Systems"]
+    },
+    {
+      "period": "2001-2002",
+      "title": "System Engineer",
+      "company": "Online One Corporation Berhad",
+      "companyUrl": "http://greenoceancorp.com/bizsegments.html",
+      "descriptionPoints": [
+        "Deployed E-Treasury Management Systems to Hitachi Asia Ltd contributing RM1 million in revenue.",
+        "Developed Fund Transfer, Bank Reconciliation, and General Ledger modules."
+      ],
+      "skills": ["Cold Fusion", "Oracle 8i", "ASP", "SOAP", "System Integration"]
+    },
+    {
+      "period": "1999-2000",
+      "title": "System Engineer",
+      "company": "Tee Yam Holding Sdn. Bhd.",
+      "descriptionPoints": [
+        "Designed and developed Touch Screen POS system, Inventory Control, and Customer Contact Management.",
+        "Developed multimedia game systems using Visual Basic 6.0 and DirectX 7.0."
+      ],
+      "skills": ["Visual Basic 6.0", "MS SQL Server 7.0", "POS Systems", "DirectX SDK"]
+    }
   ],
   "valuePropositions": [
     "I help privacy-conscious enterprises deploy local LLMs for trustworthy knowledge discovery without exposing sensitive data to third-party.",
@@ -144,6 +247,12 @@
   "_meta": {
     "generated": "2026-04-12",
     "source": "limcheekin/portfolio constants.ts",
-    "format": "Static JSON API for agent consumption"
+    "format": "Static JSON API for agent consumption",
+    "endpoints": {
+      "portfolio": "/portfolio/api/portfolio.json",
+      "llms": "/portfolio/llms.txt",
+      "llmsFull": "/portfolio/llms-full.txt",
+      "sitemap": "/portfolio/sitemap.xml"
+    }
   }
 }

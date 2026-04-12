@@ -4,7 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page Not Found - Lim Chee Kin Portfolio</title>
-  <meta http-equiv="refresh" content="3;url=/portfolio/">
+  <script>
+    // SPA redirect for GitHub Pages (T3 fix)
+    // Converts path-based URLs to query params so the SPA can handle routing.
+    // This enables future BrowserRouter migration without losing deep links.
+    (function () {
+      var basePath = '/portfolio';
+      var path = window.location.pathname;
+      // Strip the base path prefix
+      var route = path.startsWith(basePath) ? path.slice(basePath.length) : path;
+      if (route && route !== '/') {
+        // Redirect to index with route preserved as query param + hash
+        var query = route.slice(1).split('/').join('&');
+        var hash = window.location.hash;
+        window.location.replace(
+          basePath + '/?' + query + (hash || '')
+        );
+      } else {
+        // No route to preserve — just go to the homepage
+        window.location.replace(basePath + '/' + window.location.hash);
+      }
+    })();
+  </script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -35,6 +56,9 @@
   </style>
 </head>
 <body>
+  <noscript>
+    <meta http-equiv="refresh" content="0;url=/portfolio/">
+  </noscript>
   <div class="container">
     <h1>404</h1>
     <p>The page you're looking for doesn't exist. Redirecting to the portfolio...</p>
