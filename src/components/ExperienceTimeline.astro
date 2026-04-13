@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entries: CollectionEntry<'experience'>[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="space-y-10">
+  {entries.map((exp) => (
+    <div class="relative pl-8 group">
+      <div class="absolute left-0 top-1 bottom-0 w-px bg-lightest-navy/50 group-hover:bg-green-accent/50 transition-colors duration-250"></div>
+      <div class="absolute left-0 top-1.5 w-3 h-3 rounded-full bg-navy border-2 border-lightest-navy/80 group-hover:border-green-accent transition-colors duration-250 transform -translate-x-[calc(50%-1px)]">
+        <div class="w-full h-full rounded-full bg-green-accent scale-0 group-hover:scale-100 transition-transform duration-250"></div>
+      </div>
+      <h4 class="text-lg font-medium text-lightest-slate group-hover:text-green-accent transition-colors duration-250 mb-0.5">
+        {exp.data.title}
+        {exp.data.companyUrl ? (
+          <a href={exp.data.companyUrl} target="_blank" rel="noopener noreferrer" class="text-green-accent hover:underline">
+            {' '}@ {exp.data.company}
+          </a>
+        ) : (
+          <span class="text-green-accent"> @ {exp.data.company}</span>
+        )}
+      </h4>
+      <p class="font-mono text-xs text-slate-text mb-3">{exp.data.startDate} - {exp.data.endDate || 'Present'}</p>
+      <ul class="list-none pl-0 space-y-1.5 text-slate-text text-sm">
+        {exp.data.description.map((point) => (
+          <li class="relative pl-5 before:content-['–'] before:absolute before:left-0 before:text-slate-text before:opacity-70">
+            {point}
+          </li>
+        ))}
+      </ul>
+      {exp.data.technologies.length > 0 && (
+        <div class="mt-4 flex flex-wrap gap-2">
+          {exp.data.technologies.map((skill) => (
+            <span class="font-mono text-xs bg-green-tint text-green-accent px-2.5 py-1 rounded">{skill}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  ))}
+</div>
