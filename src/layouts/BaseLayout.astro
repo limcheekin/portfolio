@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import { SITE_TITLE, SITE_URL, ENGINEER_NAME, ENGINEER_TITLE } from '../data/site';
+import { SITE_TITLE, SITE_URL, ENGINEER_NAME, ENGINEER_TITLE, EMAIL_ADDRESS } from '../data/site';
+import WebMCPTools from '../components/WebMCPTools.tsx';
 
 interface Props {
   title?: string;
@@ -52,5 +53,6 @@ const {
 </head>
 <body class="bg-navy text-lightest-slate antialiased selection:bg-green-accent/30 selection:text-green-accent">
   <slot />
+  <WebMCPTools client:idle portfolioApiUrl={`${SITE_URL}/api/portfolio.json`} contactEmail={EMAIL_ADDRESS} engineerName={ENGINEER_NAME} />
 </body>
 </html>
