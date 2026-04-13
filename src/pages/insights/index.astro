@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FixedSidebars from '../../components/FixedSidebars.astro';
+import { getCollection } from 'astro:content';
+import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+
+const articles = (await getCollection('articles'))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `Articles by ${ENGINEER_NAME}`,
+    "itemListElement": articles.map((a, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": { "@type": "Article", "name": a.data.title, "description": a.data.description, "url": a.data.externalUrl || `${SITE_URL}/insights/${a.slug}/` }
+    }))
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+      { "@type": "ListItem", "position": 2, "name": "Insights", "item": `${SITE_URL}/insights/` }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={`Insights | ${ENGINEER_NAME}`}
+  description={`Articles and insights on AI engineering, RAG systems, and open-source AI by ${ENGINEER_NAME}.`}
+  jsonLd={jsonLd}
+>
+  <Header />
+  <FixedSidebars />
+  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-12">Writing & Insights</h1>
+    <div class="max-w-2xl mx-auto">
+      <ul class="space-y-1">
+        {articles.map((article) => (
+          <li class="mb-5 group">
+            <a
+              href={article.data.externalUrl || `/insights/${article.slug}/`}
+              target={article.data.externalUrl ? '_blank' : undefined}
+              rel={article.data.externalUrl ? 'noopener noreferrer' : undefined}
+              class="block p-5 rounded-md transition-all duration-250 ease-custom-ease hover:bg-light-navy hover:shadow-xl"
+              aria-label={`Read article: ${article.data.title}`}
+            >
+              <div class="flex justify-between items-center mb-1">
+                <h2 class="text-lg font-semibold text-lightest-slate group-hover:text-green-accent transition-colors duration-250">{article.data.title}</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-text group-hover:text-green-accent transition-colors duration-250 flex-shrink-0 ml-2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </div>
+              <p class="text-sm text-slate-text leading-relaxed line-clamp-2 mb-1">{article.data.description}</p>
+              <p class="text-xs font-mono text-green-accent/80">
+                {article.data.type}{article.data.platform && ` · ${article.data.platform}`}
+              </p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FixedSidebars from '../../components/FixedSidebars.astro';
+import { getCollection } from 'astro:content';
+import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
+const otherProjects = allProjects.filter((p) => !p.data.featured);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `Projects by ${ENGINEER_NAME}`,
+    "itemListElement": allProjects.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": { "@type": "SoftwareSourceCode", "name": p.data.title, "description": p.data.description, "url": `${SITE_URL}/projects/${p.slug}/` }
+    }))
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+      { "@type": "ListItem", "position": 2, "name": "Projects", "item": `${SITE_URL}/projects/` }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={`Projects | ${ENGINEER_NAME}`}
+  description={`Explore AI engineering projects by ${ENGINEER_NAME}: RAG systems, voice AI, MCP servers, and more.`}
+  jsonLd={jsonLd}
+>
+  <Header />
+  <FixedSidebars />
+  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-12">All Projects</h1>
+
+    {featuredProjects.length > 0 && (
+      <div class="mb-16">
+        <h2 class="text-xl font-semibold text-lightest-slate mb-8">Featured</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {featuredProjects.map((project) => (
+            <a href={`/projects/${project.slug}/`} class="block bg-light-navy rounded-md p-6 hover:shadow-xl transition-shadow duration-250 group">
+              {project.data.image && (
+                <img src={project.data.image} alt={project.data.title} class="w-full h-48 object-cover rounded mb-4 filter grayscale group-hover:filter-none transition-all duration-250" loading="lazy" />
+              )}
+              <h3 class="text-lg font-semibold text-lightest-slate group-hover:text-green-accent transition-colors duration-250 mb-2">{project.data.title}</h3>
+              <p class="text-sm text-slate-text leading-relaxed line-clamp-3 mb-3">{project.data.description}</p>
+              <ul class="flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-slate-text">
+                {project.data.technologies.slice(0, 5).map((tech) => <li>{tech}</li>)}
+              </ul>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {otherProjects.length > 0 && (
+      <div>
+        <h2 class="text-xl font-semibold text-lightest-slate mb-8">Other Projects</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {otherProjects.map((project) => (
+            <a href={`/projects/${project.slug}/`} class="flex flex-col h-full bg-light-navy rounded-md shadow-lg hover:shadow-xl transition-shadow duration-250 group p-6">
+              <h3 class="text-lg font-semibold text-lightest-slate mb-2 group-hover:text-green-accent transition-colors duration-250">{project.data.title}</h3>
+              <p class="text-slate-text text-sm leading-relaxed mb-4 flex-grow line-clamp-3">{project.data.description}</p>
+              <ul class="flex flex-wrap gap-x-3 gap-y-1.5 font-mono text-xs text-slate-text">
+                {project.data.technologies.slice(0, 4).map((tech) => <li>{tech}</li>)}
+              </ul>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FixedSidebars from '../components/FixedSidebars.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Button from '../components/Button.astro';
+import { CONTACT_CONTENT, EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL } from '../data/site';
+
+const submitted = Astro.url.searchParams.get('submitted') === 'true';
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": `Contact ${ENGINEER_NAME}`,
+    "url": `${SITE_URL}/contact/`
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+      { "@type": "ListItem", "position": 2, "name": "Contact", "item": `${SITE_URL}/contact/` }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={`Contact | ${ENGINEER_NAME}`}
+  description={`Get in touch with ${ENGINEER_NAME} for AI discussions, collaborations, or consulting.`}
+  jsonLd={jsonLd}
+>
+  <Header />
+  <FixedSidebars />
+  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <div class="text-center max-w-xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-4">{CONTACT_CONTENT.title}</h1>
+      <p class="text-slate-text text-lg leading-relaxed mb-10">{CONTACT_CONTENT.paragraph}</p>
+
+      {submitted ? (
+        <div data-testid="contact-form-success" class="text-green-accent font-mono text-sm mb-8 p-6 bg-light-navy rounded-md">
+          Thank you for your message! I'll get back to you as soon as possible.
+        </div>
+      ) : (
+        <ContactForm />
+      )}
+
+      <p class="font-mono text-xs text-slate-text mb-4 mt-8">or email directly</p>
+      <Button href={`mailto:${EMAIL_ADDRESS}`} size="md" data-testid="contact-cta" variant="secondary">
+        {CONTACT_CONTENT.buttonText}
+      </Button>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
