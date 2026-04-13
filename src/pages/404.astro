@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Button from '../components/Button.astro';
+import { ENGINEER_NAME, SITE_URL } from '../data/site';
+
+const jsonLd = [{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL }
+  ]
+}];
+---
+
+<BaseLayout title={`Page Not Found | ${ENGINEER_NAME}`} description="The page you're looking for doesn't exist." jsonLd={jsonLd}>
+  <Header />
+  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 flex flex-col items-center justify-center text-center">
+    <h1 class="text-6xl md:text-8xl font-bold text-green-accent mb-4">404</h1>
+    <h2 class="text-2xl md:text-3xl font-semibold text-lightest-slate mb-6">Page Not Found</h2>
+    <p class="text-slate-text text-lg mb-10 max-w-md">
+      The page you're looking for doesn't exist or has been moved. Here are some places you can go instead:
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <Button href="/">Home</Button>
+      <Button href="/projects/" variant="secondary">Projects</Button>
+      <Button href="/insights/" variant="secondary">Insights</Button>
+      <Button href="/contact/" variant="secondary">Contact</Button>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
