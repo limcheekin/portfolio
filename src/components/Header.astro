@@ -1,0 +1,73 @@
+---
+import MobileMenu from './MobileMenu.tsx';
+import Button from './Button.astro';
+import { NAV_LINKS, ENGINEER_NAME } from '../data/site';
+
+const initials = ENGINEER_NAME.split(' ').map((n: string) => n[0]).join('');
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 z-50 px-6 md:px-12 w-full h-24 flex items-center bg-navy/80 backdrop-blur-md shadow-md transition-transform duration-300 ease-in-out translate-y-0"
+>
+  <div class="container mx-auto h-full flex items-center justify-between">
+    <a
+      href="/"
+      data-testid="logo-link"
+      class="text-2xl font-bold text-green-accent border-2 border-green-accent rounded w-10 h-10 md:w-12 md:h-12 flex items-center justify-center hover:bg-green-tint transition-colors duration-250"
+      aria-label="Homepage"
+    >
+      {initials[0]}
+    </a>
+
+    <nav aria-label="Main navigation" data-testid="desktop-nav" class="hidden md:flex items-center">
+      <ol class="flex items-center space-x-6 lg:space-x-8 list-none p-0 m-0">
+        {NAV_LINKS.map((link, index) => (
+          <li class="relative font-mono text-sm">
+            <a
+              href={link.href}
+              data-testid={`nav-link-${link.name.toLowerCase()}`}
+              class="px-2.5 py-2 transition-colors duration-250 text-light-slate hover:text-green-accent"
+            >
+              <span class="text-green-accent text-xs mr-1">0{index + 1}.</span>
+              {link.name}
+            </a>
+          </li>
+        ))}
+      </ol>
+      <div class="ml-4">
+        <Button href="/resume.pdf" size="sm" data-testid="resume-button" target="_blank" rel="noopener noreferrer">
+          Resume
+        </Button>
+      </div>
+    </nav>
+
+    <MobileMenu client:load navLinks={NAV_LINKS} />
+  </div>
+</header>
+
+<script>
+  // Header hide-on-scroll behavior
+  let lastScrollY = 0;
+  const header = document.getElementById('site-header');
+  const SCROLL_THRESHOLD = 5;
+
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
+    if (!header) return;
+
+    if (currentScrollY < SCROLL_THRESHOLD * 2) {
+      header.classList.remove('-translate-y-full');
+      header.classList.add('translate-y-0');
+    } else if (currentScrollY > lastScrollY && currentScrollY > SCROLL_THRESHOLD) {
+      header.classList.remove('translate-y-0');
+      header.classList.add('-translate-y-full');
+    } else if (currentScrollY < lastScrollY) {
+      header.classList.remove('-translate-y-full');
+      header.classList.add('translate-y-0');
+    }
+    lastScrollY = currentScrollY;
+  }
+
+  window.addEventListener('scroll', handleScroll);
+</script>
