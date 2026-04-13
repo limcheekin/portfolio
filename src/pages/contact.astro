@@ -7,8 +7,6 @@ import ContactForm from '../components/ContactForm.astro';
 import Button from '../components/Button.astro';
 import { CONTACT_CONTENT, EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL } from '../data/site';
 
-const submitted = Astro.url.searchParams.get('submitted') === 'true';
-
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -39,13 +37,22 @@ const jsonLd = [
       <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-4">{CONTACT_CONTENT.title}</h1>
       <p class="text-slate-text text-lg leading-relaxed mb-10">{CONTACT_CONTENT.paragraph}</p>
 
-      {submitted ? (
-        <div data-testid="contact-form-success" class="text-green-accent font-mono text-sm mb-8 p-6 bg-light-navy rounded-md">
-          Thank you for your message! I'll get back to you as soon as possible.
-        </div>
-      ) : (
+      <!-- Success message (hidden by default, shown via client-side script) -->
+      <div id="contact-success" data-testid="contact-form-success" class="hidden text-green-accent font-mono text-sm mb-8 p-6 bg-light-navy rounded-md">
+        Thank you for your message! I'll get back to you as soon as possible.
+      </div>
+
+      <!-- Form (hidden when success is shown) -->
+      <div id="contact-form-container">
         <ContactForm />
-      )}
+      </div>
+
+      <script>
+        if (window.location.search.includes('submitted=true')) {
+          document.getElementById('contact-success')?.classList.remove('hidden');
+          document.getElementById('contact-form-container')?.classList.add('hidden');
+        }
+      </script>
 
       <p class="font-mono text-xs text-slate-text mb-4 mt-8">or email directly</p>
       <Button href={`mailto:${EMAIL_ADDRESS}`} size="md" data-testid="contact-cta" variant="secondary">
