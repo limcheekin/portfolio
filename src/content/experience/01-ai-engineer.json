@@ -1,0 +1,18 @@
+{
+  "company": "RAG.WTF & AI Initiatives",
+  "title": "AI Engineer & Solution Architect",
+  "companyUrl": "https://www.rag.wtf",
+  "startDate": "2021-01",
+  "description": [
+    "Launched the Project Concord, a TypeScript-based, Dockerized Model Context Protocol (MCP) server that bridges modern AI agents with legacy databases by translating ambiguous schemas into clear, AI-friendly interfaces.",
+    "Championed and developed open-source AI solutions focusing on data ownership, privacy, and efficient local AI processing; architecting and building RAG.WTF as a platform for secure, personalized knowledge discovery and management.",
+    "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models, enabling significant cost reduction and eliminating vendor lock-in.",
+    "Developed 'Talk To AI' application, integrating HuggingFace's FastRTC for low-latency real-time voice AI interactions; engineered a flexible backend supporting local and cloud-based STT, LLM, and TTS APIs.",
+    "Pioneered and operationalized a self-hosted AI infrastructure (Coolify, Docker), running multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.) and STT/TTS for data privacy and operational control.",
+    "Advocated for and implemented robust data sovereignty by integrating embedded database solutions like SurrealDB.wasm with RAG.WTF.",
+    "Strategically utilized TensorDock and Modal for scalable cloud GPU servers and serverless execution AI/ML workloads, complementing local AI capabilities.",
+    "Previously initiated Talking Book YouTube channel (AI-powered summaries and Telegram bot) and Fluwix (Flutter showcases)."
+  ],
+  "technologies": ["Open-Source AI", "RAG", "MCP", "Python", "Text Embeddings", "FastRTC", "Docker", "Local LLMs", "SurrealDB.wasm", "Modal.com", "FastAPI", "Flutter", "Voice AI", "Solution Architecture"],
+  "sortOrder": 1
+}

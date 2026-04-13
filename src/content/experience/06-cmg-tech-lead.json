@@ -1,0 +1,15 @@
+{
+  "company": "CMG Online Sdn. Bhd.",
+  "title": "Technical Lead",
+  "companyUrl": "https://www.cmg.com.my/",
+  "startDate": "2005-04",
+  "endDate": "2007-12",
+  "description": [
+    "Led an 8-member international team (China, India, Malaysia) to deliver a RM2 million Integrated Hospital Inventory System (IHIS4) for government hospitals, using AIX UNIX, JBoss 4.0, Oracle 10g, J2EE, Struts, and JasperReports.",
+    "Drove Quality Management Systems (QMS): introduced a Standard Development Environment (Eclipse, Subversion, JUnit, Ant), improving team productivity by 20%.",
+    "Actively participated in the CMMI Committee to define and implement CMMI Level 3 compliant organizational standards and processes.",
+    "Architected and developed a common technical foundation for the Integrated Hospital Information Systems (IHIS5) on AppFuse (J2EE, Spring Framework, Hibernate, JUnit, JMock), including reusable logging and auditing modules with Spring AOP."
+  ],
+  "technologies": ["Technical Leadership", "J2EE", "JBoss", "Oracle 10g", "Struts", "JasperReports", "Spring Framework", "Hibernate", "Spring AOP", "AppFuse", "CMMI Level 3", "QMS", "SDLC", "Team Management"],
+  "sortOrder": 6
+}

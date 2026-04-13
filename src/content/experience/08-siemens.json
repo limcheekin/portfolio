@@ -1,0 +1,14 @@
+{
+  "company": "Siemens Multimedia Sdn. Bhd.",
+  "title": "Software Engineer",
+  "companyUrl": "https://www.siemens.com/my/en.html",
+  "startDate": "2002-10",
+  "endDate": "2004-04",
+  "description": [
+    "Developed the core Voice4Info Portal (News Delivery over Phone), including Call Control Components using Java IDL, CORBA, Parlay API, and VoiceXML, collaborating with German colleagues on the Siemens Next Generation Network (NGN) platform.",
+    "Engineered iTalk, a Unified Phone Conferencing system with instant messaging-like features (presence, contact list, buddy list management).",
+    "Supervised and coordinated 4 groups of Multimedia University (MMU) final year students on IP telephony projects, ensuring functional prototypes for the Siemens NGN platform."
+  ],
+  "technologies": ["Java", "J2EE", "CORBA", "Parlay API", "VoiceXML", "Telephony Systems", "Siemens NGN", "Software Development", "Mentorship"],
+  "sortOrder": 8
+}

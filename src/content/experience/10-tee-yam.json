@@ -1,0 +1,12 @@
+{
+  "company": "Tee Yam Holding Sdn. Bhd.",
+  "title": "System Engineer",
+  "startDate": "1999-06",
+  "endDate": "2000-05",
+  "description": [
+    "Individually designed and developed a comprehensive Touch Screen based Point Of Sale (POS) system, Inventory Control System, and Customer Contact Management system using Visual Basic 6.0, ADO, COM, ActiveX Control, and Microsoft SQL Server 7.0.",
+    "Developed multimedia game systems, including a Horse Racing Game and Roulette Game, using Visual Basic 6.0, DirectX 7.0 SDK, ADO, and Microsoft Access 97."
+  ],
+  "technologies": ["Visual Basic 6.0", "MS SQL Server 7.0", "ADO", "COM", "ActiveX", "DirectX SDK", "POS Systems Development", "Inventory Control Systems", "Game Development"],
+  "sortOrder": 10
+}

@@ -1,0 +1,14 @@
+{
+  "company": "Online One Corporation Berhad",
+  "title": "System Engineer (Web Application Development)",
+  "companyUrl": "http://greenoceancorp.com/bizsegments.html",
+  "startDate": "2001-08",
+  "endDate": "2002-09",
+  "description": [
+    "Successfully deployed E-Treasury Management Systems to Hitachi Asia Ltd (Singapore) within 2 months, contributing RM1 million in revenue.",
+    "Developed Fund Transfer, Bank Reconciliation, and General Ledger modules for the E-Treasury system using Cold Fusion, HTML, JavaScript, JavaBean, JDBC, and Oracle 8i.",
+    "Engineered Business-to-Business (B2B) integration of National Panasonic of Malaysia's purchasing system using Active Server Page (ASP), SOAP, XML, IIS Web Server, and Oracle 8i."
+  ],
+  "technologies": ["Web Application Development", "Cold Fusion", "Oracle 8i", "ASP", "SOAP", "XML", "HTML", "JavaScript", "JDBC", "System Integration"],
+  "sortOrder": 9
+}

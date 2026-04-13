@@ -1,0 +1,13 @@
+{
+  "company": "Zurich Technology Services Malaysia",
+  "title": "Senior Java Tech Lead",
+  "companyUrl": "https://www.zurich.com.my/",
+  "startDate": "2012-01",
+  "endDate": "2013-12",
+  "description": [
+    "Led a 5-member production support and development team for motor and property claims systems (IBM WebSphere, FileNet, DB2, Spring, GWT, Hibernate/JPA).",
+    "Resolved over 60 critical production issues within weeks, dramatically improving system stability and user satisfaction."
+  ],
+  "technologies": ["Java", "IBM WebSphere", "FileNet", "DB2", "Spring", "GWT", "Hibernate/JPA", "Production Support", "Team Leadership"],
+  "sortOrder": 3
+}

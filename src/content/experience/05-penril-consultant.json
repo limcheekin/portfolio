@@ -1,0 +1,16 @@
+{
+  "company": "Penril Datability (M) Sdn. Bhd.",
+  "title": "Senior Solution Consultant",
+  "companyUrl": "https://penril.net/",
+  "startDate": "2008-04",
+  "endDate": "2010-07",
+  "description": [
+    "Led the successful tender for a RM6 million Internet Banking System (IBS) for Kuwait Finance House (KFH).",
+    "Designed and proposed comprehensive IBS solutions, covering 24x7 web layers, external integrations (Payment Gateway, SMS, Email), application platform, 2-Factor Authentication (2FA), Enterprise Service Bus (ESB) for backend integration, and High-Availability infrastructure.",
+    "Led a 3-member team to develop KFH's information website using BroadVision 8.1 Business Agility Suites and Oracle 10g, including JSR168 compliant portlets like Prayer Times and Currency Converter.",
+    "Secured a RM2 million eCustody System tender from Malayan Banking Berhad.",
+    "Provided pre-sales support, product demonstrations, solution consultation, and Proof-Of-Concepts (POCs) to major financial and corporate clients (e.g., Maybank, BSN, BNM, Agrobank, ING, Bank Islam)."
+  ],
+  "technologies": ["Solution Consulting", "Tender Management", "Banking Systems", "Solution Architecture", "BroadVision", "Oracle 10g", "JSR168 Portlets", "BPMN", "Requirements Analysis", "Pre-Sales", "Team Leadership"],
+  "sortOrder": 5
+}

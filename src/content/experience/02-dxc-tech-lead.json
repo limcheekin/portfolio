@@ -1,0 +1,15 @@
+{
+  "company": "DXC Technology",
+  "title": "Senior Java Tech Lead",
+  "companyUrl": "https://dxc.com/my/en",
+  "startDate": "2013-01",
+  "endDate": "2020-12",
+  "description": [
+    "Led a 6-developer international team (China, Europe, Malaysia) to deliver the Analytic Console for the Agile Process Automation (APA) platform (VueJS, Spring Boot, GoLang, MongoDB, AWS), contributing millions to company revenue.",
+    "Headed a 5-developer international team (US, Malaysia) to create the EPIC Configurator for internal Enterprise Invoice Processing (JQuery UI, Grails Framework, Oracle DB), significantly streamlining configuration processes.",
+    "Implemented a Divestiture and Acquisition (DnA) dashboard (AngularJS, Jersey, Spring, MongoDB, AWS) for critical real-time data insights supporting strategic executive decision-making.",
+    "Prototyped an Intelligent Voice Agent (Conversational AI) leveraging Amazon Connect, AWS Lambda, Amazon Lex, Dialogflow, and Micronaut Framework."
+  ],
+  "technologies": ["Java", "Spring Boot", "VueJS", "GoLang", "MongoDB", "AWS", "JQuery UI", "Grails Framework", "Oracle DB", "AngularJS", "Micronaut", "Conversational AI", "Team Leadership"],
+  "sortOrder": 2
+}

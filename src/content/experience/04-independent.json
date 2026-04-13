@@ -1,0 +1,15 @@
+{
+  "company": "Self-Employed",
+  "title": "Independent Software Professional",
+  "startDate": "2010-01",
+  "endDate": "2012-12",
+  "description": [
+    "Developed and maintained impactful open-source Grails Framework projects, including BPM workflow, form builder, and validation components.",
+    "Grails Activiti Plugin: BPM workflow system; grew the forum to 100+ members, addressed 100+ queries.",
+    "Grails Form Builder Plugin: Empowered non-programmers to create online forms.",
+    "JQuery Validation UI Plugin: Enhanced developer productivity with client-side validation.",
+    "Explore all 10+ projects at limcheekin.blogspot.com/p/my-grails-plugins.html."
+  ],
+  "technologies": ["Grails Framework", "Activiti BPM", "JQuery", "Open Source Development", "Plugin Development", "Groovy", "Java"],
+  "sortOrder": 4
+}
