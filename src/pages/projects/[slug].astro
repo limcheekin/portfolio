@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FixedSidebars from '../../components/FixedSidebars.astro';
+import Button from '../../components/Button.astro';
+import { getCollection } from 'astro:content';
+import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": project.data.title,
+    "description": project.data.description,
+    "url": `${SITE_URL}/projects/${project.slug}/`,
+    "codeRepository": project.data.githubUrl,
+    "author": { "@type": "Person", "name": ENGINEER_NAME },
+    "programmingLanguage": project.data.technologies,
+    "keywords": project.data.technologies.join(', ')
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+      { "@type": "ListItem", "position": 2, "name": "Projects", "item": `${SITE_URL}/projects/` },
+      { "@type": "ListItem", "position": 3, "name": project.data.title, "item": `${SITE_URL}/projects/${project.slug}/` }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={`${project.data.title} | ${ENGINEER_NAME}`}
+  description={project.data.description}
+  ogImage={project.data.image ? `${SITE_URL}${project.data.image}` : undefined}
+  jsonLd={jsonLd}
+>
+  <Header />
+  <FixedSidebars />
+  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <nav class="mb-8 font-mono text-sm text-slate-text">
+      <a href="/" class="hover:text-green-accent transition-colors">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/projects/" class="hover:text-green-accent transition-colors">Projects</a>
+      <span class="mx-2">/</span>
+      <span class="text-green-accent">{project.data.title}</span>
+    </nav>
+
+    {project.data.image && (
+      <img
+        src={project.data.image}
+        alt={`Screenshot of ${project.data.title}`}
+        class="w-full h-auto max-h-96 object-cover rounded-lg mb-8"
+        loading="eager"
+      />
+    )}
+
+    <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-4">{project.data.title}</h1>
+
+    <p class="text-slate-text text-lg leading-relaxed mb-6">{project.data.description}</p>
+
+    <ul class="flex flex-wrap gap-x-3 gap-y-2 mb-8 font-mono text-xs">
+      {project.data.technologies.map((tech) => (
+        <li class="bg-green-tint text-green-accent px-2.5 py-1 rounded">{tech}</li>
+      ))}
+    </ul>
+
+    <div class="flex gap-4 mb-12">
+      {project.data.githubUrl && (
+        <Button href={project.data.githubUrl} size="sm">View Source</Button>
+      )}
+      {project.data.liveUrl && (
+        <Button href={project.data.liveUrl} size="sm">Live Demo</Button>
+      )}
+    </div>
+
+    <div class="prose-like text-slate-text text-base leading-relaxed space-y-4">
+      <Content />
+    </div>
+
+    <div class="mt-16">
+      <Button href="/projects/" variant="secondary">&larr; All Projects</Button>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

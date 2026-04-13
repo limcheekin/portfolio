@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FixedSidebars from '../../components/FixedSidebars.astro';
+import Button from '../../components/Button.astro';
+import { getCollection } from 'astro:content';
+import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": article.data.title,
+    "description": article.data.description,
+    "url": article.data.externalUrl || `${SITE_URL}/insights/${article.slug}/`,
+    "datePublished": article.data.publishDate.toISOString(),
+    "author": { "@type": "Person", "name": ENGINEER_NAME },
+    "keywords": article.data.tags.join(', ')
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+      { "@type": "ListItem", "position": 2, "name": "Insights", "item": `${SITE_URL}/insights/` },
+      { "@type": "ListItem", "position": 3, "name": article.data.title, "item": `${SITE_URL}/insights/${article.slug}/` }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={`${article.data.title} | ${ENGINEER_NAME}`}
+  description={article.data.description}
+  jsonLd={jsonLd}
+>
+  <Header />
+  <FixedSidebars />
+  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <nav class="mb-8 font-mono text-sm text-slate-text">
+      <a href="/" class="hover:text-green-accent transition-colors">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/insights/" class="hover:text-green-accent transition-colors">Insights</a>
+      <span class="mx-2">/</span>
+      <span class="text-green-accent">{article.data.title}</span>
+    </nav>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-4">{article.data.title}</h1>
+
+    <div class="flex items-center gap-4 mb-8 font-mono text-sm text-slate-text">
+      <time datetime={article.data.publishDate.toISOString()}>
+        {article.data.publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      {article.data.platform && <span>· {article.data.platform}</span>}
+    </div>
+
+    <ul class="flex flex-wrap gap-x-3 gap-y-2 mb-8 font-mono text-xs">
+      {article.data.tags.map((tag) => (
+        <li class="bg-green-tint text-green-accent px-2.5 py-1 rounded">{tag}</li>
+      ))}
+    </ul>
+
+    {article.data.externalUrl && (
+      <div class="mb-8 p-4 bg-light-navy rounded-md">
+        <p class="text-sm text-slate-text">
+          This article was originally published on an external platform.
+          <a href={article.data.externalUrl} target="_blank" rel="noopener noreferrer" class="text-green-accent hover:underline ml-1">
+            Read the full article &rarr;
+          </a>
+        </p>
+      </div>
+    )}
+
+    <div class="prose-like text-slate-text text-base leading-relaxed space-y-4">
+      <Content />
+    </div>
+
+    <div class="mt-16">
+      <Button href="/insights/" variant="secondary">&larr; All Articles</Button>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
