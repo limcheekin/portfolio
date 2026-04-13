@@ -101,6 +101,24 @@ const jsonLd = [
   },
   {
     "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `Featured Projects by ${ENGINEER_NAME}`,
+    "itemListElement": featuredProjects.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "SoftwareSourceCode",
+        "name": p.data.title,
+        "description": p.data.description,
+        "codeRepository": p.data.githubUrl,
+        "programmingLanguage": p.data.technologies,
+        "author": { "@type": "Person", "name": ENGINEER_NAME },
+        "keywords": p.data.technologies.join(', ')
+      }
+    }))
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL }
