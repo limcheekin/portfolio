@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
+import matter from 'gray-matter';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -23,27 +24,14 @@ function readMdFrontmatter(dir: string) {
     return readdirSync(dir)
       .filter((f) => f.endsWith('.md'))
       .map((f) => {
-        const content = readFileSync(join(dir, f), 'utf-8');
-        const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-        if (!match) return null;
-        const frontmatter: Record<string, any> = {};
-        match[1].split('\n').forEach((line) => {
-          const [key, ...rest] = line.split(':');
-          if (key && rest.length) {
-            let val = rest.join(':').trim();
-            if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
-            if (val.startsWith('[')) {
-              try { frontmatter[key.trim()] = JSON.parse(val); } catch { frontmatter[key.trim()] = val; }
-            } else if (val === 'true') frontmatter[key.trim()] = true;
-            else if (val === 'false') frontmatter[key.trim()] = false;
-            else frontmatter[key.trim()] = val;
-          }
-        });
-        frontmatter._body = match[2].trim();
-        frontmatter._slug = f.replace('.md', '');
-        return frontmatter;
-      })
-      .filter(Boolean);
+        const raw = readFileSync(join(dir, f), 'utf-8');
+        const { data, content } = matter(raw);
+        return {
+          ...data,
+          _body: content.trim(),
+          _slug: f.replace('.md', ''),
+        };
+      });
   } catch {
     return [];
   }
