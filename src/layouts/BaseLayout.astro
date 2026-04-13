@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import { SITE_TITLE, SITE_URL, ENGINEER_NAME, ENGINEER_TITLE } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  jsonLd?: object[];
+}
+
+const {
+  title = SITE_TITLE,
+  description = `Personal portfolio for ${ENGINEER_NAME}, a ${ENGINEER_TITLE}, showcasing skills, experience, and AI projects.`,
+  ogImage = `${SITE_URL}/images/portfolio.png`,
+  canonicalUrl = new URL(Astro.url.pathname, SITE_URL).href,
+  jsonLd = [],
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content={ENGINEER_NAME} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  {jsonLd.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
+</head>
+<body class="bg-navy text-lightest-slate antialiased selection:bg-green-accent/30 selection:text-green-accent">
+  <slot />
+</body>
+</html>

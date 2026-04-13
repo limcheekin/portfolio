@@ -1,0 +1,20 @@
+---
+interface Props {
+  href?: string;
+  class?: string;
+  'data-testid'?: string;
+}
+
+const { href, class: className = '', 'data-testid': testId } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  href={href}
+  class={`flex flex-col h-full bg-light-navy rounded-md shadow-lg hover:shadow-xl transition-shadow duration-250 ease-custom-ease group p-6 ${className}`}
+  data-testid={testId}
+  target={href ? '_blank' : undefined}
+  rel={href ? 'noopener noreferrer' : undefined}
+>
+  <slot />
+</Tag>

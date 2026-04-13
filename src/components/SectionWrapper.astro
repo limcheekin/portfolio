@@ -1,0 +1,24 @@
+---
+interface Props {
+  id: string;
+  title?: string;
+  titleNumber?: string;
+  class?: string;
+  contentClass?: string;
+}
+
+const { id, title, titleNumber, class: className = '', contentClass = '' } = Astro.props;
+---
+
+<section id={id} data-testid={`section-${id}`} class={`py-20 md:py-24 lg:py-28 ${className}`}>
+  {title && (
+    <h2 class="flex items-center text-2xl md:text-3xl font-semibold text-lightest-slate mb-10 md:mb-12 whitespace-nowrap relative w-full">
+      {titleNumber && <span class="text-xl md:text-2xl text-green-accent font-mono mr-2.5">{titleNumber}.</span>}
+      {title}
+      <span class="block h-px bg-lightest-navy/30 ml-5 w-full max-w-xs md:max-w-sm"></span>
+    </h2>
+  )}
+  <div class={contentClass}>
+    <slot />
+  </div>
+</section>

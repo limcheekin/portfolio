@@ -1,0 +1,53 @@
+---
+interface Props {
+  href?: string;
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary';
+  class?: string;
+  target?: string;
+  rel?: string;
+  type?: string;
+  'data-testid'?: string;
+}
+
+const {
+  href,
+  size = 'md',
+  variant = 'primary',
+  class: className = '',
+  target,
+  rel,
+  type,
+  'data-testid': testId,
+  ...rest
+} = Astro.props;
+
+const baseStyles = `font-mono inline-flex items-center justify-center rounded border border-green-accent text-green-accent hover:bg-green-tint focus:bg-green-tint transition-all duration-250 ease-custom-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-green-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-navy disabled:opacity-50 disabled:cursor-not-allowed`;
+
+const sizeMap: Record<string, string> = {
+  sm: 'px-5 py-2.5 text-xs',
+  md: 'px-7 py-3.5 text-sm',
+  lg: 'px-8 py-4 text-base',
+};
+
+const variantMap: Record<string, string> = {
+  primary: 'text-green-accent border-green-accent hover:bg-green-tint',
+  secondary: 'text-light-slate border-light-slate hover:bg-lightest-navy/10',
+};
+
+const classes = `${baseStyles} ${sizeMap[size]} ${variantMap[variant]} ${className}`;
+
+const isExternal = href?.startsWith('http') || href?.startsWith('mailto');
+const computedTarget = target || (isExternal ? '_blank' : undefined);
+const computedRel = rel || (isExternal ? 'noopener noreferrer' : undefined);
+---
+
+{href ? (
+  <a href={href} class={classes} target={computedTarget} rel={computedRel} data-testid={testId} {...rest}>
+    <slot />
+  </a>
+) : (
+  <button type={type || 'button'} class={classes} data-testid={testId} {...rest}>
+    <slot />
+  </button>
+)}
