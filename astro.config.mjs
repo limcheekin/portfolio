@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://limcheekin.com',
+  site: 'https://kin.rag.wtf',
   integrations: [
     react(),
     tailwind(),

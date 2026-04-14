@@ -3,7 +3,7 @@ export const ENGINEER_TITLE = "Senior Tech Lead, AI Engineer, and Solution Archi
 export const SITE_TITLE = `${ENGINEER_NAME} | ${ENGINEER_TITLE}`;
 export const GITHUB_USERNAME = "limcheekin";
 export const EMAIL_ADDRESS = "limcheekin@vobject.com";
-export const SITE_URL = "https://limcheekin.com";
+export const SITE_URL = "https://kin.rag.wtf";
 
 export interface NavLink {
   name: string;
