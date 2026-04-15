@@ -5,17 +5,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        'navy': '#0a192f',
-        'light-navy': '#112240',
-        'lightest-navy': '#233554',
-        'slate-text': '#8892b0',
-        'light-slate': '#a8b2d1',
-        'lightest-slate': '#ccd6f6',
-        'white-text': '#e6f1ff',
-        'green-accent': '#64ffda',
-        'green-tint': 'rgba(100, 255, 218, 0.1)',
+        'navy': '#050507',
+        'light-navy': '#101010',
+        'lightest-navy': '#3d3a39',
+        'slate-text': '#8b949e',
+        'light-slate': '#b8b3b0',
+        'lightest-slate': '#f2f2f2',
+        'white-text': '#ffffff',
+        'green-accent': '#00d992',
+        'green-tint': 'rgba(0, 217, 146, 0.1)',
       },
       fontFamily: {
+        display: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'Ubuntu', 'Cantarell', '"Noto Sans"', 'Helvetica', 'Arial', 'sans-serif'],
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif'],
         mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
       },
