@@ -87,6 +87,16 @@ mkdirSync(join(distDir, 'api'), { recursive: true });
 writeFileSync(join(distDir, 'api', 'portfolio.json'), JSON.stringify(portfolio, null, 2));
 console.log('Generated: dist/api/portfolio.json');
 
+// Generate granular API endpoints
+writeFileSync(join(distDir, 'api', 'projects.json'), JSON.stringify(portfolio.projects, null, 2));
+console.log('Generated: dist/api/projects.json');
+
+writeFileSync(join(distDir, 'api', 'experience.json'), JSON.stringify(portfolio.experience, null, 2));
+console.log('Generated: dist/api/experience.json');
+
+writeFileSync(join(distDir, 'api', 'articles.json'), JSON.stringify(portfolio.articles, null, 2));
+console.log('Generated: dist/api/articles.json');
+
 // Generate llms-full.txt
 const lines = [
   `# Lim Chee Kin — Full Portfolio Content`,

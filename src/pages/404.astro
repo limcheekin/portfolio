@@ -5,13 +5,21 @@ import Footer from '../components/Footer.astro';
 import Button from '../components/Button.astro';
 import { ENGINEER_NAME, SITE_URL } from '../data/site';
 
-const jsonLd = [{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL }
-  ]
-}];
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Page Not Found",
+    "description": "The requested page does not exist. Use the navigation below to find what you're looking for.",
+    "url": `${SITE_URL}/404.html`,
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL }
+      ]
+    }
+  }
+];
 ---
 
 <BaseLayout title={`Page Not Found | ${ENGINEER_NAME}`} description="The page you're looking for doesn't exist." jsonLd={jsonLd}>

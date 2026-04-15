@@ -44,11 +44,11 @@ const jsonLd = [
   <FixedSidebars />
   <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
     <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Projects" }]} />
-    <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-12">All Projects</h1>
+    <h1 id="all-projects" class="text-3xl md:text-4xl font-bold text-lightest-slate mb-12">All Projects</h1>
 
     {featuredProjects.length > 0 && (
       <div class="mb-16">
-        <h2 class="text-xl font-semibold text-lightest-slate mb-8">Featured</h2>
+        <h2 id="featured-projects" class="text-xl font-semibold text-lightest-slate mb-8">Featured</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           {featuredProjects.map((project) => (
             <a href={`/projects/${project.slug}/`} class="block bg-light-navy rounded-md p-6 hover:shadow-xl transition-shadow duration-250 group">
@@ -68,7 +68,7 @@ const jsonLd = [
 
     {otherProjects.length > 0 && (
       <div>
-        <h2 class="text-xl font-semibold text-lightest-slate mb-8">Other Projects</h2>
+        <h2 id="other-projects" class="text-xl font-semibold text-lightest-slate mb-8">Other Projects</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {otherProjects.map((project) => (
             <a href={`/projects/${project.slug}/`} class="flex flex-col h-full bg-light-navy rounded-md shadow-lg hover:shadow-xl transition-shadow duration-250 group p-6">

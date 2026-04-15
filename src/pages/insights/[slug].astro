@@ -57,7 +57,7 @@ const jsonLd = [
       <span class="text-green-accent">{article.data.title}</span>
     </nav>
 
-    <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-4">{article.data.title}</h1>
+    <h1 id="article-title" class="text-3xl md:text-4xl font-bold text-lightest-slate mb-4">{article.data.title}</h1>
 
     <div class="flex items-center gap-4 mb-8 font-mono text-sm text-slate-text">
       <time datetime={article.data.publishDate.toISOString()}>

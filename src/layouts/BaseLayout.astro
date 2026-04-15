@@ -18,6 +18,10 @@ const {
   canonicalUrl = new URL(Astro.url.pathname, SITE_URL).href,
   jsonLd = [],
 } = Astro.props;
+
+// Derive current page identifier from pathname for data-current-page attribute
+const pathSegments = Astro.url.pathname.replace(/^\/|\/$/g, '').split('/');
+const currentPage = pathSegments[0] || 'home';
 ---
 
 <!DOCTYPE html>
@@ -47,11 +51,13 @@ const {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
 
+  <link rel="alternate" type="application/rss+xml" title={`Insights by ${ENGINEER_NAME}`} href="/rss.xml" />
+
   {jsonLd.map((schema) => (
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   ))}
 </head>
-<body class="bg-navy text-lightest-slate antialiased selection:bg-green-accent/30 selection:text-green-accent">
+<body class="bg-navy text-lightest-slate antialiased selection:bg-green-accent/30 selection:text-green-accent" data-current-page={currentPage}>
   <slot />
   <WebMCPTools client:idle portfolioApiUrl={`${SITE_URL}/api/portfolio.json`} contactEmail={EMAIL_ADDRESS} engineerName={ENGINEER_NAME} />
 </body>

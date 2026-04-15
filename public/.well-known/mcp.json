@@ -1,0 +1,29 @@
+{
+  "mcpVersion": "1.0",
+  "name": "Lim Chee Kin Portfolio",
+  "description": "MCP-compatible portfolio data for Lim Chee Kin, Senior Tech Lead, AI Engineer, and Solution Architect",
+  "resources": [
+    {
+      "uri": "https://kin.rag.wtf/api/portfolio.json",
+      "name": "Portfolio Data",
+      "description": "Full structured portfolio including projects, work experience, articles, and contact information",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "https://kin.rag.wtf/llms-full.txt",
+      "name": "Full Portfolio Content",
+      "description": "Extended prose content of all portfolio items optimised for LLM consumption",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://kin.rag.wtf/llms.txt",
+      "name": "LLM Site Index",
+      "description": "Structured markdown index following the llms.txt convention",
+      "mimeType": "text/plain"
+    }
+  ],
+  "contact": {
+    "email": "limcheekin@vobject.com",
+    "url": "https://kin.rag.wtf/contact/"
+  }
+}

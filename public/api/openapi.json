@@ -71,6 +71,60 @@
           }
         }
       }
+    },
+    "/api/projects.json": {
+      "get": {
+        "summary": "Get projects only",
+        "operationId": "getProjects",
+        "description": "Returns only the projects array from the portfolio.",
+        "tags": ["Portfolio"],
+        "responses": {
+          "200": {
+            "description": "Array of projects",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Project" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/experience.json": {
+      "get": {
+        "summary": "Get work experience only",
+        "operationId": "getExperience",
+        "description": "Returns only the work experience array from the portfolio.",
+        "tags": ["Portfolio"],
+        "responses": {
+          "200": {
+            "description": "Array of experience entries",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Experience" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/articles.json": {
+      "get": {
+        "summary": "Get articles only",
+        "operationId": "getArticles",
+        "description": "Returns only the articles array from the portfolio.",
+        "tags": ["Portfolio"],
+        "responses": {
+          "200": {
+            "description": "Array of articles",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Article" } }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
