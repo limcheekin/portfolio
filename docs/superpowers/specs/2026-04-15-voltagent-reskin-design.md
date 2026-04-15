@@ -43,11 +43,9 @@ Token names are preserved; only values change. This means no `.astro` file needs
 | `green-accent` | `#64ffda` | `#00d992` | Emerald Signal Green — accent |
 | `green-tint` | `rgba(100,255,218,0.1)` | `rgba(0,217,146,0.1)` | Tinted hover/focus |
 
-**New tokens added:**
+**New tokens added:** None. VoltAgent Mint (`#2fd6a1`) is reserved by DESIGN.md for CTA button text, but the current `Button` component uses `text-green-accent` which will resolve to Signal Green on the Carbon Surface background at 7.5:1 contrast — no readability gap to close. Skipping Mint avoids a speculative token.
 
-- `mint: '#2fd6a1'` — VoltAgent Mint, CTA button text variant. Not yet used by any component but added for future button variant work.
-
-Semantic colors are intentionally not added to the Tailwind palette. The only semantic need today is form-error red, handled with an arbitrary value (see §Form errors).
+Semantic colors are intentionally not added to the Tailwind palette. The only semantic need today is form-error red, handled with an arbitrary value (see §Tailwind-default color leaks to fix).
 
 ### Typography (`tailwind.config.mjs`)
 
@@ -138,7 +136,7 @@ That is the complete list of Tailwind-default palette leaks in the codebase (ver
 
 ## Files Touched
 
-1. `tailwind.config.mjs` — token values + new `display` font stack + `mint` token.
+1. `tailwind.config.mjs` — token values + new `display` font stack.
 2. `src/styles/global.css` — scrollbar, focus, bullet, OpenType features, compressed-heading rules.
 3. `src/components/Banner.tsx` — 5 color-class swaps.
 4. `src/components/ContactForm.astro` — 3 error-span color swaps.
