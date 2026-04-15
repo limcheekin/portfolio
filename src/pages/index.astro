@@ -45,6 +45,18 @@ const jsonLd = [
       "MongoDB", "PostgreSQL", "AWS", "Docker", "Model Context Protocol"
     ],
     "worksFor": { "@type": "Organization", "name": "RAG.WTF & AI Initiatives", "url": "https://www.rag.wtf" },
+    "alumniOf": [
+      { "@type": "Organization", "name": "DXC Technology", "url": "https://www.dxc.com" },
+      { "@type": "Organization", "name": "Zurich Technology Services Malaysia" },
+      { "@type": "Organization", "name": "Penril Datability Networks" },
+      { "@type": "Organization", "name": "Siemens Multimedia" }
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": EMAIL_ADDRESS,
+      "contactType": "professional inquiry",
+      "availableLanguage": ["English"]
+    },
     "sameAs": [
       "https://github.com/limcheekin",
       "https://linkedin.com/in/limcheekin",
@@ -57,7 +69,14 @@ const jsonLd = [
     "name": `${ENGINEER_NAME} - Portfolio`,
     "url": SITE_URL,
     "description": `Personal portfolio for ${ENGINEER_NAME}, a ${ENGINEER_TITLE}`,
-    "author": { "@type": "Person", "name": ENGINEER_NAME }
+    "author": { "@type": "Person", "name": ENGINEER_NAME },
+    "potentialAction": {
+      "@type": "ReadAction",
+      "target": [
+        `${SITE_URL}/api/portfolio.json`,
+        `${SITE_URL}/llms-full.txt`
+      ]
+    }
   },
   {
     "@context": "https://schema.org",
@@ -97,6 +116,21 @@ const jsonLd = [
         "@type": "Question",
         "name": "What is open-text-embeddings?",
         "acceptedAnswer": { "@type": "Answer", "text": "open-text-embeddings is a Python library created by Lim Chee Kin that provides an OpenAI-compatible API for diverse open-source sentence transformer models such as BGE and E5. It enables significant cost reduction and eliminates vendor lock-in for text embedding generation in RAG and NLP applications." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Lim Chee Kin available for freelance or consulting work?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin is open to AI engineering consulting, solution architecture engagements, and collaborations on open-source AI projects. He is particularly interested in RAG systems, local LLM deployment, data sovereignty solutions, and AI agent infrastructure. Reach out via email at limcheekin@vobject.com or LinkedIn." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Talk To AI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Talk To AI is a real-time voice AI application built by Lim Chee Kin that achieves sub-300ms latency for voice interactions. It supports local and cloud-based speech-to-text (STT), large language model (LLM), and text-to-speech (TTS) services via FastRTC, enabling private, low-latency voice conversations with AI." }
+      },
+      {
+        "@type": "Question",
+        "name": "How long has Lim Chee Kin been working in software engineering?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin has over 25 years of software engineering experience, starting in 1999. He has worked across enterprise Java development (Spring, Micronaut, Grails), mobile applications (Flutter/Dart), data engineering, and AI/ML. Since 2021 he has focused exclusively on AI engineering, specialising in RAG systems, LLM deployment, and open-source AI infrastructure." }
       }
     ]
   },

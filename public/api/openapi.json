@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Lim Chee Kin Portfolio API",
+    "version": "2.0.0",
+    "description": "Static portfolio API providing structured data about Lim Chee Kin's projects, work experience, and articles. All responses are pre-generated at build time.",
+    "contact": {
+      "name": "Lim Chee Kin",
+      "email": "limcheekin@vobject.com",
+      "url": "https://kin.rag.wtf"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/limcheekin/portfolio/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    { "url": "https://kin.rag.wtf", "description": "Production" }
+  ],
+  "paths": {
+    "/api/portfolio.json": {
+      "get": {
+        "summary": "Get full portfolio data",
+        "operationId": "getPortfolio",
+        "description": "Returns all portfolio data including name, title, contact URLs, projects, work experience history, and articles.",
+        "tags": ["Portfolio"],
+        "responses": {
+          "200": {
+            "description": "Full portfolio data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Portfolio" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/llms-full.txt": {
+      "get": {
+        "summary": "Full portfolio content as plain text",
+        "operationId": "getLlmsFullText",
+        "description": "Returns all portfolio content (projects with full descriptions, work experience, articles) as a structured plain-text document optimised for LLM consumption.",
+        "tags": ["Discovery"],
+        "responses": {
+          "200": {
+            "description": "Plain text portfolio content",
+            "content": {
+              "text/plain": {
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM-readable site index",
+        "operationId": "getLlmsTxt",
+        "description": "Structured markdown index of the portfolio site for LLM agents, following the llms.txt convention.",
+        "tags": ["Discovery"],
+        "responses": {
+          "200": {
+            "description": "Structured markdown index",
+            "content": {
+              "text/plain": {
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Portfolio": {
+        "type": "object",
+        "description": "Complete portfolio data for Lim Chee Kin",
+        "properties": {
+          "name": { "type": "string", "example": "Lim Chee Kin" },
+          "title": { "type": "string", "example": "Senior Tech Lead, AI Engineer, and Solution Architect" },
+          "email": { "type": "string", "format": "email", "example": "limcheekin@vobject.com" },
+          "urls": {
+            "type": "object",
+            "properties": {
+              "github": { "type": "string", "format": "uri" },
+              "linkedin": { "type": "string", "format": "uri" },
+              "medium": { "type": "string", "format": "uri" }
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Project" }
+          },
+          "articles": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Article" }
+          },
+          "experience": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Experience" }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "generatedAt": { "type": "string", "format": "date-time" },
+              "version": { "type": "string" }
+            }
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "slug": { "type": "string" },
+          "description": { "type": "string" },
+          "featured": { "type": "boolean" },
+          "technologies": { "type": "array", "items": { "type": "string" } },
+          "githubUrl": { "type": "string", "format": "uri" },
+          "liveUrl": { "type": "string", "format": "uri" },
+          "category": { "type": "string" }
+        }
+      },
+      "Article": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "slug": { "type": "string" },
+          "description": { "type": "string" },
+          "externalUrl": { "type": "string", "format": "uri" },
+          "publishDate": { "type": "string", "format": "date" },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "Experience": {
+        "type": "object",
+        "properties": {
+          "company": { "type": "string" },
+          "title": { "type": "string" },
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" },
+          "technologies": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

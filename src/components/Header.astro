@@ -4,6 +4,7 @@ import Button from './Button.astro';
 import { NAV_LINKS, ENGINEER_NAME } from '../data/site';
 
 const initials = ENGINEER_NAME.split(' ').map((n: string) => n[0]).join('');
+const currentPath = Astro.url.pathname;
 ---
 
 <header
@@ -22,18 +23,22 @@ const initials = ENGINEER_NAME.split(' ').map((n: string) => n[0]).join('');
 
     <nav aria-label="Main navigation" data-testid="desktop-nav" class="hidden md:flex items-center">
       <ol class="flex items-center space-x-6 lg:space-x-8 list-none p-0 m-0">
-        {NAV_LINKS.map((link, index) => (
-          <li class="relative font-mono text-sm">
-            <a
-              href={link.href}
-              data-testid={`nav-link-${link.name.toLowerCase()}`}
-              class="px-2.5 py-2 transition-colors duration-250 text-light-slate hover:text-green-accent"
-            >
-              <span class="text-green-accent text-xs mr-1">0{index + 1}.</span>
-              {link.name}
-            </a>
-          </li>
-        ))}
+        {NAV_LINKS.map((link, index) => {
+          const isActive = currentPath.startsWith(link.href);
+          return (
+            <li class="relative font-mono text-sm">
+              <a
+                href={link.href}
+                data-testid={`nav-link-${link.name.toLowerCase()}`}
+                aria-current={isActive ? 'page' : undefined}
+                class={`px-2.5 py-2 transition-colors duration-250 hover:text-green-accent ${isActive ? 'text-green-accent' : 'text-light-slate'}`}
+              >
+                <span class="text-green-accent text-xs mr-1">0{index + 1}.</span>
+                {link.name}
+              </a>
+            </li>
+          );
+        })}
       </ol>
       <div class="ml-4">
         <Button href="/resume.pdf" size="sm" data-testid="resume-button" target="_blank" rel="noopener noreferrer">

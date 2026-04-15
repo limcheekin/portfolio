@@ -6,6 +6,7 @@ import FixedSidebars from '../components/FixedSidebars.astro';
 import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { ABOUT_CONTENT, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL, EMAIL_ADDRESS } from '../data/site';
 
 const experience = (await getCollection('experience'))
@@ -20,6 +21,13 @@ const jsonLd = [
     "image": `${SITE_URL}/images/profile.png`,
     "jobTitle": ENGINEER_TITLE,
     "email": `mailto:${EMAIL_ADDRESS}`,
+    "worksFor": { "@type": "Organization", "name": "RAG.WTF & AI Initiatives", "url": "https://www.rag.wtf" },
+    "alumniOf": [
+      { "@type": "Organization", "name": "DXC Technology", "url": "https://www.dxc.com" },
+      { "@type": "Organization", "name": "Zurich Technology Services Malaysia" },
+      { "@type": "Organization", "name": "Penril Datability Networks" },
+      { "@type": "Organization", "name": "Siemens Multimedia" }
+    ],
     "sameAs": ["https://github.com/limcheekin", "https://linkedin.com/in/limcheekin", "https://medium.com/@limcheekin"]
   },
   {
@@ -41,6 +49,7 @@ const jsonLd = [
   <Header />
   <FixedSidebars />
   <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About" }]} />
     <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-8">About Me</h1>
 
     <div class="grid md:grid-cols-5 gap-10 lg:gap-12 items-start mb-16">

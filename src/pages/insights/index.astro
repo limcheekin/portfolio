@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import FixedSidebars from '../../components/FixedSidebars.astro';
 import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 
 const articles = (await getCollection('articles'))
   .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
@@ -39,6 +40,7 @@ const jsonLd = [
   <Header />
   <FixedSidebars />
   <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Insights" }]} />
     <h1 class="text-3xl md:text-4xl font-bold text-lightest-slate mb-12">Writing & Insights</h1>
     <div class="max-w-2xl mx-auto">
       <ul class="space-y-1">

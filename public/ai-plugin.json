@@ -1,0 +1,15 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Lim Chee Kin Portfolio",
+  "name_for_model": "limcheekin_portfolio",
+  "description_for_human": "Portfolio of Lim Chee Kin, Senior Tech Lead, AI Engineer, and Solution Architect specialising in RAG systems and open-source AI.",
+  "description_for_model": "Access structured portfolio data for Lim Chee Kin, an AI engineer and solution architect with 25+ years of experience. Provides projects (RAG.WTF, Talk To AI, Project Concord, open-text-embeddings), work experience history, written articles, and contact information. All data is available via a static JSON API at /api/portfolio.json.",
+  "auth": { "type": "none" },
+  "api": {
+    "type": "openapi",
+    "url": "https://kin.rag.wtf/api/openapi.json"
+  },
+  "logo_url": "https://kin.rag.wtf/favicon.svg",
+  "contact_email": "limcheekin@vobject.com",
+  "legal_info_url": "https://kin.rag.wtf/"
+}

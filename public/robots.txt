@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://limcheekin.com/sitemap-index.xml
+Sitemap: https://kin.rag.wtf/sitemap-index.xml
+
+# Agent discovery
+# LLM index: https://kin.rag.wtf/llms.txt
+# Full content: https://kin.rag.wtf/llms-full.txt
+# Portfolio API: https://kin.rag.wtf/api/portfolio.json
+# Plugin manifest: https://kin.rag.wtf/ai-plugin.json

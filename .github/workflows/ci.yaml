@@ -30,5 +30,9 @@ jobs:
           test -f dist/index.html
           test -f dist/404.html
           test -f dist/api/portfolio.json
+          test -f dist/api/openapi.json
           test -f dist/llms-full.txt
+          test -f dist/llms.txt
+          test -f dist/ai-plugin.json
+          test -f dist/robots.txt
           echo "Build artifacts verified"

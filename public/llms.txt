@@ -48,7 +48,9 @@ Lim Chee Kin is a Senior Tech Lead, AI Engineer, and Solution Architect based in
 - Medium: https://medium.com/@limcheekin
 
 ## Technical
-- Portfolio: https://limcheekin.com/
-- Full Content (llms-full.txt): https://limcheekin.com/llms-full.txt
-- Sitemap: https://limcheekin.com/sitemap.xml
-- Portfolio Data (JSON): https://limcheekin.com/api/portfolio.json
+- Portfolio: https://kin.rag.wtf/
+- Full Content (llms-full.txt): https://kin.rag.wtf/llms-full.txt
+- Sitemap: https://kin.rag.wtf/sitemap-index.xml
+- Portfolio Data (JSON): https://kin.rag.wtf/api/portfolio.json
+- OpenAPI Spec: https://kin.rag.wtf/api/openapi.json
+- Plugin Discovery: https://kin.rag.wtf/ai-plugin.json
