@@ -5,6 +5,9 @@
 html {
   scroll-behavior: smooth;
   background-color: #050507;
+  /* Firefox scrollbar — mirrors the Webkit rules below. */
+  scrollbar-color: #3d3a39 #050507;
+  scrollbar-width: thin;
 }
 
 body {

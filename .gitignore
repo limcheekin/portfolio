@@ -140,3 +140,10 @@ dist
 
 # Superpowers
 .superpowers/
+
+# Claude Code local settings (per-developer)
+.claude/
+
+# Audit artifacts (working documents, not product)
+*-audit-findings.json
+*-audit.json
