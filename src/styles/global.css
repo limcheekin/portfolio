@@ -4,33 +4,40 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #0a192f;
+  background-color: #050507;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  color: #ccd6f6;
+  color: #f2f2f2;
+  font-feature-settings: "calt", "rlig";
 }
+
+/* Compressed heading rhythm (VoltAgent) — applies only to headings
+   that opt in with .font-display. Uses em-based tracking so it
+   scales with font size. */
+h1.font-display { line-height: 1.0;  letter-spacing: -0.065em; }
+h2.font-display { line-height: 1.11; letter-spacing: -0.025em; }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a192f;
+  background: #050507;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #233554;
+  background: #3d3a39;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8b2d1;
+  background: #b8b3b0;
 }
 
 *:focus-visible {
-  outline: 2px dashed #64ffda;
+  outline: 2px dashed #00d992;
   outline-offset: 2px;
 }
 
@@ -43,7 +50,7 @@ body {
   content: "▹";
   position: absolute;
   left: 0;
-  color: #64ffda;
+  color: #00d992;
   font-size: 1.125rem;
   line-height: 1.75;
 }
