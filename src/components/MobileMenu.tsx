@@ -48,6 +48,8 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           data-testid="mobile-menu-toggle"
+          data-state={menuOpen ? 'open' : 'closed'}
+          aria-expanded={menuOpen}
           className="relative z-50 p-4 -mr-4 text-green-accent focus:outline-none"
           aria-label="Menu"
         >

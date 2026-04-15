@@ -7,6 +7,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
   method="POST"
   data-testid="contact-form"
   class="w-full max-w-lg text-left mb-8 space-y-5"
+  novalidate
 >
   <div>
     <label for="contact-name" class="block font-mono text-xs text-light-slate mb-1.5">Name</label>
@@ -17,9 +18,11 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       required
       autocomplete="name"
       data-testid="contact-field-name"
+      aria-describedby="contact-name-error"
       class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250"
       placeholder="Your name"
     />
+    <span id="contact-name-error" role="alert" class="hidden font-mono text-xs text-red-400 mt-1"></span>
   </div>
   <div>
     <label for="contact-email" class="block font-mono text-xs text-light-slate mb-1.5">Email</label>
@@ -30,9 +33,11 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       required
       autocomplete="email"
       data-testid="contact-field-email"
+      aria-describedby="contact-email-error"
       class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250"
       placeholder="your@email.com"
     />
+    <span id="contact-email-error" role="alert" class="hidden font-mono text-xs text-red-400 mt-1"></span>
   </div>
   <div>
     <label for="contact-message" class="block font-mono text-xs text-light-slate mb-1.5">Message</label>
@@ -42,9 +47,11 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       required
       rows="5"
       data-testid="contact-field-message"
+      aria-describedby="contact-message-error"
       class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250 resize-y"
       placeholder="What would you like to discuss?"
     ></textarea>
+    <span id="contact-message-error" role="alert" class="hidden font-mono text-xs text-red-400 mt-1"></span>
   </div>
   <input type="hidden" name="_next" value="/contact/?submitted=true" />
   <div class="text-center pt-2">
@@ -57,3 +64,34 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
     </button>
   </div>
 </form>
+
+<script>
+  const form = document.querySelector('[data-testid="contact-form"]') as HTMLFormElement | null;
+  if (form) {
+    const fields = [
+      { id: 'contact-name', errorId: 'contact-name-error', message: 'Name is required.' },
+      { id: 'contact-email', errorId: 'contact-email-error', message: 'A valid email address is required.' },
+      { id: 'contact-message', errorId: 'contact-message-error', message: 'Message is required.' },
+    ];
+
+    fields.forEach(({ id, errorId }) => {
+      const input = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
+      if (!input) return;
+      input.addEventListener('invalid', () => {
+        input.setAttribute('aria-invalid', 'true');
+        const err = document.getElementById(errorId);
+        if (err) {
+          err.textContent = input.validationMessage;
+          err.classList.remove('hidden');
+        }
+      });
+      input.addEventListener('input', () => {
+        if (input.validity.valid) {
+          input.removeAttribute('aria-invalid');
+          const err = document.getElementById(errorId);
+          if (err) err.classList.add('hidden');
+        }
+      });
+    });
+  }
+</script>
