@@ -42,20 +42,20 @@ export default function Banner({ valueProps }: BannerProps) {
             }`}
           >
             <div className="font-display font-bold leading-[1.1] tracking-tight m-0">
-              <div className="text-2xl md:text-3xl lg:text-4xl text-slate-300">
+              <div className="text-2xl md:text-3xl lg:text-4xl text-light-slate">
                 I help <span className="text-white relative inline-block">
                   {prop.target}
-                  <div className="absolute -bottom-1 left-0 w-full h-px bg-blue-500/40" />
+                  <div className="absolute -bottom-1 left-0 w-full h-px bg-green-accent/60" />
                 </span>
               </div>
 
-              <div className="text-3xl md:text-4xl lg:text-5xl text-emerald-400 py-0">
+              <div className="text-3xl md:text-4xl lg:text-5xl text-green-accent py-0">
                 {prop.benefit}
               </div>
 
-              <div className="text-2xl md:text-3xl lg:text-4xl text-slate-300 flex items-baseline flex-wrap gap-x-3">
+              <div className="text-2xl md:text-3xl lg:text-4xl text-light-slate flex items-baseline flex-wrap gap-x-3">
                 <span>without</span>
-                <span className="text-rose-400 font-light italic opacity-95">
+                <span className="text-[#fb565b] font-light italic opacity-95">
                   {prop.negative}.
                 </span>
               </div>
