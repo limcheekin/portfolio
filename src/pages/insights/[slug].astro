@@ -31,6 +31,15 @@ const jsonLd = [
   },
   {
     "@context": "https://schema.org",
+    "@type": "WebPage",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["#article-title", ".prose-like"]
+    },
+    "url": `${SITE_URL}/insights/${article.slug}/`
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },

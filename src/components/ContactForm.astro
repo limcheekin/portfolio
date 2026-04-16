@@ -17,6 +17,8 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       name="name"
       required
       autocomplete="name"
+      minlength="2"
+      pattern=".{2,}"
       data-testid="contact-field-name"
       aria-describedby="contact-name-error"
       class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250"
@@ -46,6 +48,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       name="message"
       required
       rows="5"
+      minlength="10"
       data-testid="contact-field-message"
       aria-describedby="contact-message-error"
       class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250 resize-y"

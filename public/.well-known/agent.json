@@ -1,0 +1,31 @@
+{
+  "schema_version": "v1",
+  "name": "Lim Chee Kin Portfolio",
+  "description": "Portfolio of Lim Chee Kin — Senior Tech Lead, AI Engineer, and Solution Architect specialising in RAG systems, open-source AI, and data sovereignty.",
+  "version": "1.0",
+  "url": "https://kin.rag.wtf",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "authentication": {
+    "type": "none"
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": [
+    {
+      "id": "portfolio-retrieval",
+      "name": "Portfolio Data Retrieval",
+      "description": "Retrieve structured portfolio data including projects, work experience, articles, and contact information via the static JSON API at /api/portfolio.json.",
+      "tags": ["retrieval", "portfolio", "content"]
+    },
+    {
+      "id": "content-discovery",
+      "name": "Content Discovery",
+      "description": "Discover and access all portfolio content including insights and project pages via the sitemap and llms.txt index.",
+      "tags": ["discovery", "content", "sitemap"]
+    }
+  ]
+}

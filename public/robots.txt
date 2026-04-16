@@ -8,3 +8,5 @@ Sitemap: https://kin.rag.wtf/sitemap-index.xml
 # Full content: https://kin.rag.wtf/llms-full.txt
 # Portfolio API: https://kin.rag.wtf/api/portfolio.json
 # Plugin manifest: https://kin.rag.wtf/ai-plugin.json
+# A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json
+# Agent Policy: https://kin.rag.wtf/.well-known/agent-policy

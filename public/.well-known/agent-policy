@@ -1,0 +1,30 @@
+# Agent Policy for kin.rag.wtf
+# Formal declaration of agent usage rights for this portfolio site.
+# Last updated: 2026-04-16
+
+## Permitted Uses
+- Indexing and crawling all public pages for search and discovery
+- Extracting and summarising content for informational purposes
+- Citing content with proper attribution and a link to the source page
+- Accessing the JSON API endpoints (/api/*.json) for structured data retrieval
+- Reading /llms.txt and /llms-full.txt for LLM-optimised consumption
+- Using the portfolio data to answer questions about Lim Chee Kin's professional background, projects, and articles
+
+## Prohibited Uses
+- Reproducing the full site content verbatim without attribution
+- Misrepresenting the site owner's views, credentials, or affiliations
+- Automated form submission (the contact form is for human use only)
+- Scraping for AI training datasets without explicit written permission from the site owner
+
+## Rate Limits
+- No hard rate limits are enforced, but agents should respect the Cache-Control headers on API responses (max-age=3600)
+- Use conditional GET requests with If-None-Match / ETag headers to avoid redundant fetches
+- Please be courteous with request frequency; avoid hammering endpoints
+
+## Data Freshness
+- All content is generated at build time. The Last-Modified header on any page reflects the last deployment date.
+- Subscribe to /rss.xml for content change notifications.
+
+## Contact
+- For agent access questions or permissions: limcheekin@vobject.com
+- Portfolio owner: https://kin.rag.wtf/about/

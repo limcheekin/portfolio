@@ -54,3 +54,5 @@ Lim Chee Kin is a Senior Tech Lead, AI Engineer, and Solution Architect based in
 - Portfolio Data (JSON): https://kin.rag.wtf/api/portfolio.json
 - OpenAPI Spec: https://kin.rag.wtf/api/openapi.json
 - Plugin Discovery: https://kin.rag.wtf/ai-plugin.json
+- A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json
+- Agent Policy: https://kin.rag.wtf/.well-known/agent-policy
