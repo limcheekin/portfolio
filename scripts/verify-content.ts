@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import matter from 'gray-matter';
 
@@ -8,30 +8,49 @@ const RUN_LINKS = args.has('--links');
 
 // ---------- helpers ----------
 
-export function readText(path: string): string {
-  return readFileSync(path, 'utf8');
+/** Caches `fn` per argument; every file and directory is read at most once per run. */
+function memo<K, V>(fn: (key: K) => V): (key: K) => V {
+  const cache = new Map<K, V>();
+  return (key) => {
+    if (!cache.has(key)) cache.set(key, fn(key));
+    return cache.get(key)!;
+  };
 }
+
+/** Computes `fn()` on first use, then returns the cached value. */
+function lazy<T>(fn: () => T): () => T {
+  let done = false;
+  let value: T;
+  return () => {
+    if (!done) {
+      value = fn();
+      done = true;
+    }
+    return value;
+  };
+}
+
+const readText = memo((path: string) => readFileSync(path, 'utf8'));
 
 /** Recursively list files under `dir` whose extension is in `exts` ('' matches extensionless files). */
-export function walk(dir: string, exts: string[]): string[] {
+function walk(dir: string, exts: string[]): string[] {
   if (!existsSync(dir)) return [];
-  const out: string[] = [];
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name).replaceAll('\\', '/');
-    if (statSync(p).isDirectory()) out.push(...walk(p, exts));
-    else if (exts.includes(extname(name))) out.push(p);
-  }
-  return out;
-}
-
-export function frontmatter(dir: string): Array<{ slug: string; data: any; body: string }> {
-  return walk(dir, ['.md', '.mdx']).map((f) => {
-    const { data, content } = matter(readText(f));
-    return { slug: f.slice(dir.length + 1).replace(/\.mdx?$/, ''), data, body: content };
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+    const p = join(dir, e.name).replaceAll('\\', '/');
+    if (e.isDirectory()) return walk(p, exts);
+    return exts.includes(extname(e.name)) ? [p] : [];
   });
 }
 
-export function htmlText(html: string): string {
+/** Front matter of every .md/.mdx under `dir`. Shared and cached: copy before sorting. */
+const frontmatter = memo((dir: string): Array<{ slug: string; data: any; body: string }> =>
+  walk(dir, ['.md', '.mdx']).map((f) => {
+    const { data, content } = matter(readText(f));
+    return { slug: f.slice(dir.length + 1).replace(/\.mdx?$/, ''), data, body: content };
+  }),
+);
+
+function htmlText(html: string): string {
   return html
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/<[^>]*>/g, ' ')
@@ -44,32 +63,53 @@ export function htmlText(html: string): string {
     .trim();
 }
 
+/** Built home page: raw HTML, and its visible text. */
+const homeHtml = () => readText('dist/index.html');
+const homeText = lazy(() => htmlText(homeHtml()));
+
+/** Files in `files` whose text satisfies `hit`, mapped to failure messages. */
+const scan = (files: string[], hit: (text: string) => boolean, msg: (f: string) => string = (f) => f) =>
+  files.filter((f) => hit(readText(f))).map(msg);
+/** Needles absent from / present in `text`. */
+const missing = (text: string, needles: string[]) => needles.filter((s) => !text.includes(s));
+const present = (text: string, needles: string[]) => needles.filter((s) => text.includes(s));
+/** Messages whose condition is true. */
+const flagged = (pairs: Array<[boolean, string]>) => pairs.filter(([bad]) => bad).map(([, m]) => m);
+const sameList = (a: string[], b: string[]) => a.length === b.length && a.every((v, i) => v === b[i]);
+const site = () => import('../src/data/site.ts');
+
 // ---------- runner ----------
 
 type CheckFn = () => string[] | Promise<string[]>;
 const queue: Array<{ name: string; fn: CheckFn }> = [];
 
-export function check(name: string, fn: CheckFn, opts: { dist?: boolean; links?: boolean } = {}): void {
+function check(name: string, fn: CheckFn, opts: { dist?: boolean; links?: boolean } = {}): void {
   if (opts.dist && !RUN_DIST) return;
   if (opts.links && !RUN_LINKS) return;
   queue.push({ name, fn });
 }
 
-// ---------- checks (later tasks append below) ----------
+// ---------- role, title and years ----------
 
 const YEARS = new RegExp(['25\\+?[\\s-]?years?', 'over 25'].join('|'), 'i'); // built from parts so this file doesn't match itself
 const OLD_TITLE = /Senior Tech Lead, AI Engineer/;
 const SCAN = [...walk('src', ['.astro', '.ts', '.tsx', '.md', '.json']), ...walk('public', ['.txt', '.json', '.webmanifest', '']), ...walk('scripts', ['.ts']), 'README.md', 'CLAUDE.md']
   .filter((f) => !f.endsWith('verify-content.ts'));
 
-check('no explicit years figure', () => SCAN.filter((f) => YEARS.test(readText(f))).map((f) => `years figure in ${f}`));
-check('old title gone', () => SCAN.filter((f) => OLD_TITLE.test(readText(f))).map((f) => `old title in ${f}`));
-check('old employer label gone', () => SCAN.filter((f) => readText(f).includes('RAG.WTF & AI Initiatives')).map((f) => f));
-check('title is AI Solutions Architect', async () => (await import('../src/data/site.ts')).ENGINEER_TITLE === 'AI Solutions Architect' ? [] : ['ENGINEER_TITLE']);
-check('llms.txt names role + employer', () => ['AI Solutions Architect', 'Daxonet AI'].filter((s) => !readText('public/llms.txt').includes(s)).map((s) => `llms.txt missing "${s}"`));
+const SCANS: Array<[name: string, hit: (text: string) => boolean, msg?: (f: string) => string]> = [
+  ['no explicit years figure', (t) => YEARS.test(t), (f) => `years figure in ${f}`],
+  ['old title gone', (t) => OLD_TITLE.test(t), (f) => `old title in ${f}`],
+  ['old employer label gone', (t) => t.includes('RAG.WTF & AI Initiatives')],
+];
+for (const [name, hit, msg] of SCANS) check(name, () => scan(SCAN, hit, msg));
+
+check('title is AI Solutions Architect', async () => (await site()).ENGINEER_TITLE === 'AI Solutions Architect' ? [] : ['ENGINEER_TITLE']);
+check('llms.txt names role + employer', () => missing(readText('public/llms.txt'), ['AI Solutions Architect', 'Daxonet AI']).map((s) => `llms.txt missing "${s}"`));
 check('resume.pdf is the Oct 2026 CV', () => existsSync('docs/Resume-202610.pdf') && !readFileSync('public/resume.pdf').equals(readFileSync('docs/Resume-202610.pdf')) ? ['public/resume.pdf differs'] : []);
 check('dist: portfolio.json title', () => JSON.parse(readText('dist/api/portfolio.json')).title === 'AI Solutions Architect' ? [] : ['portfolio.json title'], { dist: true });
-check('dist: no years figure in dist', () => walk('dist', ['.html', '.txt', '.json', '.xml']).filter((f) => YEARS.test(readText(f))), { dist: true });
+check('dist: no years figure in dist', () => scan(walk('dist', ['.html', '.txt', '.json', '.xml']), (t) => YEARS.test(t)), { dist: true });
+
+// ---------- articles ----------
 
 const M = 'https://limcheekin.medium.com/';
 const EXPECTED_ARTICLES: Record<string, [string, string]> = { // slug -> [publishDate, externalUrl]
@@ -85,10 +125,11 @@ const EXPECTED_ARTICLES: Record<string, [string, string]> = { // slug -> [publis
   'open-text-embeddings-intro': ['2023-11-13', M + 'unleashing-the-power-of-open-source-text-embeddings-with-open-text-embeddings-e8fc684aa2cd'],
 };
 const isoDate = (d: unknown) => (d instanceof Date ? d.toISOString().slice(0, 10) : String(d));
+const articles = () => frontmatter('src/content/articles');
 
 check('articles match Medium', () => {
   const out: string[] = [];
-  const found = new Map(frontmatter('src/content/articles').map((a) => [a.slug, a.data]));
+  const found = new Map(articles().map((a) => [a.slug, a.data]));
   for (const [slug, [date, url]] of Object.entries(EXPECTED_ARTICLES)) {
     const d = found.get(slug);
     if (!d) { out.push(`missing article ${slug}`); continue; }
@@ -99,34 +140,40 @@ check('articles match Medium', () => {
   return out;
 });
 check('latest three articles', () => {
-  const top = frontmatter('src/content/articles')
+  const top = [...articles()]
     .sort((a, b) => isoDate(b.data.publishDate).localeCompare(isoDate(a.data.publishDate)))
     .slice(0, 3)
     .map((a) => a.slug);
-  const want = ['zero-trust-ai-agents', 'llm-load-testing-gke', 'nanochat-single-gpu'];
-  return JSON.stringify(top) === JSON.stringify(want) ? [] : [`latest three are ${top.join(', ')}`];
+  return sameList(top, ['zero-trust-ai-agents', 'llm-load-testing-gke', 'nanochat-single-gpu']) ? [] : [`latest three are ${top.join(', ')}`];
 });
 check('llms.txt has no coming-soon', () => (readText('public/llms.txt').includes('coming soon') ? ['coming soon in llms.txt'] : []));
 check('article links live', async () => {
-  const out: string[] = [];
   const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' };
+  const entries = Object.entries(EXPECTED_ARTICLES);
+  // All article GETs run in parallel; failures are reported per slug, in table order.
+  const gets = entries.map(([, [, url]]) =>
+    fetch(url, { headers, redirect: 'follow', signal: AbortSignal.timeout(30000) }).then(
+      (r) => (r.status >= 400 ? `GET ${r.status}` : null),
+      (e) => `GET threw ${(e as Error).message}`,
+    ),
+  );
   const feed = await (await fetch(M + 'feed', { headers, signal: AbortSignal.timeout(30000) })).text();
-  for (const [slug, [, url]] of Object.entries(EXPECTED_ARTICLES)) {
-    if (!feed.includes(url)) out.push(`${slug}: not in Medium feed`);
-    try {
-      const r = await fetch(url, { headers, redirect: 'follow', signal: AbortSignal.timeout(30000) });
-      if (r.status >= 400) out.push(`${slug}: GET ${r.status}`);
-    } catch (e) {
-      out.push(`${slug}: GET threw ${(e as Error).message}`);
-    }
-  }
-  return out;
+  const results = await Promise.all(gets);
+  return entries.flatMap(([slug, [, url]], i) => [
+    ...(feed.includes(url) ? [] : [`${slug}: not in Medium feed`]),
+    ...(results[i] ? [`${slug}: ${results[i]}`] : []),
+  ]);
 }, { links: true });
 
-const readExperience = () => walk('src/content/experience', ['.json']).sort().map((f) => ({ f, ...JSON.parse(readText(f)) }));
+// ---------- experience ----------
+
+/** Shared and cached: copy before sorting. */
+const readExperience = lazy((): any[] => walk('src/content/experience', ['.json']).sort().map((f) => ({ f, ...JSON.parse(readText(f)) })));
+const experienceFile = (f: string) => `src/content/experience/${f}`;
+
 check('experience order + Daxonet first', () => {
   const out: string[] = [];
-  const e = readExperience().sort((a, b) => a.sortOrder - b.sortOrder);
+  const e = [...readExperience()].sort((a, b) => a.sortOrder - b.sortOrder);
   const orders = e.map((x) => x.sortOrder);
   if (new Set(orders).size !== orders.length) out.push('sortOrder not unique');
   for (let i = 1; i < e.length; i++) if (e[i].startDate > e[i - 1].startDate) out.push(`${e[i].company} starts after ${e[i - 1].company} but sorts later`);
@@ -138,25 +185,28 @@ check('experience order + Daxonet first', () => {
 check('merge kept trimmed detail', () => [
   ['02-dxc-tech-lead.json', 'contributing millions'], ['02-dxc-tech-lead.json', 'EPIC Configurator'], ['02-dxc-tech-lead.json', 'Divestiture and Acquisition'],
   ['03-zurich-tech-lead.json', '5-member'], ['01-ai-engineer.json', 'open-text-embeddings'], ['01-ai-engineer.json', 'Fluwix'],
-].filter(([f, s]) => !readText(`src/content/experience/${f}`).includes(s)).map(([f, s]) => `${f} lost "${s}"`));
+].filter(([f, s]) => !readText(experienceFile(f)).includes(s)).map(([f, s]) => `${f} lost "${s}"`));
 check('CV facts merged', () => [
   ['00-daxonet.json', 'Claim Pilot'], ['00-daxonet.json', 'AI Enablement'], ['01-ai-engineer.json', 'Private Service Connect'],
   ['01-ai-engineer.json', 'Ragas'], ['02-dxc-tech-lead.json', 'mentored three junior developers'],
-].filter(([f, s]) => !existsSync(`src/content/experience/${f}`) || !readText(`src/content/experience/${f}`).includes(s)).map(([f, s]) => `${f} missing "${s}"`));
+].filter(([f, s]) => !existsSync(experienceFile(f)) || !readText(experienceFile(f)).includes(s)).map(([f, s]) => `${f} missing "${s}"`));
 check('no companyUrl on Independent Consultant', () => (readExperience().some((x) => x.company === 'Independent Consultant' && x.companyUrl) ? ['companyUrl still set'] : []));
 
+// ---------- projects ----------
+
 const FEATURED: Record<string, string> = { 'claim-pilot': 'claim', 'trade-pilot': 'trade', 'warebot': 'ware', 'agentic-ai-layer': 'agent', 'project-concord': 'concord', 'talk-to-ai': 'talk', 'rag-wtf': 'rag' };
-const projectsBySlug = () => new Map(frontmatter('src/content/projects').map((p) => [p.slug, p]));
+const projects = () => frontmatter('src/content/projects');
+const projectsBySlug = lazy(() => new Map(projects().map((p) => [p.slug, p])));
+const project = (slug: string) => projectsBySlug().get(slug);
+
 check('featured order', () => {
-  const got = frontmatter('src/content/projects').filter((p) => p.data.featured).sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99)).map((p) => p.slug);
-  const want = Object.keys(FEATURED);
-  return JSON.stringify(got) === JSON.stringify(want) ? [] : [`featured order is ${got.join(', ')}`];
+  const got = projects().filter((p) => p.data.featured).sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99)).map((p) => p.slug);
+  return sameList(got, Object.keys(FEATURED)) ? [] : [`featured order is ${got.join(', ')}`];
 });
 check('featured cards complete', () => {
   const out: string[] = [];
-  const m = projectsBySlug();
   Object.keys(FEATURED).forEach((slug, i) => {
-    const d = m.get(slug)?.data;
+    const d = project(slug)?.data;
     if (!d) { out.push(`missing ${slug}`); return; }
     if (!d.tagline) out.push(`${slug}: no tagline`);
     if (!Array.isArray(d.stack) || d.stack.length < 2 || d.stack.length > 4) out.push(`${slug}: stack length`);
@@ -169,42 +219,42 @@ check('featured cards complete', () => {
 });
 check('demoted + hvac', () => {
   const out: string[] = [];
-  const m = projectsBySlug();
-  for (const s of ['telegram-gpt', 'open-text-embeddings']) if (m.get(s)?.data.featured !== false) out.push(`${s} should not be featured`);
-  const h = m.get('smart-hvac-catalogue')?.data;
+  for (const s of ['telegram-gpt', 'open-text-embeddings']) if (project(s)?.data.featured !== false) out.push(`${s} should not be featured`);
+  const h = project('smart-hvac-catalogue')?.data;
   if (!h) out.push('smart-hvac-catalogue missing');
   else { if (h.featured) out.push('hvac featured'); if (h.kind !== 'enterprise') out.push('hvac kind'); }
   return out;
 });
 check('dist: portfolio.json has kind', () => (JSON.parse(readText('dist/api/portfolio.json')).projects as any[]).filter((p) => !p.kind).map((p) => `${p.slug} lacks kind`), { dist: true });
 
-// ---------- task 6: site chrome ----------
-const UI = [...walk('src/pages', ['.astro','.ts']), ...walk('src/components', ['.astro','.tsx']), ...walk('src/layouts', ['.astro']), 'src/data/site.ts'];
-check('no visible "Insights" label', () => UI.filter(f => /Insights/.test(readText(f))).map(f => f));
-check('nav says Writing', async () => (await import('../src/data/site.ts')).NAV_LINKS.some((l: any) => l.name === 'Writing' && l.href === '/insights/') ? [] : ['NAV_LINKS']);
-check('sidebars removed', () => [existsSync('src/components/FixedSidebars.astro') && 'FixedSidebars.astro exists', ...UI.filter(f => readText(f).includes('FixedSidebars'))].filter(Boolean) as string[]);
-check('dist: footer + nav', () => { const t = htmlText(readText('dist/index.html')); return [!t.includes('Kuala Lumpur, Malaysia') && 'footer location', !readText('dist/index.html').includes('href="/insights/"') && 'nav link'].filter(Boolean) as string[]; }, { dist: true });
+// ---------- site chrome ----------
 
-// ---------- task 7: home shell ----------
-check('dist: old home gone', () => { const t = htmlText(readText('dist/index.html')); return ['Hi, my name is', "Some Things I've Built", 'I help'].filter(s => t.includes(s)); }, { dist: true });
-check('dist: home order', () => { const h = readText('dist/index.html'); const idx = ['id="hero"','id="work"','id="career"','id="writing"','id="contact"'].map(s => h.indexOf(s)); return idx.every((v, i) => v > -1 && (i === 0 || v > idx[i-1])) ? [] : ['section order ' + idx]; }, { dist: true });
-check('banner removed', () => ['src/components/Banner.tsx','src/data/value-props.ts','src/components/SectionWrapper.astro'].filter(existsSync));
+const UI = [...walk('src/pages', ['.astro', '.ts']), ...walk('src/components', ['.astro', '.tsx']), ...walk('src/layouts', ['.astro']), 'src/data/site.ts'];
+check('no visible "Insights" label', () => scan(UI, (t) => /Insights/.test(t)));
+check('nav says Writing', async () => (await site()).NAV_LINKS.some((l: any) => l.name === 'Writing' && l.href === '/insights/') ? [] : ['NAV_LINKS']);
+check('sidebars removed', () => [...flagged([[existsSync('src/components/FixedSidebars.astro'), 'FixedSidebars.astro exists']]), ...scan(UI, (t) => t.includes('FixedSidebars'))]);
+check('dist: footer + nav', () => flagged([[!homeText().includes('Kuala Lumpur, Malaysia'), 'footer location'], [!homeHtml().includes('href="/insights/"'), 'nav link']]), { dist: true });
 
-// ---------- task 8: hero ----------
-check('dist: hero SSR text', () => { const t = htmlText(readText('dist/index.html')); return ['I build AI agents that do real work inside business systems.', 'From a WhatsApp message to a posted sales order', 'Lim Chee Kin · AI Solutions Architect', 'Résumé'].filter(s => !t.includes(s)); }, { dist: true });
-check('dist: console decorative', () => /aria-hidden="true"[^>]*data-agent-console|data-agent-console[^>]*aria-hidden="true"/.test(readText('dist/index.html')) ? [] : ['console must have data-agent-console + aria-hidden'], { dist: true });
+// ---------- home page ----------
 
-// ---------- task 9: selected work track ----------
-check('dist: work cards SSR', () => { const t = htmlText(readText('dist/index.html')); return ['Selected Work', 'Claim Pilot', 'Trade Pilot', 'WareBot', 'Agentic AI Layer', 'Project Concord', 'Talk To AI', 'RAG.WTF', 'All projects', 'Expense claims from Teams and WhatsApp'].filter(s => !t.includes(s)); }, { dist: true });
-check('dist: claim pilot first', () => { const t = htmlText(readText('dist/index.html')); return t.indexOf('Claim Pilot') < t.indexOf('Trade Pilot') ? [] : ['order']; }, { dist: true });
+check('dist: old home gone', () => present(homeText(), ['Hi, my name is', "Some Things I've Built", 'I help']), { dist: true });
+check('dist: home order', () => {
+  const idx = ['id="hero"', 'id="work"', 'id="career"', 'id="writing"', 'id="contact"'].map((s) => homeHtml().indexOf(s));
+  return idx.every((v, i) => v > -1 && (i === 0 || v > idx[i - 1])) ? [] : ['section order ' + idx];
+}, { dist: true });
+check('banner removed', () => ['src/components/Banner.tsx', 'src/data/value-props.ts', 'src/components/SectionWrapper.astro'].filter(existsSync));
 
-// ---------- task 11: career ----------
-check('dist: career SSR', () => { const t = htmlText(readText('dist/index.html')); return ['Career', 'AI Solutions Architect', 'Daxonet AI', 'Principal AI Architect', 'DXC Technology', 'Zurich Technology Services', 'Where it started', 'Full experience'].filter(s => !t.includes(s)); }, { dist: true });
+check('dist: hero SSR text', () => missing(homeText(), ['I build AI agents that do real work inside business systems.', 'From a WhatsApp message to a posted sales order', 'Lim Chee Kin · AI Solutions Architect', 'Résumé']), { dist: true });
+check('dist: console decorative', () => /aria-hidden="true"[^>]*data-agent-console|data-agent-console[^>]*aria-hidden="true"/.test(homeHtml()) ? [] : ['console must have data-agent-console + aria-hidden'], { dist: true });
 
-// ---------- task 12: writing + contact ----------
-check('dist: writing rows', () => { const t = htmlText(readText('dist/index.html')); return ['Latest Writing', 'All writing', 'Zero-Trust Security for Autonomous AI Agents', 'Solving the LLM Load Testing Paradox', "Reproducing Karpathy's NanoChat"].filter(s => !t.includes(s)); }, { dist: true });
-check('dist: writing links external', () => readText('dist/index.html').includes('href="https://limcheekin.medium.com/zero-trust-security-for-autonomous-ai-agents-691b5cbcec21"') ? [] : ['zero-trust link'], { dist: true });
-check('dist: contact', () => { const t = htmlText(readText('dist/index.html')); return ['Have a workflow that should run itself?', 'Tell me about yours.', 'GitHub', 'LinkedIn', 'Medium'].filter(s => !t.includes(s)); }, { dist: true });
+check('dist: work cards SSR', () => missing(homeText(), ['Selected Work', 'Claim Pilot', 'Trade Pilot', 'WareBot', 'Agentic AI Layer', 'Project Concord', 'Talk To AI', 'RAG.WTF', 'All projects', 'Expense claims from Teams and WhatsApp']), { dist: true });
+check('dist: claim pilot first', () => (homeText().indexOf('Claim Pilot') < homeText().indexOf('Trade Pilot') ? [] : ['order']), { dist: true });
+
+check('dist: career SSR', () => missing(homeText(), ['Career', 'AI Solutions Architect', 'Daxonet AI', 'Principal AI Architect', 'DXC Technology', 'Zurich Technology Services', 'Where it started', 'Full experience']), { dist: true });
+
+check('dist: writing rows', () => missing(homeText(), ['Latest Writing', 'All writing', 'Zero-Trust Security for Autonomous AI Agents', 'Solving the LLM Load Testing Paradox', "Reproducing Karpathy's NanoChat"]), { dist: true });
+check('dist: writing links external', () => homeHtml().includes('href="https://limcheekin.medium.com/zero-trust-security-for-autonomous-ai-agents-691b5cbcec21"') ? [] : ['zero-trust link'], { dist: true });
+check('dist: contact', () => missing(homeText(), ['Have a workflow that should run itself?', 'Tell me about yours.', 'GitHub', 'LinkedIn', 'Medium']), { dist: true });
 
 // ---------- run ----------
 
