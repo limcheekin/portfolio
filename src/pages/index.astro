@@ -4,12 +4,14 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import {
-  HERO_CONTENT, CONTACT_CTA,
+  HERO_CONTENT,
   EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL, ENGINEER_TITLE,
 } from '../data/site';
 import Hero from '../components/home/Hero.astro';
 import WorkTrack from '../components/home/WorkTrack.tsx';
 import CareerTimeline from '../components/home/CareerTimeline.tsx';
+import LatestWriting from '../components/home/LatestWriting.astro';
+import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_HIGHLIGHTS } from '../data/career';
 import type { WorkCard } from '../components/home/types';
 
@@ -194,22 +196,9 @@ const jsonLd = [
 
     <CareerTimeline client:load entries={CAREER_HIGHLIGHTS} />
 
-    <section id="writing" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
-      <ul class="space-y-2">
-        {recentArticles.map((article) => (
-          <li class="text-lightest-slate">{article.data.title}</li>
-        ))}
-      </ul>
-    </section>
+    <LatestWriting articles={recentArticles} />
 
-    <section id="contact" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
-      <p class="font-mono text-green-accent mb-4">{CONTACT_CTA.eyebrow}</p>
-      <h2 class="text-3xl md:text-4xl font-semibold text-lightest-slate mb-4">
-        {CONTACT_CTA.headline.before}<em class="not-italic text-green-accent">{CONTACT_CTA.headline.accent}</em>
-      </h2>
-      <p class="text-slate-text text-lg mb-8">{CONTACT_CTA.paragraph}</p>
-      <a href={CONTACT_CTA.button.href} data-testid="hero-contact-cta" class="text-green-accent">{CONTACT_CTA.button.label}</a>
-    </section>
+    <ContactCta />
 
   </main>
 

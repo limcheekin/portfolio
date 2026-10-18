@@ -201,6 +201,11 @@ check('dist: claim pilot first', () => { const t = htmlText(readText('dist/index
 // ---------- task 11: career ----------
 check('dist: career SSR', () => { const t = htmlText(readText('dist/index.html')); return ['Career', 'AI Solutions Architect', 'Daxonet AI', 'Principal AI Architect', 'DXC Technology', 'Zurich Technology Services', 'Where it started', 'Full experience'].filter(s => !t.includes(s)); }, { dist: true });
 
+// ---------- task 12: writing + contact ----------
+check('dist: writing rows', () => { const t = htmlText(readText('dist/index.html')); return ['Latest Writing', 'All writing', 'Zero-Trust Security for Autonomous AI Agents', 'Solving the LLM Load Testing Paradox', "Reproducing Karpathy's NanoChat"].filter(s => !t.includes(s)); }, { dist: true });
+check('dist: writing links external', () => readText('dist/index.html').includes('href="https://limcheekin.medium.com/zero-trust-security-for-autonomous-ai-agents-691b5cbcec21"') ? [] : ['zero-trust link'], { dist: true });
+check('dist: contact', () => { const t = htmlText(readText('dist/index.html')); return ['Have a workflow that should run itself?', 'Tell me about yours.', 'GitHub', 'LinkedIn', 'Medium'].filter(s => !t.includes(s)); }, { dist: true });
+
 // ---------- run ----------
 
 let failed = 0;
