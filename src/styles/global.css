@@ -56,3 +56,21 @@ h2.font-display { line-height: 1.11; letter-spacing: -0.025em; }
   font-size: 1.125rem;
   line-height: 1.75;
 }
+
+/* Hero agent console cursor. Blink is disabled for reduced motion. */
+.agent-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #00d992;
+  vertical-align: middle;
+  animation: agent-blink 1s steps(1) infinite;
+}
+
+@keyframes agent-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-cursor { animation: none; }
+}

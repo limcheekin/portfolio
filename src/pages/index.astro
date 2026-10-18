@@ -7,6 +7,7 @@ import {
   HERO_CONTENT, CONTACT_CTA,
   EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL, ENGINEER_TITLE,
 } from '../data/site';
+import Hero from '../components/home/Hero.astro';
 import type { WorkCard } from '../components/home/types';
 
 const allProjects = await getCollection('projects');
@@ -184,17 +185,7 @@ const jsonLd = [
 
   <main id="main-content" data-testid="main-content" class="min-h-screen">
 
-    <section id="hero" data-testid="hero-section" class="px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
-      <p class="font-mono text-green-accent mb-4">{HERO_CONTENT.eyebrow}</p>
-      <h1 class="text-4xl md:text-6xl font-display font-bold text-lightest-slate mb-4">
-        {HERO_CONTENT.headline.before}<em class="not-italic text-green-accent">{HERO_CONTENT.headline.accent}</em>{HERO_CONTENT.headline.after}
-      </h1>
-      <p class="text-slate-text text-lg mb-8">{HERO_CONTENT.sub}</p>
-      <div class="flex gap-4">
-        <a href={HERO_CONTENT.primaryCta.href} data-testid="hero-cta" class="text-green-accent">{HERO_CONTENT.primaryCta.label}</a>
-        <a href={HERO_CONTENT.resumeCta.href} class="text-slate-text">{HERO_CONTENT.resumeCta.label}</a>
-      </div>
-    </section>
+    <Hero />
 
     <section id="work" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
       <ul class="space-y-3">

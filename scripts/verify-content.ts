@@ -190,6 +190,10 @@ check('dist: old home gone', () => { const t = htmlText(readText('dist/index.htm
 check('dist: home order', () => { const h = readText('dist/index.html'); const idx = ['id="hero"','id="work"','id="career"','id="writing"','id="contact"'].map(s => h.indexOf(s)); return idx.every((v, i) => v > -1 && (i === 0 || v > idx[i-1])) ? [] : ['section order ' + idx]; }, { dist: true });
 check('banner removed', () => ['src/components/Banner.tsx','src/data/value-props.ts','src/components/SectionWrapper.astro'].filter(existsSync));
 
+// ---------- task 8: hero ----------
+check('dist: hero SSR text', () => { const t = htmlText(readText('dist/index.html')); return ['I build AI agents that do real work inside business systems.', 'From a WhatsApp message to a posted sales order', 'Lim Chee Kin · AI Solutions Architect', 'Résumé'].filter(s => !t.includes(s)); }, { dist: true });
+check('dist: console decorative', () => /aria-hidden="true"[^>]*data-agent-console|data-agent-console[^>]*aria-hidden="true"/.test(readText('dist/index.html')) ? [] : ['console must have data-agent-console + aria-hidden'], { dist: true });
+
 // ---------- run ----------
 
 let failed = 0;
