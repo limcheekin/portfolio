@@ -115,7 +115,7 @@ export default function DotGrid({ gap = 30, opacity = 0.35 }: { gap?: number; op
 
       return () => mm.revert();
     },
-    { scope: ref, dependencies: [gap] },
+    { scope: ref, dependencies: [gap], revertOnUpdate: true },
   );
 
   return <canvas ref={ref} aria-hidden="true" style={{ opacity }} className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full md:block" />;

@@ -40,7 +40,7 @@ export default function HeroIntro({ content }: { content: typeof HERO_CONTENT })
     'font-mono inline-flex items-center justify-center rounded border px-7 py-3.5 text-sm transition-all duration-250 ease-custom-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-green-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-navy';
 
   return (
-    <div ref={scope}>
+    <div ref={scope} className="min-w-0">
       <p data-hero-fade className="font-mono text-green-accent mb-5 text-sm md:text-base">{eyebrow}</p>
       <h1 className="font-display font-bold text-lightest-slate text-4xl sm:text-5xl lg:text-[52px] leading-[1.06] tracking-tight">
         {headline.before}<em className="not-italic text-green-accent">{headline.accent}</em>{headline.after}
