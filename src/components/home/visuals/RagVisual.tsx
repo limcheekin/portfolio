@@ -1,6 +1,5 @@
-import { useRef } from 'react';
 import type { VisualProps } from '../types';
-import { useVisualTimeline } from './useVisualTimeline';
+import { reveal } from './helpers';
 import VizFrame from './VizFrame';
 
 const STEP = 0.8;
@@ -9,22 +8,21 @@ const HITS = [4, 7, 10];
 const DOCS: [number, number][] = [[14, 18], [58, 30], [102, 18]];
 
 export default function RagVisual({ active }: VisualProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  useVisualTimeline(ref, active, (tl) => {
-    tl.from('.doc', { opacity: 0, y: 5, duration: 0.35 }, 0);
-    tl.from('.dot, .q', { opacity: 0, y: 5, duration: 0.35 }, STEP);
+  const build = (tl: gsap.core.Timeline) => {
+    reveal(tl, '.doc', 0);
+    reveal(tl, '.dot, .q', STEP);
     tl.from('.hit', { scale: 1, duration: 0.4 }, 2 * STEP);
     tl.from('.glow', { opacity: 0, duration: 0.4 }, 2 * STEP);
-    tl.from('.ans', { opacity: 0, y: 5, duration: 0.35 }, 3 * STEP);
-  });
+    reveal(tl, '.ans', 3 * STEP);
+  };
   return (
-    <VizFrame frameRef={ref}>
+    <VizFrame active={active} build={build}>
       {DOCS.map(([top, left], i) => (
-        <div key={i} className="doc absolute w-11 h-[54px] bg-[#141417] border border-[#2e2e33] rounded-[4px]" style={{ top, left }}>
+        <div key={i} className="doc absolute w-11 h-[54px] bg-graphite border border-[#2e2e33] rounded-[4px]" style={{ top, left }}>
           <div className="absolute inset-x-[7px] top-[9px] h-1 bg-[#2e2e33] rounded-[2px] shadow-[0_9px_0_#2e2e33,0_18px_0_#2e2e33,0_27px_0_#2e2e33]" />
         </div>
       ))}
-      <div className="q absolute right-[14px] top-4 bg-[#1d1d22] rounded-[9px] px-[9px] py-[5px] text-[#f2f2f2]">what&apos;s our refund policy?</div>
+      <div className="q absolute right-[14px] top-4 bg-[#1d1d22] rounded-[9px] px-[9px] py-[5px] text-lightest-slate">what&apos;s our refund policy?</div>
       {PTS.map(([x, y], i) => {
         const hit = HITS.includes(i);
         return (
