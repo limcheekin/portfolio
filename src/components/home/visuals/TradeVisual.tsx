@@ -5,7 +5,9 @@ import VizFrame from './VizFrame';
 
 const STEP = 0.7;
 const ROWS: [string, string][] = [['A4 80g', '×40'], ['Toner', '×6'], ['Folder', '×120']];
-const rowCls = 'flex justify-between px-2 py-[5px] border-b border-[#1a1a1e] text-[#b8b3b0]';
+const rowCls = 'flex justify-between px-2 py-[5px] border-b border-[#1a1a1e]';
+const bodyCls = 'text-[#b8b3b0]';
+const headCls = 'text-[#8b949e] bg-[#0f0f12]';
 
 export default function TradeVisual({ active }: VisualProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,9 +24,9 @@ export default function TradeVisual({ active }: VisualProps) {
       </div>
       <div className="arrow absolute left-[142px] top-[52px] text-[#8b949e] text-sm">→</div>
       <div className="absolute left-[162px] top-[18px] w-[134px] border border-[#232327] rounded-[6px] overflow-hidden">
-        <div className={`${rowCls} text-[#8b949e] bg-[#0f0f12]`}><span>item</span><span>qty</span></div>
+        <div className={`${rowCls} ${headCls}`}><span>item</span><span>qty</span></div>
         {ROWS.map(([a, b], i) => (
-          <div key={a} className={`r${i} ${rowCls}`}><span>{a}</span><span>{b}</span></div>
+          <div key={a} className={`r${i} ${rowCls} ${bodyCls}`}><span>{a}</span><span>{b}</span></div>
         ))}
       </div>
       <div className="so absolute left-[162px] bottom-4 bg-[rgba(0,217,146,.12)] text-green-accent border border-[rgba(0,217,146,.35)] rounded-[6px] px-[9px] py-[5px]">SO-0412 created ✓</div>
