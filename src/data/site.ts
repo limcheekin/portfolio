@@ -30,10 +30,18 @@ export const SOCIAL_LINKS: ContactLink[] = [
 ];
 
 export const HERO_CONTENT = {
-  greeting: "Hi, my name is",
-  name: ENGINEER_NAME + ".",
-  tagline: "AI Engineer & Solution Architect.",
-  ctaButton: "Get In Touch",
+  eyebrow: 'Lim Chee Kin · AI Solutions Architect',
+  headline: { before: 'I build AI agents that do ', accent: 'real work', after: ' inside business systems.' },
+  sub: 'From a WhatsApp message to a posted sales order, with a human in the loop.',
+  primaryCta: { label: 'Get in touch', href: '/contact/' },
+  resumeCta: { label: 'Résumé ↗', href: '/resume.pdf' },
+};
+
+export const CONTACT_CTA = {
+  eyebrow: '04 · Contact',
+  headline: { before: 'Have a workflow that should ', accent: 'run itself?' },
+  paragraph: 'I design and ship AI agents that plug into the systems you already run. Tell me about yours.',
+  button: { label: 'Get in touch', href: '/contact/' },
 };
 
 export const ABOUT_CONTENT = {

@@ -185,6 +185,11 @@ check('nav says Writing', async () => (await import('../src/data/site.ts')).NAV_
 check('sidebars removed', () => [existsSync('src/components/FixedSidebars.astro') && 'FixedSidebars.astro exists', ...UI.filter(f => readText(f).includes('FixedSidebars'))].filter(Boolean) as string[]);
 check('dist: footer + nav', () => { const t = htmlText(readText('dist/index.html')); return [!t.includes('Kuala Lumpur, Malaysia') && 'footer location', !readText('dist/index.html').includes('href="/insights/"') && 'nav link'].filter(Boolean) as string[]; }, { dist: true });
 
+// ---------- task 7: home shell ----------
+check('dist: old home gone', () => { const t = htmlText(readText('dist/index.html')); return ['Hi, my name is', "Some Things I've Built", 'I help'].filter(s => t.includes(s)); }, { dist: true });
+check('dist: home order', () => { const h = readText('dist/index.html'); const idx = ['id="hero"','id="work"','id="career"','id="writing"','id="contact"'].map(s => h.indexOf(s)); return idx.every((v, i) => v > -1 && (i === 0 || v > idx[i-1])) ? [] : ['section order ' + idx]; }, { dist: true });
+check('banner removed', () => ['src/components/Banner.tsx','src/data/value-props.ts','src/components/SectionWrapper.astro'].filter(existsSync));
+
 // ---------- run ----------
 
 let failed = 0;
