@@ -1,10 +1,10 @@
 ---
 title: "Building Your First No-Code MCP Server: The Fabric Integration Story"
 description: "How I created a Model Context Protocol (MCP) server for Fabric REST API without writing a single line of code"
-publishDate: 2026-03-15
+externalUrl: "https://limcheekin.medium.com/building-your-first-no-code-mcp-server-the-fabric-integration-story-90da58cdbe1f"
+publishDate: 2025-06-20
 tags: ["Mcp Server", "MCP", "No Code", "Fabric", "Prompt Library"]
-image: "https://picsum.photos/seed/no-code-mcp/400/200"
-platform: "MCP, Fabric"
+platform: "Medium"
 type: "Article"
 ---
 

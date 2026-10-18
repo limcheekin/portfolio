@@ -38,11 +38,16 @@ Lim Chee Kin is an AI Solutions Architect at Daxonet AI, based in Kuala Lumpur, 
 - 1999-2000: System Engineer (Tee Yam Holding)
 
 ## Articles
-- AI is Ready. Your Legacy Database Isn't. Let's Fix That. (coming soon)
-- Building Your First No-Code MCP Server: The Fabric Integration Story (coming soon)
-- [Talking Book: Making Books Less Boring](https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2)
-- [Beyond the Cloud: How I Built My Own AI Server (and Why)](https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3)
-- [Would you pay $1/month to Own Your AI Data?](https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf)
+- [Zero-Trust Security for Autonomous AI Agents](https://limcheekin.medium.com/zero-trust-security-for-autonomous-ai-agents-691b5cbcec21)
+- [Solving the LLM Load Testing Paradox: A Reference Architecture on GKE Autopilot](https://limcheekin.medium.com/solving-the-llm-load-testing-paradox-a-reference-architecture-on-gke-autopilot-c8c2271f5cfb)
+- [Reproducing Karpathy's NanoChat on a Single GPU — Step by Step with AI Tools](https://limcheekin.medium.com/reproducing-karpathys-nanochat-on-a-single-gpu-step-by-step-with-ai-tools-e9420aaee912)
+- [AI is Ready. Your Legacy Database Isn't. Let's Fix That.](https://limcheekin.medium.com/ai-is-ready-your-legacy-database-isnt-let-s-fix-that-f28013a2f833)
+- [Building Your First No-Code MCP Server: The Fabric Integration Story](https://limcheekin.medium.com/building-your-first-no-code-mcp-server-the-fabric-integration-story-90da58cdbe1f)
+- [Introducing Talking Book](https://limcheekin.medium.com/introducing-talking-book-487f6e3bc2c2)
+- [Beyond the Cloud: How I Built My Own AI Server (and Why)](https://limcheekin.medium.com/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3)
+- [Would you pay $1/month to Own Your AI Data?](https://limcheekin.medium.com/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf)
+- [Talk To AI with FastRTC: Real-Time Voice Conversations with AI](https://limcheekin.medium.com/talk-to-ai-with-fastrtc-real-time-voice-conversations-with-ai-5cf35f9691d8)
+- [Unleashing the Power of Open Source Text Embeddings with open-text-embeddings](https://limcheekin.medium.com/unleashing-the-power-of-open-source-text-embeddings-with-open-text-embeddings-e8fc684aa2cd)
 
 ## Contact
 - Email: limcheekin@vobject.com

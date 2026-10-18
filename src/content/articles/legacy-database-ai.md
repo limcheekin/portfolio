@@ -1,10 +1,10 @@
 ---
 title: "AI is Ready. Your Legacy Database Isn't. Let's Fix That."
 description: "Project Concord is a high-performance, TypeScript-based MCP server designed to help AI systems work smoothly with older business databases by turning messy and unclear data into clean, reliable information."
-publishDate: 2026-04-01
+externalUrl: "https://limcheekin.medium.com/ai-is-ready-your-legacy-database-isnt-let-s-fix-that-f28013a2f833"
+publishDate: 2025-08-18
 tags: ["Legacy Modernization", "Enterprise AI", "Data Strategy", "Digital Transformation"]
-image: "https://picsum.photos/seed/project-concord/400/200"
-platform: "MCP, Legacy Systems"
+platform: "Medium"
 type: "Article"
 ---
 

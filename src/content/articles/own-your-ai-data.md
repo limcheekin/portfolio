@@ -1,11 +1,10 @@
 ---
 title: "Would you pay $1/month to Own Your AI Data?"
 description: "Our AI conversations are valuable assets that shouldn't be surrendered to Big Tech without control or ownership."
-externalUrl: "https://medium.com/@limcheekin/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf"
-publishDate: 2025-07-01
+externalUrl: "https://limcheekin.medium.com/would-you-pay-1-month-to-own-your-ai-data-6dbb0db1eeaf"
+publishDate: 2025-04-19
 tags: ["Open WebUI", "Private AI", "Self Hosted AI", "Prompt Library"]
-image: "https://picsum.photos/seed/fluwix/400/200"
-platform: "Open WebUI"
+platform: "Medium"
 type: "Article"
 ---
 

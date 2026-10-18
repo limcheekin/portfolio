@@ -1,11 +1,10 @@
 ---
 title: "Beyond the Cloud: How I Built My Own AI Server (and Why)"
 description: "I built my own AI server using an Orange Pi 5 Max, Ubuntu 24.04, Docker, and LocalAI, enabling me to run various open-source models locally."
-externalUrl: "https://medium.com/@limcheekin/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3"
-publishDate: 2025-08-15
+externalUrl: "https://limcheekin.medium.com/beyond-the-cloud-how-i-built-my-own-ai-server-and-why-68b7235117f3"
+publishDate: 2025-04-23
 tags: ["Local AI", "Private AI", "Self Hosted AI", "DIY AI"]
-image: "https://picsum.photos/seed/fluwix/400/200"
-platform: "OrangePi 5 Max, LocalAI"
+platform: "Medium"
 type: "Article"
 ---
 

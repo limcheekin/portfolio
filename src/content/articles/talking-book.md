@@ -1,11 +1,10 @@
 ---
-title: "Talking Book: Making Books Less Boring"
+title: "Introducing Talking Book"
 description: "I created Talking Book to make reading more engaging and accessible, especially for my 9-year-old son with dyslexia."
-externalUrl: "https://medium.com/@limcheekin/introducing-talking-book-487f6e3bc2c2"
-publishDate: 2025-10-01
+externalUrl: "https://limcheekin.medium.com/introducing-talking-book-487f6e3bc2c2"
+publishDate: 2025-05-19
 tags: ["AI", "Content Generation", "YouTube", "Telegram Bot", "NLP"]
-image: "https://picsum.photos/seed/talkingbook/400/200"
-platform: "YouTube, Telegram"
+platform: "Medium"
 type: "Article"
 ---
 
