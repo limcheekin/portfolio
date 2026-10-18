@@ -45,7 +45,7 @@ const experience = readJsonFiles(join(contentDir, 'experience')).sort((a, b) => 
 // Generate portfolio.json
 const portfolio = {
   name: "Lim Chee Kin",
-  title: "Senior Tech Lead, AI Engineer, and Solution Architect",
+  title: "AI Solutions Architect",
   email: "limcheekin@vobject.com",
   urls: {
     github: "https://github.com/limcheekin",
@@ -100,7 +100,7 @@ console.log('Generated: dist/api/articles.json');
 // Generate llms-full.txt
 const lines = [
   `# Lim Chee Kin — Full Portfolio Content`,
-  `> Senior Tech Lead, AI Engineer, and Solution Architect with 25+ years of experience.`,
+  `> AI Solutions Architect at Daxonet AI — enterprise AI agents, document extraction, RAG and voice AI.`,
   ``,
   `## Projects`,
   ...projects.map((p: any) => [

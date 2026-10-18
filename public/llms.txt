@@ -1,15 +1,17 @@
 # Lim Chee Kin
-> Senior Tech Lead, AI Engineer, and Solution Architect with 25+ years of software industry experience. Passionate about Open-Source AI and Data Sovereignty.
+> AI Solutions Architect at Daxonet AI in Kuala Lumpur, Malaysia. Enterprise AI agents, document extraction, RAG and voice AI, built in Python and TypeScript.
 
 ## About
-Lim Chee Kin is a Senior Tech Lead, AI Engineer, and Solution Architect based in Malaysia. With over 25 years in the software industry, he specializes in AI/ML solutions, enterprise software architecture, and open-source development. His current focus is building privacy-first AI systems and bridging legacy infrastructure with modern AI capabilities.
+Lim Chee Kin is an AI Solutions Architect at Daxonet AI, based in Kuala Lumpur, Malaysia. He designs and ships enterprise AI: conversational agents, document extraction, human approvals, and integration with accounting and business platforms. His work spans retrieval-augmented generation (RAG), real-time voice systems, cloud operations and distributed teams. Before AI, he led enterprise Java teams and delivered banking and healthcare systems.
 
 ## Core Skills
-- AI & Machine Learning (RAG, LLM deployment, embeddings, voice AI)
-- Python, Java, Spring, Micronaut, Flutter
-- MongoDB, PostgreSQL, Oracle
-- AWS, Docker, DevOps
-- React, TypeScript, GraphQL
+- Languages and backend: Python, TypeScript, JavaScript, Java, SQL; FastAPI, Pydantic, Node.js, Bun, Spring Boot; REST APIs, webhooks and Server-Sent Events
+- AI engineering: Claude Agent SDK, MCP, Google Gemini, LiteLLM, OpenRouter, ragbits, Docling; multimodal document extraction, agent tool permissions, hybrid retrieval, Ragas and LLM evaluation
+- Data and storage: PostgreSQL/pgvector, SQLite, SurrealDB, MongoDB Atlas, MinIO
+- Frontend: React, Next.js, TypeScript, Vite, Tailwind CSS, React Native and Flutter
+- Voice and enterprise integration: Pipecat, Gemini Live, Whisper, Kokoro; Teams Bot Framework, WhatsApp, Telegram, Google Workspace, AutoCount and Dynamod
+- Security: OAuth 2.0 with PKCE, JWT validation, role-restricted agent tools, AES-256-GCM token encryption
+- Infrastructure and quality: Docker/Compose, Kubernetes, Linux, AWS, GCP/GKE, GitHub Actions, pytest and Vitest, OpenTelemetry, Prometheus and Grafana
 
 ## Current Projects
 - [RAG.WTF](https://www.rag.wtf/): An open-source platform for private, personalized knowledge discovery and management using RAG systems
@@ -23,7 +25,8 @@ Lim Chee Kin is a Senior Tech Lead, AI Engineer, and Solution Architect based in
 - 10+ Grails Framework plugins for the developer community
 
 ## Work Experience
-- 2021-Present: AI Engineer & Solution Architect (RAG.WTF & AI Initiatives)
+- 2026-Present: AI Solutions Architect (Daxonet AI)
+- 2021-2025: Principal AI Architect (Independent Consultant)
 - 2013-2020: Senior Java Tech Lead (DXC Technology)
 - 2012-2013: Senior Java Tech Lead (Zurich Technology Services Malaysia)
 - 2010-2012: Independent Software Professional

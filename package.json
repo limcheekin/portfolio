@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && tsx scripts/generate-api.ts",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "verify": "tsx scripts/verify-content.ts",
+    "verify:dist": "tsx scripts/verify-content.ts --dist",
+    "verify:links": "tsx scripts/verify-content.ts --links"
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",

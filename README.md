@@ -1,4 +1,4 @@
-# Portfolio of Lim Chee Kin - AI Engineer & Solution Architect
+# Portfolio of Lim Chee Kin - AI Solutions Architect
 
 This is the source code for my personal portfolio website, showcasing my skills, experience, and projects. The portfolio is built with React, TypeScript, and Tailwind CSS, and it is deployed on GitHub Pages.
 
@@ -8,7 +8,7 @@ This is the source code for my personal portfolio website, showcasing my skills,
 
 ## About
 
-This portfolio provides a comprehensive overview of my 25+ years of experience in the software industry, with a current focus on AI engineering. It details my expertise in building and leading multinational teams to deliver complex software solutions, architecting open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications.
+This portfolio provides a comprehensive overview of my experience in the software industry, with a current focus on enterprise AI. It details my expertise in building and leading multinational teams to deliver complex software solutions, architecting open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications.
 
 ## Built With
 

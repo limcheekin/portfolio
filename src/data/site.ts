@@ -1,5 +1,5 @@
 export const ENGINEER_NAME = "Lim Chee Kin";
-export const ENGINEER_TITLE = "Senior Tech Lead, AI Engineer, and Solution Architect";
+export const ENGINEER_TITLE = "AI Solutions Architect";
 export const SITE_TITLE = `${ENGINEER_NAME} | ${ENGINEER_TITLE}`;
 export const GITHUB_USERNAME = "limcheekin";
 export const EMAIL_ADDRESS = "limcheekin@vobject.com";
@@ -40,17 +40,16 @@ export const HERO_CONTENT = {
   greeting: "Hi, my name is",
   name: ENGINEER_NAME + ".",
   tagline: "AI Engineer & Solution Architect.",
-  introduction: `I'm a ${ENGINEER_TITLE} with over 25 years of experience, currently focusing intensively on AI engineering.`,
   ctaButton: "Get In Touch",
 };
 
 export const ABOUT_CONTENT = {
   introductionParagraphs: [
-    `Hello! I'm ${ENGINEER_NAME}, a ${ENGINEER_TITLE} with a deep passion for AI engineering. I bring over 25 years of experience delivering advance software solutions by aligning business needs with technical design and implementation.`,
-    `My expertise lies in architecting and implementing open-source AI, local AI infrastructure, and data sovereignty solutions, particularly for mobile-first web applications. I'm dedicated to building and leading teams to innovate with privacy-preserving and democratized AI.`,
-    `I am committed to standardizing processes, driving innovation in the AI space, and continuously exploring new frontiers in technology.`,
+    "I'm Lim Chee Kin, an AI Solutions Architect at Daxonet AI in Kuala Lumpur. I design and ship enterprise AI: conversational agents, document extraction, human approvals, and integration with accounting and business platforms.",
+    "My work spans retrieval-augmented generation (RAG), real-time voice systems, cloud operations and distributed teams, built in Python and TypeScript. Before AI, I led enterprise Java teams across China, Europe and Malaysia, and delivered banking and healthcare systems.",
+    "I care about AI that does real work safely: role-restricted agent tools, explicit confirmation before writes, and private, self-hosted models where data sovereignty matters.",
   ],
-  skills: ["AI Engineering", "RAG Systems", "LLM Integration", "Python", "Java", "Gemini API", "Docker", "AWS"],
+  skills: ["Agentic AI & MCP", "RAG & LLM Evaluation", "Voice AI (Pipecat)", "Python & FastAPI", "TypeScript & React", "Claude Agent SDK & Gemini", "Docker & Kubernetes", "GCP & AWS"],
   professionalPhotoUrl: "/images/profile.png",
 };
 

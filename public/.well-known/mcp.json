@@ -1,7 +1,7 @@
 {
   "mcpVersion": "1.0",
   "name": "Lim Chee Kin Portfolio",
-  "description": "MCP-compatible portfolio data for Lim Chee Kin, Senior Tech Lead, AI Engineer, and Solution Architect",
+  "description": "MCP-compatible portfolio data for Lim Chee Kin, AI Solutions Architect",
   "resources": [
     {
       "uri": "https://kin.rag.wtf/api/portfolio.json",

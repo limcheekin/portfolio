@@ -134,7 +134,7 @@
         "description": "Complete portfolio data for Lim Chee Kin",
         "properties": {
           "name": { "type": "string", "example": "Lim Chee Kin" },
-          "title": { "type": "string", "example": "Senior Tech Lead, AI Engineer, and Solution Architect" },
+          "title": { "type": "string", "example": "AI Solutions Architect" },
           "email": { "type": "string", "format": "email", "example": "limcheekin@vobject.com" },
           "urls": {
             "type": "object",
