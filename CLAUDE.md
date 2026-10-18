@@ -1,62 +1,90 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repository.
 
-## Project Overview
+## Project overview
 
-Personal portfolio website for Lim Chee Kin (AI Engineer & Solution Architect). Single-page React app deployed to GitHub Pages at `https://limcheekin.github.io/portfolio/`.
+Personal portfolio for Lim Chee Kin (AI Solutions Architect, Daxonet AI), live at `https://kin.rag.wtf`. Astro 5 static site with React 19 islands, built to `dist/` and served by nginx in Docker. The site is deliberately agent-first: all meaningful text is in server-rendered HTML.
 
 ## Commands
 
 ```bash
-npm run dev       # Start Vite dev server
-npm run build     # Production build to dist/
-npm run preview   # Preview production build locally
+npm run dev           # astro dev
+npm run build         # astro build, then tsx scripts/generate-api.ts
+npm run preview       # serve dist/
+npm run verify        # content/source checks (scripts/verify-content.ts)
+npm run verify:dist   # same plus checks on built dist/ (run after build)
+npm run verify:links  # same plus HTTP checks of article externalUrls (network)
 ```
 
-There are no tests or linting configured in this project.
+There is no test runner and no linter. Verification is `build` plus the three `verify` commands plus manual browser checks.
 
-## Architecture
+## Stack and layout
 
-**Runtime:** React 19 + TypeScript, bundled with Vite. Tailwind CSS is loaded via CDN (`<script src="https://cdn.tailwindcss.com">`) with theme config defined inline in `index.html`, not via a `tailwind.config.js` file. Tailwind classes reference custom colors like `navy`, `green-accent`, `slate-text`, etc. defined in that inline config.
+- Astro 5, `@astrojs/react` (React islands), `@astrojs/tailwind` (Tailwind 3, config in `tailwind.config.mjs`), `@astrojs/sitemap`. `trailingSlash: 'always'`. Dark only.
+- Motion: `gsap` (ScrollTrigger, SplitText), `@gsap/react`, `lenis`.
+- `src/pages/` — `index`, `about`, `contact`, `projects/` (index + `[slug]`), `insights/` (index + `[slug]`), `404`, `rss.xml.ts`.
+- `src/layouts/BaseLayout.astro` — head/meta/JSON-LD, Header, Footer, `<SmoothScroll client:load />` (once), `WebMCPTools`.
+- `src/components/` — shared `.astro` pieces (Header, Footer, Button, Card, Breadcrumb, ContactForm, ExperienceTimeline), `MobileMenu.tsx`, `WebMCPTools.tsx`.
+- `src/components/motion/` — `SmoothScroll.tsx` (Lenis, the only place a bare `useEffect` touches GSAP), `RevealGroup.tsx`.
+- `src/lib/gsap.ts` — registers plugins once and re-exports `gsap`, `useGSAP`, `ScrollTrigger`, `SplitText`. In dev only, `window.ScrollTrigger` is exposed for leak checks. `src/lib/motion.ts` exports `MQ` media queries.
+- `src/data/` — `site.ts` (name, title, nav, hero/about/contact copy, links), `career.ts` (home Career entries), `agent-runs.ts` (hero console runs).
+- `src/styles/global.css`, `DESIGN.md` (palette).
 
-**Routing:** Uses `react-router-dom` with `HashRouter`. The entire site renders as one route (`/*`) with sections scrolled to via hash links (`#about`, `#projects`, etc.).
+### Home page sections (`src/pages/index.astro`)
 
-**Data layer:** All content (experience, projects, articles, value props, nav links) lives in `constants.ts` as typed exported constants. Types are defined in `types.ts`. There is no CMS, API, or database.
+Hero (unnumbered), 01 Selected Work, 02 Career, 03 Latest Writing, 04 Contact.
 
-**Key files:**
-- `App.tsx` — Root component with scroll handling, header visibility, intersection observer for active section highlighting
-- `constants.ts` — All site content data (experience timeline, projects, articles, contact info, value propositions)
-- `types.ts` — TypeScript interfaces for all data structures
-- `index.html` — Contains Tailwind CDN config, JSON-LD structured data, import maps for ESM dependencies, and meta tags
+| Section | Files | Islands |
+|---|---|---|
+| Hero | `home/Hero.astro` | `HeroIntro` (SplitText headline), `AgentConsole` (looping runs), `DotGrid` (`client:only`, decorative) |
+| Work | `home/WorkTrack.tsx`, `home/visuals/*` | `WorkTrack` (`client:load`): pinned horizontal track on desktop, native swipe row on mobile; one code-drawn illustration per card via `useVisualTimeline` |
+| Career | `home/CareerTimeline.tsx` | `client:load`: `ScrollTrigger.batch` reveal, scroll-filled rail |
+| Writing | `home/LatestWriting.astro` | `RevealGroup` (three newest articles by `publishDate`) |
+| Contact | `home/ContactCta.astro` | `MagnetButton` (`client:visible`, `gsap.quickTo`) |
 
-**Components** (`components/`):
-- `Header.tsx` — Fixed header with numbered nav links, mobile hamburger menu
-- `HomePage.tsx` — Hero section with animated Banner and About section with work experience timeline
-- `Banner.tsx` — Rotating value proposition display (cycles through `VALUE_PROPS` from constants)
-- `PortfolioPage.tsx` — Featured and other projects grid
-- `InsightsPage.tsx` — Articles/blog section
-- `ConnectPage.tsx` — Contact section
-- `FixedSidebars.tsx` — Left social links sidebar, right email sidebar (desktop only)
-- `Layout.tsx` — Shared components: `SectionWrapper`, `Button`, `Card`, `Footer`, icon re-exports
+### Content collections (`src/content/config.ts`)
 
-**Theme:** Dark-mode-first design inspired by Brittany Chiang's portfolio (v4). `ThemeContext` exists but only dark mode is actively used. Color palette: navy background (`#0a192f`), green accent (`#64ffda`), slate text variants.
+- `projects` (md): `title`, `description`, `featured`, `featuredOrder`, `technologies`, `category`, optional `githubUrl/liveUrl/articleUrl/image/dateStarted`, plus card fields `kind` (`enterprise` | `oss`, default `oss`), `org`, `tagline`, `stack` (max 4), `visual` (`claim|trade|ware|agent|concord|talk|rag`, selects the illustration). `featuredOrder` sets the Work track order. Enterprise entries have no image or links; detail pages render without them.
+- `articles` (md): `title`, `description`, `publishDate`, `tags`, `externalUrl`, `platform`. Synced to https://limcheekin.medium.com/; all have an `externalUrl`. `/insights/<slug>/` pages still build for agents and SEO.
+- `experience` (json): `company`, `title`, `startDate`, `endDate`, `description[]`, `technologies`, `sortOrder` (newest first).
 
-## Deployment
+## Agent-first surfaces
 
-CI/CD via `.github/workflows/deploy.yaml`. On push to `main`, it builds and deploys the `dist/` folder to the `gh-pages` branch using `JamesIves/github-pages-deploy-action`. The workflow also copies `resume.pdf`, `images/`, and `infographic*.html` into `dist/` before deploying.
+- `public/llms.txt`, `robots.txt`, `site.webmanifest`, `ai-plugin.json`, `api/openapi.json`, `.well-known/{agent.json,ai-plugin.json,mcp.json,agent-policy,security.txt}`.
+- `scripts/generate-api.ts` runs after `astro build` and writes `dist/api/portfolio.json` and `dist/llms-full.txt` from the content collections.
+- JSON-LD (Person, WebSite, FAQPage) in `index.astro` and `about.astro`; WebMCP tools in `WebMCPTools.tsx`.
+- When changing the title, role, projects or articles, update all of these surfaces, not just the pages.
 
-**Base path:** Vite is configured with `base: '/portfolio/'` — all asset paths must account for this subdirectory.
+## Deploy and CI
 
-## Agent-First Web Features
+- `Dockerfile`: node:20-alpine runs `npm ci && npm run build`; nginx:alpine serves `dist/` with `nginx.conf` (trailing-slash redirect, `/sitemap.xml` -> `/sitemap-index.xml`, cache and security headers, custom 404).
+- `.github/workflows/ci.yaml` (push/PR to `main`): `npm ci`, `npm run build`, then requires in `dist/`: `index.html`, `404.html`, `api/portfolio.json`, `api/openapi.json`, `llms-full.txt`, `llms.txt`, `ai-plugin.json`, `robots.txt`. Do not break any of them.
+- Deployed `public/resume.pdf` is linked as `/resume.pdf` everywhere.
 
-The site includes SEO and AI-agent discoverability features:
-- `public/llms.txt` — LLM-readable site description
-- `public/robots.txt` and `public/sitemap.xml`
-- `public/api/portfolio.json` — Structured portfolio data for API consumers
-- JSON-LD structured data blocks in `index.html` (Person, WebSite, FAQPage schemas)
+## Animation rules
 
-## Vite Config Notes
+Translated from the redesign guide (Next.js) to Astro. Binary rules; follow them exactly.
 
-- Path alias `@/*` maps to the project root (not `src/`)
-- `GEMINI_API_KEY` env var is injected as `process.env.API_KEY` and `process.env.GEMINI_API_KEY` at build time
+- Animate only `x`, `y`, `xPercent`, `yPercent`, `scale`, `rotation`, `opacity` in our own code.
+- Every GSAP call lives in `useGSAP(fn, { scope })` imported from `src/lib/gsap.ts`. Never a bare `useEffect` (sole exception: the Lenis/ticker bridge in `SmoothScroll`).
+- Tweens created from events or timers are wrapped in `contextSafe`. Manual listeners are removed in cleanup.
+- Never store tweens in `useState`. Never update React state per frame.
+- Every animating island branches with `gsap.matchMedia(scope)` using `MQ`. Under reduced motion: no x/y movement, no pin or scrub, no loops; show the finished frame.
+- Meaningful text is server-rendered. Hidden-before-reveal states are set with `gsap.set` in JS, never CSS.
+- No top-level `window`/`document` in island module bodies (islands render at build time). Purely decorative canvases use `client:only="react"`.
+- At most the hero console plus one active Work card animate at once. Inactive cards: card opacity 0.9; illustration opacity 0.7 with `saturate(0.55)`, frozen on its finished frame.
+- Do not put `transform` or `will-change` on ancestors of a pinned section. Do not use `content-visibility` on animated sections.
+- Pinned section: `scrub: 1`, `ease: "none"`, `invalidateOnRefresh: true`, distance from `scrollWidth - innerWidth`. The Work pin has `refreshPriority: 10` so later triggers measure after it; call `ScrollTrigger.refresh()` after layout settles.
+- Lenis: one provider, `autoRaf: false`, driven by `gsap.ticker` with `lagSmoothing(0)`. No `scroll-behavior: smooth` in CSS.
+- Explicit `width`/`height` on every `<img>`.
+- No effect that makes the page crowded: one idea per section, no side rails.
+
+## Content rules
+
+- No explicit years-of-experience figure anywhere (copy, meta, JSON-LD, llms files, manifests, generated API, README, this file, PDF). Convey seniority with roles, dates and outcomes. `npm run verify` scans for it, including this file.
+- Title is "AI Solutions Architect" at Daxonet AI. The old multi-part title must not appear.
+- The visible label is "Writing"; the URL stays `/insights/`, and slugs, the `articles` collection and JSON keys keep their names.
+- Palette per `DESIGN.md`; `sky` (`#38bdf8`) is used only for open-source work.
+- Merge, never drop, experience detail: add new CV facts to existing entries.
+- Resume PDF must not state a years figure.

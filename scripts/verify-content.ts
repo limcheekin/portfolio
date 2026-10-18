@@ -59,7 +59,7 @@ export function check(name: string, fn: CheckFn, opts: { dist?: boolean; links?:
 
 const YEARS = new RegExp(['25\\+?[\\s-]?years?', 'over 25'].join('|'), 'i'); // built from parts so this file doesn't match itself
 const OLD_TITLE = /Senior Tech Lead, AI Engineer/;
-const SCAN = [...walk('src', ['.astro', '.ts', '.tsx', '.md', '.json']), ...walk('public', ['.txt', '.json', '.webmanifest', '']), ...walk('scripts', ['.ts']), 'README.md']
+const SCAN = [...walk('src', ['.astro', '.ts', '.tsx', '.md', '.json']), ...walk('public', ['.txt', '.json', '.webmanifest', '']), ...walk('scripts', ['.ts']), 'README.md', 'CLAUDE.md']
   .filter((f) => !f.endsWith('verify-content.ts'));
 
 check('no explicit years figure', () => SCAN.filter((f) => YEARS.test(readText(f))).map((f) => `years figure in ${f}`));
