@@ -15,6 +15,14 @@ export default {
         'green-accent': '#00d992',
         'green-tint': 'rgba(0, 217, 146, 0.1)',
         'sky': '#38bdf8',
+        'graphite': '#141417',
+        'light-graphite': '#1c1c20',
+      },
+      // Work track pin breakpoint; keep in sync with MQ.pin in src/lib/motion.ts.
+      // Raw screens turn off Tailwind's max-* variants (max-sm: etc.), so write responsive classes mobile-first.
+      screens: {
+        pin: { raw: '(min-width: 768px) and (min-height: 560px)' },
+        nopin: { raw: 'not all and (min-width: 768px) and (min-height: 560px)' },
       },
       fontFamily: {
         display: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'Ubuntu', 'Cantarell', '"Noto Sans"', 'Helvetica', 'Arial', 'sans-serif'],
@@ -26,15 +34,6 @@ export default {
       },
       transitionDuration: {
         '250': '250ms',
-      },
-      keyframes: {
-        fadeInUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-      },
-      animation: {
-        fadeInUp: 'fadeInUp 0.5s ease-out forwards',
       },
     },
   },

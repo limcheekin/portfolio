@@ -27,7 +27,7 @@ There is no test runner and no linter. Verification is `build` plus the three `v
 - `src/layouts/BaseLayout.astro` — head/meta/JSON-LD, Header, Footer, `<SmoothScroll client:load />` (once), `WebMCPTools`.
 - `src/components/` — shared `.astro` pieces (Header, Footer, Button, Card, Breadcrumb, ContactForm, ExperienceTimeline), `MobileMenu.tsx`, `WebMCPTools.tsx`.
 - `src/components/motion/` — `SmoothScroll.tsx` (Lenis, the only place a bare `useEffect` touches GSAP), `RevealGroup.tsx`.
-- `src/lib/gsap.ts` — registers plugins once and re-exports `gsap`, `useGSAP`, `ScrollTrigger`, `SplitText`. In dev only, `window.ScrollTrigger` is exposed for leak checks. `src/lib/motion.ts` exports `MQ` media queries.
+- `src/lib/gsap.ts` — registers `useGSAP` and `ScrollTrigger` once and re-exports them with `gsap`. In dev only, `window.ScrollTrigger` is exposed for leak checks. `src/lib/gsap-split.ts` registers and re-exports `SplitText`; import it only where text is split (the hero headline), so other pages don't ship it. `src/lib/motion.ts` exports `MQ` media queries; `MQ.pin` is the Work pin breakpoint, mirrored by the Tailwind `pin` / `nopin` screens in `tailwind.config.mjs`. `src/lib/button-styles.ts` holds the shared button classes.
 - `src/data/` — `site.ts` (name, title, nav, hero/about/contact copy, links), `career.ts` (home Career entries), `agent-runs.ts` (hero console runs).
 - `src/styles/global.css`, `DESIGN.md` (palette).
 
@@ -38,7 +38,7 @@ Hero (unnumbered), 01 Selected Work, 02 Career, 03 Latest Writing, 04 Contact.
 | Section | Files | Islands |
 |---|---|---|
 | Hero | `home/Hero.astro` | `HeroIntro` (SplitText headline), `AgentConsole` (looping runs), `DotGrid` (`client:only`, decorative) |
-| Work | `home/WorkTrack.tsx`, `home/visuals/*` | `WorkTrack` (`client:load`): pinned horizontal track on desktop, native swipe row on mobile; one code-drawn illustration per card via `useVisualTimeline` |
+| Work | `home/WorkTrack.tsx`, `home/visuals/*` | `WorkTrack` (`client:load`): pinned horizontal track on desktop, native swipe row on mobile; one code-drawn illustration per card via `VizFrame` (runs `useVisualTimeline`) |
 | Career | `home/CareerTimeline.tsx` | `client:load`: `ScrollTrigger.batch` reveal, scroll-filled rail |
 | Writing | `home/LatestWriting.astro` | `RevealGroup` (three newest articles by `publishDate`) |
 | Contact | `home/ContactCta.astro` | `MagnetButton` (`client:visible`, `gsap.quickTo`) |

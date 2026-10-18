@@ -1,5 +1,7 @@
 import { useRef } from 'react';
-import { gsap, useGSAP, SplitText } from '../../lib/gsap';
+import { gsap, useGSAP } from '../../lib/gsap';
+import { SplitText } from '../../lib/gsap-split';
+import { BUTTON_BASE, BUTTON_SIZES } from '../../lib/button-styles';
 import { MQ } from '../../lib/motion';
 import type { HERO_CONTENT } from '../../data/site';
 
@@ -36,8 +38,7 @@ export default function HeroIntro({ content }: { content: typeof HERO_CONTENT })
   );
 
   const { eyebrow, headline, sub, primaryCta, resumeCta } = content;
-  const btn =
-    'font-mono inline-flex items-center justify-center rounded border px-7 py-3.5 text-sm transition-all duration-250 ease-custom-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-green-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-navy';
+  const btn = `${BUTTON_BASE} ${BUTTON_SIZES.md}`;
 
   return (
     <div ref={scope} className="min-w-0">

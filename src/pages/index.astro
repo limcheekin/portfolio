@@ -3,10 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
-import {
-  HERO_CONTENT,
-  EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL, ENGINEER_TITLE,
-} from '../data/site';
+import { EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL, ENGINEER_TITLE } from '../data/site';
 import Hero from '../components/home/Hero.astro';
 import WorkTrack from '../components/home/WorkTrack.tsx';
 import CareerTimeline from '../components/home/CareerTimeline.tsx';
@@ -21,16 +18,19 @@ const featuredProjects = allProjects
   .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
 
 const workCards: WorkCard[] = [
-  ...featuredProjects.map((p): WorkCard => ({
-    slug: p.slug,
-    title: p.data.title.split(':')[0].trim(),
-    kind: p.data.kind === 'oss' ? 'oss' : 'enterprise',
-    label: p.data.kind === 'oss' ? 'Open source' : 'Enterprise · Daxonet AI',
-    tagline: p.data.tagline ?? p.data.description,
-    stack: p.data.stack ?? [],
-    visual: p.data.visual,
-    href: `/projects/${p.slug}/`,
-  })),
+  ...featuredProjects.map((p): WorkCard => {
+    const { kind, org } = p.data;
+    return {
+      slug: p.slug,
+      title: p.data.title.split(':')[0].trim(),
+      kind,
+      label: kind === 'oss' ? 'Open source' : `Enterprise${org ? ` · ${org}` : ''}`,
+      tagline: p.data.tagline ?? p.data.description,
+      stack: p.data.stack ?? [],
+      visual: p.data.visual,
+      href: `/projects/${p.slug}/`,
+    };
+  }),
   { slug: 'all-projects', title: 'All projects →', kind: 'more', label: 'More', tagline: 'open-text-embeddings, Smart HVAC RAG, Fluwix, Talking Book and more.', stack: [], href: '/projects/' },
 ];
 

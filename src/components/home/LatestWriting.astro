@@ -7,7 +7,7 @@ const { articles } = Astro.props;
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 ---
 
-<section id="writing" class="border-t border-[#141417] px-[6vw] pb-14 pt-16">
+<section id="writing" class="border-t border-graphite px-[6vw] pb-14 pt-16">
   <div class="mb-[22px] flex items-end justify-between">
     <h2 class="m-0 text-[clamp(24px,3vw,36px)] font-semibold tracking-[-0.03em] text-lightest-slate">
       <span class="mr-3 align-middle font-mono text-[.5em] text-green-accent">03</span>Latest Writing
@@ -15,7 +15,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', year: '
     <a href="/insights/" class="font-mono text-[13px] text-green-accent no-underline">All writing →</a>
   </div>
   <RevealGroup client:load selector=".reveal">
-    <ul class="m-0 list-none border-t border-[#1c1c20] p-0">
+    <ul class="m-0 list-none border-t border-light-graphite p-0">
       {articles.map((a) => {
         const external = !!a.data.externalUrl;
         return (
@@ -24,7 +24,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', year: '
               href={external ? a.data.externalUrl : `/insights/${a.slug}/`}
               target={external ? '_blank' : undefined}
               rel={external ? 'noopener noreferrer' : undefined}
-              class="wrow grid grid-cols-[1fr_20px] items-center gap-5 border-b border-[#1c1c20] px-1 py-5 text-inherit no-underline md:grid-cols-[90px_1fr_auto_24px]"
+              class="wrow grid grid-cols-[1fr_20px] items-center gap-5 border-b border-light-graphite px-1 py-5 text-inherit no-underline md:grid-cols-[90px_1fr_auto_24px]"
             >
               <span class="hidden font-mono text-xs text-slate-text md:block">{fmt(a.data.publishDate)}</span>
               <span class="wt text-lg tracking-[-0.01em] text-lightest-slate">{a.data.title}</span>

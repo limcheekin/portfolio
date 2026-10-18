@@ -9,20 +9,17 @@ export default function SmoothScroll() {
   // Keep ScrollTrigger in sync on every Lenis scroll event.
   useLenis(ScrollTrigger.update);
 
-  // Drive Lenis from the GSAP ticker (seconds -> milliseconds) and refresh
-  // triggers once layout settles (window load, web fonts ready).
+  // Drive Lenis from the GSAP ticker (seconds -> milliseconds) and refresh triggers once web fonts
+  // are ready (ScrollTrigger already refreshes on window load by itself).
   useEffect(() => {
     const update = (time: number) => lenisRef.current?.lenis?.raf(time * 1000);
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener('load', refresh);
-    document.fonts?.ready.then(refresh);
+    document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
     return () => {
       gsap.ticker.remove(update);
-      window.removeEventListener('load', refresh);
     };
   }, []);
 

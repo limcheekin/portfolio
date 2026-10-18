@@ -56,7 +56,6 @@ export const ABOUT_CONTENT = {
 
 export const CONTACT_CONTENT = {
   title: "What's Next?",
-  subtext: "Get In Touch",
   paragraph: `My inbox is always open for AI discussions, collaborations, or just to connect. Whether you have a question about RAG, local AI, open-source initiatives, or AI engineering in general, I'll do my best to get back to you!`,
   buttonText: "Say Hello",
 };

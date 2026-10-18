@@ -17,6 +17,43 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
   const [active, setActive] = useState(0);
   const run = runs[active];
 
+  // The current run's row timeline and the visibility trigger that plays/pauses it.
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const stRef = useRef<ScrollTrigger | null>(null);
+
+  // Created once: the visibility trigger (motion) or the static first run (reduced motion).
+  useGSAP(
+    () => {
+      const el = root.current;
+      if (!el) return;
+      const mm = gsap.matchMedia(el);
+
+      mm.add(MQ.motion, () => {
+        const st = ScrollTrigger.create({
+          trigger: el,
+          start: 'top bottom',
+          end: 'bottom top',
+          onToggle: (self) => (self.isActive ? tlRef.current?.play() : tlRef.current?.pause()),
+        });
+        stRef.current = st;
+        if (st.isActive) tlRef.current?.play();
+        else tlRef.current?.pause();
+        return () => {
+          stRef.current = null;
+        };
+      });
+
+      mm.add(MQ.reduce, () => {
+        // Static: always show the finished first run.
+        setActive(0);
+      });
+
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
+
+  // Per run: reveal the rows one by one, hold, then advance to the next run.
   useGSAP(
     () => {
       const el = root.current;
@@ -29,19 +66,11 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
         const tl = gsap.timeline();
         tl.to(rows, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: ROW_GAP });
         tl.call(() => setActive((i) => (i + 1) % runs.length), undefined, `+=${HOLD}`);
-
-        const st = ScrollTrigger.create({
-          trigger: el,
-          start: 'top bottom',
-          end: 'bottom top',
-          onToggle: (self) => (self.isActive ? tl.play() : tl.pause()),
-        });
-        if (!st.isActive) tl.pause();
-      });
-
-      mm.add(MQ.reduce, () => {
-        // Static: always show the finished first run.
-        setActive(0);
+        if (!stRef.current?.isActive) tl.pause();
+        tlRef.current = tl;
+        return () => {
+          tlRef.current = null;
+        };
       });
 
       return () => mm.revert();

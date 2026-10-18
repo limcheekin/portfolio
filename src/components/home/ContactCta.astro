@@ -1,11 +1,11 @@
 ---
-import { CONTACT_CTA, SOCIAL_LINKS } from '../../data/site';
+import { CONTACT_CTA, HERO_CONTENT, SOCIAL_LINKS } from '../../data/site';
 import MagnetButton from './MagnetButton.tsx';
 ---
 
 <section
   id="contact"
-  class="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-t border-[#141417] px-[6vw] py-[10vh] text-center"
+  class="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-t border-graphite px-[6vw] py-[10vh] text-center"
 >
   <div
     aria-hidden="true"
@@ -24,6 +24,6 @@ import MagnetButton from './MagnetButton.tsx';
     {SOCIAL_LINKS.map((l) => (
       <li><a href={l.url} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{l.name}</a></li>
     ))}
-    <li><a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">Résumé ↗</a></li>
+    <li><a href={HERO_CONTENT.resumeCta.href} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{HERO_CONTENT.resumeCta.label}</a></li>
   </ul>
 </section>

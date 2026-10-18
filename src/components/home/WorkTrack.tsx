@@ -9,17 +9,16 @@ type Mode = 'pin' | 'swipe' | 'reduce';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const GUTTER = 'px-6 sm:px-10 md:px-16 lg:px-24';
-// Layout modes (class strings must stay literal for Tailwind's scanner):
-// - pinned track: wide AND tall viewport (>= 768px wide, >= 560px tall), motion allowed;
+// Layout modes (`pin` / `nopin` are Tailwind screens defined from MQ.pin; class strings stay literal
+// for Tailwind's scanner):
+// - pinned track: wide AND tall viewport (MQ.pin), motion allowed;
 // - swipe row: every other motion case (narrow, or short-and-wide such as landscape phones).
 // scrollWidth ignores the track's right padding while it is not a scroll container, so on the pinned
 // track a trailing pseudo item (gutter minus the 24px gap) lets the last card stop at the gutter.
 const END_GUTTER =
-  "[@media(min-width:768px)_and_(min-height:560px)]:motion-safe:after:block [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:after:shrink-0 [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:after:content-[''] [@media(min-width:768px)_and_(max-width:1023px)_and_(min-height:560px)]:motion-safe:after:w-10 [@media(min-width:1024px)_and_(min-height:560px)]:motion-safe:after:w-[72px]";
-const SWIPE_ROW =
-  '[@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:snap-x [@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:snap-mandatory [@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:overflow-x-auto [@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:pb-2';
-const PINNED_SECTION =
-  '[@media(min-width:768px)_and_(min-height:560px)]:motion-safe:flex [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:h-screen [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:flex-col [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:justify-center [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:py-0';
+  "pin:motion-safe:after:block pin:motion-safe:after:shrink-0 pin:motion-safe:after:content-[''] [@media(min-width:768px)_and_(max-width:1023px)_and_(min-height:560px)]:motion-safe:after:w-10 [@media(min-width:1024px)_and_(min-height:560px)]:motion-safe:after:w-[72px]";
+const SWIPE_ROW = 'nopin:motion-safe:snap-x nopin:motion-safe:snap-mandatory nopin:motion-safe:overflow-x-auto nopin:motion-safe:pb-2';
+const PINNED_SECTION = 'pin:motion-safe:flex pin:motion-safe:h-screen pin:motion-safe:flex-col pin:motion-safe:justify-center pin:motion-safe:py-0';
 
 export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
   const n = cards.length;
@@ -48,43 +47,55 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       const mm = gsap.matchMedia(sectionEl);
       const items = Array.from(trackEl.querySelectorAll<HTMLElement>('[data-card]'));
 
-      // Wide and tall: pin the section and translate the inner track sideways.
-      mm.add(`${MQ.desktop} and ${MQ.tall} and ${MQ.motion}`, () => {
-        modeRef.current = 'pin';
-        gsap.set(fillEl, { scaleX: 0 });
-        const setFill = gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
-        const distance = () => trackEl.scrollWidth - window.innerWidth;
-        const sync = (progress: number) => {
-          setFill(progress);
-          setActive(Math.round(progress * (n - 1)));
-        };
+      // One branch per mode; GSAP re-runs it (after reverting the last run) whenever a condition flips.
+      // Swipe is motion AND `not all and MQ.pin`, the complement of the pin screen.
+      mm.add({ pin: MQ.pin, motion: MQ.motion, reduce: MQ.reduce }, (ctx) => {
+        const { pin, motion, reduce } = ctx.conditions as Record<'pin' | 'motion' | 'reduce', boolean>;
 
-        const tween = gsap.to(trackEl, {
-          x: () => -distance(),
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionEl,
-            pin: true,
-            scrub: 1,
-            start: 'top top',
-            end: () => '+=' + distance(),
-            invalidateOnRefresh: true,
-            refreshPriority: 10,
-            onUpdate: (self) => sync(self.progress),
-          },
-        });
-        const st = tween.scrollTrigger!;
-        pinRef.current = st;
-        sync(st.progress);
+        // Reduced motion (any width): static wrapped grid, nothing glows or moves.
+        if (reduce) {
+          modeRef.current = 'reduce';
+          setActive(-1);
+          return;
+        }
+        if (!motion) return;
 
-        return () => {
-          pinRef.current = null;
-        };
-      });
+        // Wide and tall: pin the section and translate the inner track sideways.
+        if (pin) {
+          modeRef.current = 'pin';
+          gsap.set(fillEl, { scaleX: 0 });
+          const setFill = gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
+          const distance = () => trackEl.scrollWidth - window.innerWidth;
+          const sync = (progress: number) => {
+            setFill(progress);
+            setActive(Math.round(progress * (n - 1)));
+          };
 
-      // Narrow, or short-and-wide: native swipe row with snap. Among the cards at least 60% visible
-      // inside the row, the one whose centre is nearest the row's centre is active.
-      mm.add(`${MQ.mobile} and ${MQ.motion}, (max-height: 559px) and ${MQ.motion}`, () => {
+          const tween = gsap.to(trackEl, {
+            x: () => -distance(),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionEl,
+              pin: true,
+              scrub: 1,
+              start: 'top top',
+              end: () => '+=' + distance(),
+              invalidateOnRefresh: true,
+              refreshPriority: 10,
+              onUpdate: (self) => sync(self.progress),
+            },
+          });
+          const st = tween.scrollTrigger!;
+          pinRef.current = st;
+          sync(st.progress);
+
+          return () => {
+            pinRef.current = null;
+          };
+        }
+
+        // Narrow, or short-and-wide: native swipe row with snap. Among the cards at least 60% visible
+        // inside the row, the one whose centre is nearest the row's centre is active.
         modeRef.current = 'swipe';
         gsap.set(fillEl, { scaleX: 0 });
         const setFill = gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
@@ -121,12 +132,6 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
         return () => io.disconnect();
       });
 
-      // Reduced motion (any width): static wrapped grid, nothing glows or moves.
-      mm.add(MQ.reduce, () => {
-        modeRef.current = 'reduce';
-        setActive(-1);
-      });
-
       return () => mm.revert();
     },
     { scope: section },
@@ -146,6 +151,9 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       el.scrollIntoView({ inline: 'center', block: 'nearest' });
     }
   };
+
+  // -1: reduced motion, where every card shows its finished, undimmed frame.
+  const settled = activeIndex === -1;
 
   return (
     <section
@@ -178,7 +186,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
           const Visual = card.visual ? VISUALS[card.visual] : undefined;
           const activeCls = isActive
             ? `is-active opacity-100 ${oss ? 'border-[rgba(56,189,248,.55)] shadow-[0_0_60px_rgba(56,189,248,.06)]' : 'border-[rgba(0,217,146,.55)] shadow-[0_0_60px_rgba(0,217,146,.06)]'}`
-            : `border-[#26262a] ${activeIndex === -1 ? 'opacity-100' : 'opacity-90'}`;
+            : `border-[#26262a] ${settled ? 'opacity-100' : 'opacity-90'}`;
           return (
             <li key={card.slug} className="shrink-0 snap-center">
               <a
@@ -194,7 +202,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                     aria-hidden="true"
                     data-visual
                     className={`relative h-[170px] shrink-0 overflow-hidden rounded-[10px] border border-[#1d1d21] bg-[#09090b] bg-[radial-gradient(circle_at_1px_1px,#1b1b1f_1px,transparent_0)] bg-[length:14px_14px] font-mono text-[10.5px] transition-[opacity,filter] duration-[400ms] ease-out ${
-                      isActive || activeIndex === -1 ? '' : 'opacity-70 saturate-[.55]'
+                      isActive || settled ? '' : 'opacity-70 saturate-[.55]'
                     }`}
                   >
                     {Visual && <Visual active={isActive} />}
@@ -221,7 +229,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       </ul>
 
       <div aria-hidden="true" className={`mt-10 motion-reduce:hidden ${GUTTER}`}>
-        <div className="h-[2px] rounded-sm bg-[#1c1c20]">
+        <div className="h-[2px] rounded-sm bg-light-graphite">
           <i ref={fill} data-progress className="block h-full origin-left rounded-sm bg-green-accent" />
         </div>
       </div>
