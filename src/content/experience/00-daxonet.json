@@ -1,0 +1,17 @@
+{
+  "company": "Daxonet AI",
+  "title": "AI Solutions Architect",
+  "location": "Kuala Lumpur, Malaysia",
+  "startDate": "2026-01",
+  "description": [
+    "Claim Pilot: Built expense claim intake through Teams and WhatsApp, document capture in a web portal, and claimant, verifier and approver reviews. Implemented Gemini receipt extraction, a FastAPI backend and React portal, with accounting/ERP integration for invoices and general ledger journals.",
+    "Trade Pilot: Developed WhatsApp intake for purchase orders, delivery orders and item lists from messages, images, PDFs and Excel files. Combined document extraction with a Next.js review portal and AutoCount/Dynamod integration for quotations, sales orders and goods received notes, supporting admin review or automatic processing.",
+    "WareBot: Delivered a conversational AI assistant for Warehouse Management System with natural-language stock queries, warehouse operations, SSE streaming and explicit confirmation before writes. Integrated locally hosted Qwen3.5 inference and delivered three Maestro UI test flows and a 21-assertion Newman API suite.",
+    "Smart HVAC Catalogue System: Built a RAG backend matching air-conditioners to room type, size and usage. Combined PDF ingestion, dense and sparse retrieval, and product filters; implemented asynchronous ingestion, LLM evaluation and observability, with tests and evaluations in GitHub Actions.",
+    "Agentic AI Layer: Architected multi-channel agents connecting accounting and business systems through APIs and role-restricted MCP tools. Implemented Claude Agent SDK workflows, Gemini-backed memory, Pipecat voice, and Telegram/WhatsApp access; integrated Google Workspace and Microsoft Graph using OAuth with PKCE and encrypted token storage.",
+    "Agent First Web Audit: Developed a pipeline of four agent skills to audit websites for AI readiness, apply fixes and review changes.",
+    "AI Enablement: Conducted company-wide training for functional consultants, engineers and support teams, plus monthly AI Ask Me Anything sessions for practical sharing and Q&A."
+  ],
+  "technologies": ["Python", "TypeScript", "FastAPI", "React", "Next.js", "Claude Agent SDK", "MCP", "Google Gemini", "RAG", "Pipecat", "OAuth 2.0 with PKCE", "GitHub Actions", "Solution Architecture"],
+  "sortOrder": 0
+}

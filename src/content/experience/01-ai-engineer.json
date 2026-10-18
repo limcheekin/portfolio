@@ -1,7 +1,6 @@
 {
   "company": "Independent Consultant",
   "title": "Principal AI Architect",
-  "companyUrl": "https://www.rag.wtf",
   "startDate": "2021-01",
   "endDate": "2025-12",
   "description": [
@@ -12,8 +11,29 @@
     "Pioneered and operationalized a self-hosted AI infrastructure (Coolify, Docker), running multiple local LLMs (Llama 3.2, DeepSeek-R1, etc.) and STT/TTS for data privacy and operational control.",
     "Advocated for and implemented robust data sovereignty by integrating embedded database solutions like SurrealDB.wasm with RAG.WTF.",
     "Strategically utilized TensorDock and Modal for scalable cloud GPU servers and serverless execution AI/ML workloads, complementing local AI capabilities.",
-    "Previously initiated Talking Book YouTube channel (AI-powered summaries and Telegram bot) and Fluwix (Flutter showcases)."
+    "Previously initiated Talking Book YouTube channel (AI-powered summaries and Telegram bot) and Fluwix (Flutter showcases).",
+    "Deployed a healthcare agent on GKE using Vertex AI and MongoDB Atlas with Private Service Connect; configured Cloud Logging, latency/error alerts and horizontal pod autoscaling.",
+    "Integrated Ragas to evaluate retrieval accuracy and generation quality, providing repeatable checks for RAG outputs."
   ],
-  "technologies": ["Open-Source AI", "RAG", "MCP", "Python", "Text Embeddings", "FastRTC", "Docker", "Local LLMs", "SurrealDB.wasm", "Modal.com", "FastAPI", "Flutter", "Voice AI", "Solution Architecture"],
+  "technologies": [
+    "Open-Source AI",
+    "RAG",
+    "MCP",
+    "Python",
+    "Text Embeddings",
+    "FastRTC",
+    "Docker",
+    "Local LLMs",
+    "SurrealDB.wasm",
+    "Modal.com",
+    "FastAPI",
+    "Flutter",
+    "Voice AI",
+    "Solution Architecture",
+    "GKE",
+    "Vertex AI",
+    "MongoDB Atlas",
+    "Ragas"
+  ],
   "sortOrder": 1
 }

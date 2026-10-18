@@ -123,6 +123,28 @@ check('article links live', async () => {
   return out;
 }, { links: true });
 
+const readExperience = () => walk('src/content/experience', ['.json']).sort().map((f) => ({ f, ...JSON.parse(readText(f)) }));
+check('experience order + Daxonet first', () => {
+  const out: string[] = [];
+  const e = readExperience().sort((a, b) => a.sortOrder - b.sortOrder);
+  const orders = e.map((x) => x.sortOrder);
+  if (new Set(orders).size !== orders.length) out.push('sortOrder not unique');
+  for (let i = 1; i < e.length; i++) if (e[i].startDate > e[i - 1].startDate) out.push(`${e[i].company} starts after ${e[i - 1].company} but sorts later`);
+  if (e[0]?.company !== 'Daxonet AI' || e[0]?.title !== 'AI Solutions Architect' || e[0]?.startDate !== '2026-01') out.push('first entry is not Daxonet AI / AI Solutions Architect / 2026-01');
+  const p = e.find((x) => x.title === 'Principal AI Architect');
+  if (!p || p.company !== 'Independent Consultant' || p.startDate !== '2021-01' || p.endDate !== '2025-12') out.push('Principal AI Architect entry wrong');
+  return out;
+});
+check('merge kept trimmed detail', () => [
+  ['02-dxc-tech-lead.json', 'contributing millions'], ['02-dxc-tech-lead.json', 'EPIC Configurator'], ['02-dxc-tech-lead.json', 'Divestiture and Acquisition'],
+  ['03-zurich-tech-lead.json', '5-member'], ['01-ai-engineer.json', 'open-text-embeddings'], ['01-ai-engineer.json', 'Fluwix'],
+].filter(([f, s]) => !readText(`src/content/experience/${f}`).includes(s)).map(([f, s]) => `${f} lost "${s}"`));
+check('CV facts merged', () => [
+  ['00-daxonet.json', 'Claim Pilot'], ['00-daxonet.json', 'AI Enablement'], ['01-ai-engineer.json', 'Private Service Connect'],
+  ['01-ai-engineer.json', 'Ragas'], ['02-dxc-tech-lead.json', 'mentored three junior developers'],
+].filter(([f, s]) => !existsSync(`src/content/experience/${f}`) || !readText(`src/content/experience/${f}`).includes(s)).map(([f, s]) => `${f} missing "${s}"`));
+check('no companyUrl on Independent Consultant', () => (readExperience().some((x) => x.company === 'Independent Consultant' && x.companyUrl) ? ['companyUrl still set'] : []));
+
 // ---------- run ----------
 
 let failed = 0;
