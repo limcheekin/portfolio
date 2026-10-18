@@ -9,6 +9,8 @@ import {
 } from '../data/site';
 import Hero from '../components/home/Hero.astro';
 import WorkTrack from '../components/home/WorkTrack.tsx';
+import CareerTimeline from '../components/home/CareerTimeline.tsx';
+import { CAREER_HIGHLIGHTS } from '../data/career';
 import type { WorkCard } from '../components/home/types';
 
 const allProjects = await getCollection('projects');
@@ -190,9 +192,7 @@ const jsonLd = [
 
     <WorkTrack client:load cards={workCards} />
 
-    <section id="career" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
-      <a href="/about/" class="text-green-accent">Career and background</a>
-    </section>
+    <CareerTimeline client:load entries={CAREER_HIGHLIGHTS} />
 
     <section id="writing" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
       <ul class="space-y-2">

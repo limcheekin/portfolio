@@ -198,6 +198,9 @@ check('dist: console decorative', () => /aria-hidden="true"[^>]*data-agent-conso
 check('dist: work cards SSR', () => { const t = htmlText(readText('dist/index.html')); return ['Selected Work', 'Claim Pilot', 'Trade Pilot', 'WareBot', 'Agentic AI Layer', 'Project Concord', 'Talk To AI', 'RAG.WTF', 'All projects', 'Expense claims from Teams and WhatsApp'].filter(s => !t.includes(s)); }, { dist: true });
 check('dist: claim pilot first', () => { const t = htmlText(readText('dist/index.html')); return t.indexOf('Claim Pilot') < t.indexOf('Trade Pilot') ? [] : ['order']; }, { dist: true });
 
+// ---------- task 11: career ----------
+check('dist: career SSR', () => { const t = htmlText(readText('dist/index.html')); return ['Career', 'AI Solutions Architect', 'Daxonet AI', 'Principal AI Architect', 'DXC Technology', 'Zurich Technology Services', 'Where it started', 'Full experience'].filter(s => !t.includes(s)); }, { dist: true });
+
 // ---------- run ----------
 
 let failed = 0;
