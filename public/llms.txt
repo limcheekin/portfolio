@@ -14,9 +14,17 @@ Lim Chee Kin is an AI Solutions Architect at Daxonet AI, based in Kuala Lumpur, 
 - Infrastructure and quality: Docker/Compose, Kubernetes, Linux, AWS, GCP/GKE, GitHub Actions, pytest and Vitest, OpenTelemetry, Prometheus and Grafana
 
 ## Current Projects
-- [RAG.WTF](https://www.rag.wtf/): An open-source platform for private, personalized knowledge discovery and management using RAG systems
+At Daxonet AI:
+- Claim Pilot: Expense claims from Teams and WhatsApp, read by AI, approved by humans, and posted as GL journals
+- Trade Pilot: Purchase orders arrive on WhatsApp as photos, PDFs or Excel, and leave as quotations and sales orders
+- WareBot: Conversational assistant for a Warehouse Management System; every write waits for an explicit confirmation
+- Agentic AI Layer: Multi-channel agents that reach accounting and business systems through role-restricted MCP tools
+- Smart HVAC Catalogue System: RAG backend matching air-conditioners to room type, size and usage
+
+Open source:
+- [Project Concord](https://github.com/limcheekin/project-concord): A Model Context Protocol (MCP) server that lets modern AI agents query legacy database schemas, with permission controls
 - [Talk To AI](https://github.com/limcheekin/talk-to-ai): A real-time voice AI application for low-latency (<300ms) interactions, supporting local and cloud STT, LLM, and TTS services
-- [Project Concord](https://github.com/limcheekin/project-concord): A Model Context Protocol (MCP) server that connects modern AI agents with legacy database schemas
+- [RAG.WTF](https://www.rag.wtf/): An open-source platform for private, personalized knowledge discovery and management using RAG systems
 - [TelegramGPT](https://github.com/limcheekin/TelegramGPT): AI-powered Telegram bot for natural language conversations
 - [open-text-embeddings](https://github.com/limcheekin/open-text-embeddings): Python library for open-source text embedding models
 

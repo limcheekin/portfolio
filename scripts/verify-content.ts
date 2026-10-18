@@ -145,6 +145,39 @@ check('CV facts merged', () => [
 ].filter(([f, s]) => !existsSync(`src/content/experience/${f}`) || !readText(`src/content/experience/${f}`).includes(s)).map(([f, s]) => `${f} missing "${s}"`));
 check('no companyUrl on Independent Consultant', () => (readExperience().some((x) => x.company === 'Independent Consultant' && x.companyUrl) ? ['companyUrl still set'] : []));
 
+const FEATURED: Record<string, string> = { 'claim-pilot': 'claim', 'trade-pilot': 'trade', 'warebot': 'ware', 'agentic-ai-layer': 'agent', 'project-concord': 'concord', 'talk-to-ai': 'talk', 'rag-wtf': 'rag' };
+const projectsBySlug = () => new Map(frontmatter('src/content/projects').map((p) => [p.slug, p]));
+check('featured order', () => {
+  const got = frontmatter('src/content/projects').filter((p) => p.data.featured).sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99)).map((p) => p.slug);
+  const want = Object.keys(FEATURED);
+  return JSON.stringify(got) === JSON.stringify(want) ? [] : [`featured order is ${got.join(', ')}`];
+});
+check('featured cards complete', () => {
+  const out: string[] = [];
+  const m = projectsBySlug();
+  Object.keys(FEATURED).forEach((slug, i) => {
+    const d = m.get(slug)?.data;
+    if (!d) { out.push(`missing ${slug}`); return; }
+    if (!d.tagline) out.push(`${slug}: no tagline`);
+    if (!Array.isArray(d.stack) || d.stack.length < 2 || d.stack.length > 4) out.push(`${slug}: stack length`);
+    if (d.visual !== FEATURED[slug]) out.push(`${slug}: visual ${d.visual}`);
+    if (d.featuredOrder !== i + 1) out.push(`${slug}: featuredOrder ${d.featuredOrder}`);
+    if (i < 4 && (d.kind !== 'enterprise' || d.org !== 'Daxonet AI')) out.push(`${slug}: should be enterprise / Daxonet AI`);
+    if (i >= 4 && d.kind !== 'oss') out.push(`${slug}: should be oss`);
+  });
+  return out;
+});
+check('demoted + hvac', () => {
+  const out: string[] = [];
+  const m = projectsBySlug();
+  for (const s of ['telegram-gpt', 'open-text-embeddings']) if (m.get(s)?.data.featured !== false) out.push(`${s} should not be featured`);
+  const h = m.get('smart-hvac-catalogue')?.data;
+  if (!h) out.push('smart-hvac-catalogue missing');
+  else { if (h.featured) out.push('hvac featured'); if (h.kind !== 'enterprise') out.push('hvac kind'); }
+  return out;
+});
+check('dist: portfolio.json has kind', () => (JSON.parse(readText('dist/api/portfolio.json')).projects as any[]).filter((p) => !p.kind).map((p) => `${p.slug} lacks kind`), { dist: true });
+
 // ---------- run ----------
 
 let failed = 0;

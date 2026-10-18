@@ -56,9 +56,9 @@ const jsonLd = [
                 <img src={project.data.image} alt={project.data.title} class="w-full h-48 object-cover rounded mb-4 filter grayscale group-hover:filter-none transition-all duration-250" loading="lazy" />
               )}
               <h3 class="text-lg font-semibold text-lightest-slate group-hover:text-green-accent transition-colors duration-250 mb-2">{project.data.title}</h3>
-              <p class="text-sm text-slate-text leading-relaxed line-clamp-3 mb-3">{project.data.description}</p>
+              <p class="text-sm text-slate-text leading-relaxed line-clamp-3 mb-3">{project.data.tagline ?? project.data.description}</p>
               <ul class="flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-slate-text">
-                {project.data.technologies.slice(0, 5).map((tech) => <li>{tech}</li>)}
+                {(project.data.stack ?? project.data.technologies.slice(0, 5)).map((tech) => <li>{tech}</li>)}
               </ul>
             </a>
           ))}

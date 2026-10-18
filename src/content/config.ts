@@ -14,6 +14,11 @@ const projects = defineCollection({
     image: z.string().optional(),
     category: z.string(),
     dateStarted: z.string().optional(),
+    kind: z.enum(['enterprise', 'oss']).default('oss'),
+    org: z.string().optional(),
+    tagline: z.string().optional(),
+    stack: z.array(z.string()).max(4).optional(),
+    visual: z.enum(['claim', 'trade', 'ware', 'agent', 'concord', 'talk', 'rag']).optional(),
   }),
 });
 
