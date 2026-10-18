@@ -194,6 +194,10 @@ check('banner removed', () => ['src/components/Banner.tsx','src/data/value-props
 check('dist: hero SSR text', () => { const t = htmlText(readText('dist/index.html')); return ['I build AI agents that do real work inside business systems.', 'From a WhatsApp message to a posted sales order', 'Lim Chee Kin · AI Solutions Architect', 'Résumé'].filter(s => !t.includes(s)); }, { dist: true });
 check('dist: console decorative', () => /aria-hidden="true"[^>]*data-agent-console|data-agent-console[^>]*aria-hidden="true"/.test(readText('dist/index.html')) ? [] : ['console must have data-agent-console + aria-hidden'], { dist: true });
 
+// ---------- task 9: selected work track ----------
+check('dist: work cards SSR', () => { const t = htmlText(readText('dist/index.html')); return ['Selected Work', 'Claim Pilot', 'Trade Pilot', 'WareBot', 'Agentic AI Layer', 'Project Concord', 'Talk To AI', 'RAG.WTF', 'All projects', 'Expense claims from Teams and WhatsApp'].filter(s => !t.includes(s)); }, { dist: true });
+check('dist: claim pilot first', () => { const t = htmlText(readText('dist/index.html')); return t.indexOf('Claim Pilot') < t.indexOf('Trade Pilot') ? [] : ['order']; }, { dist: true });
+
 // ---------- run ----------
 
 let failed = 0;

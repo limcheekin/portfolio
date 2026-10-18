@@ -8,6 +8,7 @@ import {
   EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL, ENGINEER_TITLE,
 } from '../data/site';
 import Hero from '../components/home/Hero.astro';
+import WorkTrack from '../components/home/WorkTrack.tsx';
 import type { WorkCard } from '../components/home/types';
 
 const allProjects = await getCollection('projects');
@@ -187,16 +188,7 @@ const jsonLd = [
 
     <Hero />
 
-    <section id="work" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
-      <ul class="space-y-3">
-        {workCards.map((card) => (
-          <li>
-            <a href={card.href} class="text-lightest-slate">{card.title}</a>
-            <span class="text-slate-text"> {card.tagline}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <WorkTrack client:load cards={workCards} />
 
     <section id="career" class="px-6 sm:px-10 md:px-16 lg:px-24 py-20">
       <a href="/about/" class="text-green-accent">Career and background</a>
