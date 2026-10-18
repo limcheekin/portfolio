@@ -8,8 +8,9 @@ const LOOP_GAP = 2; // seconds between the end of a play and the restart
  * One paused, non-repeating illustration timeline per Work card.
  *
  * - Reduced motion: the timeline always rests on its finished frame (`progress(1)`).
- * - `active` true: restart from 0 and loop (on complete, a 2s `delayedCall` restarts it).
- * - `active` false: kill the pending restart and `pause().progress(1)`, so the card shows its
+ * - `active` true: restart from 0 and loop (on complete, a 2s `delayedCall` restarts it; one
+ *   paused delayedCall per matchMedia branch is reused).
+ * - `active` false: cancel the pending restart and `pause().progress(1)`, so the card shows its
  *   finished frame.
  *
  * `build` receives the empty timeline and adds the tweens; its final state is the "finished frame".
@@ -31,20 +32,18 @@ export function useVisualTimeline(
       if (!el) return;
       const mm = gsap.matchMedia(el);
 
-      mm.add(MQ.motion, (_ctx, contextSafe) => {
+      mm.add(MQ.motion, () => {
         const tl = gsap.timeline({ paused: true });
         buildRef.current(tl);
 
-        let again: gsap.core.Tween | null = null;
-        const scheduleRestart = contextSafe!(() => {
-          if (!activeRef.current) return;
-          again = gsap.delayedCall(LOOP_GAP, () => tl.restart());
-        }) as () => void;
-        tl.eventCallback('onComplete', scheduleRestart);
+        // One paused delayedCall per branch, restarted after each play (no per-loop allocation).
+        const again = gsap.delayedCall(LOOP_GAP, () => tl.restart()).pause();
+        tl.eventCallback('onComplete', () => {
+          if (activeRef.current) again.restart(true); // true: honour the 2s delay
+        });
 
         const apply = (on: boolean) => {
-          again?.kill();
-          again = null;
+          again.pause();
           if (on) tl.restart();
           else tl.pause().progress(1, true); // suppress onComplete so no restart is scheduled
         };
@@ -52,7 +51,7 @@ export function useVisualTimeline(
         apply(activeRef.current);
 
         return () => {
-          again?.kill();
+          again.kill();
           applyRef.current = null;
         };
       });

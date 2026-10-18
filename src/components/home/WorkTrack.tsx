@@ -5,14 +5,21 @@ import { MQ } from '../../lib/motion';
 import { VISUALS } from './visuals';
 import type { WorkCard } from './types';
 
-type Mode = 'desktop' | 'mobile' | 'reduce';
+type Mode = 'pin' | 'swipe' | 'reduce';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const GUTTER = 'px-6 sm:px-10 md:px-16 lg:px-24';
+// Layout modes (class strings must stay literal for Tailwind's scanner):
+// - pinned track: wide AND tall viewport (>= 768px wide, >= 560px tall), motion allowed;
+// - swipe row: every other motion case (narrow, or short-and-wide such as landscape phones).
 // scrollWidth ignores the track's right padding while it is not a scroll container, so on the pinned
-// desktop track a trailing pseudo item (gutter minus the 24px gap) lets the last card stop at the gutter.
+// track a trailing pseudo item (gutter minus the 24px gap) lets the last card stop at the gutter.
 const END_GUTTER =
-  "md:motion-safe:after:block md:motion-safe:after:shrink-0 md:motion-safe:after:content-[''] md:motion-safe:after:w-10 lg:motion-safe:after:w-[72px]";
+  "[@media(min-width:768px)_and_(min-height:560px)]:motion-safe:after:block [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:after:shrink-0 [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:after:content-[''] [@media(min-width:768px)_and_(max-width:1023px)_and_(min-height:560px)]:motion-safe:after:w-10 [@media(min-width:1024px)_and_(min-height:560px)]:motion-safe:after:w-[72px]";
+const SWIPE_ROW =
+  '[@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:snap-x [@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:snap-mandatory [@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:overflow-x-auto [@media_not_all_and_(min-width:768px)_and_(min-height:560px)]:motion-safe:pb-2';
+const PINNED_SECTION =
+  '[@media(min-width:768px)_and_(min-height:560px)]:motion-safe:flex [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:h-screen [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:flex-col [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:justify-center [@media(min-width:768px)_and_(min-height:560px)]:motion-safe:py-0';
 
 export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
   const n = cards.length;
@@ -20,7 +27,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
   const track = useRef<HTMLUListElement>(null);
   const fill = useRef<HTMLElement>(null);
   const pinRef = useRef<ScrollTrigger | null>(null);
-  const modeRef = useRef<Mode>('desktop');
+  const modeRef = useRef<Mode>('pin');
   const lenis = useLenis();
 
   // The active index lives in a ref; React state only changes when the index changes.
@@ -41,9 +48,9 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       const mm = gsap.matchMedia(sectionEl);
       const items = Array.from(trackEl.querySelectorAll<HTMLElement>('[data-card]'));
 
-      // Desktop: pin the section and translate the inner track sideways.
-      mm.add(`${MQ.desktop} and ${MQ.motion}`, () => {
-        modeRef.current = 'desktop';
+      // Wide and tall: pin the section and translate the inner track sideways.
+      mm.add(`${MQ.desktop} and ${MQ.tall} and ${MQ.motion}`, () => {
+        modeRef.current = 'pin';
         gsap.set(fillEl, { scaleX: 0 });
         const setFill = gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
         const distance = () => trackEl.scrollWidth - window.innerWidth;
@@ -75,31 +82,39 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
         };
       });
 
-      // Mobile: native swipe row with snap; the card most in view (within the row) is active.
-      mm.add(`${MQ.mobile} and ${MQ.motion}`, () => {
-        modeRef.current = 'mobile';
+      // Narrow, or short-and-wide: native swipe row with snap. Among the cards at least 60% visible
+      // inside the row, the one whose centre is nearest the row's centre is active.
+      mm.add(`${MQ.mobile} and ${MQ.motion}, (max-height: 559px) and ${MQ.motion}`, () => {
+        modeRef.current = 'swipe';
         gsap.set(fillEl, { scaleX: 0 });
         const setFill = gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
-        const ratios = new Map<number, number>();
+        const qualifying = new Set<number>();
 
         const io = new IntersectionObserver(
           (entries) => {
             for (const e of entries) {
               const i = items.indexOf(e.target as HTMLElement);
-              if (e.isIntersecting && e.intersectionRatio >= 0.6) ratios.set(i, e.intersectionRatio);
-              else ratios.delete(i);
+              if (e.isIntersecting && e.intersectionRatio >= 0.6) qualifying.add(i);
+              else qualifying.delete(i);
             }
-            if (ratios.size === 0) return;
-            const mid = trackEl.getBoundingClientRect().left + trackEl.clientWidth / 2;
-            const dist = (i: number) => {
+            if (qualifying.size === 0) return;
+            const box = trackEl.getBoundingClientRect();
+            const mid = box.left + box.width / 2;
+            let best = -1;
+            let bestDist = Infinity;
+            for (const i of qualifying) {
               const r = items[i].getBoundingClientRect();
-              return Math.abs(r.left + r.width / 2 - mid);
-            };
-            const best = [...ratios.keys()].sort((a, b) => ratios.get(b)! - ratios.get(a)! || dist(a) - dist(b))[0];
+              const d = Math.abs(r.left + r.width / 2 - mid);
+              if (d < bestDist) {
+                bestDist = d;
+                best = i;
+              }
+            }
             setFill(n > 1 ? best / (n - 1) : 1);
             setActive(best);
           },
-          { root: trackEl, threshold: 0.6 },
+          // Extra thresholds above 0.6 re-run the decision as cards keep moving towards the centre.
+          { root: trackEl, threshold: [0.6, 0.7, 0.8, 0.9, 1] },
         );
         items.forEach((el) => io.observe(el));
 
@@ -120,14 +135,14 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
   // Keyboard: focusing a card makes it active and brings it into view.
   const onCardFocus = (i: number, el: HTMLElement) => {
     if (!el.matches(':focus-visible')) return; // pointer clicks focus links too; only follow keyboard focus
-    if (modeRef.current === 'desktop') {
+    if (modeRef.current === 'pin') {
       const st = pinRef.current;
       if (!st) return;
       const y = st.start + (n > 1 ? i / (n - 1) : 0) * (st.end - st.start);
       const reduced = window.matchMedia(MQ.reduce).matches;
       if (lenis) lenis.scrollTo(y, { immediate: reduced });
       else window.scrollTo(0, y);
-    } else if (modeRef.current === 'mobile') {
+    } else if (modeRef.current === 'swipe') {
       el.scrollIntoView({ inline: 'center', block: 'nearest' });
     }
   };
@@ -137,7 +152,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       ref={section}
       id="work"
       aria-labelledby="work-title"
-      className="relative overflow-x-clip py-20 md:motion-safe:flex md:motion-safe:h-screen md:motion-safe:flex-col md:motion-safe:justify-center md:motion-safe:py-0"
+      className={`relative overflow-x-clip py-20 ${PINNED_SECTION}`}
     >
       <div className={`mb-10 flex items-end justify-between gap-6 ${GUTTER}`}>
         <div className="flex items-baseline gap-3">
@@ -154,7 +169,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       <ul
         ref={track}
         data-track
-        className={`flex gap-6 ${GUTTER} max-md:motion-safe:snap-x max-md:motion-safe:snap-mandatory max-md:motion-safe:overflow-x-auto max-md:motion-safe:pb-2 motion-reduce:flex-wrap motion-reduce:justify-center ${END_GUTTER}`}
+        className={`flex gap-6 ${GUTTER} ${SWIPE_ROW} motion-reduce:flex-wrap motion-reduce:justify-center ${END_GUTTER}`}
       >
         {cards.map((card, i) => {
           const isActive = i === activeIndex;
@@ -162,7 +177,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
           const more = card.kind === 'more';
           const Visual = card.visual ? VISUALS[card.visual] : undefined;
           const activeCls = isActive
-            ? `is-active opacity-100 shadow-[0_0_60px_rgba(0,217,146,.06)] ${oss ? 'border-[rgba(56,189,248,.55)]' : 'border-[rgba(0,217,146,.55)]'}`
+            ? `is-active opacity-100 ${oss ? 'border-[rgba(56,189,248,.55)] shadow-[0_0_60px_rgba(56,189,248,.06)]' : 'border-[rgba(0,217,146,.55)] shadow-[0_0_60px_rgba(0,217,146,.06)]'}`
             : `border-[#26262a] ${activeIndex === -1 ? 'opacity-100' : 'opacity-90'}`;
           return (
             <li key={card.slug} className="shrink-0 snap-center">
@@ -170,7 +185,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                 href={card.href}
                 data-card
                 onFocus={(e) => onCardFocus(i, e.currentTarget)}
-                className={`flex h-[min(470px,72vh)] w-[min(360px,80vw)] flex-col overflow-hidden rounded-2xl border p-[22px] transition-[opacity,border-color,box-shadow] duration-[400ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-accent ${
+                className={`flex h-full w-[min(360px,80vw)] [@media(min-height:560px)]:h-[min(470px,72vh)] flex-col overflow-hidden rounded-2xl border p-[22px] transition-[opacity,border-color,box-shadow] duration-[400ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-accent ${
                   more ? 'justify-center border-dashed bg-transparent' : 'bg-[#0e0e10]'
                 } ${activeCls}`}
               >
