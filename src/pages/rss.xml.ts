@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
     .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
 
   return rss({
-    title: `Insights by ${ENGINEER_NAME}`,
+    title: `Writing by ${ENGINEER_NAME}`,
     description: `Articles and insights on AI engineering, RAG systems, and open-source AI by ${ENGINEER_NAME}.`,
     site: context.site ?? SITE_URL,
     items: articles.map((article) => ({

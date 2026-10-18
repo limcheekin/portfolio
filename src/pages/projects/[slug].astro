@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import FixedSidebars from '../../components/FixedSidebars.astro';
 import Button from '../../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
@@ -49,7 +48,6 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <Header />
-  <FixedSidebars />
   <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
     <nav class="mb-8 font-mono text-sm text-slate-text">
       <a href="/" class="hover:text-green-accent transition-colors">Home</a>

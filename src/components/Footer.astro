@@ -1,14 +1,24 @@
 ---
-import { FOOTER_TEXT } from '../data/site';
+import { FOOTER_TEXT, SOCIAL_LINKS, EMAIL_ADDRESS } from '../data/site';
+
+const linkClass = 'hover:text-green-accent transition-colors duration-250';
 ---
 
-<footer class="text-center py-8 px-6">
-  <a
-    href="https://github.com/limcheekin/portfolio"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="font-mono text-xs text-slate-text hover:text-green-accent transition-colors duration-250"
-  >
-    {FOOTER_TEXT}
-  </a>
+<footer class="py-8 px-6 md:px-12 font-mono text-xs text-slate-text">
+  <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <p>{FOOTER_TEXT}</p>
+    <nav aria-label="Footer links">
+      <ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 list-none p-0 m-0">
+        {SOCIAL_LINKS.map((link) => (
+          <li>
+            <a href={link.url} target="_blank" rel="noopener noreferrer" class={linkClass}>{link.name}</a>
+          </li>
+        ))}
+        <li><a href={`mailto:${EMAIL_ADDRESS}`} class={linkClass}>Email</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="mt-4 text-center">
+    <a href="https://github.com/limcheekin/portfolio" target="_blank" rel="noopener noreferrer" class={linkClass}>Source on GitHub</a>
+  </p>
 </footer>

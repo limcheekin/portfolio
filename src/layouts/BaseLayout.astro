@@ -52,7 +52,7 @@ const currentPage = pathSegments[0] || 'home';
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
 
-  <link rel="alternate" type="application/rss+xml" title={`Insights by ${ENGINEER_NAME}`} href="/rss.xml" />
+  <link rel="alternate" type="application/rss+xml" title={`Writing by ${ENGINEER_NAME}`} href="/rss.xml" />
 
   {jsonLd.map((schema) => (
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />

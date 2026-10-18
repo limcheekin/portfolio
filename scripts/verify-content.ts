@@ -178,6 +178,13 @@ check('demoted + hvac', () => {
 });
 check('dist: portfolio.json has kind', () => (JSON.parse(readText('dist/api/portfolio.json')).projects as any[]).filter((p) => !p.kind).map((p) => `${p.slug} lacks kind`), { dist: true });
 
+// ---------- task 6: site chrome ----------
+const UI = [...walk('src/pages', ['.astro','.ts']), ...walk('src/components', ['.astro','.tsx']), ...walk('src/layouts', ['.astro']), 'src/data/site.ts'];
+check('no visible "Insights" label', () => UI.filter(f => /Insights/.test(readText(f))).map(f => f));
+check('nav says Writing', async () => (await import('../src/data/site.ts')).NAV_LINKS.some((l: any) => l.name === 'Writing' && l.href === '/insights/') ? [] : ['NAV_LINKS']);
+check('sidebars removed', () => [existsSync('src/components/FixedSidebars.astro') && 'FixedSidebars.astro exists', ...UI.filter(f => readText(f).includes('FixedSidebars'))].filter(Boolean) as string[]);
+check('dist: footer + nav', () => { const t = htmlText(readText('dist/index.html')); return [!t.includes('Kuala Lumpur, Malaysia') && 'footer location', !readText('dist/index.html').includes('href="/insights/"') && 'nav link'].filter(Boolean) as string[]; }, { dist: true });
+
 // ---------- run ----------
 
 let failed = 0;

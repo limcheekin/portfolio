@@ -13,15 +13,8 @@ export interface NavLink {
 export const NAV_LINKS: NavLink[] = [
   { name: "About", href: "/about/" },
   { name: "Work", href: "/projects/" },
-  { name: "Insights", href: "/insights/" },
+  { name: "Writing", href: "/insights/" },
   { name: "Contact", href: "/contact/" },
-];
-
-export const SCROLL_NAV_LINKS: NavLink[] = [
-  { name: "About", href: "#about" },
-  { name: "Work", href: "#projects" },
-  { name: "Insights", href: "#insights" },
-  { name: "Contact", href: "#contact" },
 ];
 
 export interface ContactLink {
@@ -60,4 +53,4 @@ export const CONTACT_CONTENT = {
   buttonText: "Say Hello",
 };
 
-export const FOOTER_TEXT = `Designed & Built by ${ENGINEER_NAME}. Inspired by Brittany Chiang.`;
+export const FOOTER_TEXT = `© ${new Date().getFullYear()} ${ENGINEER_NAME} · Kuala Lumpur, Malaysia`;
