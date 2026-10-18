@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latest insights strip</title>
+<style>
+  :root { --bg:#050507; --panel:#0e0e10; --line:#26262a; --text:#f2f2f2; --muted:#8b949e; --soft:#b8b3b0; --accent:#00d992; --sky:#38bdf8; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:#18181b; color:var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .intro { max-width:1100px; margin:0 auto; padding:40px 24px 8px; }
+  .intro h1 { font-size:22px; margin:0 0 8px; }
+  .intro p { color:var(--muted); margin:0; line-height:1.55; }
+  .opt { max-width:1100px; margin:28px auto; padding:0 24px; }
+  .opt-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+  .opt-head h2 { margin:0; font-size:17px; } .opt-head h2 b { color:var(--accent); margin-right:8px; font-family: ui-monospace, Consolas, monospace; }
+  .opt-head p { margin:0; color:var(--muted); font-size:14px; }
+  .pick { cursor:pointer; background:transparent; color:var(--accent); border:1px solid var(--accent); border-radius:6px; padding:8px 14px; font: 13px ui-monospace, Consolas, monospace; }
+  .pick.selected, .pick:hover { background:var(--accent); color:#050507; }
+  .page { background:var(--bg); border:1px solid #26262a; border-radius:14px; overflow:hidden; }
+
+  /* context: end of career, start of contact (faded) */
+  .ctx { padding:28px 6vw; color:var(--muted); font-size:13px; opacity:.45; }
+  .ctx .job { border-left:2px solid #1c1c20; padding-left:20px; }
+  .ctx .job b { color:var(--soft); display:block; font-size:15px; margin:4px 0; }
+  .ctx.contact { text-align:center; border-top:1px solid #141417; padding:40px 6vw 20px; }
+  .ctx.contact h3 { font-size:34px; margin:6px 0 0; letter-spacing:-0.03em; color:var(--text); }
+  .ctx.contact h3 em { color:var(--accent); font-style:normal; }
+
+  /* A: plain rows */
+  .ins { padding:64px 6vw 56px; border-top:1px solid #141417; }
+  .ins-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:22px; }
+  .ins-head h2 { margin:0; font-size:clamp(24px, 3vw, 36px); letter-spacing:-0.03em; }
+  .ins-head h2 span { color:var(--accent); font-size:.5em; vertical-align:middle; margin-right:12px; }
+  .ins-head a { color:var(--accent); font-size:13px; text-decoration:none; }
+  .rows { list-style:none; margin:0; padding:0; border-top:1px solid #1c1c20; }
+  .rows li a { display:grid; grid-template-columns: 90px 1fr auto 24px; gap:20px; align-items:center; padding:20px 4px; border-bottom:1px solid #1c1c20; text-decoration:none; color:inherit; transition: padding .3s ease, background .3s ease; }
+  .rows li a:hover { padding-left:14px; background:linear-gradient(90deg, rgba(0,217,146,.06), transparent 70%); }
+  .rows .date { color:var(--muted); font-size:12px; }
+  .rows .t { font-size:18px; letter-spacing:-0.01em; }
+  .rows li a:hover .t { color:var(--accent); }
+  .rows .plat { color:var(--muted); font-size:12px; }
+  .rows .arr { color:var(--muted); transition: transform .3s, color .3s; }
+  .rows li a:hover .arr { color:var(--accent); transform:translate(3px,-3px); }
+
+  /* B: three title tiles */
+  .tiles { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+  .tile { display:flex; flex-direction:column; min-height:170px; padding:20px; border:1px solid var(--line); border-radius:12px; background:var(--panel); text-decoration:none; color:inherit; transition: border-color .3s, transform .3s; }
+  .tile:hover { border-color:rgba(0,217,146,.5); transform:translateY(-3px); }
+  .tile .kind { color:var(--accent); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  .tile .t { font-size:18px; line-height:1.3; margin:10px 0 0; letter-spacing:-0.01em; }
+  .tile .meta { margin-top:auto; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; }
+  .tile:hover .meta span:last-child { color:var(--accent); }
+
+  .fade { opacity:0; transform:translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+  .fade.in { opacity:1; transform:none; }
+  @media (max-width: 760px) {
+    .rows li a { grid-template-columns: 1fr 20px; } .rows .date, .rows .plat { display:none; }
+    .tiles { grid-template-columns:1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .fade { transform:none; transition: opacity .2s; } }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Bring Insights back to the home page, slim</h1>
+  <p>Both options sit between Career and Contact (shown faded for context) and use your three newest pieces. Neither animates beyond a simple fade-in; hover the rows/tiles. /insights/ keeps the full list.</p>
+</div>
+
+<section class="opt">
+  <div class="opt-head">
+    <div><h2><b>A</b>Plain rows (index style)</h2><p>Lightest possible: date · title · topic · ↗. Hover slides the row and turns it green. About ⅓ of a screen.</p></div>
+    <button class="pick" data-choice="rows" onclick="pick(this)">Pick A</button>
+  </div>
+  <div class="page">
+    <div class="ctx"><div class="job"><span class="mono">1999 — 2005</span><b>Where it started</b>Siemens Multimedia, Media Trend, Online One and Tee Yam Holding.</div></div>
+    <section class="ins">
+      <div class="ins-head fade"><h2><span class="mono">03</span>Latest Insights</h2><a class="mono" href="#">All insights →</a></div>
+      <ul class="rows">
+        <li class="fade"><a href="#"><span class="date mono">Apr 2026</span><span class="t">AI is Ready. Your Legacy Database Isn't. Let's Fix That.</span><span class="plat mono">MCP · Legacy</span><span class="arr">↗</span></a></li>
+        <li class="fade"><a href="#"><span class="date mono">Mar 2026</span><span class="t">Building Your First No-Code MCP Server: The Fabric Integration Story</span><span class="plat mono">MCP · Fabric</span><span class="arr">↗</span></a></li>
+        <li class="fade"><a href="#"><span class="date mono">Oct 2025</span><span class="t">Talking Book: Making Books Less Boring</span><span class="plat mono">YouTube · Telegram</span><span class="arr">↗</span></a></li>
+      </ul>
+    </section>
+    <div class="ctx contact"><span class="mono" style="color:var(--accent)">04 · Contact</span><h3>Have a workflow that should <em>run itself?</em></h3></div>
+  </div>
+</section>
+
+<section class="opt">
+  <div class="opt-head">
+    <div><h2><b>B</b>Three title tiles</h2><p>A bit more presence: three quiet tiles, titles only (no images, no summaries). Lifts slightly on hover.</p></div>
+    <button class="pick" data-choice="tiles" onclick="pick(this)">Pick B</button>
+  </div>
+  <div class="page">
+    <div class="ctx"><div class="job"><span class="mono">1999 — 2005</span><b>Where it started</b>Siemens Multimedia, Media Trend, Online One and Tee Yam Holding.</div></div>
+    <section class="ins">
+      <div class="ins-head fade"><h2><span class="mono">03</span>Latest Insights</h2><a class="mono" href="#">All insights →</a></div>
+      <div class="tiles">
+        <a class="tile fade" href="#"><span class="kind mono">Article</span><span class="t">AI is Ready. Your Legacy Database Isn't. Let's Fix That.</span><span class="meta mono"><span>Apr 2026 · MCP</span><span>↗</span></span></a>
+        <a class="tile fade" href="#"><span class="kind mono">Article</span><span class="t">Building Your First No-Code MCP Server: The Fabric Integration Story</span><span class="meta mono"><span>Mar 2026 · MCP</span><span>↗</span></span></a>
+        <a class="tile fade" href="#"><span class="kind mono">Article</span><span class="t">Talking Book: Making Books Less Boring</span><span class="meta mono"><span>Oct 2025 · Medium</span><span>↗</span></span></a>
+      </div>
+    </section>
+    <div class="ctx contact"><span class="mono" style="color:var(--accent)">04 · Contact</span><h3>Have a workflow that should <em>run itself?</em></h3></div>
+  </div>
+</section>
+
+<div class="intro" style="padding-bottom:48px"><p>Or tell me in the terminal: "neither, nav only".</p></div>
+
+<script>
+  function pick(el){ document.querySelectorAll('.pick').forEach(p=>p.classList.remove('selected')); el.classList.add('selected'); }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let q = [], t = null;
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { q.push(e.target); io.unobserve(e.target); } });
+    clearTimeout(t); t = setTimeout(() => { q.forEach((el, i) => setTimeout(() => el.classList.add('in'), reduce ? 0 : i * 90)); q = []; }, 30);
+  }, { rootMargin:'0px 0px -10% 0px' });
+  document.querySelectorAll('.fade').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
