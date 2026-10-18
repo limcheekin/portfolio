@@ -14,6 +14,7 @@ export default {
         'white-text': '#ffffff',
         'green-accent': '#00d992',
         'green-tint': 'rgba(0, 217, 146, 0.1)',
+        'sky': '#38bdf8',
       },
       fontFamily: {
         display: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'Ubuntu', 'Cantarell', '"Noto Sans"', 'Helvetica', 'Arial', 'sans-serif'],

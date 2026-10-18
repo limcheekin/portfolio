@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE_TITLE, SITE_URL, ENGINEER_NAME, ENGINEER_TITLE, EMAIL_ADDRESS } from '../data/site';
 import WebMCPTools from '../components/WebMCPTools.tsx';
+import SmoothScroll from '../components/motion/SmoothScroll.tsx';
 
 interface Props {
   title?: string;
@@ -58,6 +59,7 @@ const currentPage = pathSegments[0] || 'home';
   ))}
 </head>
 <body class="bg-navy text-lightest-slate antialiased selection:bg-green-accent/30 selection:text-green-accent" data-current-page={currentPage}>
+  <SmoothScroll client:load />
   <slot />
   <WebMCPTools client:idle portfolioApiUrl={`${SITE_URL}/api/portfolio.json`} contactEmail={EMAIL_ADDRESS} engineerName={ENGINEER_NAME} />
 </body>
