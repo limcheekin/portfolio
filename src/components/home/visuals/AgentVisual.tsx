@@ -2,8 +2,9 @@ import type { VisualProps } from '../types';
 import { addPulse, svgLabel } from './helpers';
 import VizFrame from './VizFrame';
 
-const DUR = 2.4;
-const CYCLES = 3;
+// The last pulse starts at 2.0s; 2 cycles of 1.4s keep one play under 5s.
+const DUR = 1.4;
+const CYCLES = 2;
 const NODES = [
   { y: 38, in: 'Telegram', out: '🔒 ERP' },
   { y: 85, in: 'WhatsApp', out: '🔒 GL' },

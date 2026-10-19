@@ -261,7 +261,7 @@ Source of truth: `src/lib/palette.mjs`, read by `tailwind.config.mjs` (and impor
 - **Headline** (600, `clamp(28px, 4vw, 48px)`, 1.25, -0.03em): numbered home section headings ("01 Selected Work"). The number is mono, green, half size, set inline before the title.
 - **Page title** (600, `clamp(32px, 4.5vw, 48px)`, 1.25, -0.03em, `lightest-slate`): the `h1` of every inner page, from `PAGE_TITLE`.
 - **Title** (600, 20px to 24px, -0.02em): card titles, timeline job titles, inner page subsection headings. Prose `h2` is 20px/600/-0.02em, `h3` 18px/600.
-- **Body** (400, 16px, 1.625): prose in `slate-text`, measured at `max-w-[65ch]`. Lead paragraphs on inner pages and the hero sub run at 18px.
+- **Body** (400, 16px, 1.625): prose in `slate-text`, measured by `MEASURE` (`max-w-[56ch]`, about 70–75 characters of Inter a line; 65ch ran to ~85). Lead paragraphs on inner pages and the hero sub run at 18px.
 - **Label** (mono, 400, 12px to 13px): nav, breadcrumb, dates, stacks, footer, form labels, buttons (12px / 14px / 16px by size).
 - **Label caps** (mono, 11px, uppercase, 0.08em): the kind label on Work and project cards ("Enterprise · Daxonet AI"), and chips (11px, not uppercase).
 
@@ -313,7 +313,7 @@ Mono, quiet and precise; the outline is the default.
 - **State:** static; chips are not interactive. In the hero console the active run chip switches to a green border at 40% and green text.
 
 ### Cards / Containers
-- **Work card:** `card` surface, 1px `edge` border, 16px radius, 22px padding, `min(360px, 80vw)` wide and `min(470px, 72vh)` tall on tall screens. Content: a 170px illustration frame (`well` with `bg-dot-pattern`, 10px radius, `light-graphite` border), a mono caps kind label in the kind's accent, a 24px title, a `light-slate` tagline, a mono `slate-text` stack. The active card gets an accent border at 55% and a `glow-*` shadow on a fading overlay. Inactive cards sit at opacity 0.9 with their illustration at 0.7 and `saturate(0.55)`, frozen on the finished frame.
+- **Work card:** `card` surface, 1px `edge` border, 16px radius, 22px padding, `min(360px, 80vw)` wide and `min(470px, 72vh)` tall on tall screens. Content: a 312:170 illustration frame (170px tall on a full-width card; on narrower cards the drawing scales down with it) (`well` with `bg-dot-pattern`, 10px radius, `light-graphite` border), a mono caps kind label in the kind's accent, a 24px title, a `light-slate` tagline, a mono `slate-text` stack. The active card gets an accent border at 55% and a `glow-*` shadow on a fading overlay. Inactive cards sit at opacity 0.9 with their illustration at 0.7 and `saturate(0.55)`, frozen on the finished frame.
 - **Project card:** the Work card language without the illustration: text only, 20px title, tagline clamped to three lines. Hover turns the border to the kind's accent at 55% and the title to the accent.
 - **Shadow Strategy:** none at rest; see Elevation.
 
@@ -326,14 +326,14 @@ Mono, quiet and precise; the outline is the default.
 ### Navigation
 - **Header:** fixed, 64px (80px md), `navy` at 80% with backdrop blur, inside the page gutter. Left: the initial in a 2px green-bordered square (40px / 48px). Right: mono 14px links, each prefixed by a green 12px index ("01."), `light-slate` at rest, green on hover and when current, then a small outline Résumé button. It hides on scroll down and returns on scroll up or when focus enters it.
 - **Mobile:** below md, a two-bar green toggle that rotates into an X opens a right-hand drawer (`card`, `edge` left border, 75% wide, max 384px) with centred mono 18px links and an outline Résumé button. The page behind is dimmed, blurred and made `inert`; Escape closes it.
-- **Breadcrumb:** mono 14px `slate-text`, `/` separators, current item green.
-- **Footer:** mono 12px `slate-text`, links turn green on hover.
+- **Breadcrumb:** mono 14px `slate-text`, `/` separators, current item green. Links carry a 44px tap area (`TAP_LINK`) without changing the layout.
+- **Footer:** mono 12px `slate-text`, links turn green on hover. Small text links here, in the home Contact row and beside section headings use `TAP_LINK` (44px tall tap area); wrapped rows sit one tap area apart.
 
 ### Agent Console (signature)
 A terminal-like panel in the hero: `well` surface, `edge` border, 12px radius, `shadow-console`, mono 13px at 1.7 line height. A title bar with three `edge` dots and a `light-graphite` rule, log lines in a 74px label column, a green blinking block cursor, and run chips along the bottom. Runs loop; under reduced motion the console rests on a finished run and the cursor stops blinking.
 
 ### Work Illustrations (signature)
-One code-drawn illustration per Work card, selected by the project's `visual` field and played by `VizFrame`. Built only from palette tokens: `card` chips and nodes, `graphite` paper, `edge` wires, `edge-strong` outlines and `shadow-doc-lines`, accent bubbles from the matching `green-*` or `sky-*` family, `shadow-scan` / `shadow-spark` highlights. Only the active card's illustration plays, and only while the Work section is on screen.
+One code-drawn illustration per Work card, selected by the project's `visual` field and played by `VizFrame`. Built only from palette tokens: `card` chips and nodes, `graphite` paper, `edge` wires, `edge-strong` outlines and `shadow-doc-lines`, accent bubbles from the matching `green-*` or `sky-*` family, `shadow-scan` / `shadow-spark` highlights. Each is drawn on a 312×170 canvas and scaled to fit its frame. Only the active card's illustration plays: once (at most 5s), each time the card becomes active while the Work section is on screen. It never loops.
 
 ### Article Row
 A list row: mono date, 18px title, two mono tags, an arrow. On hover the `bg-row-tint` overlay fades in, the row nudges 14px right (motion-safe), the title turns green and the arrow lifts. Used on home Latest Writing and the Writing page (detailed variant adds the description).
@@ -346,7 +346,7 @@ Motion follows the "Animation rules" in `CLAUDE.md`; in summary:
 - Animate only transforms (`x`, `y`, `xPercent`, `yPercent`, `scale`, `scaleX`, `scaleY`, `rotation`) and `opacity`. Hover and focus may transition `color`, `background-color` and `border-color`. No layout properties, `filter` or `box-shadow` transitions, no `transition-all`.
 - All GSAP runs inside `useGSAP` or `useMatchMedia` with `gsap.matchMedia` branches on `MQ`. Under reduced motion: no movement, pin, scrub or loops; loops and scrubbed pieces rest on the finished frame; reveals are immediate or a short fade.
 - At most the hero console and one active Work card animate at once. The hero dot grid moves only in response to the pointer.
-- Lenis smooth scroll driven by the GSAP ticker; no CSS `scroll-behavior: smooth`.
+- Lenis smooth scroll on the home page only, driven by the GSAP ticker; inner pages scroll natively; no CSS `scroll-behavior: smooth`.
 - Hero entrance: words rise from their line masks (0.8s, power3.out, 0.04s stagger), then the sub and CTAs fade up 12px.
 - Hover timing: 250ms with the custom ease for controls, 300ms ease-out for article rows, 400ms ease-out for Work card dimming.
 

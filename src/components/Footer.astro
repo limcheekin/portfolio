@@ -1,15 +1,16 @@
 ---
 import { FOOTER_TEXT, CONTACT_LINKS } from '../data/site';
 import { GUTTER } from '../lib/layout';
+import { TAP_LINK } from '../lib/text-styles';
 
-const linkClass = 'hover:text-green-accent transition-colors duration-250';
+const linkClass = `${TAP_LINK} hover:text-green-accent transition-colors duration-250`;
 ---
 
-<footer class={`py-8 font-mono text-xs text-slate-text ${GUTTER}`}>
-  <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-    <p>{FOOTER_TEXT}</p>
+<footer class={`py-5 font-mono text-xs text-slate-text ${GUTTER}`}>
+  <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+    <p class="text-center md:text-left">{FOOTER_TEXT}</p>
     <nav aria-label="Footer links">
-      <ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 list-none p-0 m-0">
+      <ul class="flex flex-wrap items-center justify-center gap-x-6 list-none p-0 m-0">
         {CONTACT_LINKS.map((link) => (
           <li>
             <a href={link.url} target={link.external ? '_blank' : undefined} rel={link.external ? 'noopener noreferrer' : undefined} class={linkClass}>{link.name}</a>

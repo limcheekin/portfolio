@@ -12,6 +12,9 @@ interface Props {
   ogImage?: string;
   canonicalUrl?: string;
   jsonLd?: object[];
+  /** Lenis smooth scroll, driven by GSAP. Only the home page needs it (the pinned Work track and its
+   *  scroll-linked pieces); reading pages scroll natively and ship no GSAP. */
+  smoothScroll?: boolean;
 }
 
 const {
@@ -20,6 +23,7 @@ const {
   ogImage = `${SITE_URL}/images/portfolio.png`,
   canonicalUrl = new URL(Astro.url.pathname, SITE_URL).href,
   jsonLd = [],
+  smoothScroll = false,
 } = Astro.props;
 
 // Derive current page identifier from pathname for data-current-page attribute
@@ -65,7 +69,7 @@ const currentPage = pathSegments[0] || 'home';
   <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-md focus:bg-green-accent focus:px-4 focus:py-3 focus:font-mono focus:text-sm focus:text-navy">
     Skip to main content
   </a>
-  <SmoothScroll client:load />
+  {smoothScroll && <SmoothScroll client:load />}
   <slot />
   <WebMCPTools client:idle portfolioApiUrl={`${SITE_URL}/api/portfolio.json`} contactEmail={EMAIL_ADDRESS} engineerName={ENGINEER_NAME} />
 </body>

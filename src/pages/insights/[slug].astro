@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { PAGE_MAIN } from '../../lib/layout';
-import { CHIP, PAGE_TITLE } from '../../lib/text-styles';
+import { CHIP, MEASURE, PAGE_TITLE } from '../../lib/text-styles';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Button from '../../components/Button.astro';
@@ -87,7 +87,7 @@ const jsonLd = [
       </div>
     )}
 
-    <div class="prose-like max-w-[65ch] space-y-4 text-base leading-relaxed text-slate-text">
+    <div class={`prose-like ${MEASURE} space-y-4 text-base leading-relaxed text-slate-text`}>
       <Content />
     </div>
 

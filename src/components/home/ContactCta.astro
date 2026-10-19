@@ -2,6 +2,9 @@
 import { CONTACT_CTA, CONTACT_LINKS, HERO_CONTENT } from '../../data/site';
 import MagnetButton from './MagnetButton.tsx';
 import { GUTTER } from '../../lib/layout';
+import { TAP_LINK } from '../../lib/text-styles';
+
+const LINK = `${TAP_LINK} text-light-slate no-underline hover:text-green-accent`;
 ---
 
 <section
@@ -20,10 +23,10 @@ import { GUTTER } from '../../lib/layout';
   <div class="relative">
     <MagnetButton client:visible href={CONTACT_CTA.button.href} label={CONTACT_CTA.button.label} />
   </div>
-  <ul class="relative mt-[34px] flex list-none flex-wrap justify-center gap-x-[26px] gap-y-2 p-0 font-mono text-[13px]">
+  <ul class="relative mt-[22px] flex list-none flex-wrap justify-center gap-x-[26px] p-0 font-mono text-[13px]">
     {CONTACT_LINKS.map((l) => (
-      <li><a href={l.url} target={l.external ? '_blank' : undefined} rel={l.external ? 'noopener noreferrer' : undefined} class="text-light-slate no-underline hover:text-green-accent">{l.name}</a></li>
+      <li><a href={l.url} target={l.external ? '_blank' : undefined} rel={l.external ? 'noopener noreferrer' : undefined} class={LINK}>{l.name}</a></li>
     ))}
-    <li><a href={HERO_CONTENT.resumeCta.href} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{HERO_CONTENT.resumeCta.label}</a></li>
+    <li><a href={HERO_CONTENT.resumeCta.href} target="_blank" rel="noopener noreferrer" class={LINK}>{HERO_CONTENT.resumeCta.label}</a></li>
   </ul>
 </section>

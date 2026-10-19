@@ -4,6 +4,7 @@ import { useMatchMedia } from '../../lib/use-match-media';
 import { batchReveal } from '../../lib/reveal';
 import { MQ } from '../../lib/motion';
 import { GUTTER } from '../../lib/layout';
+import { TAP_LINK } from '../../lib/text-styles';
 import SectionHeading from './SectionHeading';
 import type { CareerEntry } from './types';
 
@@ -61,7 +62,7 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
       <div className="md:sticky md:top-[14vh] md:self-start">
         <SectionHeading number="02" className="mb-3.5">Career</SectionHeading>
         <p className="mb-5 max-w-[300px] leading-relaxed text-slate-text">{intro}</p>
-        <a href="/about/" className="text-sm text-green-accent hover:underline">Full experience →</a>
+        <a href="/about/" className={`${TAP_LINK} -my-3 text-sm text-green-accent hover:underline`}>Full experience →</a>
       </div>
 
       <div ref={timeline} className="relative pl-[34px]">

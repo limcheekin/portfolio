@@ -20,7 +20,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
 // track a trailing pseudo item (gutter minus the track's gap-6) lets the last card stop at the gutter.
 const END_GUTTER =
   "pin:motion-safe:after:block pin:motion-safe:after:shrink-0 pin:motion-safe:after:content-[''] pin:motion-safe:after:w-[calc(var(--gutter)-theme(spacing.6))]";
-const SWIPE_ROW = 'nopin:motion-safe:snap-x nopin:motion-safe:snap-mandatory nopin:motion-safe:overflow-x-auto nopin:motion-safe:pb-2';
+// A scroll container clips on both axes, so the swipe row pads top and bottom to keep the cards' focus
+// outlines (2px at a 4px offset) visible; the negative top margin keeps the row where it was.
+const SWIPE_ROW =
+  'nopin:motion-safe:snap-x nopin:motion-safe:snap-mandatory nopin:motion-safe:overflow-x-auto nopin:motion-safe:-mt-2 nopin:motion-safe:py-2';
 // Accent classes per accent colour (literal strings for Tailwind's scanner).
 const ACCENT = {
   green: { glow: 'border-green-accent/[.55] shadow-glow-green', label: 'text-green-accent' },
@@ -222,7 +225,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                   <div
                     aria-hidden="true"
                     data-visual
-                    className={`relative h-[170px] shrink-0 overflow-hidden rounded-[10px] border border-light-graphite bg-well bg-dot-pattern bg-[length:14px_14px] font-mono text-[10.5px] transition-opacity duration-[400ms] ease-out ${
+                    className={`relative box-content aspect-[312/170] shrink-0 overflow-hidden rounded-[10px] border border-light-graphite bg-well bg-dot-pattern bg-[length:14px_14px] font-mono text-[10.5px] transition-opacity duration-[400ms] ease-out ${
                       isDimmed ? 'opacity-70 saturate-[.55]' : ''
                     }`}
                   >

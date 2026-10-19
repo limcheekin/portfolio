@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { CHIP } from '../lib/text-styles';
+import { CHIP, MEASURE } from '../lib/text-styles';
 
 /** Full work history on About, drawn like the home Career rail: one line, a green-ringed dot per role. */
 interface Props {
@@ -27,7 +27,7 @@ const { entries } = Astro.props;
             <span class="text-green-accent"> @ {exp.data.company}</span>
           )}
         </h3>
-        <ul class="mt-3 max-w-[65ch] list-none space-y-1.5 pl-0 text-sm leading-relaxed text-slate-text">
+        <ul class={`mt-3 ${MEASURE} list-none space-y-1.5 pl-0 text-sm leading-relaxed text-slate-text`}>
           {exp.data.description.map((point) => (
             <li class="relative pl-5 before:absolute before:left-0 before:text-slate-text before:opacity-70 before:content-['–']">
               {point}

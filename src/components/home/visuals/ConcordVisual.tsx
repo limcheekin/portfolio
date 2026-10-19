@@ -6,7 +6,7 @@ const STEP = 0.8;
 
 export default function ConcordVisual({ active }: VisualProps) {
   const build = (tl: gsap.core.Timeline) => {
-    addPulse(tl, '.cp', 176, 0, 0, 1.8, 3);
+    addPulse(tl, '.cp', 176, 0, 0, 1.8, 2);
     [1, 2, 3].forEach((n, i) => reveal(tl, `.q${n}`, (i + 1) * STEP));
     reveal(tl, '.res', 4 * STEP);
   };
@@ -24,7 +24,8 @@ export default function ConcordVisual({ active }: VisualProps) {
         <circle className="cp fill-sky" cx="70" cy="70" r="3" />
       </svg>
       <div className="res absolute right-[14px] top-3 text-sky">1 row · allowed: sales</div>
-      <div className="absolute left-[14px] right-[14px] bottom-3 text-light-slate whitespace-nowrap overflow-hidden">
+      {/* Wraps between clauses rather than clipping where the mono face runs wide. */}
+      <div className="absolute left-[14px] right-[14px] bottom-3 text-light-slate leading-[1.5]">
         <span className="q1 inline-block"><span className="text-sky">SELECT</span> name, credit_lmt&nbsp;</span>
         <span className="q2 inline-block"><span className="text-sky">FROM</span> CUST_MSTR&nbsp;</span>
         <span className="q3 inline-block"><span className="text-sky">WHERE</span> id=1042</span>

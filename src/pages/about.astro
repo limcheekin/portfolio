@@ -8,7 +8,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 import { ABOUT_CONTENT, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL, EMAIL_ADDRESS } from '../data/site';
 import Img from '../components/Img.astro';
 import { PAGE_MAIN } from '../lib/layout';
-import { CHIP, PAGE_TITLE } from '../lib/text-styles';
+import { CHIP, MEASURE, PAGE_TITLE } from '../lib/text-styles';
 
 const experience = (await getCollection('experience'))
   .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
@@ -55,7 +55,7 @@ const jsonLd = [
     <div class="grid md:grid-cols-5 gap-10 lg:gap-12 items-start mb-20">
       <div class="md:col-span-3">
         {ABOUT_CONTENT.introductionParagraphs.map((paragraph) => (
-          <p class="text-slate-text text-lg leading-relaxed mb-4 max-w-[65ch]">{paragraph}</p>
+          <p class={`text-slate-text text-lg leading-relaxed mb-4 ${MEASURE}`}>{paragraph}</p>
         ))}
         <h2 class="mt-8 mb-3 text-lightest-slate">Technologies I work with</h2>
         <ul class="flex list-none flex-wrap gap-2 p-0">

@@ -369,7 +369,7 @@
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Prose in slate-text, 65ch measure."
+        "purpose": "Prose in slate-text, MEASURE (56ch, about 70-75 characters a line)."
       },
       "body-lead": {
         "displayName": "Lead",

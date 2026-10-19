@@ -8,7 +8,7 @@ import { ENGINEER_NAME, SITE_URL } from '../../data/site';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Img from '../../components/Img.astro';
 import { PAGE_MAIN } from '../../lib/layout';
-import { CHIP, PAGE_TITLE } from '../../lib/text-styles';
+import { CHIP, MEASURE, PAGE_TITLE } from '../../lib/text-styles';
 import { PROJECT_KIND_INFO, projectLabel } from '../../lib/project-kind';
 import { projectJsonLd } from '../../lib/project-jsonld';
 
@@ -61,7 +61,7 @@ const jsonLd = [
     <h1 id="project-title" class={`${PAGE_TITLE} mb-3`}>{project.data.title}</h1>
     <p class={`mb-6 font-mono text-[13px] ${accentText}`}>{projectLabel(project.data.kind, project.data.org)}</p>
 
-    <p class="mb-6 max-w-[65ch] text-lg leading-relaxed text-slate-text">{project.data.description}</p>
+    <p class={`mb-6 ${MEASURE} text-lg leading-relaxed text-slate-text`}>{project.data.description}</p>
 
     <ul class="mb-8 flex list-none flex-wrap gap-2 p-0">
       {project.data.technologies.map((tech) => (
@@ -80,7 +80,7 @@ const jsonLd = [
       </div>
     )}
 
-    <div class="prose-like max-w-[65ch] space-y-4 text-base leading-relaxed text-slate-text">
+    <div class={`prose-like ${MEASURE} space-y-4 text-base leading-relaxed text-slate-text`}>
       <Content />
     </div>
 

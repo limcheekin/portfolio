@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { MEASURE } from '../lib/text-styles';
 
 /**
  * One article as a list row (Latest Writing on home, and the Writing page): date, title, two tags, arrow.
@@ -32,7 +33,7 @@ const Title = detailed ? 'h2' : 'span';
     <time datetime={publishDate.toISOString()} class="hidden font-mono text-xs text-slate-text md:block">{fmt(publishDate)}</time>
     <span class="min-w-0">
       <Title class={`block text-lg tracking-[-0.01em] text-lightest-slate transition-colors group-hover:text-green-accent ${HOVER_EASE}`}>{title}</Title>
-      {detailed && <span class="mt-1 block max-w-[65ch] text-sm leading-relaxed text-slate-text">{description}</span>}
+      {detailed && <span class={`mt-1 block ${MEASURE} text-sm leading-relaxed text-slate-text`}>{description}</span>}
       {detailed && <span class="mt-2 block font-mono text-xs text-slate-text md:hidden">{fmt(publishDate)}</span>}
     </span>
     <span class="hidden font-mono text-xs text-slate-text md:block">{tags.slice(0, 2).join(' · ')}</span>

@@ -3,15 +3,15 @@ import { gsap, useGSAP } from '../../../lib/gsap';
 import { useMatchMedia } from '../../../lib/use-match-media';
 import { MQ } from '../../../lib/motion';
 
-const LOOP_GAP = 2; // seconds between the end of a play and the restart
+// One play may last at most this long (WCAG 2.2.2: motion over 5s that runs beside content needs a pause).
+const MAX_PLAY = 5;
 
 /**
- * One paused, looping illustration timeline per Work card (`repeat: -1`, 2s `repeatDelay`).
+ * One paused illustration timeline per Work card. It plays once, never loops.
  *
- * - Reduced motion: a non-repeating copy always rests on its finished frame (`progress(1)`).
- * - `active` true: restart from 0 and loop.
- * - `active` false: `pause().progress(1)`, so the card shows its finished frame (the end of the
- *   current iteration).
+ * - Reduced motion: rests on its finished frame (`progress(1)`).
+ * - `active` true: plays once from 0 and rests on the finished frame.
+ * - `active` false: `pause().progress(1)`, so the card shows its finished frame.
  *
  * `build` receives the empty timeline and adds the tweens; its final state is the "finished frame".
  */
@@ -28,8 +28,11 @@ export function useVisualTimeline(
 
   useMatchMedia(scope, (mm) => {
     mm.add(MQ.motion, () => {
-      const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: LOOP_GAP });
+      const tl = gsap.timeline({ paused: true });
       buildRef.current(tl);
+      if (import.meta.env.DEV && tl.duration() > MAX_PLAY) {
+        console.warn(`Work illustration plays for ${tl.duration().toFixed(1)}s; keep it at ${MAX_PLAY}s or less.`);
+      }
 
       const apply = (on: boolean) => {
         if (on) tl.restart();
