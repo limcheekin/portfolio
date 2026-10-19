@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 import { gsap, useGSAP } from './gsap';
 
-type ContextSafe = <F extends Function>(fn: F) => F;
+export type ContextSafe = <F extends Function>(fn: F) => F;
 
 /**
  * The animating-island pattern: `useGSAP` scoped to `scope`, with one `gsap.matchMedia` on its element that

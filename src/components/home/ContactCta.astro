@@ -1,5 +1,5 @@
 ---
-import { CONTACT_CTA, EMAIL_ADDRESS, HERO_CONTENT, SOCIAL_LINKS } from '../../data/site';
+import { CONTACT_CTA, CONTACT_LINKS, HERO_CONTENT } from '../../data/site';
 import MagnetButton from './MagnetButton.tsx';
 import { GUTTER } from '../../lib/layout';
 ---
@@ -21,10 +21,9 @@ import { GUTTER } from '../../lib/layout';
     <MagnetButton client:visible href={CONTACT_CTA.button.href} label={CONTACT_CTA.button.label} />
   </div>
   <ul class="relative mt-[34px] flex list-none flex-wrap justify-center gap-x-[26px] gap-y-2 p-0 font-mono text-[13px]">
-    {SOCIAL_LINKS.map((l) => (
-      <li><a href={l.url} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{l.name}</a></li>
+    {CONTACT_LINKS.map((l) => (
+      <li><a href={l.url} target={l.external ? '_blank' : undefined} rel={l.external ? 'noopener noreferrer' : undefined} class="text-light-slate no-underline hover:text-green-accent">{l.name}</a></li>
     ))}
-    <li><a href={`mailto:${EMAIL_ADDRESS}`} class="text-light-slate no-underline hover:text-green-accent">Email</a></li>
     <li><a href={HERO_CONTENT.resumeCta.href} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{HERO_CONTENT.resumeCta.label}</a></li>
   </ul>
 </section>

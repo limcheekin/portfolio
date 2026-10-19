@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { DEFAULT_PROJECT_KIND, PROJECT_KINDS } from '../lib/project-kind';
 
 const projects = defineCollection({
   type: 'content',
@@ -14,7 +15,7 @@ const projects = defineCollection({
     image: z.string().optional(),
     category: z.string(),
     dateStarted: z.string().optional(),
-    kind: z.enum(['enterprise', 'oss']).default('oss'),
+    kind: z.enum(PROJECT_KINDS).default(DEFAULT_PROJECT_KIND),
     org: z.string().optional(),
     tagline: z.string().optional(),
     stack: z.array(z.string()).min(3).max(4).optional(),

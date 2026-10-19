@@ -55,9 +55,15 @@ export const ABOUT_CONTENT = {
 };
 
 export const CONTACT_CONTENT = {
-  title: "What's Next?",
-  paragraph: `My inbox is always open for AI discussions, collaborations, or just to connect. Whether you have a question about RAG, local AI, open-source initiatives, or AI engineering in general, I'll do my best to get back to you!`,
-  buttonText: "Say Hello",
+  title: "Let's talk about your workflow",
+  paragraph: "I design and ship AI agents that plug into the systems you already run, from expense claims to trade documents and warehouse operations. Tell me what you'd like to automate, or ask about consulting and open-source collaboration, and I'll get back to you.",
+  buttonText: "Email me",
 };
+
+/** Social profiles plus email, listed in the footer and the home Contact section. */
+export const CONTACT_LINKS = [
+  ...SOCIAL_LINKS.map(({ name, url }) => ({ name, url, external: true })),
+  { name: 'Email', url: `mailto:${EMAIL_ADDRESS}`, external: false },
+];
 
 export const FOOTER_TEXT = `© ${new Date().getFullYear()} ${ENGINEER_NAME} · Kuala Lumpur, Malaysia`;

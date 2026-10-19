@@ -24,6 +24,9 @@ const PINNED_SECTION = 'pin:motion-safe:flex pin:motion-safe:h-screen pin:motion
 
 export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
   const count = cards.length;
+  // Track progress (0..1) and card index map onto each other the same way in every mode.
+  const indexAt = (progress: number) => Math.round(progress * (count - 1));
+  const progressAt = (index: number) => (count > 1 ? index / (count - 1) : 0);
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLUListElement>(null);
   const fill = useRef<HTMLElement>(null);
@@ -78,7 +81,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
         const distance = () => trackEl.scrollWidth - window.innerWidth;
         const sync = (progress: number) => {
           setFill(progress);
-          setActive(Math.round(progress * (count - 1)));
+          setActive(indexAt(progress));
         };
 
         const tween = gsap.to(trackEl, {
@@ -131,7 +134,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
               best = i;
             }
           }
-          setFill(count > 1 ? best / (count - 1) : 1);
+          setFill(progressAt(best));
           setActive(best);
         },
         // Extra thresholds above 0.6 re-run the decision as cards keep moving towards the centre.
@@ -152,7 +155,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
     if (mode === 'pin') {
       const st = pinRef.current;
       if (!st) return;
-      const y = st.start + (count > 1 ? i / (count - 1) : 0) * (st.end - st.start);
+      const y = st.start + progressAt(i) * (st.end - st.start);
       const reduced = window.matchMedia(MQ.reduce).matches;
       if (lenis) lenis.scrollTo(y, { immediate: reduced });
       else window.scrollTo(0, y);

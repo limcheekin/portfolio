@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
+import { DEFAULT_PROJECT_KIND } from '../src/lib/project-kind';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -57,7 +58,7 @@ const portfolio = {
     slug: p._slug,
     description: p.description,
     featured: p.featured,
-    kind: p.kind ?? 'oss',
+    kind: p.kind ?? DEFAULT_PROJECT_KIND,
     org: p.org,
     tagline: p.tagline,
     technologies: p.technologies || [],

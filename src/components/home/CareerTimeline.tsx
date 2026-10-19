@@ -1,6 +1,7 @@
 import { useRef } from 'react';
-import { gsap, ScrollTrigger } from '../../lib/gsap';
+import { gsap } from '../../lib/gsap';
 import { useMatchMedia } from '../../lib/use-match-media';
+import { batchReveal } from '../../lib/reveal';
 import { MQ } from '../../lib/motion';
 import { GUTTER } from '../../lib/layout';
 import SectionHeading from './SectionHeading';
@@ -11,7 +12,7 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
   const timeline = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLElement>(null);
 
-  useMatchMedia(section, (mm, sectionEl) => {
+  useMatchMedia(section, (mm, sectionEl, contextSafe) => {
     const timelineEl = timeline.current;
     const fillEl = fill.current;
     if (!timelineEl || !fillEl) return;
@@ -19,17 +20,21 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
     // Reduced motion: nothing is set; the rail is already full and the dots already green.
     mm.add(MQ.motion, () => {
       const jobs = gsap.utils.toArray<HTMLElement>('.job', sectionEl);
-      gsap.set(jobs, { opacity: 0, y: 24, scale: 0.98 });
+      // Dots stay grey (data-pending) until their entry reveals.
       jobs.forEach((j) => j.setAttribute('data-pending', ''));
-
-      ScrollTrigger.batch(jobs, {
-        start: 'top 85%',
-        once: true,
-        onEnter: (els) => {
-          els.forEach((el) => el.removeAttribute('data-pending'));
-          gsap.to(els, { opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.7, ease: 'power3.out', overwrite: true });
+      batchReveal(
+        jobs,
+        {
+          y: 24,
+          scale: 0.98,
+          start: 'top 85%',
+          stagger: 0.12,
+          duration: 0.7,
+          ease: 'power3.out',
+          onEnter: (batch) => batch.forEach((el) => el.removeAttribute('data-pending')),
         },
-      });
+        contextSafe,
+      );
 
       gsap.fromTo(
         fillEl,

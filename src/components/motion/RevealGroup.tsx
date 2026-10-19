@@ -1,31 +1,19 @@
 import { useRef, type ReactNode } from 'react';
-import { gsap, ScrollTrigger } from '../../lib/gsap';
+import { gsap } from '../../lib/gsap';
 import { useMatchMedia } from '../../lib/use-match-media';
+import { batchReveal } from '../../lib/reveal';
 import { MQ } from '../../lib/motion';
 
-export default function RevealGroup({
-  selector,
-  stagger,
-  children,
-}: {
-  selector: string;
-  stagger?: number;
-  children?: ReactNode;
-}) {
+/** Fades and lifts the children matching `selector` into place as they scroll in. */
+export default function RevealGroup({ selector, children }: { selector: string; children?: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
 
-  useMatchMedia(root, (mm, el) => {
+  useMatchMedia(root, (mm, el, contextSafe) => {
     // Reduced motion: nothing is set; content stays on its finished frame.
     mm.add(MQ.motion, () => {
       const els = gsap.utils.toArray<HTMLElement>(selector, el);
       if (!els.length) return;
-      gsap.set(els, { opacity: 0, y: 12 });
-      ScrollTrigger.batch(els, {
-        start: 'top 90%',
-        once: true,
-        onEnter: (b) =>
-          gsap.to(b, { opacity: 1, y: 0, stagger: stagger ?? 0.09, overwrite: true }),
-      });
+      batchReveal(els, { y: 12, start: 'top 90%', stagger: 0.09, duration: 0.5, ease: 'power1.out' }, contextSafe);
     });
   });
 

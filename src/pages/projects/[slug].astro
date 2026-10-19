@@ -6,6 +6,7 @@ import Button from '../../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
 import { imageSize } from '../../lib/image-size';
+import { projectJsonLd } from '../../lib/project-jsonld';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -19,17 +20,7 @@ const { project } = Astro.props;
 const { Content } = await project.render();
 
 const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareSourceCode",
-    "name": project.data.title,
-    "description": project.data.description,
-    "url": `${SITE_URL}/projects/${project.slug}/`,
-    "codeRepository": project.data.githubUrl,
-    "author": { "@type": "Person", "name": ENGINEER_NAME },
-    "programmingLanguage": project.data.technologies,
-    "keywords": project.data.technologies.join(', ')
-  },
+  { "@context": "https://schema.org", ...projectJsonLd(project) },
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

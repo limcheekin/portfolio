@@ -11,6 +11,7 @@ import LatestWriting from '../components/home/LatestWriting.astro';
 import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_INTRO, getCareerEntries } from '../data/career';
 import type { WorkCard } from '../components/home/types';
+import { projectJsonLd } from '../lib/project-jsonld';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
@@ -162,15 +163,7 @@ const jsonLd = [
     "itemListElement": featuredProjects.map((p, i) => ({
       "@type": "ListItem",
       "position": i + 1,
-      "item": {
-        "@type": "SoftwareSourceCode",
-        "name": p.data.title,
-        "description": p.data.description,
-        "codeRepository": p.data.githubUrl,
-        "programmingLanguage": p.data.technologies,
-        "author": { "@type": "Person", "name": ENGINEER_NAME },
-        "keywords": p.data.technologies.join(', ')
-      }
+      "item": projectJsonLd(p)
     }))
   },
   {

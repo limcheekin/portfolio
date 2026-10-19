@@ -6,6 +6,7 @@ import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { imageSize } from '../../lib/image-size';
+import { projectJsonLd } from '../../lib/project-jsonld';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
@@ -21,7 +22,7 @@ const jsonLd = [
     "itemListElement": allProjects.map((p, i) => ({
       "@type": "ListItem",
       "position": i + 1,
-      "item": { "@type": "SoftwareSourceCode", "name": p.data.title, "description": p.data.description, "url": `${SITE_URL}/projects/${p.slug}/` }
+      "item": projectJsonLd(p)
     }))
   },
   {
