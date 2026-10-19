@@ -17,7 +17,7 @@ const projects = defineCollection({
     kind: z.enum(['enterprise', 'oss']).default('oss'),
     org: z.string().optional(),
     tagline: z.string().optional(),
-    stack: z.array(z.string()).max(4).optional(),
+    stack: z.array(z.string()).min(3).max(4).optional(),
     visual: z.enum(['claim', 'trade', 'ware', 'agent', 'concord', 'talk', 'rag']).optional(),
   }),
 });

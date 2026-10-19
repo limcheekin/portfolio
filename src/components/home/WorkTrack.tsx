@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLenis } from 'lenis/react';
-import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { gsap, ScrollTrigger } from '../../lib/gsap';
+import { useMatchMedia } from '../../lib/use-match-media';
 import { MQ } from '../../lib/motion';
 import { GUTTER } from '../../lib/layout';
 import SectionHeading from './SectionHeading';
@@ -15,9 +16,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 // - pinned track: wide AND tall viewport (MQ.pin), motion allowed;
 // - swipe row: every other motion case (narrow, or short-and-wide such as landscape phones).
 // scrollWidth ignores the track's right padding while it is not a scroll container, so on the pinned
-// track a trailing pseudo item (gutter minus the 24px gap) lets the last card stop at the gutter.
+// track a trailing pseudo item (gutter minus the track's gap-6) lets the last card stop at the gutter.
 const END_GUTTER =
-  "pin:motion-safe:after:block pin:motion-safe:after:shrink-0 pin:motion-safe:after:content-[''] [@media(min-width:768px)_and_(max-width:1023px)_and_(min-height:560px)]:motion-safe:after:w-10 [@media(min-width:1024px)_and_(min-height:560px)]:motion-safe:after:w-[72px]";
+  "pin:motion-safe:after:block pin:motion-safe:after:shrink-0 pin:motion-safe:after:content-[''] pin:motion-safe:after:w-[calc(var(--gutter)-theme(spacing.6))]";
 const SWIPE_ROW = 'nopin:motion-safe:snap-x nopin:motion-safe:snap-mandatory nopin:motion-safe:overflow-x-auto nopin:motion-safe:pb-2';
 const PINNED_SECTION = 'pin:motion-safe:flex pin:motion-safe:h-screen pin:motion-safe:flex-col pin:motion-safe:justify-center pin:motion-safe:py-0';
 
@@ -41,116 +42,109 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
     setActiveIndex(i);
   };
 
-  useGSAP(
-    () => {
-      const sectionEl = section.current;
-      const trackEl = track.current;
-      const fillEl = fill.current;
-      if (!sectionEl || !trackEl || !fillEl) return;
-      const mm = gsap.matchMedia(sectionEl);
-      const items = Array.from(trackEl.querySelectorAll<HTMLElement>('[data-card]'));
-      // Empties the progress line and returns its setter (0..1).
-      const resetFill = () => {
-        gsap.set(fillEl, { scaleX: 0 });
-        return gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
-      };
+  useMatchMedia(section, (mm, sectionEl) => {
+    const trackEl = track.current;
+    const fillEl = fill.current;
+    if (!trackEl || !fillEl) return;
+    const items = Array.from(trackEl.querySelectorAll<HTMLElement>('[data-card]'));
+    // Empties the progress line and returns its setter (0..1).
+    const resetFill = () => {
+      gsap.set(fillEl, { scaleX: 0 });
+      return gsap.quickSetter(fillEl, 'scaleX') as (v: number) => void;
+    };
 
-      // One branch per mode; GSAP re-runs it (after reverting the last run) whenever a condition flips.
-      // Swipe is motion AND `not all and MQ.pin`, the complement of the pin screen.
-      mm.add({ pin: MQ.pin, motion: MQ.motion, reduce: MQ.reduce }, (ctx) => {
-        const { pin, motion, reduce } = ctx.conditions as Record<'pin' | 'motion' | 'reduce', boolean>;
+    // One branch per mode; GSAP re-runs it (after reverting the last run) whenever a condition flips.
+    // Swipe is motion AND `not all and MQ.pin`, the complement of the pin screen.
+    mm.add({ pin: MQ.pin, motion: MQ.motion, reduce: MQ.reduce }, (ctx) => {
+      const { pin, motion, reduce } = ctx.conditions as Record<'pin' | 'motion' | 'reduce', boolean>;
 
-        // Reduced motion (any width): static wrapped grid, nothing glows or moves.
-        if (reduce) {
-          setMode('reduce');
-          return;
-        }
-        if (!motion) return;
+      // Reduced motion (any width): static wrapped grid, nothing glows or moves.
+      if (reduce) {
+        setMode('reduce');
+        return;
+      }
+      if (!motion) return;
 
-        // The active card's illustration plays only while at least 10% of the section is on screen (a
-        // pinned section stays visible for the whole pin). The threshold keeps a section that only
-        // touches the fold, as it does under the full-height hero, from counting as visible.
-        const visibility = new IntersectionObserver(([e]) => setInView(e.intersectionRatio >= 0.1), { threshold: 0.1 });
-        visibility.observe(sectionEl);
+      // The active card's illustration plays only while at least 10% of the section is on screen (a
+      // pinned section stays visible for the whole pin). The threshold keeps a section that only
+      // touches the fold, as it does under the full-height hero, from counting as visible.
+      const visibility = new IntersectionObserver(([e]) => setInView(e.intersectionRatio >= 0.1), { threshold: 0.1 });
+      visibility.observe(sectionEl);
 
-        // Wide and tall: pin the section and translate the inner track sideways.
-        if (pin) {
-          setMode('pin');
-          const setFill = resetFill();
-          const distance = () => trackEl.scrollWidth - window.innerWidth;
-          const sync = (progress: number) => {
-            setFill(progress);
-            setActive(Math.round(progress * (count - 1)));
-          };
-
-          const tween = gsap.to(trackEl, {
-            x: () => -distance(),
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionEl,
-              pin: true,
-              scrub: 1,
-              start: 'top top',
-              end: () => '+=' + distance(),
-              invalidateOnRefresh: true,
-              refreshPriority: 10,
-              onUpdate: (self) => sync(self.progress),
-            },
-          });
-          const st = tween.scrollTrigger!;
-          pinRef.current = st;
-          sync(st.progress);
-
-          return () => {
-            visibility.disconnect();
-            pinRef.current = null;
-          };
-        }
-
-        // Narrow, or short-and-wide: native swipe row with snap. Among the cards at least 60% visible
-        // inside the row, the one whose centre is nearest the row's centre is active.
-        setMode('swipe');
+      // Wide and tall: pin the section and translate the inner track sideways.
+      if (pin) {
+        setMode('pin');
         const setFill = resetFill();
-        const qualifying = new Set<number>();
+        const distance = () => trackEl.scrollWidth - window.innerWidth;
+        const sync = (progress: number) => {
+          setFill(progress);
+          setActive(Math.round(progress * (count - 1)));
+        };
 
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries) {
-              const i = items.indexOf(e.target as HTMLElement);
-              if (e.isIntersecting && e.intersectionRatio >= 0.6) qualifying.add(i);
-              else qualifying.delete(i);
-            }
-            if (qualifying.size === 0) return;
-            const box = trackEl.getBoundingClientRect();
-            const mid = box.left + box.width / 2;
-            let best = -1;
-            let bestDist = Infinity;
-            for (const i of qualifying) {
-              const r = items[i].getBoundingClientRect();
-              const d = Math.abs(r.left + r.width / 2 - mid);
-              if (d < bestDist) {
-                bestDist = d;
-                best = i;
-              }
-            }
-            setFill(count > 1 ? best / (count - 1) : 1);
-            setActive(best);
+        const tween = gsap.to(trackEl, {
+          x: () => -distance(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionEl,
+            pin: true,
+            scrub: 1,
+            start: 'top top',
+            end: () => '+=' + distance(),
+            invalidateOnRefresh: true,
+            refreshPriority: 10,
+            onUpdate: (self) => sync(self.progress),
           },
-          // Extra thresholds above 0.6 re-run the decision as cards keep moving towards the centre.
-          { root: trackEl, threshold: [0.6, 0.7, 0.8, 0.9, 1] },
-        );
-        items.forEach((el) => io.observe(el));
+        });
+        const st = tween.scrollTrigger!;
+        pinRef.current = st;
+        sync(st.progress);
 
         return () => {
           visibility.disconnect();
-          io.disconnect();
+          pinRef.current = null;
         };
-      });
+      }
 
-      return () => mm.revert();
-    },
-    { scope: section },
-  );
+      // Narrow, or short-and-wide: native swipe row with snap. Among the cards at least 60% visible
+      // inside the row, the one whose centre is nearest the row's centre is active.
+      setMode('swipe');
+      const setFill = resetFill();
+      const qualifying = new Set<number>();
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const i = items.indexOf(e.target as HTMLElement);
+            if (e.isIntersecting && e.intersectionRatio >= 0.6) qualifying.add(i);
+            else qualifying.delete(i);
+          }
+          if (qualifying.size === 0) return;
+          const box = trackEl.getBoundingClientRect();
+          const mid = box.left + box.width / 2;
+          let best = -1;
+          let bestDist = Infinity;
+          for (const i of qualifying) {
+            const r = items[i].getBoundingClientRect();
+            const d = Math.abs(r.left + r.width / 2 - mid);
+            if (d < bestDist) {
+              bestDist = d;
+              best = i;
+            }
+          }
+          setFill(count > 1 ? best / (count - 1) : 1);
+          setActive(best);
+        },
+        // Extra thresholds above 0.6 re-run the decision as cards keep moving towards the centre.
+        { root: trackEl, threshold: [0.6, 0.7, 0.8, 0.9, 1] },
+      );
+      items.forEach((el) => io.observe(el));
+
+      return () => {
+        visibility.disconnect();
+        io.disconnect();
+      };
+    });
+  });
 
   // Keyboard: focusing a card makes it active and brings it into view.
   const onCardFocus = (i: number, el: HTMLElement) => {
@@ -201,7 +195,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                 href={card.href}
                 data-card
                 onFocus={(e) => onCardFocus(i, e.currentTarget)}
-                className={`relative flex h-full w-[min(360px,80vw)] [@media(min-height:560px)]:h-[min(470px,72vh)] flex-col overflow-hidden rounded-2xl border border-edge p-[22px] transition-opacity duration-[400ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-accent ${
+                className={`relative flex h-full w-[min(360px,80vw)] tall:h-[min(470px,72vh)] flex-col overflow-hidden rounded-2xl border border-edge p-[22px] transition-opacity duration-[400ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-accent ${
                   isMoreCard ? 'justify-center border-dashed bg-transparent' : 'bg-card'
                 } ${isActive ? 'is-active' : ''} ${isDimmed ? 'opacity-90' : 'opacity-100'}`}
               >

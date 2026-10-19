@@ -1,5 +1,5 @@
 ---
-import { CONTACT_CTA, HERO_CONTENT, SOCIAL_LINKS } from '../../data/site';
+import { CONTACT_CTA, EMAIL_ADDRESS, HERO_CONTENT, SOCIAL_LINKS } from '../../data/site';
 import MagnetButton from './MagnetButton.tsx';
 import { GUTTER } from '../../lib/layout';
 ---
@@ -24,6 +24,7 @@ import { GUTTER } from '../../lib/layout';
     {SOCIAL_LINKS.map((l) => (
       <li><a href={l.url} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{l.name}</a></li>
     ))}
+    <li><a href={`mailto:${EMAIL_ADDRESS}`} class="text-light-slate no-underline hover:text-green-accent">Email</a></li>
     <li><a href={HERO_CONTENT.resumeCta.href} target="_blank" rel="noopener noreferrer" class="text-light-slate no-underline hover:text-green-accent">{HERO_CONTENT.resumeCta.label}</a></li>
   </ul>
 </section>

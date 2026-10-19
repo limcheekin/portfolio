@@ -30,7 +30,7 @@ export const SOCIAL_LINKS: ContactLink[] = [
 ];
 
 export const HERO_CONTENT = {
-  eyebrow: 'Lim Chee Kin · AI Solutions Architect',
+  eyebrow: `${ENGINEER_NAME} · ${ENGINEER_TITLE}`,
   headline: { before: 'I build AI agents that do ', accent: 'real work', after: ' inside business systems.' },
   sub: 'From a WhatsApp message to a posted sales order, with a human in the loop.',
   primaryCta: { label: 'Get in touch', href: '/contact/' },
@@ -46,7 +46,7 @@ export const CONTACT_CTA = {
 
 export const ABOUT_CONTENT = {
   introductionParagraphs: [
-    "I'm Lim Chee Kin, an AI Solutions Architect at Daxonet AI in Kuala Lumpur. I design and ship enterprise AI: conversational agents, document extraction, human approvals, and integration with accounting and business platforms.",
+    `I'm ${ENGINEER_NAME}, an ${ENGINEER_TITLE} at Daxonet AI in Kuala Lumpur. I design and ship enterprise AI: conversational agents, document extraction, human approvals, and integration with accounting and business platforms.`,
     "My work spans retrieval-augmented generation (RAG), real-time voice systems, cloud operations and distributed teams, built in Python and TypeScript. Before AI, I led enterprise Java teams across China, Europe and Malaysia, and delivered banking and healthcare systems.",
     "I care about AI that does real work safely: role-restricted agent tools, explicit confirmation before writes, and private, self-hosted models where data sovereignty matters.",
   ],

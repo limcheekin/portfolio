@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { gsap, ScrollTrigger } from '../../lib/gsap';
+import { useMatchMedia } from '../../lib/use-match-media';
 import { MQ } from '../../lib/motion';
 import { GUTTER } from '../../lib/layout';
 import SectionHeading from './SectionHeading';
@@ -10,46 +11,41 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
   const timeline = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const sectionEl = section.current;
-      const timelineEl = timeline.current;
-      const fillEl = fill.current;
-      if (!sectionEl || !timelineEl || !fillEl) return;
-      const mm = gsap.matchMedia(sectionEl);
+  useMatchMedia(section, (mm, sectionEl) => {
+    const timelineEl = timeline.current;
+    const fillEl = fill.current;
+    if (!timelineEl || !fillEl) return;
 
-      // Reduced motion: nothing is set; the rail is already full and the dots already green.
-      mm.add(MQ.motion, () => {
-        const jobs = gsap.utils.toArray<HTMLElement>('.job', sectionEl);
-        gsap.set(jobs, { opacity: 0, y: 24, scale: 0.98 });
-        jobs.forEach((j) => j.setAttribute('data-pending', ''));
+    // Reduced motion: nothing is set; the rail is already full and the dots already green.
+    mm.add(MQ.motion, () => {
+      const jobs = gsap.utils.toArray<HTMLElement>('.job', sectionEl);
+      gsap.set(jobs, { opacity: 0, y: 24, scale: 0.98 });
+      jobs.forEach((j) => j.setAttribute('data-pending', ''));
 
-        ScrollTrigger.batch(jobs, {
-          start: 'top 85%',
-          once: true,
-          onEnter: (els) => {
-            els.forEach((el) => el.removeAttribute('data-pending'));
-            gsap.to(els, { opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.7, ease: 'power3.out', overwrite: true });
-          },
-        });
-
-        gsap.fromTo(
-          fillEl,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: 'none',
-            scrollTrigger: { trigger: timelineEl, start: 'top 80%', end: 'bottom 80%', scrub: true },
-          },
-        );
-
-        return () => {
-          jobs.forEach((j) => j.removeAttribute('data-pending'));
-        };
+      ScrollTrigger.batch(jobs, {
+        start: 'top 85%',
+        once: true,
+        onEnter: (els) => {
+          els.forEach((el) => el.removeAttribute('data-pending'));
+          gsap.to(els, { opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.7, ease: 'power3.out', overwrite: true });
+        },
       });
-    },
-    { scope: section },
-  );
+
+      gsap.fromTo(
+        fillEl,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: { trigger: timelineEl, start: 'top 80%', end: 'bottom 80%', scrub: true },
+        },
+      );
+
+      return () => {
+        jobs.forEach((j) => j.removeAttribute('data-pending'));
+      };
+    });
+  });
 
   return (
     <section

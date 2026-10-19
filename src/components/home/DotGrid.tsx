@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { gsap, useGSAP } from '../../lib/gsap';
+import { gsap } from '../../lib/gsap';
+import { useMatchMedia } from '../../lib/use-match-media';
 import { MQ } from '../../lib/motion';
 import { COLORS, rgba } from '../../lib/palette.mjs';
 
@@ -20,11 +21,11 @@ interface Dot { ox: number; oy: number; x: number; y: number; vx: number; vy: nu
 export default function DotGrid({ gap = 30, opacity = 0.35 }: { gap?: number; opacity?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
-  useGSAP(
-    () => {
-      const canvas = ref.current;
-      const ctx = canvas?.getContext('2d');
-      if (!canvas || !ctx) return;
+  useMatchMedia(
+    ref,
+    (mm, canvas) => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
       const host = canvas.closest('section') ?? canvas.parentElement ?? canvas;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       let dots: Dot[] = [];
@@ -99,8 +100,6 @@ export default function DotGrid({ gap = 30, opacity = 0.35 }: { gap?: number; op
         ro.observe(canvas);
         return () => ro.disconnect();
       };
-
-      const mm = gsap.matchMedia(canvas);
 
       mm.add(INTERACTIVE, () => {
         let visible = false;
@@ -181,10 +180,8 @@ export default function DotGrid({ gap = 30, opacity = 0.35 }: { gap?: number; op
         draw(false);
         return onResize(() => { build(); draw(false); });
       });
-
-      return () => mm.revert();
     },
-    { scope: ref, dependencies: [gap], revertOnUpdate: true },
+    { dependencies: [gap], revertOnUpdate: true },
   );
 
   return <canvas ref={ref} aria-hidden="true" style={{ opacity }} className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full md:block" />;

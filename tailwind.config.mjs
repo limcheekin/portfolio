@@ -1,6 +1,7 @@
 import { COLORS, rgba } from './src/lib/palette.mjs';
 
 const GREEN = COLORS['green-accent'];
+const TALL = '(min-height: 560px)';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -28,11 +29,13 @@ export default {
         'contact-glow': `radial-gradient(circle, ${rgba(GREEN, 0.1)}, transparent 60%)`,
         'dot-pattern': `radial-gradient(circle at 1px 1px, ${COLORS['light-graphite']} 1px, transparent 0)`,
       },
-      // Work track pin breakpoint; keep in sync with MQ.pin in src/lib/motion.ts.
+      // Work track pin breakpoint; keep in sync with MQ.pin in src/lib/motion.ts. `tall` is its height half:
+      // tall enough for a full-height Work card.
       // Raw screens turn off Tailwind's max-* variants (max-sm: etc.), so write responsive classes mobile-first.
       screens: {
-        pin: { raw: '(min-width: 768px) and (min-height: 560px)' },
-        nopin: { raw: 'not all and (min-width: 768px) and (min-height: 560px)' },
+        pin: { raw: `(min-width: 768px) and ${TALL}` },
+        nopin: { raw: `not all and (min-width: 768px) and ${TALL}` },
+        tall: { raw: TALL },
       },
       fontFamily: {
         display: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'Ubuntu', 'Cantarell', '"Noto Sans"', 'Helvetica', 'Arial', 'sans-serif'],

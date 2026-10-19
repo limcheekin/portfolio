@@ -209,7 +209,7 @@ check('featured cards complete', () => {
     const d = project(slug)?.data;
     if (!d) { out.push(`missing ${slug}`); return; }
     if (!d.tagline) out.push(`${slug}: no tagline`);
-    if (!Array.isArray(d.stack) || d.stack.length < 2 || d.stack.length > 4) out.push(`${slug}: stack length`);
+    if (!Array.isArray(d.stack) || d.stack.length < 3 || d.stack.length > 4) out.push(`${slug}: stack length`);
     if (d.visual !== FEATURED[slug]) out.push(`${slug}: visual ${d.visual}`);
     if (d.featuredOrder !== i + 1) out.push(`${slug}: featuredOrder ${d.featuredOrder}`);
     if (i < 4 && (d.kind !== 'enterprise' || d.org !== 'Daxonet AI')) out.push(`${slug}: should be enterprise / Daxonet AI`);

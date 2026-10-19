@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { gsap, useGSAP } from '../../lib/gsap';
+import { gsap } from '../../lib/gsap';
+import { useMatchMedia } from '../../lib/use-match-media';
 import { SplitText } from '../../lib/gsap-split';
 import { BUTTON_BASE, BUTTON_SIZES } from '../../lib/button-styles';
 import { MQ } from '../../lib/motion';
@@ -8,34 +9,28 @@ import type { HERO_CONTENT } from '../../data/site';
 export default function HeroIntro({ content }: { content: typeof HERO_CONTENT }) {
   const scope = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const root = scope.current;
-      const h1 = root?.querySelector('h1');
-      if (!root || !h1) return;
-      const fades = Array.from(root.querySelectorAll('[data-hero-fade]'));
-      const mm = gsap.matchMedia(root);
+  useMatchMedia(scope, (mm, root) => {
+    const h1 = root.querySelector('h1');
+    if (!h1) return;
+    const fades = Array.from(root.querySelectorAll('[data-hero-fade]'));
 
-      mm.add(MQ.motion, () => {
-        SplitText.create(h1, {
-          type: 'lines, words',
-          mask: 'lines',
-          autoSplit: true,
-          onSplit: (self) =>
-            gsap.from(self.words, { yPercent: 100, opacity: 0, stagger: 0.04, duration: 0.8, ease: 'power3.out' }),
-        });
-        gsap.from(fades, { opacity: 0, y: 12, duration: 0.6, stagger: 0.12, delay: 0.7, ease: 'power2.out' });
+    mm.add(MQ.motion, () => {
+      SplitText.create(h1, {
+        type: 'lines, words',
+        mask: 'lines',
+        autoSplit: true,
+        onSplit: (self) =>
+          gsap.from(self.words, { yPercent: 100, opacity: 0, stagger: 0.04, duration: 0.8, ease: 'power3.out' }),
       });
+      gsap.from(fades, { opacity: 0, y: 12, duration: 0.6, stagger: 0.12, delay: 0.7, ease: 'power2.out' });
+    });
 
-      mm.add(MQ.reduce, () => {
-        gsap.from(h1, { opacity: 0, duration: 0.2 });
-        gsap.from(fades, { opacity: 0, duration: 0.2 });
-      });
-
-      return () => mm.revert();
-    },
-    { scope },
-  );
+    // Reduced motion: a short opacity fade-in, no movement.
+    mm.add(MQ.reduce, () => {
+      gsap.from(h1, { opacity: 0, duration: 0.2 });
+      gsap.from(fades, { opacity: 0, duration: 0.2 });
+    });
+  });
 
   const { eyebrow, headline, sub, primaryCta, resumeCta } = content;
   const btn = `${BUTTON_BASE} ${BUTTON_SIZES.md}`;

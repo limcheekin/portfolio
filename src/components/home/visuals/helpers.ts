@@ -1,5 +1,5 @@
-/** Shared style for centred SVG text labels in the illustrations. */
-export const svgLabel = { fontFamily: 'ui-monospace, Consolas, monospace', fontSize: 10, textAnchor: 'middle', dominantBaseline: 'middle' } as const;
+/** Shared style for centred SVG text labels in the illustrations (the font is the frame's `font-mono`). */
+export const svgLabel = { fontSize: 10, textAnchor: 'middle', dominantBaseline: 'middle' } as const;
 
 /** Fades `target` in from 5px below at `at` seconds: the common reveal step of the illustrations. */
 export function reveal(tl: gsap.core.Timeline, target: string, at: number) {

@@ -5,7 +5,7 @@ featured: true
 featuredOrder: 7
 kind: oss
 tagline: "Private, personalised knowledge discovery: your documents, your models, your machine."
-stack: ["open-text-embeddings", "SurrealDB"]
+stack: ["Flutter", "SurrealDB", "open-text-embeddings"]
 visual: rag
 technologies: ["Open Source", "RAG", "Data Privacy", "Local AI", "Cloud AI", "surrealdb.wasm", "Flutter", "Dart"]
 image: "/images/rag-wtf.png"

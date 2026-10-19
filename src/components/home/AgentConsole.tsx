@@ -1,5 +1,6 @@
 import { Fragment, useRef, useState } from 'react';
-import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { gsap, ScrollTrigger } from '../../lib/gsap';
+import { useMatchMedia } from '../../lib/use-match-media';
 import { MQ } from '../../lib/motion';
 import type { AgentRun } from './types';
 
@@ -22,44 +23,32 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
   const stRef = useRef<ScrollTrigger | null>(null);
 
   // Created once: the visibility trigger (motion) or the static first run (reduced motion).
-  useGSAP(
-    () => {
-      const el = root.current;
-      if (!el) return;
-      const mm = gsap.matchMedia(el);
-
-      mm.add(MQ.motion, () => {
-        const st = ScrollTrigger.create({
-          trigger: el,
-          start: 'top bottom',
-          end: 'bottom top',
-          onToggle: (self) => (self.isActive ? tlRef.current?.play() : tlRef.current?.pause()),
-        });
-        stRef.current = st;
-        if (st.isActive) tlRef.current?.play();
-        else tlRef.current?.pause();
-        return () => {
-          stRef.current = null;
-        };
+  useMatchMedia(root, (mm, el) => {
+    mm.add(MQ.motion, () => {
+      const st = ScrollTrigger.create({
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+        onToggle: (self) => (self.isActive ? tlRef.current?.play() : tlRef.current?.pause()),
       });
+      stRef.current = st;
+      if (st.isActive) tlRef.current?.play();
+      else tlRef.current?.pause();
+      return () => {
+        stRef.current = null;
+      };
+    });
 
-      mm.add(MQ.reduce, () => {
-        // Static: always show the finished first run.
-        setActive(0);
-      });
-
-      return () => mm.revert();
-    },
-    { scope: root },
-  );
+    mm.add(MQ.reduce, () => {
+      // Static: always show the finished first run.
+      setActive(0);
+    });
+  });
 
   // Per run: reveal the rows one by one, hold, then advance to the next run.
-  useGSAP(
-    () => {
-      const el = root.current;
-      if (!el) return;
-      const mm = gsap.matchMedia(el);
-
+  useMatchMedia(
+    root,
+    (mm, el) => {
       mm.add(MQ.motion, () => {
         const rows = Array.from(el.querySelectorAll('[data-run-row]'));
         gsap.set(rows, { opacity: 0, y: 6 });
@@ -72,10 +61,8 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
           tlRef.current = null;
         };
       });
-
-      return () => mm.revert();
     },
-    { scope: root, dependencies: [active, runs.length], revertOnUpdate: true },
+    { dependencies: [active, runs.length], revertOnUpdate: true },
   );
 
   return (
@@ -96,8 +83,8 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
           const done = i === run.rows.length - 1;
           return (
             <div key={`${run.name}-${i}`} data-run-row className="grid grid-cols-[74px_1fr] gap-2.5 overflow-hidden text-ellipsis whitespace-nowrap">
-              <span className={done ? 'text-white' : 'text-green-accent'}>{row.step}</span>
-              <span className={`overflow-hidden text-ellipsis text-light-slate ${done ? '[&_b]:text-white' : '[&_b]:text-lightest-slate'} [&_b]:font-medium`}>
+              <span className={done ? 'text-white-text' : 'text-green-accent'}>{row.step}</span>
+              <span className={`overflow-hidden text-ellipsis text-light-slate ${done ? '[&_b]:text-white-text' : '[&_b]:text-lightest-slate'} [&_b]:font-medium`}>
                 {renderDetail(row.detail)}
               </span>
             </div>

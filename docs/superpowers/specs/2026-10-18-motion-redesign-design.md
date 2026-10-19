@@ -130,7 +130,7 @@ Approved section order and numbering: **Hero (unnumbered) · 01 Selected Work ·
 
 - Eyebrow "04 · Contact". Large headline: **"Have a workflow that should *run itself?*"** ("run itself?" in green). One line: "I design and ship AI agents that plug into the systems you already run. Tell me about yours."
 - One primary pill button, **Get in touch →** (to `/contact/` or mailto). It is **magnetic**: it eases toward the cursor within a surrounding zone, implemented with `gsap.quickTo` (or by vendoring React Bits Magnet and reviewing it against the rules). Magnetism is enabled only for `(pointer: fine)` and no reduced motion.
-- Quiet links underneath: GitHub · LinkedIn · Medium · Résumé ↗.
+- Quiet links underneath: GitHub · LinkedIn · Medium · Email · Résumé ↗.
 - A soft radial green glow behind the section (static CSS).
 
 ### What leaves the home page
@@ -286,6 +286,7 @@ Made after the two-axis review of the branch. Each one records a deliberate impl
 - **Pin breakpoint:** the Work pin also needs a viewport at least 560px tall. Shorter viewports get the swipe row (see *01 Selected Work*).
 - **Palette:** the home surfaces and illustration tints are named tokens documented in `DESIGN.md`, alongside `sky`.
 - **Verification:** `scripts/verify-content.ts` automates the content and build-output parts of the checklist.
-- **Animated properties:** CSS hover/focus colour transitions are allowed. Hover effects that used `padding`, `background`, `border-color`, `box-shadow` or `filter` transitions now use transforms or an overlay's opacity.
+- **Animated properties:** CSS hover/focus colour transitions (`color`, `background-color`, `border-color`) are allowed and stay on buttons and links. Transitions of anything else moved to transforms or an overlay's opacity: the Writing row's `padding` nudge and gradient tint, the Work card's border-and-shadow glow, and the `filter` and `box-shadow` hover changes.
 - **Concurrency:** the active Work illustration pauses while the section is off screen. The dot grid only reacts to the pointer.
 - **Career entries:** titles, organisations and dates come from the experience collection, so Zurich shows its full company name.
+- **Contact links:** the quiet links include the email (as *Global chrome* asks), between Medium and Résumé.

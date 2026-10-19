@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Horizontal page gutter (GUTTER in src/lib/layout.ts). */
+:root { --gutter: theme('spacing.6'); }
+@media screen(sm) { :root { --gutter: theme('spacing.10'); } }
+@media screen(md) { :root { --gutter: theme('spacing.16'); } }
+@media screen(lg) { :root { --gutter: theme('spacing.24'); } }
+
 html {
   background-color: theme('colors.navy');
   /* Firefox scrollbar — mirrors the Webkit rules below. */

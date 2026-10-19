@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react';
-import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { gsap, ScrollTrigger } from '../../lib/gsap';
+import { useMatchMedia } from '../../lib/use-match-media';
 import { MQ } from '../../lib/motion';
 
 export default function RevealGroup({
@@ -13,26 +14,20 @@ export default function RevealGroup({
 }) {
   const root = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const el = root.current;
-      if (!el) return;
-      const mm = gsap.matchMedia(el);
-      // Reduced motion: nothing is set; content stays on its finished frame.
-      mm.add(MQ.motion, () => {
-        const els = gsap.utils.toArray<HTMLElement>(selector, el);
-        if (!els.length) return;
-        gsap.set(els, { opacity: 0, y: 12 });
-        ScrollTrigger.batch(els, {
-          start: 'top 90%',
-          once: true,
-          onEnter: (b) =>
-            gsap.to(b, { opacity: 1, y: 0, stagger: stagger ?? 0.09, overwrite: true }),
-        });
+  useMatchMedia(root, (mm, el) => {
+    // Reduced motion: nothing is set; content stays on its finished frame.
+    mm.add(MQ.motion, () => {
+      const els = gsap.utils.toArray<HTMLElement>(selector, el);
+      if (!els.length) return;
+      gsap.set(els, { opacity: 0, y: 12 });
+      ScrollTrigger.batch(els, {
+        start: 'top 90%',
+        once: true,
+        onEnter: (b) =>
+          gsap.to(b, { opacity: 1, y: 0, stagger: stagger ?? 0.09, overwrite: true }),
       });
-    },
-    { scope: root },
-  );
+    });
+  });
 
   return <div ref={root}>{children}</div>;
 }
