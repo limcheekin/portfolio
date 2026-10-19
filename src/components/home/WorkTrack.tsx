@@ -184,6 +184,8 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
       <ul
         ref={track}
         data-track
+        // Horizontal wheel and trackpad gestures over the row scroll it natively instead of going to Lenis.
+        data-lenis-prevent-horizontal
         className={`flex gap-6 ${GUTTER} ${SWIPE_ROW} motion-reduce:flex-wrap motion-reduce:justify-center ${END_GUTTER}`}
       >
         {cards.map((card, i) => {

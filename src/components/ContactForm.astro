@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
 ---
 
@@ -58,13 +59,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
   </div>
   <input type="hidden" name="_next" value="/contact/?submitted=true" />
   <div class="text-center pt-2">
-    <button
-      type="submit"
-      data-testid="contact-form-submit"
-      class="font-mono inline-flex items-center justify-center rounded border border-green-accent text-green-accent hover:bg-green-tint transition-colors duration-250 ease-custom-ease px-8 py-4 text-base"
-    >
-      Send Message
-    </button>
+    <Button type="submit" size="lg" data-testid="contact-form-submit">Send Message</Button>
   </div>
 </form>
 

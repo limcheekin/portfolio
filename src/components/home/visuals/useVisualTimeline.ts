@@ -55,6 +55,6 @@ export function useVisualTimeline(
       activeRef.current = active;
       applyRef.current?.(active);
     },
-    { dependencies: [active] },
+    { scope, dependencies: [active] },
   );
 }

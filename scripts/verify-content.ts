@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import matter from 'gray-matter';
+import { PROJECT_KINDS } from '../src/lib/project-kind';
 
 const args = new Set(process.argv.slice(2));
 const RUN_DIST = args.has('--dist');
@@ -226,6 +227,12 @@ check('demoted + hvac', () => {
   return out;
 });
 check('dist: portfolio.json has kind', () => (JSON.parse(readText('dist/api/portfolio.json')).projects as any[]).filter((p) => !p.kind).map((p) => `${p.slug} lacks kind`), { dist: true });
+check('openapi Project matches generated fields', () => {
+  const schema = JSON.parse(readText('public/api/openapi.json')).components.schemas.Project.properties;
+  const out = ['kind', 'org', 'tagline'].filter((k) => !schema[k]).map((k) => `openapi Project lacks ${k}`);
+  if (JSON.stringify(schema.kind?.enum) !== JSON.stringify(PROJECT_KINDS)) out.push(`openapi kind enum ${JSON.stringify(schema.kind?.enum)} != ${JSON.stringify(PROJECT_KINDS)}`);
+  return out;
+});
 
 // ---------- site chrome ----------
 
