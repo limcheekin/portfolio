@@ -1,0 +1,647 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T04:08:38.305Z",
+  "title": "Design System: Lim Chee Kin, Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "navy": {
+        "role": "neutral",
+        "displayName": "Abyss Black",
+        "canonical": "#050507",
+        "tonalRamp": [
+          "oklch(15% 0.006 285.4)",
+          "oklch(26% 0.006 285.4)",
+          "oklch(38% 0.006 285.4)",
+          "oklch(50% 0.006 285.4)",
+          "oklch(62% 0.006 285.4)",
+          "oklch(74% 0.006 285.4)",
+          "oklch(85% 0.006 285.4)",
+          "oklch(95% 0.006 285.4)"
+        ]
+      },
+      "light-navy": {
+        "role": "neutral",
+        "displayName": "Carbon Surface (unused)",
+        "canonical": "#101010",
+        "tonalRamp": [
+          "oklch(15% 0 89.9)",
+          "oklch(26% 0 89.9)",
+          "oklch(38% 0 89.9)",
+          "oklch(50% 0 89.9)",
+          "oklch(62% 0 89.9)",
+          "oklch(74% 0 89.9)",
+          "oklch(85% 0 89.9)",
+          "oklch(95% 0 89.9)"
+        ]
+      },
+      "lightest-navy": {
+        "role": "neutral",
+        "displayName": "Warm Charcoal",
+        "canonical": "#3d3a39",
+        "tonalRamp": [
+          "oklch(15% 0.005 39.4)",
+          "oklch(26% 0.005 39.4)",
+          "oklch(38% 0.005 39.4)",
+          "oklch(50% 0.005 39.4)",
+          "oklch(62% 0.005 39.4)",
+          "oklch(74% 0.005 39.4)",
+          "oklch(85% 0.005 39.4)",
+          "oklch(95% 0.005 39.4)"
+        ]
+      },
+      "slate-text": {
+        "role": "neutral",
+        "displayName": "Steel Slate",
+        "canonical": "#8b949e",
+        "tonalRamp": [
+          "oklch(15% 0.018 250.9)",
+          "oklch(26% 0.018 250.9)",
+          "oklch(38% 0.018 250.9)",
+          "oklch(50% 0.018 250.9)",
+          "oklch(62% 0.018 250.9)",
+          "oklch(74% 0.018 250.9)",
+          "oklch(85% 0.018 250.9)",
+          "oklch(95% 0.018 250.9)"
+        ]
+      },
+      "light-slate": {
+        "role": "neutral",
+        "displayName": "Warm Parchment",
+        "canonical": "#b8b3b0",
+        "tonalRamp": [
+          "oklch(15% 0.007 53.4)",
+          "oklch(26% 0.007 53.4)",
+          "oklch(38% 0.007 53.4)",
+          "oklch(50% 0.007 53.4)",
+          "oklch(62% 0.007 53.4)",
+          "oklch(74% 0.007 53.4)",
+          "oklch(85% 0.007 53.4)",
+          "oklch(95% 0.007 53.4)"
+        ]
+      },
+      "lightest-slate": {
+        "role": "neutral",
+        "displayName": "Snow White",
+        "canonical": "#f2f2f2",
+        "tonalRamp": [
+          "oklch(15% 0 89.9)",
+          "oklch(26% 0 89.9)",
+          "oklch(38% 0 89.9)",
+          "oklch(50% 0 89.9)",
+          "oklch(62% 0 89.9)",
+          "oklch(74% 0 89.9)",
+          "oklch(85% 0 89.9)",
+          "oklch(95% 0 89.9)"
+        ]
+      },
+      "white-text": {
+        "role": "neutral",
+        "displayName": "Pure White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0 89.9)",
+          "oklch(26% 0 89.9)",
+          "oklch(38% 0 89.9)",
+          "oklch(50% 0 89.9)",
+          "oklch(62% 0 89.9)",
+          "oklch(74% 0 89.9)",
+          "oklch(85% 0 89.9)",
+          "oklch(95% 0 89.9)"
+        ]
+      },
+      "green-accent": {
+        "role": "primary",
+        "displayName": "Emerald Signal Green",
+        "canonical": "#00d992",
+        "tonalRamp": [
+          "oklch(15% 0.175 160.8)",
+          "oklch(26% 0.175 160.8)",
+          "oklch(38% 0.175 160.8)",
+          "oklch(50% 0.175 160.8)",
+          "oklch(62% 0.175 160.8)",
+          "oklch(74% 0.175 160.8)",
+          "oklch(85% 0.175 160.8)",
+          "oklch(95% 0.175 160.8)"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Danger Coral",
+        "canonical": "#fb565b",
+        "tonalRamp": [
+          "oklch(15% 0.201 22.6)",
+          "oklch(26% 0.201 22.6)",
+          "oklch(38% 0.201 22.6)",
+          "oklch(50% 0.201 22.6)",
+          "oklch(62% 0.201 22.6)",
+          "oklch(74% 0.201 22.6)",
+          "oklch(85% 0.201 22.6)",
+          "oklch(95% 0.201 22.6)"
+        ]
+      },
+      "sky": {
+        "role": "secondary",
+        "displayName": "Open-Source Sky",
+        "canonical": "#38bdf8",
+        "tonalRamp": [
+          "oklch(15% 0.139 232.7)",
+          "oklch(26% 0.139 232.7)",
+          "oklch(38% 0.139 232.7)",
+          "oklch(50% 0.139 232.7)",
+          "oklch(62% 0.139 232.7)",
+          "oklch(74% 0.139 232.7)",
+          "oklch(85% 0.139 232.7)",
+          "oklch(95% 0.139 232.7)"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Instrument Well",
+        "canonical": "#09090b",
+        "tonalRamp": [
+          "oklch(15% 0.004 285.8)",
+          "oklch(26% 0.004 285.8)",
+          "oklch(38% 0.004 285.8)",
+          "oklch(50% 0.004 285.8)",
+          "oklch(62% 0.004 285.8)",
+          "oklch(74% 0.004 285.8)",
+          "oklch(85% 0.004 285.8)",
+          "oklch(95% 0.004 285.8)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card Carbon",
+        "canonical": "#0e0e10",
+        "tonalRamp": [
+          "oklch(15% 0.004 285.9)",
+          "oklch(26% 0.004 285.9)",
+          "oklch(38% 0.004 285.9)",
+          "oklch(50% 0.004 285.9)",
+          "oklch(62% 0.004 285.9)",
+          "oklch(74% 0.004 285.9)",
+          "oklch(85% 0.004 285.9)",
+          "oklch(95% 0.004 285.9)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#141417",
+        "tonalRamp": [
+          "oklch(15% 0.006 285.8)",
+          "oklch(26% 0.006 285.8)",
+          "oklch(38% 0.006 285.8)",
+          "oklch(50% 0.006 285.8)",
+          "oklch(62% 0.006 285.8)",
+          "oklch(74% 0.006 285.8)",
+          "oklch(85% 0.006 285.8)",
+          "oklch(95% 0.006 285.8)"
+        ]
+      },
+      "light-graphite": {
+        "role": "neutral",
+        "displayName": "Hairline Graphite",
+        "canonical": "#1c1c20",
+        "tonalRamp": [
+          "oklch(15% 0.008 285.8)",
+          "oklch(26% 0.008 285.8)",
+          "oklch(38% 0.008 285.8)",
+          "oklch(50% 0.008 285.8)",
+          "oklch(62% 0.008 285.8)",
+          "oklch(74% 0.008 285.8)",
+          "oklch(85% 0.008 285.8)",
+          "oklch(95% 0.008 285.8)"
+        ]
+      },
+      "edge": {
+        "role": "neutral",
+        "displayName": "Edge",
+        "canonical": "#26262a",
+        "tonalRamp": [
+          "oklch(15% 0.007 285.9)",
+          "oklch(26% 0.007 285.9)",
+          "oklch(38% 0.007 285.9)",
+          "oklch(50% 0.007 285.9)",
+          "oklch(62% 0.007 285.9)",
+          "oklch(74% 0.007 285.9)",
+          "oklch(85% 0.007 285.9)",
+          "oklch(95% 0.007 285.9)"
+        ]
+      },
+      "edge-strong": {
+        "role": "neutral",
+        "displayName": "Strong Edge",
+        "canonical": "#2e2e33",
+        "tonalRamp": [
+          "oklch(15% 0.009 285.9)",
+          "oklch(26% 0.009 285.9)",
+          "oklch(38% 0.009 285.9)",
+          "oklch(50% 0.009 285.9)",
+          "oklch(62% 0.009 285.9)",
+          "oklch(74% 0.009 285.9)",
+          "oklch(85% 0.009 285.9)",
+          "oklch(95% 0.009 285.9)"
+        ]
+      },
+      "green-deep": {
+        "role": "tertiary",
+        "displayName": "Enterprise Bubble Fill",
+        "canonical": "#0f2a20",
+        "tonalRamp": [
+          "oklch(15% 0.038 166.7)",
+          "oklch(26% 0.038 166.7)",
+          "oklch(38% 0.038 166.7)",
+          "oklch(50% 0.038 166.7)",
+          "oklch(62% 0.038 166.7)",
+          "oklch(74% 0.038 166.7)",
+          "oklch(85% 0.038 166.7)",
+          "oklch(95% 0.038 166.7)"
+        ]
+      },
+      "green-dim": {
+        "role": "tertiary",
+        "displayName": "Enterprise Bubble Border",
+        "canonical": "#1d4d3a",
+        "tonalRamp": [
+          "oklch(15% 0.062 164.5)",
+          "oklch(26% 0.062 164.5)",
+          "oklch(38% 0.062 164.5)",
+          "oklch(50% 0.062 164.5)",
+          "oklch(62% 0.062 164.5)",
+          "oklch(74% 0.062 164.5)",
+          "oklch(85% 0.062 164.5)",
+          "oklch(95% 0.062 164.5)"
+        ]
+      },
+      "green-pale": {
+        "role": "tertiary",
+        "displayName": "Enterprise Bubble Text",
+        "canonical": "#c9f5e4",
+        "tonalRamp": [
+          "oklch(15% 0.051 169.7)",
+          "oklch(26% 0.051 169.7)",
+          "oklch(38% 0.051 169.7)",
+          "oklch(50% 0.051 169.7)",
+          "oklch(62% 0.051 169.7)",
+          "oklch(74% 0.051 169.7)",
+          "oklch(85% 0.051 169.7)",
+          "oklch(95% 0.051 169.7)"
+        ]
+      },
+      "sky-deep": {
+        "role": "secondary",
+        "displayName": "Open-Source Bubble Fill",
+        "canonical": "#0c1f2a",
+        "tonalRamp": [
+          "oklch(15% 0.033 236)",
+          "oklch(26% 0.033 236)",
+          "oklch(38% 0.033 236)",
+          "oklch(50% 0.033 236)",
+          "oklch(62% 0.033 236)",
+          "oklch(74% 0.033 236)",
+          "oklch(85% 0.033 236)",
+          "oklch(95% 0.033 236)"
+        ]
+      },
+      "sky-dim": {
+        "role": "secondary",
+        "displayName": "Open-Source Bubble Border",
+        "canonical": "#1e3a4a",
+        "tonalRamp": [
+          "oklch(15% 0.044 235.3)",
+          "oklch(26% 0.044 235.3)",
+          "oklch(38% 0.044 235.3)",
+          "oklch(50% 0.044 235.3)",
+          "oklch(62% 0.044 235.3)",
+          "oklch(74% 0.044 235.3)",
+          "oklch(85% 0.044 235.3)",
+          "oklch(95% 0.044 235.3)"
+        ]
+      },
+      "sky-pale": {
+        "role": "secondary",
+        "displayName": "Open-Source Bubble Text",
+        "canonical": "#cbeeff",
+        "tonalRamp": [
+          "oklch(15% 0.043 228.7)",
+          "oklch(26% 0.043 228.7)",
+          "oklch(38% 0.043 228.7)",
+          "oklch(50% 0.043 228.7)",
+          "oklch(62% 0.043 228.7)",
+          "oklch(74% 0.043 228.7)",
+          "oklch(85% 0.043 228.7)",
+          "oklch(95% 0.043 228.7)"
+        ]
+      },
+      "green-tint": {
+        "role": "primary",
+        "displayName": "Signal Tint",
+        "canonical": "rgba(0, 217, 146, 0.1)",
+        "tonalRamp": [
+          "oklch(15% 0.175 160.8)",
+          "oklch(26% 0.175 160.8)",
+          "oklch(38% 0.175 160.8)",
+          "oklch(50% 0.175 160.8)",
+          "oklch(62% 0.175 160.8)",
+          "oklch(74% 0.175 160.8)",
+          "oklch(85% 0.175 160.8)",
+          "oklch(95% 0.175 160.8)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Hero Display",
+        "purpose": "Home hero h1 only (system-ui stack); not extended to other surfaces."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "Numbered home section headings with an inline mono green number."
+      },
+      "page-title": {
+        "displayName": "Page Title",
+        "purpose": "The h1 of every inner page (PAGE_TITLE)."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card, timeline and subsection titles (20-24px)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose in slate-text, 65ch measure."
+      },
+      "body-lead": {
+        "displayName": "Lead",
+        "purpose": "Hero sub and inner-page lead paragraphs."
+      },
+      "label": {
+        "displayName": "Mono Label",
+        "purpose": "Nav, dates, stacks, breadcrumb, footer, form labels, buttons."
+      },
+      "label-caps": {
+        "displayName": "Mono Caps",
+        "purpose": "Kind label on Work and project cards."
+      }
+    },
+    "shadows": [
+      {
+        "name": "console",
+        "value": "0 0 0 1px rgba(0, 217, 146, 0.06), 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 80px rgba(0, 217, 146, 0.08)",
+        "purpose": "Hero agent console."
+      },
+      {
+        "name": "glow-green",
+        "value": "0 0 60px rgba(0, 217, 146, 0.06)",
+        "purpose": "Active enterprise Work card, on a fading overlay."
+      },
+      {
+        "name": "glow-sky",
+        "value": "0 0 60px rgba(56, 189, 248, 0.06)",
+        "purpose": "Active open-source Work card, on a fading overlay."
+      },
+      {
+        "name": "halo",
+        "value": "0 0 0 4px rgba(0, 217, 146, 0.12)",
+        "purpose": "Timeline dots."
+      },
+      {
+        "name": "magnet",
+        "value": "0 10px 40px rgba(0, 217, 146, 0.25)",
+        "purpose": "Contact magnet button."
+      },
+      {
+        "name": "scan",
+        "value": "0 0 12px #00d992",
+        "purpose": "Scan-line glow in enterprise illustrations."
+      },
+      {
+        "name": "spark",
+        "value": "0 0 10px #38bdf8",
+        "purpose": "Spark glow in open-source illustrations."
+      },
+      {
+        "name": "doc-lines",
+        "value": "0 9px 0 #2e2e33, 0 18px 0 #2e2e33, 0 27px 0 #2e2e33",
+        "purpose": "Text lines on a document shape in illustrations."
+      }
+    ],
+    "motion": [
+      {
+        "name": "custom-ease",
+        "value": "cubic-bezier(0.645, 0.045, 0.355, 1)",
+        "purpose": "Control hover/focus colour transitions (250ms)."
+      },
+      {
+        "name": "duration-250",
+        "value": "250ms",
+        "purpose": "Buttons, links, nav, inputs."
+      },
+      {
+        "name": "row-hover",
+        "value": "300ms ease-out",
+        "purpose": "Article row nudge, tint fade, arrow lift."
+      },
+      {
+        "name": "card-dim",
+        "value": "400ms ease-out",
+        "purpose": "Work card active/inactive opacity and glow overlay."
+      },
+      {
+        "name": "hero-words",
+        "value": "0.8s power3.out, 0.04s stagger, yPercent 100",
+        "purpose": "Hero headline entrance from line masks."
+      },
+      {
+        "name": "hero-fade",
+        "value": "0.6s power2.out, y 12, 0.12s stagger, 0.7s delay",
+        "purpose": "Hero sub and CTAs."
+      },
+      {
+        "name": "magnet",
+        "value": "quickTo 0.4s power3",
+        "purpose": "Contact button pointer follow."
+      },
+      {
+        "name": "work-pin",
+        "value": "scrub 1, ease none",
+        "purpose": "Pinned horizontal Work track."
+      },
+      {
+        "name": "reduced",
+        "value": "opacity 0.2s, no movement",
+        "purpose": "Reduced-motion reveals."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "pin",
+        "value": "(min-width: 768px) and (min-height: 560px)"
+      },
+      {
+        "name": "nopin",
+        "value": "not all and (min-width: 768px) and (min-height: 560px)"
+      },
+      {
+        "name": "tall",
+        "value": "(min-height: 560px)"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Default action: green outline, mono label; fills with the signal tint on hover.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Résumé</a>",
+      "css": ".ds-btn-primary { font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid; padding: 14px 28px; font-size: 14px; text-decoration: none; cursor: pointer; transition: color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), background-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), border-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), opacity 250ms cubic-bezier(0.645, 0.045, 0.355, 1); background: transparent; color: #00d992; border-color: #00d992; } .ds-btn-primary:hover { background: rgba(0, 217, 146, 0.1); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #050507, 0 0 0 4px rgba(0, 217, 146, 0.7); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Lower-emphasis action in warm parchment.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">All projects</a>",
+      "css": ".ds-btn-secondary { font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid; padding: 14px 28px; font-size: 14px; text-decoration: none; cursor: pointer; transition: color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), background-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), border-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), opacity 250ms cubic-bezier(0.645, 0.045, 0.355, 1); background: transparent; color: #b8b3b0; border-color: #b8b3b0; } .ds-btn-secondary:hover { background: rgba(61, 58, 57, 0.1); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px #050507, 0 0 0 4px rgba(0, 217, 146, 0.7); }"
+    },
+    {
+      "name": "Solid Button",
+      "kind": "button",
+      "refersTo": "button-solid",
+      "description": "Hero primary CTA: filled signal green, navy text.",
+      "html": "<a class=\"ds-btn-solid\" href=\"#\">See the work</a>",
+      "css": ".ds-btn-solid { font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid; padding: 14px 28px; font-size: 14px; text-decoration: none; cursor: pointer; transition: color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), background-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), border-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1), opacity 250ms cubic-bezier(0.645, 0.045, 0.355, 1); background: #00d992; color: #050507; border-color: #00d992; font-weight: 600; } .ds-btn-solid:hover { opacity: 0.9; } .ds-btn-solid:focus-visible { outline: none; box-shadow: 0 0 0 2px #050507, 0 0 0 4px rgba(0, 217, 146, 0.7); }"
+    },
+    {
+      "name": "Magnet Button",
+      "kind": "button",
+      "refersTo": "button-magnet",
+      "description": "Contact pill with a green glow; follows the pointer on fine pointers when motion is allowed.",
+      "html": "<a class=\"ds-btn-magnet\" href=\"#\">Start a conversation</a>",
+      "css": ".ds-btn-magnet { display: inline-flex; align-items: center; gap: 10px; border-radius: 9999px; background: #00d992; color: #050507; padding: 20px 34px; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 10px 40px rgba(0, 217, 146, 0.25); } .ds-btn-magnet:focus-visible { outline: 2px dashed #00d992; outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Static technology, skill or tag label.",
+      "html": "<span class=\"ds-chip\">LangGraph</span>",
+      "css": ".ds-chip { display: inline-block; border-radius: 5px; border: 1px solid #26262a; padding: 4px 8px; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 11px; color: #b8b3b0; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "card-project",
+      "description": "Text-only project card; border and title take the kind accent on hover (green enterprise, sky open source).",
+      "html": "<a class=\"ds-card\" href=\"#\"><p class=\"ds-card-label\">Enterprise · Daxonet AI</p><h3 class=\"ds-card-title\">Claim Pilot</h3><p class=\"ds-card-tag\">Expense claims from a WhatsApp photo to a posted journal, with a human approving every write.</p><ul class=\"ds-card-stack\"><li>LangGraph</li><li>MCP</li><li>WhatsApp</li></ul></a>",
+      "css": ".ds-card { display: flex; flex-direction: column; max-width: 360px; border-radius: 16px; border: 1px solid #26262a; background: #0e0e10; padding: 22px; text-decoration: none; transition: border-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1); } .ds-card:hover { border-color: rgba(0, 217, 146, 0.55); } .ds-card:hover .ds-card-title { color: #00d992; } .ds-card:focus-visible { outline: 2px dashed #00d992; outline-offset: 2px; } .ds-card-label { margin: 0; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #00d992; } .ds-card-title { margin: 8px 0; font-family: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; color: #f2f2f2; transition: color 250ms cubic-bezier(0.645, 0.045, 0.355, 1); } .ds-card-tag { margin: 0; font-family: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #b8b3b0; } .ds-card-stack { display: flex; flex-wrap: wrap; gap: 4px 12px; list-style: none; margin: 0; padding: 16px 0 0; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 11.5px; color: #8b949e; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Form field on card carbon; border turns green on focus, coral when invalid.",
+      "html": "<label class=\"ds-label\" for=\"ds-f\">Email</label><input id=\"ds-f\" class=\"ds-input\" placeholder=\"your@email.com\" />",
+      "css": ".ds-label { display: block; margin-bottom: 6px; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; color: #b8b3b0; } .ds-input { width: 100%; background: #0e0e10; border: 1px solid #26262a; border-radius: 4px; padding: 12px 16px; font-family: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif; font-size: 14px; color: #f2f2f2; transition: border-color 250ms cubic-bezier(0.645, 0.045, 0.355, 1); } .ds-input::placeholder { color: #8b949e; } .ds-input:focus { border-color: #00d992; outline: none; } .ds-input:focus-visible { box-shadow: 0 0 0 2px rgba(0, 217, 146, 0.5); } .ds-input[aria-invalid=\"true\"] { border-color: #fb565b; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Mono links with green indices; current page green.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\"><span>01.</span>About</a><a class=\"ds-nav-link\" aria-current=\"page\" href=\"#\"><span>02.</span>Work</a><a class=\"ds-nav-link\" href=\"#\"><span>03.</span>Writing</a><a class=\"ds-nav-link\" href=\"#\"><span>04.</span>Contact</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 24px; background: rgba(5, 5, 7, 0.8); padding: 20px 24px; } .ds-nav-link { padding: 8px 10px; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 14px; color: #b8b3b0; text-decoration: none; transition: color 250ms cubic-bezier(0.645, 0.045, 0.355, 1); } .ds-nav-link span { margin-right: 4px; font-size: 12px; color: #00d992; } .ds-nav-link:hover, .ds-nav-link[aria-current=\"page\"] { color: #00d992; } .ds-nav-link:focus-visible { outline: 2px dashed #00d992; outline-offset: 2px; }"
+    },
+    {
+      "name": "Agent Console",
+      "kind": "custom",
+      "description": "Hero console replaying agent runs in mono on the recessed well.",
+      "html": "<div class=\"ds-console\"><div class=\"ds-console-bar\"><i></i><i></i><i></i><span>agent run</span></div><div class=\"ds-console-body\"><div><span class=\"ds-k\">trigger</span><span>WhatsApp photo received</span></div><div><span class=\"ds-k\">post</span><span>Journal <b>JV-1042</b> awaiting approval<i class=\"ds-cursor\"></i></span></div></div></div>",
+      "css": ".ds-console { max-width: 520px; border-radius: 12px; border: 1px solid #26262a; background: #09090b; font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.7; color: #b8b3b0; box-shadow: 0 0 0 1px rgba(0, 217, 146, 0.06), 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 80px rgba(0, 217, 146, 0.08); } .ds-console-bar { display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #1c1c20; padding: 10px 14px; font-size: 12px; color: #8b949e; } .ds-console-bar i { width: 10px; height: 10px; border-radius: 9999px; background: #26262a; } .ds-console-bar span { margin-left: 8px; } .ds-console-body { padding: 14px 18px 18px; } .ds-console-body div { display: grid; grid-template-columns: 74px 1fr; gap: 10px; } .ds-k { color: #00d992; } .ds-console b { font-weight: 500; color: #f2f2f2; } .ds-cursor { display: inline-block; width: 8px; height: 15px; margin-left: 4px; vertical-align: middle; background: #00d992; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Running Agent",
+    "overview": "The site is a near-black workspace where the work itself is the picture: a console replays real agent runs, each Work card carries a code-drawn illustration of the flow it automated, and the career rail fills as you scroll. Everything is set on a single carbon canvas (`navy`) with stepped dark surfaces for depth, one signal colour for emphasis and action, and a second colour reserved for open-source work. Mono type carries the machine voice (labels, dates, stacks, nav, buttons); Inter carries the human voice (headings and prose).\n\nDensity is calm. Each home section holds one idea, generous vertical room separates sections, and motion supports meaning: one thing moves at a time, and under reduced motion nothing travels. The palette's lineage is VoltAgent's dark theme; only the core colour values were carried over.\n\nDark only. There is no light theme and no theme toggle.",
+    "keyCharacteristics": [
+      "Carbon canvas with five stepped near-black surfaces (`well`, `card`, `graphite`, `light-graphite`, `edge`) instead of shadows for structure.",
+      "One signal accent, Emerald Signal Green, for emphasis, links, active state and primary action.",
+      "Sky marks open-source work only; green marks everything else.",
+      "Mono labels and controls, Inter headings and prose, tight negative tracking on headings.",
+      "Soft-cornered cards (16px) and small-radius controls (4px).",
+      "Transform and opacity motion only, with a full reduced-motion branch."
+    ],
+    "rules": [
+      {
+        "name": "The Sky Is Open Source Rule",
+        "body": "`sky` and its `sky-*` tints mark open-source work and nothing else. Enterprise work, navigation, links and actions are green. The accent for a project comes from `PROJECT_KIND_INFO[kind].accent`, never chosen by hand.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tokens Only Rule",
+        "body": "Components use Tailwind colour, shadow and gradient tokens from `palette.mjs`. No raw hex or `rgba()` in components; a new colour is added to `palette.mjs` and this section first.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Signal Rule",
+        "body": "Green is the only emphasis colour in the interface. It marks the thing to look at or press; it is never a large surface fill except the two solid action buttons.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Mono is for labels, metadata, controls and machine output; Inter is for headings and sentences. A sentence is never set in mono, and a date or stack is never set in Inter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Upright Accent Rule",
+        "body": "Emphasis inside a headline is a green phrase, not italics or bold.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Idea Per Section Rule",
+        "body": "Each section carries one idea. No side rails, no secondary widgets competing with the section's subject.",
+        "section": "layout"
+      },
+      {
+        "name": "The Glow Means Live Rule",
+        "body": "A glow marks the one element that is active or waiting for action. Static content gets a border, not a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** build every new surface on `navy`, with `card` for raised surfaces and `well` for recessed ones, bordered by `edge`.",
+      "**Do** use `green-accent` for links, active state, primary actions and focus, and `sky` only for open-source work.",
+      "**Do** take colours, shadows and gradients from the Tailwind tokens listed in Portfolio tokens.",
+      "**Do** set labels, dates, stacks, nav and buttons in mono, and headings and prose in Inter with negative tracking.",
+      "**Do** use `PAGE_TITLE` for inner page `h1`s, `PAGE_MAIN` / `GUTTER` for page and section width, and `CHIP`, `BUTTON_BASE` and `BUTTON_SIZES` for chips and buttons.",
+      "**Do** give every `<img>` explicit width and height (`Img.astro` does it), with 16px radius and an `edge` border for content images.",
+      "**Do** provide a reduced-motion branch for every animation, resting on its finished frame."
+    ],
+    "donts": [
+      "**Don't** add a light theme, light surfaces or a theme toggle.",
+      "**Don't** use `sky` for anything other than open-source work, or green for open-source work.",
+      "**Don't** write raw hex or `rgba()` in components.",
+      "**Don't** transition `box-shadow`, `filter` or layout properties; fade an overlay's opacity instead.",
+      "**Don't** add a glow or shadow to static content; borders carry structure.",
+      "**Don't** crowd a section: one idea per section, no side rails, no more than the console and one Work card moving at once.",
+      "**Don't** state a years-of-experience figure anywhere in the design or copy."
+    ]
+  }
+}

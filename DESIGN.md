@@ -1,345 +1,371 @@
-# Design System Inspired by VoltAgent
+---
+name: Lim Chee Kin, Portfolio
+description: Dark, agent-first portfolio of an AI Solutions Architect; proof of shipped agents over claims.
+colors:
+  navy: "#050507"
+  light-navy: "#101010"
+  lightest-navy: "#3d3a39"
+  slate-text: "#8b949e"
+  light-slate: "#b8b3b0"
+  lightest-slate: "#f2f2f2"
+  white-text: "#ffffff"
+  green-accent: "#00d992"
+  green-tint: "rgba(0, 217, 146, 0.1)"
+  danger: "#fb565b"
+  sky: "#38bdf8"
+  well: "#09090b"
+  card: "#0e0e10"
+  graphite: "#141417"
+  light-graphite: "#1c1c20"
+  edge: "#26262a"
+  edge-strong: "#2e2e33"
+  green-deep: "#0f2a20"
+  green-dim: "#1d4d3a"
+  green-pale: "#c9f5e4"
+  sky-deep: "#0c1f2a"
+  sky-dim: "#1e3a4a"
+  sky-pale: "#cbeeff"
+typography:
+  display:
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, sans-serif"
+    fontSize: "clamp(36px, 5vw, 52px)"
+    fontWeight: 700
+    lineHeight: 1.04
+    letterSpacing: "-0.015em"
+  headline:
+    fontFamily: "Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(28px, 4vw, 48px)"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "-0.03em"
+  page-title:
+    fontFamily: "Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(32px, 4.5vw, 48px)"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "-0.03em"
+  title:
+    fontFamily: "Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "20px"
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: "-0.02em"
+  body:
+    fontFamily: "Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "16px"
+    fontWeight: 400
+    lineHeight: 1.625
+    fontFeature: "\"calt\", \"rlig\""
+  body-lead:
+    fontFamily: "Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 400
+    lineHeight: 1.625
+  label:
+    fontFamily: "SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.5
+  label-caps:
+    fontFamily: "SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace"
+    fontSize: "11px"
+    fontWeight: 400
+    letterSpacing: "0.08em"
+rounded:
+  sm: "4px"
+  chip: "5px"
+  frame: "10px"
+  panel: "12px"
+  card: "16px"
+  full: "9999px"
+spacing:
+  gutter-base: "24px"
+  gutter-sm: "40px"
+  gutter-md: "64px"
+  gutter-lg: "96px"
+  card-pad: "22px"
+  page-top: "128px"
+components:
+  button-primary:
+    backgroundColor: "transparent"
+    textColor: "{colors.green-accent}"
+    rounded: "{rounded.sm}"
+    padding: "14px 28px"
+  button-primary-hover:
+    backgroundColor: "{colors.green-tint}"
+    textColor: "{colors.green-accent}"
+  button-secondary:
+    backgroundColor: "transparent"
+    textColor: "{colors.light-slate}"
+    rounded: "{rounded.sm}"
+    padding: "14px 28px"
+  button-solid:
+    backgroundColor: "{colors.green-accent}"
+    textColor: "{colors.navy}"
+    rounded: "{rounded.sm}"
+    padding: "14px 28px"
+  button-magnet:
+    backgroundColor: "{colors.green-accent}"
+    textColor: "{colors.navy}"
+    rounded: "{rounded.full}"
+    padding: "20px 34px"
+  chip:
+    backgroundColor: "transparent"
+    textColor: "{colors.light-slate}"
+    typography: "{typography.label-caps}"
+    rounded: "{rounded.chip}"
+    padding: "4px 8px"
+  card-work:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.lightest-slate}"
+    rounded: "{rounded.card}"
+    padding: "{spacing.card-pad}"
+    width: "min(360px, 80vw)"
+  card-project:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.lightest-slate}"
+    rounded: "{rounded.card}"
+    padding: "{spacing.card-pad}"
+  console:
+    backgroundColor: "{colors.well}"
+    textColor: "{colors.light-slate}"
+    rounded: "{rounded.panel}"
+  input-field:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.lightest-slate}"
+    rounded: "{rounded.sm}"
+    padding: "12px 16px"
+  nav-link:
+    textColor: "{colors.light-slate}"
+    typography: "{typography.label}"
+    padding: "8px 10px"
+  nav-link-active:
+    textColor: "{colors.green-accent}"
+---
 
-## 1. Visual Theme & Atmosphere
+# Design System: Lim Chee Kin, Portfolio
 
-VoltAgent's interface is a deep-space command terminal for the AI age — a developer-facing darkness built on near-pure-black surfaces (`#050507`) where the only interruption is the electric pulse of emerald green energy. The entire experience evokes the feeling of staring into a high-powered IDE at 2am: dark, focused, and alive with purpose. This is not a friendly SaaS landing page — it's an engineering platform that announces itself through code snippets, architectural diagrams, and raw technical confidence.
+## Overview
 
-The green accent (`#00d992`) is used with surgical precision — it glows from headlines, borders, and interactive elements like a circuit board carrying a signal. Against the carbon-black canvas, this green reads as "power on" — a deliberate visual metaphor for an AI agent engineering platform. The supporting palette is built entirely from warm-neutral grays (`#3d3a39`, `#8b949e`, `#b8b3b0`) that soften the darkness without introducing color noise, creating a cockpit-like warmth that pure blue-grays would lack.
+**Creative North Star: "The Running Agent"**
 
-Typography leans on the system font stack for headings — achieving maximum rendering speed and native-feeling authority — while Inter carries the body and UI text with geometric precision. Code blocks use SFMono-Regular, the same font developers see in their terminals, reinforcing the tool's credibility at every scroll.
+The site is a near-black workspace where the work itself is the picture: a console replays real agent runs, each Work card carries a code-drawn illustration of the flow it automated, and the career rail fills as you scroll. Everything is set on a single carbon canvas (`navy`) with stepped dark surfaces for depth, one signal colour for emphasis and action, and a second colour reserved for open-source work. Mono type carries the machine voice (labels, dates, stacks, nav, buttons); Inter carries the human voice (headings and prose).
+
+Density is calm. Each home section holds one idea, generous vertical room separates sections, and motion supports meaning: one thing moves at a time, and under reduced motion nothing travels. The palette's lineage is VoltAgent's dark theme; only the core colour values were carried over.
+
+Dark only. There is no light theme and no theme toggle.
 
 **Key Characteristics:**
-- Carbon-black canvas (`#050507`) with warm-gray border containment (`#3d3a39`) — not cold or sterile
-- Single-accent identity: Emerald Signal Green (`#00d992`) as the sole chromatic energy source
-- Dual-typography system: system-ui for authoritative headings, Inter for precise UI/body text, SFMono for code credibility
-- Ultra-tight heading line-heights (1.0–1.11) creating dense, compressed power blocks
-- Warm neutral palette (`#3d3a39`, `#8b949e`, `#b8b3b0`) that prevents the dark theme from feeling clinical
-- Developer-terminal aesthetic where code snippets ARE the hero content
-- Green glow effects (`drop-shadow`, border accents) that make UI elements feel electrically alive
+- Carbon canvas with five stepped near-black surfaces (`well`, `card`, `graphite`, `light-graphite`, `edge`) instead of shadows for structure.
+- One signal accent, Emerald Signal Green, for emphasis, links, active state and primary action.
+- Sky marks open-source work only; green marks everything else.
+- Mono labels and controls, Inter headings and prose, tight negative tracking on headings.
+- Soft-cornered cards (16px) and small-radius controls (4px).
+- Transform and opacity motion only, with a full reduced-motion branch.
 
-## 2. Color Palette & Roles
+## Colors
+
+A warm-neutral near-black system with one green signal and one sky marker.
 
 ### Primary
-- **Emerald Signal Green** (`#00d992`): The core brand energy — used for accent borders, glow effects, and the highest-signal interactive moments. This is the "power-on" indicator of the entire interface.
-- **VoltAgent Mint** (`#2fd6a1`): The button-text variant of the brand green — slightly warmer and more readable than pure Signal Green, used specifically for CTA text on dark surfaces.
-- **Tailwind Emerald** (`#10b981`): The ecosystem-standard green used at low opacity (30%) for subtle background tints and link defaults. Bridges VoltAgent's custom palette with Tailwind's utility classes.
+- **Emerald Signal Green** (`green-accent`): links, active nav, section numbers, the hero headline's accent phrase, primary buttons (outline and solid), the Work progress bar, the career rail fill and dots, focus outlines, list markers in prose. Also the source of every green glow and tint.
+- **Signal Tint** (`green-tint`, green at 10%): hover fill of outline buttons and the logo mark.
 
-### Secondary & Accent
-- **Soft Purple** (`#818cf8`): A cool indigo-violet used sparingly for secondary categorization, code syntax highlights, and visual variety without competing with green.
-- **Cobalt Primary** (`#306cce`): Docusaurus primary dark — used in documentation contexts for links and interactive focus states.
-- **Deep Cobalt** (`#2554a0`): The darkest primary shade, reserved for pressed/active states in documentation UI.
-- **Ring Blue** (`#3b82f6`): Tailwind's ring color at 50% opacity — visible only during keyboard focus for accessibility compliance.
+### Secondary
+- **Open-Source Sky** (`sky`): the kind label, hover border, title hover and active glow of open-source project cards, plus the open-source illustration family (`sky-deep` bubble fill, `sky-dim` bubble border, `sky-pale` bubble text). Never used for anything that is not open-source work.
 
-### Surface & Background
-- **Abyss Black** (`#050507`): The landing page canvas — a near-pure black with the faintest warm undertone, darker than most "dark themes" for maximum contrast with green accents.
-- **Carbon Surface** (`#101010`): The primary card and button background — one shade lighter than Abyss, creating a barely perceptible elevation layer. Used across all contained surfaces.
-- **Warm Charcoal Border** (`#3d3a39`): The signature containment color — not a cold gray but a warm, almost brownish dark tone that prevents borders from feeling harsh against the black canvas.
+### Tertiary
+- **Enterprise Illustration Greens** (`green-deep` / `green-dim` / `green-pale`): bubble fill, border and text inside enterprise Work card illustrations. Illustration-only.
+- **Danger Coral** (`danger`): form validation only (invalid field border, error text).
 
-### Neutrals & Text
-- **Snow White** (`#f2f2f2`): The primary text color on dark surfaces — not pure white (`#ffffff`) but a softened, eye-friendly off-white. The most-used color on the site (1008 instances).
-- **Pure White** (`#ffffff`): Reserved for the highest-emphasis moments — ghost button text and maximum-contrast headings. Used at low opacity (5%) for subtle overlay effects.
-- **Warm Parchment** (`#b8b3b0`): Secondary body text — a warm light gray with a slight pinkish undertone that reads as "paper" against the dark canvas.
-- **Steel Slate** (`#8b949e`): Tertiary text, metadata, timestamps, and de-emphasized content. A cool blue-gray that provides clear hierarchy below Warm Parchment.
-- **Fog Gray** (`#bdbdbd`): Footer links and supporting navigation text — brightens on hover to Pure White.
-- **Mist Gray** (`#dcdcdc`): Slightly brighter than Fog, used for secondary link text that transitions to bright green on hover.
-- **Near White** (`#eeeeee`): Highest-contrast secondary text, one step below Snow White.
-
-### Semantic & Accent
-- **Success Emerald** (`#008b00`): Deep green for success states and positive confirmations in documentation contexts.
-- **Success Light** (`#80d280`): Soft pastel green for success backgrounds and subtle positive indicators.
-- **Warning Amber** (`#ffba00`): Bright amber for warning alerts and caution states.
-- **Warning Pale** (`#ffdd80`): Softened amber for warning background fills.
-- **Danger Coral** (`#fb565b`): Vivid red for error states and destructive action warnings.
-- **Danger Rose** (`#fd9c9f`): Softened coral-pink for error backgrounds.
-- **Info Teal** (`#4cb3d4`): Cool teal-blue for informational callouts and tip admonitions.
-- **Dashed Border Slate** (`#4f5d75` at 40%): A muted blue-gray used exclusively for decorative dashed borders in workflow diagrams.
-
-### Gradient System
-- **Green Signal Glow**: `drop-shadow(0 0 2px #00d992)` animating to `drop-shadow(0 0 8px #00d992)` — creates a pulsing "electric charge" effect on the VoltAgent bolt logo and interactive elements. The glow expands and contracts like a heartbeat.
-- **Warm Ambient Haze**: `rgba(92, 88, 85, 0.2) 0px 0px 15px` — a warm-toned diffused shadow that creates a soft atmospheric glow around elevated cards, visible at the edges without sharp boundaries.
-- **Deep Dramatic Elevation**: `rgba(0, 0, 0, 0.7) 0px 20px 60px` with `rgba(148, 163, 184, 0.1) 0px 0px 0px 1px inset` — a heavy, dramatic downward shadow paired with a faint inset slate ring for the most prominent floating elements.
+### Neutral
+- **Abyss Black** (`navy`): page canvas, scrollbar track, text on solid green buttons, the inner fill of career dots.
+- **Instrument Well** (`well`): recessed panels: the hero console and the illustration frame inside Work cards.
+- **Card Carbon** (`card`): cards, the mobile drawer, form fields, the contact success panel; chips and nodes inside illustrations.
+- **Graphite** (`graphite`): the top border that divides home sections; paper shapes in illustrations.
+- **Hairline Graphite** (`light-graphite`): list row dividers, console title bar rule, the progress track and career rail, illustration frame border, the dot-pattern dots.
+- **Edge** (`edge`): borders of cards, console, chips, inputs, the drawer; console window dots; illustration wires.
+- **Strong Edge** (`edge-strong`): illustration outlines and text placeholders (the `shadow-doc-lines` lines).
+- **Warm Charcoal** (`lightest-navy`): scrollbar thumb, the secondary hero button border, pending career dots.
+- **Steel Slate** (`slate-text`): supporting prose, dates, metadata, stacks, footer, breadcrumb trail.
+- **Warm Parchment** (`light-slate`): secondary text: taglines, nav links at rest, chips, form labels, console log lines.
+- **Snow White** (`lightest-slate`): headings, titles and default body colour.
+- **Pure White** (`white-text`): bold terms in a finished console run only.
+- **Carbon Surface** (`light-navy`): defined in the palette; not used by current components.
 
 ### Portfolio tokens
 
-The site's Tailwind tokens. Source of truth: `src/lib/palette.mjs`, which `tailwind.config.mjs` reads. Components use these names, never raw hex.
-
-**Core palette (as above):** `navy` `#050507` (Abyss Black), `light-navy` `#101010` (Carbon Surface), `lightest-navy` `#3d3a39` (Warm Charcoal Border), `slate-text` `#8b949e` (Steel Slate), `light-slate` `#b8b3b0` (Warm Parchment), `lightest-slate` `#f2f2f2` (Snow White), `white-text` `#ffffff`, `green-accent` `#00d992` (Emerald Signal Green), `green-tint` (`green-accent` at 10%), `danger` `#fb565b` (Danger Coral, form errors).
-
-**Added for the 2026-10 motion redesign:**
+Source of truth: `src/lib/palette.mjs`, read by `tailwind.config.mjs` (and imported directly by canvas code such as `DotGrid`). Components use these Tailwind names, never raw hex or `rgba()`; `palette.mjs` exports a `rgba(hex, alpha)` helper for the config and canvas code.
 
 | Token | Value | Role |
 |---|---|---|
-| `sky` | `#38bdf8` | Marks open-source work only (labels, glow, illustrations) |
-| `well` | `#09090b` | Recessed panels: Work card illustration frame, hero console |
-| `card` | `#0e0e10` | Work card surface; chips and nodes inside illustrations |
+| `navy` | `#050507` | Page canvas |
+| `light-navy` | `#101010` | Reserved surface (unused) |
+| `lightest-navy` | `#3d3a39` | Scrollbar thumb, secondary button border, pending career dots |
+| `slate-text` | `#8b949e` | Supporting text, metadata |
+| `light-slate` | `#b8b3b0` | Secondary text, nav at rest, chips, labels |
+| `lightest-slate` | `#f2f2f2` | Headings, body default |
+| `white-text` | `#ffffff` | Bold terms in a finished console run |
+| `green-accent` | `#00d992` | The signal: emphasis, links, active, primary action, focus |
+| `green-tint` | `green-accent` at 10% (Tailwind config) | Outline button and logo hover fill |
+| `danger` | `#fb565b` | Form errors only |
+| `sky` | `#38bdf8` | Open-source work only (labels, glow, illustrations) |
+| `well` | `#09090b` | Recessed panels: hero console, Work illustration frame |
+| `card` | `#0e0e10` | Card surface, drawer, inputs; chips and nodes in illustrations |
 | `graphite` | `#141417` | Section dividers; paper shapes in illustrations |
-| `light-graphite` | `#1c1c20` | Hairlines, the progress and career rails, chat bubbles |
-| `edge` | `#26262a` | Card, console and chip borders; wires |
+| `light-graphite` | `#1c1c20` | Hairlines, progress and career rails, chat bubbles |
+| `edge` | `#26262a` | Card, console, chip and input borders; wires |
 | `edge-strong` | `#2e2e33` | Illustration outlines and text placeholders |
 | `green-deep` / `green-dim` / `green-pale` | `#0f2a20` / `#1d4d3a` / `#c9f5e4` | Enterprise illustration bubble fill / border / text |
 | `sky-deep` / `sky-dim` / `sky-pale` | `#0c1f2a` / `#1e3a4a` / `#cbeeff` | Open-source illustration bubble fill / border / text |
 
-**Shadows and gradients** (built from the colours above): `shadow-console` (1px `green-accent` 6% ring, 30px/80px black 60% drop, 80px `green-accent` 8% glow), `shadow-glow-green` / `shadow-glow-sky` (60px glow at 6%, active Work card), `shadow-halo` (4px `green-accent` 12% ring, career dots), `shadow-magnet` (contact button), `shadow-scan` / `shadow-spark` (small accent glows in illustrations), `shadow-doc-lines` (text lines on a document shape), `bg-row-tint` (Latest Writing hover tint), `bg-contact-glow` (radial glow behind Contact), `bg-dot-pattern` (dotted illustration background).
+**Shadows** (`boxShadow` in `tailwind.config.mjs`, built from the palette):
 
-## 3. Typography Rules
+| Token | Value | Role |
+|---|---|---|
+| `shadow-console` | 1px `green-accent` 6% ring, `0 30px 80px` black 60%, 80px `green-accent` 8% glow | Hero agent console |
+| `shadow-glow-green` | `0 0 60px` `green-accent` 6% | Active enterprise Work card (on its fading overlay) |
+| `shadow-glow-sky` | `0 0 60px` `sky` 6% | Active open-source Work card |
+| `shadow-halo` | `0 0 0 4px` `green-accent` 12% | Career and experience timeline dots |
+| `shadow-magnet` | `0 10px 40px` `green-accent` 25% | Contact magnet button |
+| `shadow-scan` | `0 0 12px` `green-accent` | Scan line glow in enterprise illustrations |
+| `shadow-spark` | `0 0 10px` `sky` | Spark glow in open-source illustrations |
+| `shadow-doc-lines` | three `edge-strong` hard lines at 9/18/27px | Text lines on a document shape in illustrations |
 
-### Font Family
-- **Primary (Headings)**: `system-ui`, with fallbacks: `-apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol`
-- **Secondary (Body/UI)**: `Inter`, with fallbacks inheriting from system-ui stack. OpenType features: `"calt", "rlig"` (contextual alternates and required ligatures)
-- **Monospace (Code)**: `SFMono-Regular`, with fallbacks: `Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace`
+**Gradients** (`backgroundImage`):
+
+| Token | Value | Role |
+|---|---|---|
+| `bg-row-tint` | 90deg `green-accent` 6% to transparent at 70% | Article row hover tint (fades in by opacity) |
+| `bg-contact-glow` | radial `green-accent` 10% to transparent at 60% | Glow behind the home Contact headline |
+| `bg-dot-pattern` | 1px `light-graphite` dots (sized 14px) | Work illustration frame background |
+
+### Named Rules
+**The Sky Is Open Source Rule.** `sky` and its `sky-*` tints mark open-source work and nothing else. Enterprise work, navigation, links and actions are green. The accent for a project comes from `PROJECT_KIND_INFO[kind].accent`, never chosen by hand.
+
+**The Tokens Only Rule.** Components use Tailwind colour, shadow and gradient tokens from `palette.mjs`. No raw hex or `rgba()` in components; a new colour is added to `palette.mjs` and this section first.
+
+**The One Signal Rule.** Green is the only emphasis colour in the interface. It marks the thing to look at or press; it is never a large surface fill except the two solid action buttons.
+
+## Typography
+
+**Display Font:** system-ui stack (hero headline only)
+**Body Font:** Inter Variable (self-hosted via `@fontsource-variable/inter`, latin subset preloaded in `BaseLayout`), falling back to Inter and the system sans stack
+**Label/Mono Font:** SFMono-Regular, with Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace
+
+**Character:** Inter carries headings and prose with tight negative tracking; mono carries everything the machine would say: labels, dates, stacks, nav, buttons, the console. Body text enables `"calt", "rlig"`.
 
 ### Hierarchy
+- **Display** (700, 36px / 48px / 52px at base / sm / lg, line-height 1.04, -0.015em): the home hero `h1` only. Its accent phrase is green, set upright (an `em` with italics removed). SplitText line masks are padded (`.hero-line-mask`) so descenders survive.
+- **Contact headline** (600, `clamp(36px, 6vw, 76px)`, 1.04, -0.035em): the home Contact `h2`, the one oversized heading below the hero; also carries a green accent phrase.
+- **Headline** (600, `clamp(28px, 4vw, 48px)`, 1.25, -0.03em): numbered home section headings ("01 Selected Work"). The number is mono, green, half size, set inline before the title.
+- **Page title** (600, `clamp(32px, 4.5vw, 48px)`, 1.25, -0.03em, `lightest-slate`): the `h1` of every inner page, from `PAGE_TITLE`.
+- **Title** (600, 20px to 24px, -0.02em): card titles, timeline job titles, inner page subsection headings. Prose `h2` is 20px/600/-0.02em, `h3` 18px/600.
+- **Body** (400, 16px, 1.625): prose in `slate-text`, measured at `max-w-[65ch]`. Lead paragraphs on inner pages and the hero sub run at 18px.
+- **Label** (mono, 400, 12px to 13px): nav, breadcrumb, dates, stacks, footer, form labels, buttons (12px / 14px / 16px by size).
+- **Label caps** (mono, 11px, uppercase, 0.08em): the kind label on Work and project cards ("Enterprise · Daxonet AI"), and chips (11px, not uppercase).
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| Display / Hero | system-ui | 60px (3.75rem) | 400 | 1.00 (tight) | -0.65px | Maximum impact, compressed blocks |
-| Section Heading | system-ui | 36px (2.25rem) | 400 | 1.11 (tight) | -0.9px | Tightest letter-spacing in the system |
-| Sub-heading | system-ui | 24px (1.50rem) | 700 | 1.33 | -0.6px | Bold weight for emphasis at this size |
-| Sub-heading Light | system-ui / Inter | 24px (1.50rem) | 300–400 | 1.33 | -0.6px | Light weight variant for softer hierarchy |
-| Overline | system-ui | 20px (1.25rem) | 600 | 1.40 | 0.5px | Uppercase transform, positive letter-spacing |
-| Feature Title | Inter | 20px (1.25rem) | 500–600 | 1.40 | normal | Card headings, feature names |
-| Overline Small | Inter | 18px (1.13rem) | 600 | 1.56 | 0.45px | Uppercase section labels |
-| Body / Button | Inter | 16px (1.00rem) | 400–600 | 1.50–1.65 | normal | Standard text, nav links, buttons |
-| Nav Link | Inter | 14.45px (0.90rem) | 500 | 1.65 | normal | Navigation-specific sizing |
-| Caption / Label | Inter | 14px (0.88rem) | 400–600 | 1.43–1.65 | normal | Descriptions, metadata, badge text |
-| Tag / Overline Tiny | system-ui | 14px (0.88rem) | 600 | 1.43 | 2.52px | Widest letter-spacing — reserved for uppercase tags |
-| Micro | Inter | 12px (0.75rem) | 400–500 | 1.33 | normal | Smallest sans-serif text |
-| Code Body | SFMono-Regular | 13–14px | 400–686 | 1.23–1.43 | normal | Inline code, terminal output, variable weight for syntax |
-| Code Small | SFMono-Regular | 11–12px | 400 | 1.33–1.45 | normal | Tiny code references, line numbers |
-| Code Button | monospace | 13px (0.81rem) | 700 | 1.65 | normal | Copy-to-clipboard button labels |
+Headings `h1`–`h3` use `text-wrap: balance`; `p` and `li` use `text-wrap: pretty`.
 
-### Principles
-- **System-native authority**: Display headings use system-ui rather than a custom web font — this means the largest text renders instantly (no FOIT/FOUT) and inherits the operating system's native personality. On macOS it's SF Pro, on Windows it's Segoe UI. The design accepts this variability as a feature, not a bug.
-- **Tight compression creates density**: Hero line-heights are extremely compressed (1.0) with negative letter-spacing (-0.65px to -0.9px), creating text blocks that feel like dense technical specifications rather than airy marketing copy.
-- **Weight gradient, not weight contrast**: The system uses a gentle 300→400→500→600→700 weight progression. Bold (700) is reserved for sub-headings and code-button emphasis. Most body text lives at 400–500, creating subtle rather than dramatic hierarchy.
-- **Uppercase is earned and wide**: When uppercase appears, it's always paired with generous letter-spacing (0.45px–2.52px), transforming dense words into spaced-out overline labels. This treatment is never applied to headings.
-- **OpenType by default**: Both system-ui and Inter enable `"calt"` and `"rlig"` features, ensuring contextual character adjustments and ligature rendering throughout.
+### Named Rules
+**The Two Voices Rule.** Mono is for labels, metadata, controls and machine output; Inter is for headings and sentences. A sentence is never set in mono, and a date or stack is never set in Inter.
 
-## 4. Component Stylings
+**The Upright Accent Rule.** Emphasis inside a headline is a green phrase, not italics or bold.
+
+## Layout
+
+Single column with a responsive gutter. The page gutter is the `--gutter` variable (24px base, 40px at sm, 64px at md, 96px at lg), applied through `GUTTER` on every home section. Inner pages use `PAGE_MAIN`: a centred `max-w-screen-lg` column inside the same gutter, 128px top padding to clear the fixed header, 80px bottom.
+
+Home sections are full-width bands divided by a 1px `graphite` top border. Vertical room is generous: the hero fills the viewport on md and up; Career uses 16vh vertical padding; Contact is at least 90vh. Hero is a two-column grid (1.1fr / 1fr) on md and up, stacked below. Career is a 1fr / 2fr grid with a sticky intro column. Projects lists two columns (enterprise) and up to three (open source); gaps are 24px.
+
+The Work track pins and scrolls horizontally only on the `pin` screen (min-width 768px and min-height 560px, mirrored by `MQ.pin`); below it (`nopin`) it is a native snap-scrolling row; under reduced motion the cards wrap into a centred grid. Raw screens disable Tailwind's `max-*` variants, so responsive classes are written mobile-first.
+
+### Named Rules
+**The One Idea Per Section Rule.** Each section carries one idea. No side rails, no secondary widgets competing with the section's subject.
+
+## Elevation & Depth
+
+Depth is tonal first. Surfaces step from `navy` (canvas) to `well` (recessed) to `card` (raised), and borders (`edge`, `light-graphite`, `graphite`) do the structural work. Shadows are rare and almost all are green-tinted glows that mean "this is live": the console, the active Work card, the contact magnet button, the career dots. The only neutral drop shadow is inside `shadow-console`.
+
+### Shadow Vocabulary
+See the shadow table in Portfolio tokens. Card glows are carried by an absolutely positioned overlay whose opacity fades; the shadow value itself never transitions.
+
+### Named Rules
+**The Glow Means Live Rule.** A glow marks the one element that is active or waiting for action. Static content gets a border, not a shadow.
+
+## Shapes
+
+Corners are soft on containers and small on controls: cards and images 16px, the console 12px, the illustration frame 10px, chips 5px, buttons and inputs 4px. Fully round shapes are reserved for the contact magnet button, timeline dots, console window dots and hamburger bars. Borders are 1px throughout (the logo mark and timeline dots use 2px); the "more" Work card uses a dashed `edge` border on a transparent fill. Article rows are borderless list rows separated by `light-graphite` hairlines.
+
+## Components
 
 ### Buttons
+Mono, quiet and precise; the outline is the default.
+- **Shape:** gently squared (4px), 1px border.
+- **Primary (outline):** `green-accent` text and border on transparent; sizes sm (20px × 10px, 12px text), md (28px × 14px, 14px), lg (32px × 16px, 16px). Shared classes live in `src/lib/button-styles.ts`.
+- **Hover / Focus:** fills with `green-tint`; focus-visible adds a 2px `green-accent` ring at 70% with a `navy` offset. Colour, background, border and opacity transition over 250ms on `cubic-bezier(0.645, 0.045, 0.355, 1)`.
+- **Secondary:** `light-slate` text and border. The hero's résumé button uses a `lightest-navy` border with `lightest-slate` text and turns green on hover.
+- **Solid:** the hero primary CTA is a filled `green-accent` button with `navy` text at 600; hover drops opacity to 0.9.
+- **Magnet (Contact):** a pill (9999px), filled green, navy mono 16px/600 text with an arrow, `shadow-magnet`. On a fine pointer with motion allowed, the button, label and arrow follow the pointer with `gsap.quickTo` (0.4s, power3) and spring back on leave.
 
-**Ghost / Outline (Standard)**
-- Background: transparent
-- Text: Pure White (`#ffffff`)
-- Padding: comfortable (12px 16px)
-- Border: thin solid Warm Charcoal (`1px solid #3d3a39`)
-- Radius: comfortably rounded (6px)
-- Hover: background darkens to `rgba(0, 0, 0, 0.2)`, opacity drops to 0.4
-- Outline: subtle green tint (`rgba(33, 196, 93, 0.5)`)
-- The default interactive element — unassuming but clearly clickable
+### Chips
+- **Style:** transparent, 1px `edge` border, 5px radius, mono 11px `light-slate`, 4px × 8px. Used for technologies, skills and tags (`CHIP`).
+- **State:** static; chips are not interactive. In the hero console the active run chip switches to a green border at 40% and green text.
 
-**Primary Green CTA**
-- Background: Carbon Surface (`#101010`)
-- Text: VoltAgent Mint (`#2fd6a1`)
-- Padding: comfortable (12px 16px)
-- Border: none visible (outline-based focus indicator)
-- Outline: VoltAgent Mint (`rgb(47, 214, 161)`)
-- Hover: same darkening behavior as Ghost
-- The "powered on" button — green text on dark surface reads as an active terminal command
+### Cards / Containers
+- **Work card:** `card` surface, 1px `edge` border, 16px radius, 22px padding, `min(360px, 80vw)` wide and `min(470px, 72vh)` tall on tall screens. Content: a 170px illustration frame (`well` with `bg-dot-pattern`, 10px radius, `light-graphite` border), a mono caps kind label in the kind's accent, a 24px title, a `light-slate` tagline, a mono `slate-text` stack. The active card gets an accent border at 55% and a `glow-*` shadow on a fading overlay. Inactive cards sit at opacity 0.9 with their illustration at 0.7 and `saturate(0.55)`, frozen on the finished frame.
+- **Project card:** the Work card language without the illustration: text only, 20px title, tagline clamped to three lines. Hover turns the border to the kind's accent at 55% and the title to the accent.
+- **Shadow Strategy:** none at rest; see Elevation.
 
-**Tertiary / Emphasized Container Button**
-- Background: Carbon Surface (`#101010`)
-- Text: Snow White (`#f2f2f2`)
-- Padding: generous (20px all sides)
-- Border: thick solid Warm Charcoal (`3px solid #3d3a39`)
-- Radius: comfortably rounded (8px)
-- A card-like button treatment for larger interactive surfaces (code copy blocks, feature CTAs)
-
-### Cards & Containers
-- Background: Carbon Surface (`#101010`) — one shade lighter than the page canvas
-- Border: `1px solid #3d3a39` (Warm Charcoal) for standard containment; `2px solid #00d992` for highlighted/active cards
-- Radius: comfortably rounded (8px) for content cards; subtly rounded (4–6px) for smaller inline containers
-- Shadow Level 1: Warm Ambient Haze (`rgba(92, 88, 85, 0.2) 0px 0px 15px`) for standard elevation
-- Shadow Level 2: Deep Dramatic (`rgba(0, 0, 0, 0.7) 0px 20px 60px` + `rgba(148, 163, 184, 0.1) 0px 0px 0px 1px inset`) for hero/feature showcase cards
-- Hover behavior: likely border color shift toward green accent or subtle opacity increase
-- Dashed variant: `1px dashed rgba(79, 93, 117, 0.4)` for workflow/diagram containers — visually distinct from solid-border content cards
-
-### Inputs & Forms
-- No explicit input token data extracted — the site is landing-page focused with minimal form UI
-- The npm install command (`npm create voltagent-app@latest`) is presented as a code block rather than an input field
-- Inferred style: Carbon Surface background, Warm Charcoal border, VoltAgent Mint focus ring, Snow White text
+### Inputs / Fields
+- **Style:** `card` fill, 1px `edge` border, 4px radius, 12px × 16px padding, 14px `lightest-slate` text, `slate-text` placeholder. Labels are mono 12px `light-slate` above the field.
+- **Focus:** border turns `green-accent`, plus a 2px green ring at 50% on focus-visible.
+- **Error:** `aria-invalid` turns the border `danger`; a mono 12px `danger` message below names the fix.
+- **Disabled:** the submit button drops to 50% opacity while sending.
 
 ### Navigation
-- Sticky top nav bar on Abyss Black canvas
-- Logo: VoltAgent bolt icon with animated green glow (`drop-shadow` cycling 2px–8px)
-- Nav structure: Logo → Product dropdown → Use Cases dropdown → Resources dropdown → GitHub stars badge → Docs CTA
-- Link text: Snow White (`#f2f2f2`) at 14–16px Inter, weight 500
-- Hover: links transition to green variants (`#00c182` or `#00ffaa`)
-- GitHub badge: social proof element integrated directly into nav
-- Mobile: collapses to hamburger menu, single-column vertical layout
+- **Header:** fixed, 64px (80px md), `navy` at 80% with backdrop blur, inside the page gutter. Left: the initial in a 2px green-bordered square (40px / 48px). Right: mono 14px links, each prefixed by a green 12px index ("01."), `light-slate` at rest, green on hover and when current, then a small outline Résumé button. It hides on scroll down and returns on scroll up or when focus enters it.
+- **Mobile:** below md, a two-bar green toggle that rotates into an X opens a right-hand drawer (`card`, `edge` left border, 75% wide, max 384px) with centred mono 18px links and an outline Résumé button. The page behind is dimmed, blurred and made `inert`; Escape closes it.
+- **Breadcrumb:** mono 14px `slate-text`, `/` separators, current item green.
+- **Footer:** mono 12px `slate-text`, links turn green on hover.
 
-### Image Treatment
-- Dark-themed product screenshots and architectural diagrams dominate
-- Code blocks are treated as primary visual content — syntax-highlighted with SFMono-Regular
-- Agent workflow visualizations appear as interactive node graphs with green connection lines
-- Decorative dot-pattern backgrounds appear behind hero sections
-- Full-bleed within card containers, respecting 8px radius rounding
+### Agent Console (signature)
+A terminal-like panel in the hero: `well` surface, `edge` border, 12px radius, `shadow-console`, mono 13px at 1.7 line height. A title bar with three `edge` dots and a `light-graphite` rule, log lines in a 74px label column, a green blinking block cursor, and run chips along the bottom. Runs loop; under reduced motion the console rests on a finished run and the cursor stops blinking.
 
-### Distinctive Components
+### Work Illustrations (signature)
+One code-drawn illustration per Work card, selected by the project's `visual` field and played by `VizFrame`. Built only from palette tokens: `card` chips and nodes, `graphite` paper, `edge` wires, `edge-strong` outlines and `shadow-doc-lines`, accent bubbles from the matching `green-*` or `sky-*` family, `shadow-scan` / `shadow-spark` highlights. Only the active card's illustration plays, and only while the Work section is on screen.
 
-**npm Install Command Block**
-- A prominent code snippet (`npm create voltagent-app@latest`) styled as a copyable command
-- SFMono-Regular on Carbon Surface with a copy-to-clipboard button
-- Functions as the primary CTA — "install first, read later" developer psychology
+### Article Row
+A list row: mono date, 18px title, two mono tags, an arrow. On hover the `bg-row-tint` overlay fades in, the row nudges 14px right (motion-safe), the title turns green and the arrow lifts. Used on home Latest Writing and the Writing page (detailed variant adds the description).
 
-**Company Logo Marquee**
-- Horizontal scrolling strip of developer/company logos
-- Infinite animation (`scrollLeft`/`scrollRight`, 25–80s durations)
-- Pauses on hover and for users with reduced-motion preferences
-- Demonstrates ecosystem adoption without cluttering the layout
+### Timeline
+Career (home) and Experience (About) share one rail: a 2px `light-graphite` line with 14px dots (2px green border, `navy` fill, `shadow-halo`), mono green dates, 20px titles, `slate-text` detail and chips. On home the rail fills with a green gradient on scroll and dots start as pending (`lightest-navy` border, no halo).
 
-**Feature Section Cards**
-- Large cards combining code examples with descriptive text
-- Left: code snippet with syntax highlighting; Right: feature description
-- Green accent border (`2px solid #00d992`) on highlighted/active features
-- Internal padding: generous (24–32px estimated)
+### Motion
+Motion follows the "Animation rules" in `CLAUDE.md`; in summary:
+- Animate only transforms (`x`, `y`, `xPercent`, `yPercent`, `scale`, `scaleX`, `scaleY`, `rotation`) and `opacity`. Hover and focus may transition `color`, `background-color` and `border-color`. No layout properties, `filter` or `box-shadow` transitions, no `transition-all`.
+- All GSAP runs inside `useGSAP` or `useMatchMedia` with `gsap.matchMedia` branches on `MQ`. Under reduced motion: no movement, pin, scrub or loops; loops and scrubbed pieces rest on the finished frame; reveals are immediate or a short fade.
+- At most the hero console and one active Work card animate at once. The hero dot grid moves only in response to the pointer.
+- Lenis smooth scroll driven by the GSAP ticker; no CSS `scroll-behavior: smooth`.
+- Hero entrance: words rise from their line masks (0.8s, power3.out, 0.04s stagger), then the sub and CTAs fade up 12px.
+- Hover timing: 250ms with the custom ease for controls, 300ms ease-out for article rows, 400ms ease-out for Work card dimming.
 
-**Agent Flow Diagrams**
-- Interactive node-graph visualizations showing agent coordination
-- Connection lines use VoltAgent green variants
-- Nodes styled as mini-cards within the Warm Charcoal border system
+## Do's and Don'ts
 
-**Community / GitHub Section**
-- Large GitHub icon as the visual anchor
-- Star count and contributor metrics prominently displayed
-- Warm social proof: Discord, X, Reddit, LinkedIn, YouTube links in footer
+### Do:
+- **Do** build every new surface on `navy`, with `card` for raised surfaces and `well` for recessed ones, bordered by `edge`.
+- **Do** use `green-accent` for links, active state, primary actions and focus, and `sky` only for open-source work.
+- **Do** take colours, shadows and gradients from the Tailwind tokens listed in Portfolio tokens.
+- **Do** set labels, dates, stacks, nav and buttons in mono, and headings and prose in Inter with negative tracking.
+- **Do** use `PAGE_TITLE` for inner page `h1`s, `PAGE_MAIN` / `GUTTER` for page and section width, and `CHIP`, `BUTTON_BASE` and `BUTTON_SIZES` for chips and buttons.
+- **Do** give every `<img>` explicit width and height (`Img.astro` does it), with 16px radius and an `edge` border for content images.
+- **Do** provide a reduced-motion branch for every animation, resting on its finished frame.
 
-## 5. Layout Principles
-
-### Spacing System
-- Base unit: 8px
-- Scale: 2px, 4px, 5px, 6px, 6.4px, 8px, 12px, 16px, 20px, 24px, 28px, 32px, 40px, 48px, 64px
-- Button padding: 12px 16px (standard), 20px (container-button)
-- Card internal padding: approximately 24–32px
-- Section vertical spacing: generous (estimated 64–96px between major sections)
-- Component gap: 16–24px between sibling cards/elements
-
-### Grid & Container
-- Max container width: approximately 1280–1440px, centered
-- Hero: centered single-column with maximum breathing room
-- Feature sections: alternating asymmetric layouts (code left / text right, then reversed)
-- Logo marquee: full-width horizontal scroll, breaking the container constraint
-- Card grids: 2–3 column for feature showcases
-- Integration grid: responsive multi-column for partner/integration icons
-
-### Whitespace Philosophy
-- **Cinematic breathing room between sections**: Massive vertical gaps create a "scroll-through-chapters" experience — each section feels like a new scene.
-- **Dense within components**: Cards and code blocks are internally compact, with tight line-heights and controlled padding. Information is concentrated, not spread thin.
-- **Border-defined separation**: Rather than relying solely on whitespace, VoltAgent uses the Warm Charcoal border system (`#3d3a39`) to delineate content zones. The border IS the whitespace signal.
-- **Hero-first hierarchy**: The top of the page commands the most space — the "AI Agent Engineering Platform" headline and npm command get maximum vertical runway before the first content section appears.
-
-### Border Radius Scale
-- Nearly squared (4px): Small inline elements, SVG containers, code spans — the sharpest treatment, conveying technical precision
-- Subtly rounded (6px): Buttons, links, clipboard actions — the workhorse radius for interactive elements
-- Code-specific (6.4px): Code blocks, `pre` elements, clipboard copy targets — a deliberate micro-distinction from standard 6px
-- Comfortably rounded (8px): Content cards, feature containers, emphasized buttons — the standard containment radius
-- Pill-shaped (9999px): Tags, badges, status indicators, pill-shaped navigation elements — the roundest treatment for small categorical labels
-
-## 6. Depth & Elevation
-
-| Level | Treatment | Use |
-|-------|-----------|-----|
-| Flat (Level 0) | No shadow, no border | Page background (`#050507`), inline text |
-| Contained (Level 1) | `1px solid #3d3a39`, no shadow | Standard cards, nav bar, code blocks |
-| Emphasized (Level 2) | `3px solid #3d3a39`, no shadow | Large interactive buttons, emphasized containers |
-| Accent (Level 3) | `2px solid #00d992`, no shadow | Active/highlighted feature cards, selected states |
-| Ambient Glow (Level 4) | `rgba(92, 88, 85, 0.2) 0px 0px 15px` | Elevated cards, hover states, soft atmospheric lift |
-| Dramatic Float (Level 5) | `rgba(0, 0, 0, 0.7) 0px 20px 60px` + `rgba(148, 163, 184, 0.1) 1px inset` | Hero feature showcase, modals, maximum-elevation content |
-
-**Shadow Philosophy**: VoltAgent communicates depth primarily through **border weight and color**, not shadows. The standard `1px solid #3d3a39` border IS the elevation — adding a `3px` border weight or switching to green (`#00d992`) communicates importance more than adding shadow does. When shadows do appear, they're either warm and diffused (Level 4) or cinematic and dramatic (Level 5) — never medium or generic.
-
-### Decorative Depth
-- **Green Signal Glow**: The VoltAgent bolt logo pulses with a `drop-shadow` animation cycling between 2px and 8px blur radius in Emerald Signal Green. This is the most distinctive decorative element — it makes the logo feel "powered on."
-- **Warm Charcoal Containment Lines**: The warm tone of `#3d3a39` borders creates a subtle visual warmth against the cool black, as if the cards are faintly heated from within.
-- **Dashed Workflow Lines**: `1px dashed rgba(79, 93, 117, 0.4)` creates a blueprint-like aesthetic for architecture diagrams, visually distinct from solid content borders.
-
-## 7. Do's and Don'ts
-
-### Do
-- Use Abyss Black (`#050507`) as the landing page background and Carbon Surface (`#101010`) for all contained elements — the two-shade dark system is essential
-- Reserve Emerald Signal Green (`#00d992`) exclusively for high-signal moments: active borders, glow effects, and the most important interactive accents
-- Use VoltAgent Mint (`#2fd6a1`) for button text on dark surfaces — it's more readable than pure Signal Green
-- Keep heading line-heights compressed (1.0–1.11) with negative letter-spacing for dense, authoritative text blocks
-- Use the warm gray palette (`#3d3a39`, `#8b949e`, `#b8b3b0`) for borders and secondary text — warmth prevents the dark theme from feeling sterile
-- Present code snippets as primary content — they're hero elements, not supporting illustrations
-- Use border weight (1px → 2px → 3px) and color shifts (`#3d3a39` → `#00d992`) to communicate depth and importance, rather than relying on shadows
-- Pair system-ui for headings with Inter for body text — the speed/authority of native fonts combined with the precision of a geometric sans
-- Use SFMono-Regular for all code content — it's the developer credibility signal
-- Apply `"calt"` and `"rlig"` OpenType features across all text
-
-### Don't
-- Don't use bright or light backgrounds as primary surfaces — the entire identity lives on near-black
-- Don't introduce warm colors (orange, red, yellow) as decorative accents — the palette is strictly green + warm neutrals on black. Warm colors are reserved for semantic states (warning, error) only
-- Don't use Emerald Signal Green (`#00d992`) on large surfaces or as background fills — it's an accent, never a surface
-- Don't increase heading line-heights beyond 1.33 — the compressed density is core to the engineering-platform identity
-- Don't use heavy shadows generously — depth comes from border treatment, not box-shadow. Shadows are reserved for Level 4–5 elevation only
-- Don't use pure white (`#ffffff`) as default body text — Snow White (`#f2f2f2`) is the standard. Pure white is reserved for maximum-emphasis headings and button text
-- Don't mix in serif or decorative fonts — the entire system is geometric sans + monospace
-- Don't use border-radius larger than 8px on content cards — 9999px (pill) is only for small tags and badges
-- Don't skip the warm-gray border system — cards without `#3d3a39` borders lose their containment and float ambiguously on the dark canvas
-- Don't animate aggressively — animations are slow and subtle (25–100s durations for marquee, gentle glow pulses). Fast motion contradicts the "engineering precision" atmosphere
-
-## 8. Responsive Behavior
-
-### Breakpoints
-| Name | Width | Key Changes |
-|------|-------|-------------|
-| Small Mobile | <420px | Minimum layout, stacked everything, reduced hero text to ~24px |
-| Mobile | 420–767px | Single column, hamburger nav, full-width cards, hero text ~36px |
-| Tablet | 768–1024px | 2-column grids begin, condensed nav, medium hero text |
-| Desktop | 1025–1440px | Full multi-column layout, expanded nav with dropdowns, large hero (60px) |
-| Large Desktop | >1440px | Max-width container centered (est. 1280–1440px), generous horizontal margins |
-
-*23 breakpoints detected in total, ranging from 360px to 1992px — indicating a fluid, heavily responsive grid system rather than fixed breakpoint snapping.*
-
-### Touch Targets
-- Buttons use comfortable padding (12px 16px minimum) ensuring adequate touch area
-- Navigation links spaced with sufficient gap for thumb navigation
-- Interactive card surfaces are large enough to serve as full touch targets
-- Minimum recommended touch target: 44x44px
-
-### Collapsing Strategy
-- **Navigation**: Full horizontal nav with dropdowns collapses to hamburger menu on mobile
-- **Feature grids**: 3-column → 2-column → single-column vertical stacking
-- **Hero text**: 60px → 36px → 24px progressive scaling with maintained compression ratios
-- **Logo marquee**: Adjusts scroll speed and item sizing; maintains infinite loop
-- **Code blocks**: Horizontal scroll on smaller viewports rather than wrapping — preserving code readability
-- **Section padding**: Reduces proportionally but maintains generous vertical rhythm between chapters
-- **Cards**: Stack vertically on mobile with full-width treatment and maintained internal padding
-
-### Image Behavior
-- Dark-themed screenshots and diagrams scale proportionally within containers
-- Agent flow diagrams simplify or scroll horizontally on narrow viewports
-- Dot-pattern decorative backgrounds scale with viewport
-- No visible art direction changes between breakpoints — same crops, proportional scaling
-- Lazy loading for below-fold images (Docusaurus default behavior)
-
-## 9. Agent Prompt Guide
-
-### Quick Color Reference
-- Brand Accent: "Emerald Signal Green (#00d992)"
-- Button Text: "VoltAgent Mint (#2fd6a1)"
-- Page Background: "Abyss Black (#050507)"
-- Card Surface: "Carbon Surface (#101010)"
-- Border / Containment: "Warm Charcoal (#3d3a39)"
-- Primary Text: "Snow White (#f2f2f2)"
-- Secondary Text: "Warm Parchment (#b8b3b0)"
-- Tertiary Text: "Steel Slate (#8b949e)"
-
-### Example Component Prompts
-- "Create a feature card on Carbon Surface (#101010) with a 1px solid Warm Charcoal (#3d3a39) border, comfortably rounded corners (8px). Use Snow White (#f2f2f2) for the title in system-ui at 24px weight 700, and Warm Parchment (#b8b3b0) for the description in Inter at 16px. Add a subtle Warm Ambient shadow (rgba(92, 88, 85, 0.2) 0px 0px 15px)."
-- "Design a ghost button with transparent background, Snow White (#f2f2f2) text in Inter at 16px, a 1px solid Warm Charcoal (#3d3a39) border, and subtly rounded corners (6px). Padding: 12px vertical, 16px horizontal. On hover, background shifts to rgba(0, 0, 0, 0.2)."
-- "Build a hero section on Abyss Black (#050507) with a massive heading at 60px system-ui, line-height 1.0, letter-spacing -0.65px. The word 'Platform' should be colored in Emerald Signal Green (#00d992). Below the heading, place a code block showing 'npm create voltagent-app@latest' in SFMono-Regular at 14px on Carbon Surface (#101010) with a copy button."
-- "Create a highlighted feature card using a 2px solid Emerald Signal Green (#00d992) border instead of the standard Warm Charcoal. Keep Carbon Surface background, comfortably rounded corners (8px), and include a code snippet on the left with feature description text on the right."
-- "Design a navigation bar on Abyss Black (#050507) with the VoltAgent logo (bolt icon with animated green glow) on the left, nav links in Inter at 14px weight 500 in Snow White, and a green CTA button (Carbon Surface bg, VoltAgent Mint text) on the right. Add a 1px solid Warm Charcoal bottom border."
-
-### Iteration Guide
-When refining existing screens generated with this design system:
-1. Focus on ONE component at a time
-2. Reference specific color names and hex codes — "use Warm Parchment (#b8b3b0)" not "make it lighter"
-3. Use border treatment to communicate elevation: "change the border to 2px solid Emerald Signal Green (#00d992)" for emphasis
-4. Describe the desired "feel" alongside measurements — "compressed and authoritative heading at 36px with line-height 1.11 and -0.9px letter-spacing"
-5. For glow effects, specify "Emerald Signal Green (#00d992) as a drop-shadow with 2–8px blur radius"
-6. Always specify which font — system-ui for headings, Inter for body/UI, SFMono-Regular for code
-7. Keep animations slow and subtle — marquee scrolls at 25–80s, glow pulses gently
+### Don't:
+- **Don't** add a light theme, light surfaces or a theme toggle.
+- **Don't** use `sky` for anything other than open-source work, or green for open-source work.
+- **Don't** write raw hex or `rgba()` in components.
+- **Don't** transition `box-shadow`, `filter` or layout properties; fade an overlay's opacity instead.
+- **Don't** add a glow or shadow to static content; borders carry structure.
+- **Don't** crowd a section: one idea per section, no side rails, no more than the console and one Work card moving at once.
+- **Don't** state a years-of-experience figure anywhere in the design or copy.

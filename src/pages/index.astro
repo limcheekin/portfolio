@@ -12,7 +12,7 @@ import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_INTRO, getCareerEntries } from '../data/career';
 import type { WorkCard } from '../components/home/types';
 import { projectJsonLd } from '../lib/project-jsonld';
-import { PROJECT_KIND_INFO } from '../lib/project-kind';
+import { projectLabel } from '../lib/project-kind';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
@@ -35,7 +35,7 @@ const workCards: WorkCard[] = [
       slug: p.slug,
       title: shortTitle(p),
       kind,
-      label: [PROJECT_KIND_INFO[kind].label, org].filter(Boolean).join(' · '),
+      label: projectLabel(kind, org),
       tagline: p.data.tagline ?? p.data.description,
       stack: p.data.stack ?? [],
       visual: p.data.visual,
@@ -187,10 +187,6 @@ const jsonLd = [
 ---
 
 <BaseLayout jsonLd={jsonLd}>
-  <a href="#main-content" class="absolute left-[-9999px] top-auto w-px h-px overflow-hidden focus:static focus:w-auto focus:h-auto focus:p-3 focus:m-3 focus:block focus:bg-green-accent focus:text-navy rounded-md shadow-lg z-[9999]">
-    Skip to main content
-  </a>
-
   <Header />
 
   <main id="main-content" data-testid="main-content" class="min-h-screen">

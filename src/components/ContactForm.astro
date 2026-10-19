@@ -1,8 +1,15 @@
 ---
 import Button from './Button.astro';
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
+
+const FIELD =
+  'w-full bg-card border border-edge rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text transition-colors duration-250 focus:border-green-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-green-accent/50 aria-[invalid=true]:border-danger';
+const LABEL = 'block font-mono text-xs text-light-slate mb-1.5';
+const ERROR = 'hidden font-mono text-xs text-danger mt-1.5';
 ---
 
+<!-- novalidate: the script below runs the checks and shows inline errors instead of the browser's bubbles.
+     Without JavaScript the form still posts and Formspree validates. -->
 <form
   action={FORMSPREE_ENDPOINT}
   method="POST"
@@ -11,7 +18,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
   novalidate
 >
   <div>
-    <label for="contact-name" class="block font-mono text-xs text-light-slate mb-1.5">Name</label>
+    <label for="contact-name" class={LABEL}>Name</label>
     <input
       type="text"
       id="contact-name"
@@ -22,13 +29,13 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       pattern=".{2,}"
       data-testid="contact-field-name"
       aria-describedby="contact-name-error"
-      class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250"
+      class={FIELD}
       placeholder="Your name"
     />
-    <span id="contact-name-error" role="alert" class="hidden font-mono text-xs text-danger mt-1"></span>
+    <p id="contact-name-error" class={ERROR}></p>
   </div>
   <div>
-    <label for="contact-email" class="block font-mono text-xs text-light-slate mb-1.5">Email</label>
+    <label for="contact-email" class={LABEL}>Email</label>
     <input
       type="email"
       id="contact-email"
@@ -37,13 +44,13 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       autocomplete="email"
       data-testid="contact-field-email"
       aria-describedby="contact-email-error"
-      class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250"
+      class={FIELD}
       placeholder="your@email.com"
     />
-    <span id="contact-email-error" role="alert" class="hidden font-mono text-xs text-danger mt-1"></span>
+    <p id="contact-email-error" class={ERROR}></p>
   </div>
   <div>
-    <label for="contact-message" class="block font-mono text-xs text-light-slate mb-1.5">Message</label>
+    <label for="contact-message" class={LABEL}>Message</label>
     <textarea
       id="contact-message"
       name="message"
@@ -52,10 +59,10 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
       minlength="10"
       data-testid="contact-field-message"
       aria-describedby="contact-message-error"
-      class="w-full bg-light-navy border border-lightest-navy rounded px-4 py-3 text-sm text-lightest-slate placeholder-slate-text/50 focus:border-green-accent focus:outline-none transition-colors duration-250 resize-y"
+      class={`${FIELD} resize-y`}
       placeholder="What would you like to discuss?"
     ></textarea>
-    <span id="contact-message-error" role="alert" class="hidden font-mono text-xs text-danger mt-1"></span>
+    <p id="contact-message-error" class={ERROR}></p>
   </div>
   <input type="hidden" name="_next" value="/contact/?submitted=true" />
   <div class="text-center pt-2">
@@ -64,32 +71,63 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
 </form>
 
 <script>
-  const form = document.querySelector('[data-testid="contact-form"]') as HTMLFormElement | null;
-  if (form) {
-    const fields = [
-      { id: 'contact-name', errorId: 'contact-name-error', message: 'Name is required.' },
-      { id: 'contact-email', errorId: 'contact-email-error', message: 'A valid email address is required.' },
-      { id: 'contact-message', errorId: 'contact-message-error', message: 'Message is required.' },
-    ];
+  type Field = HTMLInputElement | HTMLTextAreaElement;
 
-    fields.forEach(({ id, errorId }) => {
-      const input = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
-      if (!input) return;
-      input.addEventListener('invalid', () => {
-        input.setAttribute('aria-invalid', 'true');
-        const err = document.getElementById(errorId);
-        if (err) {
-          err.textContent = input.validationMessage;
-          err.classList.remove('hidden');
-        }
+  // Each message names the problem and how to fix it.
+  const MESSAGES: Record<string, (f: Field) => string> = {
+    'contact-name': (f) => (f.validity.valueMissing ? 'Enter your name.' : 'Your name needs at least 2 characters.'),
+    'contact-email': (f) => (f.validity.valueMissing ? 'Enter your email address.' : 'Enter a valid email address, like name@example.com.'),
+    'contact-message': (f) => (f.validity.valueMissing ? 'Tell me what you would like to discuss.' : 'Add a little more detail (at least 10 characters).'),
+  };
+
+  const form = document.querySelector<HTMLFormElement>('[data-testid="contact-form"]');
+  if (form) {
+    const fields = Array.from(form.querySelectorAll<Field>('input:not([type="hidden"]), textarea'));
+    const errorFor = (f: Field) => document.getElementById(`${f.id}-error`);
+
+    const showError = (f: Field) => {
+      const err = errorFor(f);
+      f.setAttribute('aria-invalid', 'true');
+      if (err) {
+        err.textContent = MESSAGES[f.id]?.(f) ?? f.validationMessage;
+        err.classList.remove('hidden');
+      }
+    };
+    const clearError = (f: Field) => {
+      f.removeAttribute('aria-invalid');
+      errorFor(f)?.classList.add('hidden');
+    };
+
+    fields.forEach((f) => {
+      f.addEventListener('invalid', () => showError(f));
+      // Once a field has been flagged, re-check it as the visitor types.
+      f.addEventListener('input', () => {
+        if (!f.hasAttribute('aria-invalid')) return;
+        if (f.validity.valid) clearError(f);
+        else showError(f);
       });
-      input.addEventListener('input', () => {
-        if (input.validity.valid) {
-          input.removeAttribute('aria-invalid');
-          const err = document.getElementById(errorId);
-          if (err) err.classList.add('hidden');
-        }
-      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      // checkValidity() fires `invalid` on every failing field, which shows its message.
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        fields.find((f) => !f.validity.valid)?.focus();
+        return;
+      }
+      setSending(true);
+    });
+
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const idleLabel = submit?.textContent?.trim() ?? '';
+    function setSending(sending: boolean) {
+      if (!submit) return;
+      submit.disabled = sending;
+      submit.textContent = sending ? 'Sending…' : idleLabel;
+    }
+    // Coming back from Formspree via the back button restores this page from the cache; re-enable the button.
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) setSending(false);
     });
   }
 </script>

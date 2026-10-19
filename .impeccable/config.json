@@ -1,0 +1,20 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "theme('fontfamily.sans')",
+        "createdAt": "2026-10-19T04:10:21.064Z",
+        "reason": "Claude triage: Tailwind theme() call resolving to the Inter Variable sans stack documented in DESIGN.md; detector cannot evaluate theme()"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "theme('fontfamily.mono')",
+        "createdAt": "2026-10-19T04:10:21.143Z",
+        "reason": "Claude triage: Tailwind theme() call resolving to the SFMono/Menlo/Consolas mono stack documented in DESIGN.md; detector cannot evaluate theme()"
+      }
+    ]
+  }
+}

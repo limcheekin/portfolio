@@ -1,11 +1,12 @@
 ---
 import { FOOTER_TEXT, CONTACT_LINKS } from '../data/site';
+import { GUTTER } from '../lib/layout';
 
 const linkClass = 'hover:text-green-accent transition-colors duration-250';
 ---
 
-<footer class="py-8 px-6 md:px-12 font-mono text-xs text-slate-text">
-  <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<footer class={`py-8 font-mono text-xs text-slate-text ${GUTTER}`}>
+  <div class="flex flex-col md:flex-row items-center justify-between gap-4">
     <p>{FOOTER_TEXT}</p>
     <nav aria-label="Footer links">
       <ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 list-none p-0 m-0">

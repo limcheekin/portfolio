@@ -2,12 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { ABOUT_CONTENT, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL, EMAIL_ADDRESS } from '../data/site';
-import { imageSize } from '../lib/image-size';
+import Img from '../components/Img.astro';
+import { PAGE_MAIN } from '../lib/layout';
+import { CHIP, PAGE_TITLE } from '../lib/text-styles';
 
 const experience = (await getCollection('experience'))
   .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
@@ -47,36 +48,34 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <Header />
-  <main id="main-content" class="mx-auto min-h-screen max-w-screen-lg px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20">
+  <main id="main-content" class={PAGE_MAIN}>
     <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About" }]} />
-    <h1 id="about-me" class="text-3xl md:text-4xl font-bold text-lightest-slate mb-8">About Me</h1>
+    <h1 id="about-me" class={`${PAGE_TITLE} mb-8`}>About Me</h1>
 
-    <div class="grid md:grid-cols-5 gap-10 lg:gap-12 items-start mb-16">
+    <div class="grid md:grid-cols-5 gap-10 lg:gap-12 items-start mb-20">
       <div class="md:col-span-3">
         {ABOUT_CONTENT.introductionParagraphs.map((paragraph) => (
-          <p class="text-slate-text text-lg leading-relaxed mb-4">{paragraph}</p>
+          <p class="text-slate-text text-lg leading-relaxed mb-4 max-w-[65ch]">{paragraph}</p>
         ))}
-        <div class="mt-8">
-          <p class="text-lightest-slate mb-3">Technologies I work with:</p>
-          <ul class="grid grid-cols-2 gap-x-4 gap-y-2 mt-3 text-sm">
-            {ABOUT_CONTENT.skills.map((skill) => (
-              <li class="font-mono custom-bullet">{skill}</li>
-            ))}
-          </ul>
-        </div>
+        <h2 class="mt-8 mb-3 text-lightest-slate">Technologies I work with</h2>
+        <ul class="flex list-none flex-wrap gap-2 p-0">
+          {ABOUT_CONTENT.skills.map((skill) => (
+            <li class={CHIP}>{skill}</li>
+          ))}
+        </ul>
       </div>
-      <div class="md:col-span-2 relative group mx-auto md:mx-0 max-w-xs md:max-w-sm">
-        <div class="absolute inset-0 rounded-md border-2 border-green-accent transform translate-x-3 translate-y-3 motion-safe:group-hover:translate-x-2 motion-safe:group-hover:translate-y-2 transition-transform duration-250 ease-custom-ease z-0"></div>
-        <div class="relative bg-green-accent rounded-md overflow-hidden z-10 shadow-lg">
-          <img src={ABOUT_CONTENT.professionalPhotoUrl} {...imageSize(ABOUT_CONTENT.professionalPhotoUrl)} alt={`Professional headshot of ${ENGINEER_NAME}`} class="rounded-md w-full h-auto object-cover grayscale hover:grayscale-0" loading="lazy" />
-          <div class="absolute inset-0 bg-navy/60 group-hover:bg-transparent transition-colors duration-250 ease-custom-ease"></div>
-        </div>
+      <div class="md:col-span-2 mx-auto w-full max-w-xs md:mx-0 md:max-w-sm">
+        <Img
+          src={ABOUT_CONTENT.professionalPhotoUrl}
+          alt={`Professional headshot of ${ENGINEER_NAME}`}
+          class="h-auto w-full rounded-2xl border border-edge object-cover"
+          loading="eager"
+        />
       </div>
     </div>
 
-    <h2 id="work-experience" class="text-2xl md:text-3xl font-semibold text-lightest-slate mb-10 flex items-center">
+    <h2 id="work-experience" class="mb-10 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">
       Work Experience
-      <span class="block h-px bg-lightest-navy/30 ml-5 w-full max-w-xs md:max-w-sm"></span>
     </h2>
 
     <ExperienceTimeline entries={experience} />

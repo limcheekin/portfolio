@@ -1,0 +1,28 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { imageSize } from '../lib/image-size';
+
+/**
+ * A content image (a PNG under public/) with explicit width/height, served as the WebP that `npm run images`
+ * writes next to it; the PNG stays as the fallback.
+ */
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const { src, alt, class: className, loading = 'lazy' } = Astro.props;
+const size = imageSize(src);
+const webp = src.replace(/\.png$/, '.webp');
+if (!existsSync(join(process.cwd(), 'public', webp))) {
+  throw new Error(`Img: public${webp} is missing; run "npm run images"`);
+}
+---
+
+<picture class="contents">
+  <source srcset={webp} type="image/webp" />
+  <img src={src} {...size} alt={alt} class={className} loading={loading} decoding="async" />
+</picture>

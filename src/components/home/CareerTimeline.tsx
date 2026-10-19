@@ -74,8 +74,8 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
         <ol className="m-0 list-none p-0">
           {entries.map((e) => {
             const [titleCls, summaryMt] = e.condensed
-              ? ['text-[17px] font-semibold text-light-slate', 'mt-1.5']
-              : ['text-[22px] font-semibold tracking-tight text-lightest-slate', 'mt-2.5'];
+              ? ['text-lg font-semibold text-light-slate', 'mt-1.5']
+              : ['text-xl font-semibold tracking-[-0.02em] text-lightest-slate', 'mt-2.5'];
             return (
               <li key={e.when} className="job group relative pb-[46px] last:pb-0">
                 <span
@@ -84,7 +84,7 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
                 />
                 <div className="font-mono text-xs tracking-wide text-green-accent">{e.when}</div>
                 <h3 className={`mb-0.5 mt-1.5 ${titleCls}`}>{e.title}</h3>
-                {e.org && <div className="text-[15px] text-light-slate">{e.org}</div>}
+                {e.org && <div className="text-light-slate">{e.org}</div>}
                 <p className={`max-w-[560px] leading-relaxed text-slate-text ${summaryMt}`}>{e.summary}</p>
                 {e.chips && (
                   <ul className="mt-3 flex list-none flex-wrap gap-2 p-0 font-mono">

@@ -34,7 +34,7 @@ export default function TalkVisual({ active }: VisualProps) {
         ])}
       </div>
       <div className="absolute right-4 bottom-[14px] text-sky text-base font-semibold">
-        &lt;300 <small className="text-[10px] text-slate-text font-normal">ms</small>
+        &lt;300 <small className="text-[11px] text-slate-text font-normal">ms</small>
       </div>
     </VizFrame>
   );

@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "astro build && tsx scripts/generate-api.ts",
     "preview": "astro preview",
+    "images": "tsx scripts/make-webp.ts",
     "verify": "tsx scripts/verify-content.ts",
     "verify:dist": "tsx scripts/verify-content.ts --dist",
     "verify:links": "tsx scripts/verify-content.ts --links"
@@ -15,6 +16,7 @@
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.3.0",
     "@astrojs/tailwind": "^6.0.0",
+    "@fontsource-variable/inter": "^5.3.0",
     "@gsap/react": "^2.1.2",
     "astro": "^5.7.0",
     "gsap": "^3.15.0",
@@ -28,6 +30,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "gray-matter": "^4.0.3",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.19.0",
     "typescript": "~5.7.2"

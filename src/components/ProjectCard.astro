@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { PROJECT_KIND_INFO, projectLabel } from '../lib/project-kind';
+
+/**
+ * A project on the Projects page, in the Work card language: kind label in the kind's accent, title, tagline,
+ * stack. Text only, like the Work cards; screenshots appear on the project page.
+ */
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { kind, org, title, tagline, description, stack, technologies } = project.data;
+// Literal class strings per accent (sky marks open-source work only).
+const ACCENT = {
+  green: { label: 'text-green-accent', hover: 'hover:border-green-accent/[.55]', title: 'group-hover:text-green-accent' },
+  sky: { label: 'text-sky', hover: 'hover:border-sky/[.55]', title: 'group-hover:text-sky' },
+} as const;
+const accent = ACCENT[PROJECT_KIND_INFO[kind].accent];
+---
+
+<a
+  href={`/projects/${project.slug}/`}
+  class={`group flex h-full flex-col rounded-2xl border border-edge bg-card p-[22px] transition-colors duration-250 ${accent.hover}`}
+>
+  <p class={`font-mono text-[11px] uppercase tracking-[0.08em] ${accent.label}`}>{projectLabel(kind, org)}</p>
+  <h3 class={`my-2 text-xl font-semibold tracking-[-0.02em] text-lightest-slate transition-colors duration-250 ${accent.title}`}>{title}</h3>
+  <p class="line-clamp-3 text-sm leading-normal text-light-slate">{tagline ?? description}</p>
+  <ul class="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-4 font-mono text-[11.5px] text-slate-text">
+    {(stack ?? technologies.slice(0, 4)).map((tech) => <li>{tech}</li>)}
+  </ul>
+</a>

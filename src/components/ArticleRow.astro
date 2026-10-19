@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+/**
+ * One article as a list row (Latest Writing on home, and the Writing page): date, title, two tags, arrow.
+ * Hover: the row nudges right, a green tint fades in, the title turns green and the arrow lifts. Only
+ * transforms, opacity and colour transition; the movement is off under reduced motion.
+ */
+interface Props {
+  article: CollectionEntry<'articles'>;
+  /** Extra classes on the <li> (e.g. the scroll-reveal hook). */
+  class?: string;
+  /** Render the title as an h2 and show the description under it (Writing page). */
+  detailed?: boolean;
+}
+
+const { article, class: className = '', detailed = false } = Astro.props;
+const { title, description, publishDate, tags, externalUrl, platform } = article.data;
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const HOVER_EASE = 'duration-300 ease-out motion-reduce:transition-none';
+const Title = detailed ? 'h2' : 'span';
+---
+
+<li class={`group relative border-b border-light-graphite ${className}`}>
+  <span aria-hidden="true" class={`pointer-events-none absolute inset-0 bg-row-tint opacity-0 transition-opacity group-hover:opacity-100 ${HOVER_EASE}`}></span>
+  <a
+    href={externalUrl ?? `/insights/${article.slug}/`}
+    target={externalUrl ? '_blank' : undefined}
+    rel={externalUrl ? 'noopener noreferrer' : undefined}
+    class={`relative grid grid-cols-[1fr_20px] items-center gap-5 px-1 py-5 text-inherit no-underline transition-transform motion-safe:group-hover:translate-x-[14px] md:grid-cols-[90px_1fr_auto_24px] ${HOVER_EASE}`}
+  >
+    <time datetime={publishDate.toISOString()} class="hidden font-mono text-xs text-slate-text md:block">{fmt(publishDate)}</time>
+    <span class="min-w-0">
+      <Title class={`block text-lg tracking-[-0.01em] text-lightest-slate transition-colors group-hover:text-green-accent ${HOVER_EASE}`}>{title}</Title>
+      {detailed && <span class="mt-1 block max-w-[65ch] text-sm leading-relaxed text-slate-text">{description}</span>}
+      {detailed && <span class="mt-2 block font-mono text-xs text-slate-text md:hidden">{fmt(publishDate)}</span>}
+    </span>
+    <span class="hidden font-mono text-xs text-slate-text md:block">{tags.slice(0, 2).join(' · ')}</span>
+    <span
+      class={`inline-block text-slate-text transition-[transform,color] group-hover:text-green-accent motion-safe:group-hover:translate-x-[3px] motion-safe:group-hover:-translate-y-[3px] ${HOVER_EASE}`}
+      aria-hidden="true"
+    >↗</span>
+    {externalUrl && <span class="sr-only">{`(opens on ${platform ?? 'an external site'} in a new tab)`}</span>}
+  </a>
+</li>

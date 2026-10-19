@@ -2,6 +2,7 @@
 import MobileMenu from './MobileMenu.tsx';
 import Button from './Button.astro';
 import { NAV_LINKS, ENGINEER_NAME } from '../data/site';
+import { GUTTER } from '../lib/layout';
 
 const initials = ENGINEER_NAME.split(' ').map((n: string) => n[0]).join('');
 const currentPath = Astro.url.pathname;
@@ -9,70 +10,73 @@ const currentPath = Astro.url.pathname;
 
 <header
   id="site-header"
-  class="fixed top-0 z-50 px-6 md:px-12 w-full h-16 md:h-20 flex items-center bg-navy/80 backdrop-blur-md shadow-md transition-transform duration-300 ease-in-out translate-y-0"
+  class={`fixed top-0 z-50 w-full h-16 md:h-20 flex items-center justify-between bg-navy/80 backdrop-blur-md transition-transform duration-300 ease-in-out motion-reduce:transition-none translate-y-0 ${GUTTER}`}
 >
-  <div class="container mx-auto h-full flex items-center justify-between">
-    <a
-      href="/"
-      data-testid="logo-link"
-      class="text-2xl font-bold text-green-accent border-2 border-green-accent rounded w-10 h-10 md:w-12 md:h-12 flex items-center justify-center hover:bg-green-tint transition-colors duration-250"
-      aria-label="Homepage"
-    >
-      {initials[0]}
-    </a>
+  <a
+    href="/"
+    data-testid="logo-link"
+    class="text-2xl font-bold text-green-accent border-2 border-green-accent rounded w-10 h-10 md:w-12 md:h-12 flex items-center justify-center hover:bg-green-tint transition-colors duration-250"
+    aria-label="Homepage"
+  >
+    {initials[0]}
+  </a>
 
-    <nav aria-label="Main navigation" data-testid="desktop-nav" class="hidden md:flex items-center">
-      <ol class="flex items-center space-x-6 lg:space-x-8 list-none p-0 m-0">
-        {NAV_LINKS.map((link, index) => {
-          const isActive = currentPath.startsWith(link.href);
-          return (
-            <li class="relative font-mono text-sm">
-              <a
-                href={link.href}
-                data-testid={`nav-link-${link.name.toLowerCase()}`}
-                aria-current={isActive ? 'page' : undefined}
-                class={`px-2.5 py-2 transition-colors duration-250 hover:text-green-accent ${isActive ? 'text-green-accent' : 'text-light-slate'}`}
-              >
-                <span class="text-green-accent text-xs mr-1">0{index + 1}.</span>
-                {link.name}
-              </a>
-            </li>
-          );
-        })}
-      </ol>
-      <div class="ml-4">
-        <Button href="/resume.pdf" size="sm" data-testid="resume-button" target="_blank" rel="noopener noreferrer">
-          Résumé
-        </Button>
-      </div>
-    </nav>
+  <nav aria-label="Main navigation" data-testid="desktop-nav" class="hidden md:flex items-center">
+    <ol class="flex items-center space-x-6 lg:space-x-8 list-none p-0 m-0">
+      {NAV_LINKS.map((link, index) => {
+        const isActive = currentPath.startsWith(link.href);
+        return (
+          <li class="relative font-mono text-sm">
+            <a
+              href={link.href}
+              data-testid={`nav-link-${link.name.toLowerCase()}`}
+              aria-current={isActive ? 'page' : undefined}
+              class={`px-2.5 py-2 transition-colors duration-250 hover:text-green-accent ${isActive ? 'text-green-accent' : 'text-light-slate'}`}
+            >
+              <span class="text-green-accent text-xs mr-1">0{index + 1}.</span>
+              {link.name}
+            </a>
+          </li>
+        );
+      })}
+    </ol>
+    <div class="ml-4">
+      <Button href="/resume.pdf" size="sm" data-testid="resume-button" target="_blank" rel="noopener noreferrer">
+        Résumé
+      </Button>
+    </div>
+  </nav>
 
-    <MobileMenu client:load navLinks={NAV_LINKS} />
-  </div>
+  <MobileMenu client:load navLinks={NAV_LINKS} currentPath={currentPath} />
 </header>
 
 <script>
-  // Header hide-on-scroll behavior
+  // Hide on scroll down, show on scroll up, and always show while focus is inside (so keyboard focus
+  // never lands on links that are off-screen).
   let lastScrollY = 0;
   const header = document.getElementById('site-header');
   const SCROLL_THRESHOLD = 5;
+
+  const setHidden = (hidden: boolean) => {
+    if (!header) return;
+    header.classList.toggle('-translate-y-full', hidden);
+    header.classList.toggle('translate-y-0', !hidden);
+  };
 
   function handleScroll() {
     const currentScrollY = window.scrollY;
     if (!header) return;
 
     if (currentScrollY < SCROLL_THRESHOLD * 2) {
-      header.classList.remove('-translate-y-full');
-      header.classList.add('translate-y-0');
-    } else if (currentScrollY > lastScrollY && currentScrollY > SCROLL_THRESHOLD) {
-      header.classList.remove('translate-y-0');
-      header.classList.add('-translate-y-full');
+      setHidden(false);
+    } else if (currentScrollY > lastScrollY && currentScrollY > SCROLL_THRESHOLD && !header.contains(document.activeElement)) {
+      setHidden(true);
     } else if (currentScrollY < lastScrollY) {
-      header.classList.remove('-translate-y-full');
-      header.classList.add('translate-y-0');
+      setHidden(false);
     }
     lastScrollY = currentScrollY;
   }
 
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  header?.addEventListener('focusin', () => setHidden(false));
 </script>

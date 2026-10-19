@@ -218,6 +218,8 @@ check('featured cards complete', () => {
   });
   return out;
 });
+// Project images are real screenshots under public/images; no placeholder or remote stock images.
+check('project images are local', () => projects().filter((p) => p.data.image && !String(p.data.image).startsWith('/images/')).map((p) => `${p.slug}: image ${p.data.image}`));
 check('demoted + hvac', () => {
   const out: string[] = [];
   for (const s of ['telegram-gpt', 'open-text-embeddings']) if (project(s)?.data.featured !== false) out.push(`${s} should not be featured`);

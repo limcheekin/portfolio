@@ -12,6 +12,7 @@ Personal portfolio for Lim Chee Kin (AI Solutions Architect, Daxonet AI), live a
 npm run dev           # astro dev
 npm run build         # astro build, then tsx scripts/generate-api.ts
 npm run preview       # serve dist/
+npm run images        # write .webp next to page PNGs in public/images (after adding or replacing one)
 npm run verify        # content/source checks (scripts/verify-content.ts)
 npm run verify:dist   # same plus checks on built dist/ (run after build)
 npm run verify:links  # same plus HTTP checks of article externalUrls (network)
@@ -25,9 +26,11 @@ There is no test runner and no linter. Verification is `build` plus the three `v
 - Motion: `gsap` (ScrollTrigger, SplitText), `@gsap/react`, `lenis`.
 - `src/pages/` — `index`, `about`, `contact`, `projects/` (index + `[slug]`), `insights/` (index + `[slug]`), `404`, `rss.xml.ts`.
 - `src/layouts/BaseLayout.astro` — head/meta/JSON-LD, Header, Footer, `<SmoothScroll client:load />` (once), `WebMCPTools`.
-- `src/components/` — shared `.astro` pieces (Header, Footer, Button, Card, Breadcrumb, ContactForm, ExperienceTimeline), `MobileMenu.tsx`, `WebMCPTools.tsx`.
-- `src/components/motion/` — `SmoothScroll.tsx` (Lenis, the only place a bare `useEffect` touches GSAP), `RevealGroup.tsx`.
-- `src/lib/gsap.ts` — registers `useGSAP` and `ScrollTrigger` once and re-exports them with `gsap`. In dev only, `window.ScrollTrigger` is exposed for leak checks. `src/lib/gsap-split.ts` registers and re-exports `SplitText`; import it only where text is split (the hero headline), so other pages don't ship it. `src/lib/motion.ts` exports `MQ` media queries; `MQ.pin` is the Work pin breakpoint, mirrored by the Tailwind `pin` / `nopin` screens in `tailwind.config.mjs` (`tall` is its height half). `src/lib/button-styles.ts` holds the shared button classes, `src/lib/layout.ts` the shared page gutter (`GUTTER`, sized by the `--gutter` variable in `global.css`), `src/lib/palette.mjs` the colour tokens (read by `tailwind.config.mjs` and by canvas code), `src/lib/image-size.ts` the build-time `<img>` size lookup, `src/lib/reveal.ts` the shared scroll reveal (`batchReveal`), `src/lib/project-jsonld.ts` the per-project JSON-LD (enterprise → `SoftwareApplication`, open source → `SoftwareSourceCode`), and `src/lib/project-kind.ts` the project kinds shared by the schema and `generate-api.ts`.
+- `src/components/` — shared `.astro` pieces (Header, Footer, Button, Breadcrumb, ContactForm, ExperienceTimeline, `ProjectCard` for `/projects/`, `ArticleRow` for Latest Writing and `/insights/`, `Img` for content images), `MobileMenu.tsx` (drawer is `inert` while closed; while open, `#main-content` and the footer are `inert`), `WebMCPTools.tsx`.
+- Inner pages (About, Projects, a project, Writing, an article, Contact) share `PAGE_MAIN` (`src/lib/layout.ts`), `PAGE_TITLE` and `CHIP` (`src/lib/text-styles.ts`) and the `Breadcrumb` component, and use the same card, chip and rail language as the home page. The skip link lives in `BaseLayout`.
+- Fonts: body text is Inter Variable, self-hosted from `@fontsource-variable/inter` (imported in `BaseLayout`, which also preloads the latin file). The hero h1 uses the `font-display` (system-ui) stack.
+- `src/components/motion/` — `SmoothScroll.tsx` (Lenis, the only place a bare `useEffect` touches GSAP; under reduced motion it turns Lenis wheel smoothing off), `RevealGroup.tsx`.
+- `src/lib/gsap.ts` — registers `useGSAP` and `ScrollTrigger` once and re-exports them with `gsap`. In dev only, `window.ScrollTrigger` is exposed for leak checks. `src/lib/gsap-split.ts` registers and re-exports `SplitText`; import it only where text is split (the hero headline), so other pages don't ship it. `src/lib/motion.ts` exports `MQ` media queries; `MQ.pin` is the Work pin breakpoint, mirrored by the Tailwind `pin` / `nopin` screens in `tailwind.config.mjs` (`tall` is its height half). `src/lib/button-styles.ts` holds the shared button classes, `src/lib/layout.ts` the shared page gutter (`GUTTER`, sized by the `--gutter` variable in `global.css`), `src/lib/palette.mjs` the colour tokens (read by `tailwind.config.mjs` and by canvas code), `src/lib/image-size.ts` the build-time `<img>` size lookup (used by `Img.astro`, which serves the `.webp` sibling of a local PNG and fails the build if it is missing), `src/lib/reveal.ts` the shared scroll reveal (`batchReveal`), `src/lib/project-jsonld.ts` the per-project JSON-LD (enterprise → `SoftwareApplication`, open source → `SoftwareSourceCode`), and `src/lib/project-kind.ts` the project kinds shared by the schema and `generate-api.ts`.
 - `src/data/` — `site.ts` (name, title, nav, hero/about/contact copy, links), `career.ts` (home Career copy; `getCareerEntries()` takes titles, orgs and dates from the `experience` collection), `agent-runs.ts` (hero console runs).
 - `src/styles/global.css`, `DESIGN.md` (palette; "Portfolio tokens" lists the tokens in `palette.mjs`).
 - `src/components/home/SectionHeading.tsx` renders the "NN Title" heading of every numbered home section.
@@ -78,7 +81,9 @@ Translated from the redesign guide (Next.js) to Astro. Binary rules; follow them
 - Do not put `transform` or `will-change` on ancestors of a pinned section. Do not use `content-visibility` on animated sections.
 - Pinned section: `scrub: 1`, `ease: "none"`, `invalidateOnRefresh: true`, distance from `scrollWidth - innerWidth`. The Work pin has `refreshPriority: 10` so later triggers measure after it; call `ScrollTrigger.refresh()` after layout settles.
 - Lenis: one provider, `autoRaf: false`, driven by `gsap.ticker` with `lagSmoothing(0)`. No `scroll-behavior: smooth` in CSS.
-- Explicit `width`/`height` on every `<img>`.
+- Explicit `width`/`height` on every `<img>`; render content images through `Img.astro`.
+- Any loop that runs alongside reading content needs a pause control (the hero console has one, outside its `aria-hidden` region) and holds while hovered.
+- CSS transitions on moving chrome (header, mobile drawer, hamburger bars) carry `motion-reduce:transition-none`.
 - No effect that makes the page crowded: one idea per section, no side rails.
 
 ## Content rules
@@ -89,3 +94,4 @@ Translated from the redesign guide (Next.js) to Astro. Binary rules; follow them
 - Palette per `DESIGN.md`; `sky` (`#38bdf8`) is used only for open-source work. Components use Tailwind colour, shadow and gradient tokens (from `palette.mjs` via `tailwind.config.mjs`), never raw hex or `rgba()`.
 - Merge, never drop, experience detail: add new CV facts to existing entries.
 - Resume PDF must not state a years figure.
+- A project `image` is a real screenshot under `/images/` (PNG plus its `.webp`), never a placeholder or stock photo; `npm run verify` checks the path.
