@@ -18,20 +18,20 @@ export default function RagVisual({ active }: VisualProps) {
   return (
     <VizFrame active={active} build={build}>
       {DOCS.map(([top, left], i) => (
-        <div key={i} className="doc absolute w-11 h-[54px] bg-graphite border border-[#2e2e33] rounded-[4px]" style={{ top, left }}>
-          <div className="absolute inset-x-[7px] top-[9px] h-1 bg-[#2e2e33] rounded-[2px] shadow-[0_9px_0_#2e2e33,0_18px_0_#2e2e33,0_27px_0_#2e2e33]" />
+        <div key={i} className="doc absolute w-11 h-[54px] bg-graphite border border-edge-strong rounded-[4px]" style={{ top, left }}>
+          <div className="absolute inset-x-[7px] top-[9px] h-1 bg-edge-strong rounded-[2px] shadow-doc-lines" />
         </div>
       ))}
-      <div className="q absolute right-[14px] top-4 bg-[#1d1d22] rounded-[9px] px-[9px] py-[5px] text-lightest-slate">what&apos;s our refund policy?</div>
+      <div className="q absolute right-[14px] top-4 bg-light-graphite rounded-[9px] px-[9px] py-[5px] text-lightest-slate">what&apos;s our refund policy?</div>
       {PTS.map(([x, y], i) => {
         const hit = HITS.includes(i);
         return (
-          <div key={i} className={`dot ${hit ? 'hit' : ''} absolute w-[7px] h-[7px] rounded-full bg-[#3a4a55]`} style={{ left: x, top: y, ...(hit ? { transform: 'scale(1.4)' } : {}) }}>
-            {hit && <span className="glow absolute inset-0 rounded-full bg-sky shadow-[0_0_10px_#38bdf8]" />}
+          <div key={i} className={`dot ${hit ? 'hit' : ''} absolute w-[7px] h-[7px] rounded-full bg-slate-text/40`} style={{ left: x, top: y, ...(hit ? { transform: 'scale(1.4)' } : {}) }}>
+            {hit && <span className="glow absolute inset-0 rounded-full bg-sky shadow-spark" />}
           </div>
         );
       })}
-      <div className="ans absolute right-[14px] bottom-[18px] w-[110px] bg-[#0c1f2a] border border-[#1e3a4a] rounded-[9px_9px_2px_9px] px-[9px] py-[7px] text-[#cbeeff] leading-[1.45]">
+      <div className="ans absolute right-[14px] bottom-[18px] w-[110px] bg-sky-deep border border-sky-dim rounded-[9px_9px_2px_9px] px-[9px] py-[7px] text-sky-pale leading-[1.45]">
         Refunds within 30 days… <span className="text-sky">[3 sources]</span>
       </div>
     </VizFrame>

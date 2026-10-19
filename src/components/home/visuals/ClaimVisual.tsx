@@ -14,16 +14,16 @@ export default function ClaimVisual({ active }: VisualProps) {
   };
   return (
     <VizFrame active={active} build={build}>
-      <div className="absolute left-[18px] top-4 w-[94px] h-[136px] bg-graphite border border-[#2e2e33] rounded-[4px] px-[10px] py-3 overflow-hidden">
+      <div className="absolute left-[18px] top-4 w-[94px] h-[136px] bg-graphite border border-edge-strong rounded-[4px] px-[10px] py-3 overflow-hidden">
         {[false, true, false, false, true].map((s, i) => (
-          <i key={i} className="block h-[5px] bg-[#2e2e33] rounded-[3px] mb-2" style={s ? { width: '55%' } : undefined} />
+          <i key={i} className="block h-[5px] bg-edge-strong rounded-[3px] mb-2" style={s ? { width: '55%' } : undefined} />
         ))}
         <b className="absolute bottom-[11px] left-[10px] text-lightest-slate font-semibold">RM 186.40</b>
-        <div className="scan absolute inset-x-0 top-0 h-[2px] bg-green-accent opacity-0 shadow-[0_0_12px_#00d992]" />
+        <div className="scan absolute inset-x-0 top-0 h-[2px] bg-green-accent opacity-0 shadow-scan" />
       </div>
       <ul className="absolute left-[126px] top-[18px] m-0 p-0 list-none w-[168px]">
         {FIELDS.map(([k, v], i) => (
-          <li key={k} className={`f${i} flex justify-between bg-[#0f0f12] border border-[#232327] rounded-[5px] px-2 py-[6px] mb-[6px] text-slate-text`}>
+          <li key={k} className={`f${i} flex justify-between bg-card border border-edge rounded-[5px] px-2 py-[6px] mb-[6px] text-slate-text`}>
             {k} <span className="text-lightest-slate">{v}</span>
           </li>
         ))}

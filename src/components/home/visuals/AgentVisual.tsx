@@ -25,17 +25,17 @@ export default function AgentVisual({ active }: VisualProps) {
       <svg viewBox="0 0 312 170" className="absolute inset-0 w-full h-full" aria-hidden="true">
         {NODES.map(({ y, in: from, out: to }) => (
           <g key={y}>
-            <g fill="none" stroke="#26262b" strokeWidth="1">
+            <g fill="none" className="stroke-edge" strokeWidth="1">
               <path d={`M48 ${y} L156 85`} />
               <path d={`M156 85 L264 ${y}`} />
             </g>
-            <rect x="18" y={y - 12} width="60" height="24" rx="6" fill="#0f0f12" stroke="#2c2c31" />
+            <rect x="18" y={y - 12} width="60" height="24" rx="6" className="fill-card stroke-edge-strong" />
             <text x="48" y={y} className="fill-light-slate" style={svgLabel}>{from}</text>
-            <rect x="234" y={y - 12} width="60" height="24" rx="6" fill="#0f0f12" stroke="#2c2c31" />
+            <rect x="234" y={y - 12} width="60" height="24" rx="6" className="fill-card stroke-edge-strong" />
             <text x="264" y={y} className="fill-light-slate" style={svgLabel}>{to}</text>
           </g>
         ))}
-        <circle cx="156" cy="85" r="28" fill="#0f0f12" className="stroke-green-accent" />
+        <circle cx="156" cy="85" r="28" className="fill-card stroke-green-accent" />
         <text x="156" y="85" className="fill-green-accent" style={svgLabel}>agent</text>
         <text x="210" y="160" className="fill-slate-text" style={svgLabel}>MCP · role-restricted</text>
         {NODES.map(({ y }, i) => (

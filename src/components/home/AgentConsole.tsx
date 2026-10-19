@@ -83,12 +83,12 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
       ref={root}
       data-agent-console
       aria-hidden="true"
-      className="w-full min-w-0 rounded-xl border border-[#2a2a2e] bg-[#0b0b0d] font-mono text-[13px] leading-[1.7] shadow-[0_0_0_1px_rgba(0,217,146,0.06),0_30px_80px_rgba(0,0,0,0.6),0_0_80px_rgba(0,217,146,0.08)]"
+      className="w-full min-w-0 rounded-xl border border-edge bg-well font-mono text-[13px] leading-[1.7] shadow-console"
     >
-      <div className="flex items-center gap-1.5 border-b border-[#1f1f22] px-3.5 py-2.5 text-xs text-slate-text">
-        <i className="inline-block h-2.5 w-2.5 rounded-full bg-[#2a2a2e]" />
-        <i className="inline-block h-2.5 w-2.5 rounded-full bg-[#2a2a2e]" />
-        <i className="inline-block h-2.5 w-2.5 rounded-full bg-[#2a2a2e]" />
+      <div className="flex items-center gap-1.5 border-b border-light-graphite px-3.5 py-2.5 text-xs text-slate-text">
+        <i className="inline-block h-2.5 w-2.5 rounded-full bg-edge" />
+        <i className="inline-block h-2.5 w-2.5 rounded-full bg-edge" />
+        <i className="inline-block h-2.5 w-2.5 rounded-full bg-edge" />
         <span className="ml-2">{run.name} · run</span>
       </div>
       <div className="min-h-[250px] px-[18px] pb-[18px] pt-3.5">
@@ -112,7 +112,7 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
         {runs.map((r, i) => (
           <span
             key={r.name}
-            className={`rounded border px-2 py-0.5 text-[11px] ${i === active ? 'border-green-accent/40 text-green-accent' : 'border-[#222] text-slate-text'}`}
+            className={`rounded border px-2 py-0.5 text-[11px] ${i === active ? 'border-green-accent/40 text-green-accent' : 'border-edge text-slate-text'}`}
           >
             {r.name}
           </span>

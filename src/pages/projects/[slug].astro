@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Button from '../../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+import { imageSize } from '../../lib/image-size';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -60,6 +61,7 @@ const jsonLd = [
     {project.data.image && (
       <img
         src={project.data.image}
+        {...imageSize(project.data.image)}
         alt={`Screenshot of ${project.data.title}`}
         class="w-full h-auto max-h-96 object-cover rounded-lg mb-8"
         loading="eager"

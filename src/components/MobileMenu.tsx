@@ -54,22 +54,15 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
           aria-label="Menu"
         >
           <div className="w-7 h-6 relative">
+            {/* Both bars sit on the centre line and move only by transform: closed, they are offset 6px up and
+                down (the lower one scaled to 80% from its left end); open, they rotate into an X. */}
             <div
-              className={`absolute left-0 w-full h-0.5 bg-green-accent rounded-full transition-all duration-200
-              ${menuOpen ? 'rotate-45 w-full' : ''}`}
-              style={{
-                top: menuOpen ? '50%' : '25%',
-                transform: menuOpen ? 'rotate(45deg)' : 'translateY(-50%)',
-              }}
+              className="absolute left-0 top-1/2 -mt-px w-full h-0.5 bg-green-accent rounded-full transition-transform duration-200"
+              style={{ transform: menuOpen ? 'rotate(45deg)' : 'translateY(-6px)' }}
             />
             <div
-              className={`absolute left-0 w-full h-0.5 bg-green-accent rounded-full transition-all duration-200
-              ${menuOpen ? '-rotate-45 w-full' : 'w-5/6'}`}
-              style={{
-                transform: menuOpen ? 'rotate(-45deg)' : 'translateY(-50%)',
-                width: menuOpen ? '100%' : '80%',
-                top: menuOpen ? '50%' : '75%',
-              }}
+              className="absolute left-0 top-1/2 -mt-px w-full h-0.5 bg-green-accent rounded-full transition-transform duration-200"
+              style={{ transform: menuOpen ? 'rotate(-45deg)' : 'translate(-10%, 6px) scaleX(0.8)' }}
             />
           </div>
         </button>
@@ -100,7 +93,7 @@ export default function MobileMenu({ navLinks }: MobileMenuProps) {
             ))}
           </ol>
           <a href="/resume.pdf" className="font-mono text-lg border border-green-accent text-green-accent rounded py-4 px-12 mt-8">
-            Resume
+            Résumé
           </a>
         </div>
       </nav>

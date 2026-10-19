@@ -3,8 +3,8 @@ import { reveal } from './helpers';
 import VizFrame from './VizFrame';
 
 const STEP = 0.85;
-const user = 'self-end bg-[#1d1d22] text-lightest-slate rounded-[9px_9px_2px_9px]';
-const bot = 'self-start bg-[#0f2a20] border border-[#1d4d3a] text-[#c9f5e4] rounded-[9px_9px_9px_2px]';
+const user = 'self-end bg-light-graphite text-lightest-slate rounded-[9px_9px_2px_9px]';
+const bot = 'self-start bg-green-deep border border-green-dim text-green-pale rounded-[9px_9px_9px_2px]';
 const msg = 'max-w-[78%] px-[9px] py-[5px] leading-[1.45]';
 
 export default function WareVisual({ active }: VisualProps) {

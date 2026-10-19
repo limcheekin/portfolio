@@ -1,16 +1,16 @@
 ---
 import { CONTACT_CTA, HERO_CONTENT, SOCIAL_LINKS } from '../../data/site';
 import MagnetButton from './MagnetButton.tsx';
+import { GUTTER } from '../../lib/layout';
 ---
 
 <section
   id="contact"
-  class="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-t border-graphite px-[6vw] py-[10vh] text-center"
+  class={`relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-t border-graphite py-[10vh] text-center ${GUTTER}`}
 >
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute left-1/2 top-[60%] h-[900px] w-[900px] max-w-[160vw] -translate-x-1/2 -translate-y-1/2"
-    style="background: radial-gradient(circle, rgba(0,217,146,.10), transparent 60%);"
+    class="pointer-events-none absolute left-1/2 top-[60%] h-[900px] w-[900px] max-w-[160vw] -translate-x-1/2 -translate-y-1/2 bg-contact-glow"
   ></div>
   <p class="relative mb-[22px] font-mono text-[13px] text-green-accent">{CONTACT_CTA.eyebrow}</p>
   <h2 class="relative m-0 max-w-[900px] text-[clamp(36px,6vw,76px)] font-semibold leading-[1.04] tracking-[-0.035em] text-lightest-slate">

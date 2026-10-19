@@ -1,3 +1,7 @@
+import { COLORS, rgba } from './src/lib/palette.mjs';
+
+const GREEN = COLORS['green-accent'];
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
@@ -5,18 +9,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        'navy': '#050507',
-        'light-navy': '#101010',
-        'lightest-navy': '#3d3a39',
-        'slate-text': '#8b949e',
-        'light-slate': '#b8b3b0',
-        'lightest-slate': '#f2f2f2',
-        'white-text': '#ffffff',
-        'green-accent': '#00d992',
-        'green-tint': 'rgba(0, 217, 146, 0.1)',
-        'sky': '#38bdf8',
-        'graphite': '#141417',
-        'light-graphite': '#1c1c20',
+        ...COLORS,
+        'green-tint': rgba(GREEN, 0.1),
+      },
+      // Multi-layer or tinted shadows and gradients built from the palette (DESIGN.md, "Portfolio tokens").
+      boxShadow: {
+        console: `0 0 0 1px ${rgba(GREEN, 0.06)}, 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 80px ${rgba(GREEN, 0.08)}`,
+        'glow-green': `0 0 60px ${rgba(GREEN, 0.06)}`,
+        'glow-sky': `0 0 60px ${rgba(COLORS.sky, 0.06)}`,
+        halo: `0 0 0 4px ${rgba(GREEN, 0.12)}`,
+        magnet: `0 10px 40px ${rgba(GREEN, 0.25)}`,
+        scan: `0 0 12px ${GREEN}`,
+        spark: `0 0 10px ${COLORS.sky}`,
+        'doc-lines': [9, 18, 27].map((y) => `0 ${y}px 0 ${COLORS['edge-strong']}`).join(', '),
+      },
+      backgroundImage: {
+        'row-tint': `linear-gradient(90deg, ${rgba(GREEN, 0.06)}, transparent 70%)`,
+        'contact-glow': `radial-gradient(circle, ${rgba(GREEN, 0.1)}, transparent 60%)`,
+        'dot-pattern': `radial-gradient(circle at 1px 1px, ${COLORS['light-graphite']} 1px, transparent 0)`,
       },
       // Work track pin breakpoint; keep in sync with MQ.pin in src/lib/motion.ts.
       // Raw screens turn off Tailwind's max-* variants (max-sm: etc.), so write responsive classes mobile-first.

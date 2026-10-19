@@ -59,6 +59,28 @@ Typography leans on the system font stack for headings — achieving maximum ren
 - **Warm Ambient Haze**: `rgba(92, 88, 85, 0.2) 0px 0px 15px` — a warm-toned diffused shadow that creates a soft atmospheric glow around elevated cards, visible at the edges without sharp boundaries.
 - **Deep Dramatic Elevation**: `rgba(0, 0, 0, 0.7) 0px 20px 60px` with `rgba(148, 163, 184, 0.1) 0px 0px 0px 1px inset` — a heavy, dramatic downward shadow paired with a faint inset slate ring for the most prominent floating elements.
 
+### Portfolio tokens
+
+The site's Tailwind tokens. Source of truth: `src/lib/palette.mjs`, which `tailwind.config.mjs` reads. Components use these names, never raw hex.
+
+**Core palette (as above):** `navy` `#050507` (Abyss Black), `light-navy` `#101010` (Carbon Surface), `lightest-navy` `#3d3a39` (Warm Charcoal Border), `slate-text` `#8b949e` (Steel Slate), `light-slate` `#b8b3b0` (Warm Parchment), `lightest-slate` `#f2f2f2` (Snow White), `white-text` `#ffffff`, `green-accent` `#00d992` (Emerald Signal Green), `green-tint` (`green-accent` at 10%), `danger` `#fb565b` (Danger Coral, form errors).
+
+**Added for the 2026-10 motion redesign:**
+
+| Token | Value | Role |
+|---|---|---|
+| `sky` | `#38bdf8` | Marks open-source work only (labels, glow, illustrations) |
+| `well` | `#09090b` | Recessed panels: Work card illustration frame, hero console |
+| `card` | `#0e0e10` | Work card surface; chips and nodes inside illustrations |
+| `graphite` | `#141417` | Section dividers; paper shapes in illustrations |
+| `light-graphite` | `#1c1c20` | Hairlines, the progress and career rails, chat bubbles |
+| `edge` | `#26262a` | Card, console and chip borders; wires |
+| `edge-strong` | `#2e2e33` | Illustration outlines and text placeholders |
+| `green-deep` / `green-dim` / `green-pale` | `#0f2a20` / `#1d4d3a` / `#c9f5e4` | Enterprise illustration bubble fill / border / text |
+| `sky-deep` / `sky-dim` / `sky-pale` | `#0c1f2a` / `#1e3a4a` / `#cbeeff` | Open-source illustration bubble fill / border / text |
+
+**Shadows and gradients** (built from the colours above): `shadow-console` (1px `green-accent` 6% ring, 30px/80px black 60% drop, 80px `green-accent` 8% glow), `shadow-glow-green` / `shadow-glow-sky` (60px glow at 6%, active Work card), `shadow-halo` (4px `green-accent` 12% ring, career dots), `shadow-magnet` (contact button), `shadow-scan` / `shadow-spark` (small accent glows in illustrations), `shadow-doc-lines` (text lines on a document shape), `bg-row-tint` (Latest Writing hover tint), `bg-contact-glow` (radial glow behind Contact), `bg-dot-pattern` (dotted illustration background).
+
 ## 3. Typography Rules
 
 ### Font Family

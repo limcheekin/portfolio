@@ -21,13 +21,13 @@ export default function TalkVisual({ active }: VisualProps) {
     <VizFrame active={active} build={build}>
       <div className="absolute left-4 right-4 top-[30px] h-[70px] flex items-center gap-1">
         {BARS.map((h, i) => (
-          <i key={i} className="bar flex-1 h-full rounded-[3px] bg-gradient-to-b from-sky to-[rgba(56,189,248,.25)]" style={{ transform: `scaleY(${h})` }} />
+          <i key={i} className="bar flex-1 h-full rounded-[3px] bg-gradient-to-b from-sky to-sky/25" style={{ transform: `scaleY(${h})` }} />
         ))}
       </div>
       <div className="absolute left-4 bottom-4 flex gap-[6px] items-center text-slate-text">
         {PILLS.flatMap((p, i) => [
           i > 0 && <span key={`a${i}`}>→</span>,
-          <span key={p} className="relative border border-[#1e3a4a] rounded-[5px] px-2 py-1 text-light-slate">
+          <span key={p} className="relative border border-sky-dim rounded-[5px] px-2 py-1 text-light-slate">
             {p}
             <span className={`lit${i} absolute -inset-px rounded-[5px] border border-sky text-sky px-2 py-1 opacity-0`}>{p}</span>
           </span>,

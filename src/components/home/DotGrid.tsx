@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { gsap, useGSAP } from '../../lib/gsap';
 import { MQ } from '../../lib/motion';
+import { COLORS, rgba } from '../../lib/palette.mjs';
 
 const RADIUS = 160;
 const RADIUS_SQ = RADIUS * RADIUS;
@@ -9,7 +10,8 @@ const GLOW_SQ = GLOW * GLOW;
 const REST = 0.01; // px and px/frame below which a dot counts as settled
 const SPRING = 0.06;
 const DAMPING = 0.82;
-const BASE = 'rgba(139,148,158,0.22)';
+const BASE = rgba(COLORS['slate-text'], 0.22);
+const LIT = COLORS['green-accent'];
 const INTERACTIVE = `${MQ.motion} and ${MQ.finePointer}`;
 const STATIC = `${MQ.reduce}, not all and ${MQ.finePointer}`;
 
@@ -83,7 +85,7 @@ export default function DotGrid({ gap = 30, opacity = 0.35 }: { gap?: number; op
         }
         ctx.fill();
         for (const [d, near] of lit) {
-          ctx.fillStyle = `rgba(0,217,146,${0.25 + near * 0.75})`;
+          ctx.fillStyle = rgba(LIT, 0.25 + near * 0.75);
           ctx.beginPath();
           ctx.arc(d.x, d.y, 1.3 + near * 1.6, 0, Math.PI * 2);
           ctx.fill();

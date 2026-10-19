@@ -1,10 +1,11 @@
 import { useRef } from 'react';
 import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
 import { MQ } from '../../lib/motion';
-import { CAREER_INTRO } from '../../data/career';
+import { GUTTER } from '../../lib/layout';
+import SectionHeading from './SectionHeading';
 import type { CareerEntry } from './types';
 
-export default function CareerTimeline({ entries }: { entries: CareerEntry[] }) {
+export default function CareerTimeline({ intro, entries }: { intro: string; entries: CareerEntry[] }) {
   const section = useRef<HTMLElement>(null);
   const timeline = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLElement>(null);
@@ -54,13 +55,11 @@ export default function CareerTimeline({ entries }: { entries: CareerEntry[] }) 
     <section
       id="career"
       ref={section}
-      className="mx-auto grid max-w-[1100px] gap-10 px-6 py-24 sm:px-10 md:grid-cols-[1fr_2fr] md:gap-[6vw] md:px-16 md:py-[16vh] lg:px-24"
+      className={`mx-auto grid max-w-[1100px] gap-10 py-24 md:grid-cols-[1fr_2fr] md:gap-[6vw] md:py-[16vh] ${GUTTER}`}
     >
       <div className="md:sticky md:top-[14vh] md:self-start">
-        <h2 className="mb-3.5 text-[clamp(28px,4vw,48px)] font-semibold tracking-tight text-lightest-slate">
-          <span className="mr-3 align-middle font-mono text-[0.5em] text-green-accent">02</span>Career
-        </h2>
-        <p className="mb-5 max-w-[300px] leading-relaxed text-slate-text">{CAREER_INTRO}</p>
+        <SectionHeading number="02" className="mb-3.5">Career</SectionHeading>
+        <p className="mb-5 max-w-[300px] leading-relaxed text-slate-text">{intro}</p>
         <a href="/about/" className="text-sm text-green-accent hover:underline">Full experience →</a>
       </div>
 
@@ -80,7 +79,7 @@ export default function CareerTimeline({ entries }: { entries: CareerEntry[] }) 
               <li key={e.when} className="job group relative pb-[46px] last:pb-0">
                 <span
                   aria-hidden="true"
-                  className="absolute -left-[34px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-green-accent bg-navy shadow-[0_0_0_4px_rgba(0,217,146,0.12)] group-data-[pending]:border-[#3a3a40] group-data-[pending]:shadow-none"
+                  className="absolute -left-[34px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-green-accent bg-navy shadow-halo group-data-[pending]:border-lightest-navy group-data-[pending]:shadow-none"
                 />
                 <div className="font-mono text-xs tracking-wide text-green-accent">{e.when}</div>
                 <h3 className={`mb-0.5 mt-1.5 ${titleCls}`}>{e.title}</h3>
@@ -89,7 +88,7 @@ export default function CareerTimeline({ entries }: { entries: CareerEntry[] }) 
                 {e.chips && (
                   <ul className="mt-3 flex list-none flex-wrap gap-2 p-0 font-mono">
                     {e.chips.map((c) => (
-                      <li key={c} className="rounded-[5px] border border-[#26262b] px-2 py-1 text-[11px] text-light-slate">{c}</li>
+                      <li key={c} className="rounded-[5px] border border-edge px-2 py-1 text-[11px] text-light-slate">{c}</li>
                     ))}
                   </ul>
                 )}

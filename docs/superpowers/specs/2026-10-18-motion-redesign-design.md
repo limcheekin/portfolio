@@ -1,6 +1,6 @@
 # Motion Redesign of kin.rag.wtf
 
-**Status:** Approved 2026-10-18
+**Status:** Approved 2026-10-18; amended 2026-10-19 after the branch review (see *Amendments*)
 **Date:** 2026-10-18
 **Inputs:** `docs/Website_Redesign_Guide_Development_v2.md` (the guide), `docs/Resume-202610.pdf` (the CV), the brainstorm session of 2026-10-18
 **Approved mockups:** `docs/superpowers/specs/mockups/2026-10-18-motion-redesign/` (open each `.html` in a browser; they are plain-JS approximations of the target feel, not code to port verbatim)
@@ -33,7 +33,7 @@ The guiding theme, which the owner chose: **show, don't tell**. The visitor shou
 
 ## Anti-goals (a failure even if it technically works)
 
-- **Many things moving at once.** The owner rejected a version where every card animated: "too many things moving on screen". At any moment, at most the hero console plus one active Work card may be animating.
+- **Many things moving at once.** The owner rejected a version where every card animated: "too many things moving on screen". At any moment, at most the hero console plus one active Work card may be animating. The active card's illustration plays only while the Work section is on screen; the decorative hero dot grid moves only in response to the pointer and stops once settled.
 - **Over-dimming.** The owner rejected inactive cards that were "too dark and dim". De-emphasis must keep inactive cards readable (see Selected Work).
 - **Stating "over 25 years" / "25+ years"** or any explicit years-of-experience figure anywhere: copy, meta, JSON-LD, `llms.txt`, manifests or the generated API. The owner forbade it. Convey seniority through roles, dates and outcomes.
 - **Re-crowding.** Each section keeps to its one idea. No side rails, no paragraphs of bio on the home page, no extra card grids.
@@ -43,8 +43,8 @@ The guiding theme, which the owner chose: **show, don't tell**. The visitor shou
 
 - **Stack:** Astro 5, `@astrojs/react` (React 19 islands), `@astrojs/tailwind` (Tailwind 3, config in `tailwind.config.mjs`), static output, served by nginx in Docker (`Dockerfile`, `nginx.conf`). CI (`.github/workflows/ci.yaml`) runs `npm run build` and checks for `dist/index.html`, `404.html`, `api/portfolio.json`, `api/openapi.json`, `llms-full.txt`, `llms.txt`, `ai-plugin.json` and `robots.txt`. All of these must still be produced.
 - **New dependencies:** `gsap` (3.13+; SplitText needs `onSplit`), `@gsap/react`, `lenis`. All GSAP plugins are free and ship in `gsap`.
-- **Palette** stays as in `DESIGN.md` and `tailwind.config.mjs` (`#050507` canvas, `#00d992` green accent, warm neutrals). One new token is added: **sky `#38bdf8`**, used only to mark open-source work.
-- **No tests or linting exist.** Verification is `npm run build` plus the manual checklist at the end.
+- **Palette** stays as in `DESIGN.md` and `tailwind.config.mjs` (`#050507` canvas, `#00d992` green accent, warm neutrals). New tokens are added: **sky `#38bdf8`**, used only to mark open-source work, plus the home surface and illustration tint tokens listed in `DESIGN.md` (*Portfolio tokens*). Components use tokens, never raw hex.
+- **No tests or linting exist.** Verification is `npm run build`, the content and build-output checks in `scripts/verify-content.ts` (`npm run verify`, `verify:dist`, `verify:links`), plus the manual checklist at the end.
 - **`CLAUDE.md` is stale:** it describes the old Vite/HashRouter SPA. It must be rewritten for the Astro codebase as part of this work.
 
 ## Design: the home page
@@ -74,7 +74,7 @@ Approved section order and numbering: **Hero (unnumbered) · 01 Selected Work ·
 
 ### 01 Selected Work: pinned sideways track (mockup 02)
 
-- **Mechanics (desktop, ≥ 768px):** the section pins at the top of the viewport, and vertical scroll translates an inner track horizontally, then releases. Follow the guide exactly: pin the outer section, translate the inner track with `ease: "none"`, `scrub: 1`, distance computed from `track.scrollWidth - window.innerWidth`, `end: () => "+=" + distance()` and `invalidateOnRefresh: true`. No drag or inertia on the track.
+- **Mechanics (desktop, ≥ 768px wide and ≥ 560px tall):** the section pins at the top of the viewport, and vertical scroll translates an inner track horizontally, then releases. Follow the guide exactly: pin the outer section, translate the inner track with `ease: "none"`, `scrub: 1`, distance computed from `track.scrollWidth - window.innerWidth`, `end: () => "+=" + distance()` and `invalidateOnRefresh: true`. No drag or inertia on the track.
 - **Header row:** "01 Selected Work" at left. A counter "`01 / 08`" at right always matches the active card. A thin green progress line runs along the bottom.
 - **Cards** are compact (about 360px wide). The owner chose compact over large. Each card, top to bottom:
   1. a code-drawn micro-illustration panel (about 170px tall),
@@ -100,18 +100,18 @@ Approved section order and numbering: **Hero (unnumbered) · 01 Selected Work ·
   - **Active card:** full opacity, a soft glowing border (green, or sky for open source), and its illustration plays from the start and loops.
   - **Inactive cards:** card at about 90% opacity, illustration at about 70% opacity and desaturated (about 55% saturation), **frozen on its finished frame** so it still reads at a glance. The owner approved exactly this level (mockup 02). Earlier, darker dimming was rejected.
   - Implement each illustration as a GSAP timeline (`repeat: -1`) that is played when active and set to `progress(1)` then paused when inactive. Keep pointer- or time-created tweens inside `contextSafe`. Track the active index outside React state, or update state only when the index changes (never per frame).
-- **Mobile (< 768px):** no pinning. The track becomes a native horizontal swipe row with scroll-snap. The active card is the one most in view (IntersectionObserver within the row), with the same play/freeze rule. Make sure Lenis does not hijack the horizontal swipe.
+- **Mobile (< 768px) and short viewports (< 560px tall, such as landscape phones, where a pinned 470px card would not fit):** no pinning. The track becomes a native horizontal swipe row with scroll-snap. The active card is the one most in view (IntersectionObserver within the row), with the same play/freeze rule. Make sure Lenis does not hijack the horizontal swipe.
 - **Reduced motion:** no pin or scrub. Cards show as a static row or grid, every illustration rests on its finished frame, and nothing loops.
 - **Accessibility:** illustrations are `aria-hidden`. Card text carries the meaning. Cards are focusable links, and keyboard focus on a card makes it active (and scrolls it into view).
 
 ### 02 Career: batched timeline (mockup 03, top half)
 
 - Two columns on desktop. **Left (sticky):** "02 Career", one line (*"From enterprise Java and banking systems to agentic AI. The same job throughout: make complex systems work for the business."*), and a "Full experience →" link to `/about/`. **Right:** a vertical timeline.
-- **Entries** (from the CV):
+- **Entries** (from the CV; titles, organisations and dates are read from the experience collection):
   - **2026 — Present · AI Solutions Architect · Daxonet AI.** Enterprise agents for expense claims, trade documents and warehouse operations, plus company-wide AI enablement. Chips: Claude Agent SDK, MCP, Gemini, FastAPI.
   - **2021 — 2025 · Principal AI Architect · Independent Consultant.** MCP for enterprise databases, real-time voice AI, self-hosted RAG, and a healthcare agent on GKE. Chips: RAG, Voice AI, GKE, Ragas.
   - **2013 — 2020 · Senior Java Tech Lead · DXC Technology.** Led 6+ engineers across China, Europe and Malaysia on an enterprise analytics console. Chips: Spring Boot, AWS, Microservices.
-  - **2012 — 2013 · Senior Java Tech Lead · Zurich Technology Services.** Resolved 60+ cross-service production issues in claims systems.
+  - **2012 — 2013 · Senior Java Tech Lead · Zurich Technology Services Malaysia.** Resolved 60+ cross-service production issues in claims systems.
   - **2005 — 2012 (condensed) · Open source, banking and healthcare delivery.** 10+ open-source Grails plugins · RM6M and RM2M banking tenders at Penril · RM2M hospital inventory system at CMG Online.
   - **1999 — 2005 (condensed) · Where it started.** Siemens Multimedia, Media Trend, Online One and Tee Yam Holding.
 - **Motion:** entries reveal with `ScrollTrigger.batch()` (opacity plus a small `y`/`scale`, staggered), created inside `gsap.matchMedia()`. A rail on the timeline fills top to bottom as you scroll (a scrubbed `scaleY` transform). Entry dots turn green as they reveal.
@@ -240,7 +240,7 @@ The guide is written for Next.js 16. Its rules carry over with these translation
 
 **Rules from the guide that apply unchanged:**
 
-- Animate only transforms and opacity in our own code.
+- Animate only transforms and opacity in our own code. CSS hover/focus colour transitions are the one exception; layout properties, `filter` and `box-shadow` never transition.
 - Use `useGSAP()` with `{ scope }`, never bare `useEffect`, for GSAP. The only exception is the Lenis ↔ ticker bridge.
 - Wrap event-created tweens in `contextSafe()`, and remove manually added listeners in cleanup.
 - Never keep tweens in `useState`.
@@ -278,3 +278,14 @@ The guide is written for Next.js 16. Its rules carry over with these translation
 9. **Leaks:** `ScrollTrigger.getAll().length` is stable after resizes. In dev, no duplicated animations from island re-mounts.
 10. **Lighthouse on the home page:** CLS ≈ 0, and no large regression in performance score versus the current site.
 11. **Agent surfaces:** `/api/portfolio.json`, `llms.txt`, `llms-full.txt` and the JSON-LD reflect the new title, role and projects.
+
+## Amendments (2026-10-19)
+
+Made after the two-axis review of the branch. Each one records a deliberate implementation choice or closes a gap the review found:
+
+- **Pin breakpoint:** the Work pin also needs a viewport at least 560px tall. Shorter viewports get the swipe row (see *01 Selected Work*).
+- **Palette:** the home surfaces and illustration tints are named tokens documented in `DESIGN.md`, alongside `sky`.
+- **Verification:** `scripts/verify-content.ts` automates the content and build-output parts of the checklist.
+- **Animated properties:** CSS hover/focus colour transitions are allowed. Hover effects that used `padding`, `background`, `border-color`, `box-shadow` or `filter` transitions now use transforms or an overlay's opacity.
+- **Concurrency:** the active Work illustration pauses while the section is off screen. The dot grid only reacts to the pointer.
+- **Career entries:** titles, organisations and dates come from the experience collection, so Zurich shows its full company name.

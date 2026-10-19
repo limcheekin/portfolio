@@ -8,7 +8,7 @@
 
 **Tech Stack:** Astro 5, React 19 islands, Tailwind 3, gsap 3.15 (ScrollTrigger, SplitText), @gsap/react 2.1, lenis 1.3, tsx, gray-matter.
 
-**Spec:** `docs/superpowers/specs/2026-10-18-motion-redesign-design.md`. Approved mockups are in `docs/superpowers/specs/mockups/2026-10-18-motion-redesign/` (01 hero option C, 02 work track, 03 career + contact, 04 writing option A). Executors read the spec and open the mockups in a browser before any UI task.
+**Spec:** `docs/superpowers/specs/2026-10-18-motion-redesign-design.md` (see its *Amendments* for the 2026-10-19 changes made after the branch review, which supersede this plan where they differ). Approved mockups are in `docs/superpowers/specs/mockups/2026-10-18-motion-redesign/` (01 hero option C, 02 work track, 03 career + contact, 04 writing option A). Executors read the spec and open the mockups in a browser before any UI task.
 
 ## Global Constraints
 
@@ -16,7 +16,7 @@
 - Never state an explicit years-of-experience figure ("over 25 years", "25+ years", "25+ year career") anywhere: copy, meta, JSON-LD, `llms.txt`, manifests, generated API, README, CLAUDE.md, PDF.
 - Title everywhere: **"AI Solutions Architect"** (employer: Daxonet AI / Daxonet AI Sdn. Bhd.). The old title "Senior Tech Lead, AI Engineer, and Solution Architect" must not appear.
 - Visible label **"Writing"** replaces "Insights" everywhere a human reads it. The URL `/insights/`, slugs, the `articles` collection name and JSON keys are unchanged.
-- Palette per `DESIGN.md` plus one new token: `sky: '#38bdf8'`, used only for open-source work.
+- Palette per `DESIGN.md` plus `sky: '#38bdf8'` (open-source work only) and the home tokens in `DESIGN.md` *Portfolio tokens*.
 - In our own animation code, animate only `x`, `y`, `xPercent`, `yPercent`, `scale`, `rotation` and `opacity`.
 - All GSAP code uses `useGSAP(fn, { scope })` from `src/lib/gsap.ts`. Event-created tweens are wrapped in `contextSafe`. Never store tweens in `useState`. The only bare `useEffect` allowed for GSAP is the Lenis ↔ ticker bridge in `SmoothScroll`.
 - Every animating component branches on `gsap.matchMedia(scope)` using `MQ` from `src/lib/motion.ts`. Under reduced motion: no x/y movement, no pin or scrub, no loops. Content is shown on its finished frame.
@@ -282,7 +282,7 @@ Run: `npm run verify && npm run build && npm run verify:dist`. Expected: all ✓
 
 **Interfaces:**
 - Produces: `src/lib/gsap.ts` exports `{ gsap, useGSAP, ScrollTrigger, SplitText }`, after `gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)` at module level. In dev in the browser, it also sets `window.ScrollTrigger = ScrollTrigger` (guard with `import.meta.env.DEV && typeof window !== 'undefined'`).
-- Produces: `src/lib/motion.ts` exports `export const MQ = { reduce: '(prefers-reduced-motion: reduce)', motion: '(prefers-reduced-motion: no-preference)', desktop: '(min-width: 768px)', mobile: '(max-width: 767px)', finePointer: '(pointer: fine)' } as const;`
+- Produces: `src/lib/motion.ts` exports `export const MQ = { reduce: '(prefers-reduced-motion: reduce)', motion: '(prefers-reduced-motion: no-preference)', pin: '(min-width: 768px) and (min-height: 560px)', finePointer: '(pointer: fine)' } as const;`
 - Produces: `SmoothScroll` (default export, no props), mounted once in `BaseLayout` as `<SmoothScroll client:load />`. It renders `<ReactLenis root options={{ autoRaf: false, anchors: true }} ref={lenisRef} />`, calls `useLenis(ScrollTrigger.update)`, and runs the guide's ticker bridge in its one `useEffect` (`gsap.ticker.add(t => lenis.raf(t * 1000))`, `gsap.ticker.lagSmoothing(0)`, remove on cleanup). It also calls `ScrollTrigger.refresh()` once on `window` `load` and once on `document.fonts.ready`, and removes the listener on cleanup. It imports `lenis/dist/lenis.css`. Other islands reach Lenis via `useLenis()` from `lenis/react`.
 - Produces: Tailwind color `sky: '#38bdf8'`.
 
@@ -480,7 +480,7 @@ Run: `npm run build && npm run verify:dist`. Expected: ✓.
 **Interfaces:**
 - Consumes: `WorkCard`, `VisualKey` and `VisualProps`; `gsap`, `useGSAP` and `ScrollTrigger`; `MQ`; `useLenis` from `lenis/react`.
 - Produces:
-  - `useVisualTimeline(scope: React.RefObject<HTMLElement>, active: boolean, build: (tl: gsap.core.Timeline) => void): void`. It builds one paused, non-repeating timeline inside `gsap.matchMedia(scope)`. Under `MQ.reduce` it always sits at `progress(1)`. Otherwise, `active` true restarts it from 0 and loops it: on complete, a 2s `delayedCall` restarts it. `active` false kills the delayed call and does `pause().progress(1)`. The finished frame is the final state.
+  - `useVisualTimeline(scope: React.RefObject<HTMLElement>, active: boolean, build: (tl: gsap.core.Timeline) => void): void`. It builds one paused timeline with `repeat: -1` and a 2s `repeatDelay` inside `gsap.matchMedia(scope)`. Under `MQ.reduce` a non-repeating copy always sits at `progress(1)`. Otherwise, `active` true restarts it from 0 and it loops; `active` false does `pause().progress(1)`. The finished frame is the final state.
   - `VISUALS: Partial<Record<VisualKey, React.ComponentType<VisualProps>>>` in `visuals/index.ts`. It starts empty; Task 10 fills it. Cards whose visual is missing render an empty 170px panel.
   - `WorkTrack({ cards: WorkCard[] })` renders `<section id="work" aria-labelledby="work-title">`.
 
@@ -664,7 +664,7 @@ Run: `npm run build && npm run verify:dist`. Expected: ✗ on all three.
   - `<section id="writing">` with a header row: `03`, "Latest Writing", and "All writing →" linking to `/insights/`.
   - `<ul>` rows on a grid `90px 1fr auto 24px`: date (`toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })`), title, first two `tags` joined by " · ", and ↗.
   - External links get `target="_blank" rel="noopener noreferrer"`.
-  - Hover: `padding-left` 14px (a CSS transition on the hover state, outside GSAP), green gradient tint, green title, arrow moved `translate(3px,-3px)`.
+  - Hover: the row nudges 14px right (`translate-x`, motion-safe only), a green gradient tint overlay fades in (opacity), green title, arrow moved `translate(3px,-3px)`.
   - Under 768px: title + arrow only.
   - Wrap the rows in `<RevealGroup selector=".reveal">`.
 - **ContactCta:** `<section id="contact">` with a centred layout, `min-h-[90vh]`, and a static radial glow `rgba(0,217,146,.10)`. It holds:

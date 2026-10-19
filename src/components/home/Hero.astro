@@ -4,9 +4,10 @@ import { AGENT_RUNS } from '../../data/agent-runs';
 import HeroIntro from './HeroIntro.tsx';
 import AgentConsole from './AgentConsole.tsx';
 import DotGrid from './DotGrid.tsx';
+import { GUTTER } from '../../lib/layout';
 ---
 
-<section id="hero" data-testid="hero-section" class="relative isolate overflow-hidden px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-20 md:min-h-[100svh] md:flex md:items-center">
+<section id="hero" data-testid="hero-section" class={`relative isolate overflow-hidden pt-32 pb-20 md:min-h-[100svh] md:flex md:items-center ${GUTTER}`}>
   <DotGrid client:only="react" gap={30} opacity={0.35} />
   <div class="relative z-10 grid w-full grid-cols-[minmax(0,1fr)] items-center gap-12 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-10 lg:gap-16">
     <HeroIntro client:load content={HERO_CONTENT} />

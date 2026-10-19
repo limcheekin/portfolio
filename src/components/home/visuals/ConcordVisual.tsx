@@ -13,13 +13,13 @@ export default function ConcordVisual({ active }: VisualProps) {
   return (
     <VizFrame active={active} build={build}>
       <svg viewBox="0 0 312 170" className="absolute inset-0 w-full h-full" aria-hidden="true">
-        <path d="M70 70 L246 70" fill="none" stroke="#26262b" strokeWidth="1" />
-        <rect x="16" y="56" width="58" height="28" rx="6" fill="#0f0f12" stroke="#2c2c31" />
+        <path d="M70 70 L246 70" fill="none" className="stroke-edge" strokeWidth="1" />
+        <rect x="16" y="56" width="58" height="28" rx="6" className="fill-card stroke-edge-strong" />
         <text x="45" y="70" className="fill-light-slate" style={svgLabel}>agent</text>
-        <path d="M156 46 l22 8 v14 c0 14 -10 22 -22 26 c-12 -4 -22 -12 -22 -26 v-14 z" fill="#0f0f12" className="stroke-sky" />
+        <path d="M156 46 l22 8 v14 c0 14 -10 22 -22 26 c-12 -4 -22 -12 -22 -26 v-14 z" className="fill-card stroke-sky" />
         <text x="156" y="70" className="fill-sky" style={svgLabel}>MCP</text>
-        <ellipse cx="268" cy="52" rx="26" ry="8" fill="#0f0f12" stroke="#2c2c31" />
-        <path d="M242 52 v34 c0 4.5 11.6 8 26 8 s26 -3.5 26 -8 v-34" fill="#0f0f12" stroke="#2c2c31" />
+        <ellipse cx="268" cy="52" rx="26" ry="8" className="fill-card stroke-edge-strong" />
+        <path d="M242 52 v34 c0 4.5 11.6 8 26 8 s26 -3.5 26 -8 v-34" className="fill-card stroke-edge-strong" />
         <text x="268" y="74" className="fill-light-slate" style={svgLabel}>legacy</text>
         <circle className="cp fill-sky" cx="70" cy="70" r="3" />
       </svg>

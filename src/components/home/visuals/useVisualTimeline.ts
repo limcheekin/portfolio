@@ -5,13 +5,12 @@ import { MQ } from '../../../lib/motion';
 const LOOP_GAP = 2; // seconds between the end of a play and the restart
 
 /**
- * One paused, non-repeating illustration timeline per Work card.
+ * One paused, looping illustration timeline per Work card (`repeat: -1`, 2s `repeatDelay`).
  *
- * - Reduced motion: the timeline always rests on its finished frame (`progress(1)`).
- * - `active` true: restart from 0 and loop (on complete, a 2s `delayedCall` restarts it; one
- *   paused delayedCall per matchMedia branch is reused).
- * - `active` false: cancel the pending restart and `pause().progress(1)`, so the card shows its
- *   finished frame.
+ * - Reduced motion: a non-repeating copy always rests on its finished frame (`progress(1)`).
+ * - `active` true: restart from 0 and loop.
+ * - `active` false: `pause().progress(1)`, so the card shows its finished frame (the end of the
+ *   current iteration).
  *
  * `build` receives the empty timeline and adds the tweens; its final state is the "finished frame".
  */
@@ -33,25 +32,17 @@ export function useVisualTimeline(
       const mm = gsap.matchMedia(el);
 
       mm.add(MQ.motion, () => {
-        const tl = gsap.timeline({ paused: true });
+        const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: LOOP_GAP });
         buildRef.current(tl);
 
-        // One paused delayedCall per branch, restarted after each play (no per-loop allocation).
-        const again = gsap.delayedCall(LOOP_GAP, () => tl.restart()).pause();
-        tl.eventCallback('onComplete', () => {
-          if (activeRef.current) again.restart(true); // true: honour the 2s delay
-        });
-
         const apply = (on: boolean) => {
-          again.pause();
           if (on) tl.restart();
-          else tl.pause().progress(1, true); // suppress onComplete so no restart is scheduled
+          else tl.pause().progress(1);
         };
         applyRef.current = apply;
         apply(activeRef.current);
 
         return () => {
-          again.kill();
           applyRef.current = null;
         };
       });
@@ -59,7 +50,7 @@ export function useVisualTimeline(
       mm.add(MQ.reduce, () => {
         const tl = gsap.timeline({ paused: true });
         buildRef.current(tl);
-        tl.progress(1, true);
+        tl.progress(1);
       });
 
       return () => mm.revert();
