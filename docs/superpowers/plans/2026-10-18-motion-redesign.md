@@ -447,7 +447,7 @@ Run: `npm run build && npm run verify:dist`. Expected: ✗ on both.
   - The tab chips show the current run. `**x**` renders as `<b>`. The cursor blink uses a CSS animation that is disabled under reduced motion.
   - Pause the loop while the console is offscreen (`ScrollTrigger.create({ trigger, onToggle })`).
 - **DotGrid**
-  - Port mockup 01's algorithm: gap 30, radius 160, spring 0.06, damping 0.82, base dot `rgba(139,148,158,0.22)`, near dots `rgba(0,217,146,…)`, default `opacity` 0.35.
+  - Port mockup 01's algorithm: gap 30, radius 160, spring 0.06, damping 0.82, base dot `slate-text` at 22%, near dots `green-accent` (both from `palette.mjs`), canvas opacity 0.35.
   - Drive frames from `gsap.ticker.add` inside `useGSAP`; remove the ticker callback and listeners in cleanup.
   - Run only while visible (IntersectionObserver) and the tab is visible.
   - Under reduced motion or a coarse pointer, draw once and stop.
@@ -506,11 +506,11 @@ Run: `npm run build && npm run verify:dist`. Expected: ✗.
 - **Card:** `<a href>` with `w-[min(360px,80vw)] h-[min(470px,72vh)]`. Inside, top to bottom: the visual panel (170px), the label (green, or `text-sky` for oss), the h3 title, the tagline, and the stack in mono 11.5px pinned to the bottom. The `more` card has a dashed border, no panel and a green title.
 - **Active styling:**
   - every card: `opacity: 0.9`;
-  - active: `opacity: 1`, border `rgba(0,217,146,.55)` (sky `rgba(56,189,248,.55)` for oss), `box-shadow: 0 0 60px rgba(0,217,146,.06)`;
+  - active: `opacity: 1`, plus a glow overlay (border `green-accent` at 55%, `shadow-glow-green`; sky equivalents for oss) faded in by opacity;
   - inactive panel: `opacity: .7; filter: saturate(.55)`;
   - transitions 0.4s.
 - **Active index:** keep it in a ref. Update React state only when the index changes, and pass `active={i === activeIndex}` to each visual.
-- **Desktop + motion** (`${MQ.desktop} and ${MQ.motion}`):
+- **Pin + motion** (`MQ.pin` and `MQ.motion`; wide and at least 560px tall):
   - the guide's pin tween with `trigger: section`, `pin: true`, `scrub: 1`, `start: 'top top'`, `end: () => '+=' + distance()`, `invalidateOnRefresh: true`, `ease: 'none'`, `refreshPriority: 10`, and `x: () => -distance()` where `distance = () => track.scrollWidth - window.innerWidth`;
   - `onUpdate`: index = `Math.round(self.progress * (n - 1))`, which also writes the counter and the progress fill.
 - **Mobile + motion:** no pin. The track gets `overflow-x-auto snap-x snap-mandatory` (each card `snap-center`). An IntersectionObserver with the track as root (threshold 0.6) picks the active card. Disconnect it in cleanup.
@@ -564,7 +564,7 @@ Run: `npm run build && npm run verify:dist`. Expected: ✓.
 | Rag | Three docs, 14-dot cloud, three hits glow sky, question and answer bubbles |
 
 - **Shared rules:**
-  - root `<div aria-hidden="true" class="relative h-[170px] rounded-[10px] overflow-hidden border border-[#1d1d21]">` on the dotted background from the mockup;
+  - root `<div aria-hidden="true" class="relative h-[170px] rounded-[10px] overflow-hidden border border-light-graphite">` on the dotted background (`bg-dot-pattern`);
   - the stepped visuals (Claim, Trade, Ware, Concord, Rag) build their steps as `tl.from(el, { opacity: 0, y: 5, duration: 0.35 })` in sequence, about 0.7–0.85s apart;
   - the finished frame (`progress(1)`) must equal the mockup's final state;
   - replace SMIL `animateMotion` with GSAP: tween each pulse circle's `x`/`y` along its straight wire, inside the same timeline, repeated within the timeline duration;
@@ -592,7 +592,7 @@ In preview at 1440×900, scroll through the track:
 - Modify: `src/pages/index.astro` (`#career` slot, `<CareerTimeline client:load entries={CAREER_HIGHLIGHTS} />`), `scripts/verify-content.ts`
 
 **Interfaces:**
-- Produces: `CAREER_HIGHLIGHTS: CareerEntry[]`, copied verbatim from the spec's six Career entries (when, title, org, summary, chips; the last two `condensed: true`, with no org).
+- Produces: `getCareerEntries(): Promise<CareerEntry[]>` for the spec's six Career entries: summaries and chips from the spec, titles, orgs and dates from the experience collection (the last two `condensed: true`, with no org).
 - Produces: `CareerTimeline({ entries: CareerEntry[] })` renders `<section id="career">`.
   - Left column: `02`, "Career", the spec's intro line, and "Full experience →" `/about/`. It's sticky at `top: 14vh` on desktop.
   - Right column: a timeline with a rail, dots and entries.

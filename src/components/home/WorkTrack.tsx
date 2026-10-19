@@ -4,6 +4,7 @@ import { gsap, ScrollTrigger } from '../../lib/gsap';
 import { useMatchMedia } from '../../lib/use-match-media';
 import { MQ } from '../../lib/motion';
 import { GUTTER } from '../../lib/layout';
+import { PROJECT_KIND_INFO } from '../../lib/project-kind';
 import SectionHeading from './SectionHeading';
 import { VISUALS } from './visuals';
 import type { WorkCard } from './types';
@@ -20,6 +21,11 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const END_GUTTER =
   "pin:motion-safe:after:block pin:motion-safe:after:shrink-0 pin:motion-safe:after:content-[''] pin:motion-safe:after:w-[calc(var(--gutter)-theme(spacing.6))]";
 const SWIPE_ROW = 'nopin:motion-safe:snap-x nopin:motion-safe:snap-mandatory nopin:motion-safe:overflow-x-auto nopin:motion-safe:pb-2';
+// Accent classes per accent colour (literal strings for Tailwind's scanner).
+const ACCENT = {
+  green: { glow: 'border-green-accent/[.55] shadow-glow-green', label: 'text-green-accent' },
+  sky: { glow: 'border-sky/[.55] shadow-glow-sky', label: 'text-sky' },
+} as const;
 const PINNED_SECTION = 'pin:motion-safe:flex pin:motion-safe:h-screen pin:motion-safe:flex-col pin:motion-safe:justify-center pin:motion-safe:py-0';
 
 export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
@@ -191,8 +197,8 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
         {cards.map((card, i) => {
           const isActive = !settled && i === activeIndex;
           const isDimmed = !settled && !isActive;
-          const isOss = card.kind === 'oss';
           const isMoreCard = card.kind === 'more';
+          const accent = ACCENT[card.kind === 'more' ? 'green' : PROJECT_KIND_INFO[card.kind].accent];
           const Visual = card.visual ? VISUALS[card.visual] : undefined;
           return (
             <li key={card.slug} className="shrink-0 snap-center">
@@ -208,7 +214,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                 <span
                   aria-hidden="true"
                   className={`pointer-events-none absolute -inset-px rounded-2xl border transition-opacity duration-[400ms] ease-out ${
-                    isOss ? 'border-sky/[.55] shadow-glow-sky' : 'border-green-accent/[.55] shadow-glow-green'
+                    accent.glow
                   } ${isActive ? 'opacity-100' : 'opacity-0'}`}
                 />
                 {!isMoreCard && (
@@ -223,7 +229,7 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                     {Visual && <Visual active={isActive && inView} />}
                   </div>
                 )}
-                <p className={`${isMoreCard ? '' : 'mt-[18px]'} font-mono text-[11px] uppercase tracking-[0.08em] ${isOss ? 'text-sky' : 'text-green-accent'}`}>
+                <p className={`${isMoreCard ? '' : 'mt-[18px]'} font-mono text-[11px] uppercase tracking-[0.08em] ${accent.label}`}>
                   {card.label}
                 </p>
                 <h3 className={`my-2 font-semibold tracking-[-0.02em] ${isMoreCard ? 'text-[28px] text-green-accent' : 'text-2xl text-lightest-slate'}`}>

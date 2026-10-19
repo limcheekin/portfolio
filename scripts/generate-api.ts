@@ -3,6 +3,7 @@ import { join } from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { DEFAULT_PROJECT_KIND } from '../src/lib/project-kind';
+import { EMAIL_ADDRESS, ENGINEER_NAME, ENGINEER_TITLE } from '../src/data/site';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -45,9 +46,9 @@ const experience = readJsonFiles(join(contentDir, 'experience')).sort((a, b) => 
 
 // Generate portfolio.json
 const portfolio = {
-  name: "Lim Chee Kin",
-  title: "AI Solutions Architect",
-  email: "limcheekin@vobject.com",
+  name: ENGINEER_NAME,
+  title: ENGINEER_TITLE,
+  email: EMAIL_ADDRESS,
   urls: {
     github: "https://github.com/limcheekin",
     linkedin: "https://linkedin.com/in/limcheekin",
@@ -103,8 +104,8 @@ console.log('Generated: dist/api/articles.json');
 
 // Generate llms-full.txt
 const lines = [
-  `# Lim Chee Kin — Full Portfolio Content`,
-  `> AI Solutions Architect at Daxonet AI — enterprise AI agents, document extraction, RAG and voice AI.`,
+  `# ${ENGINEER_NAME} — Full Portfolio Content`,
+  `> ${ENGINEER_TITLE} at Daxonet AI — enterprise AI agents, document extraction, RAG and voice AI.`,
   ``,
   `## Projects`,
   ...projects.map((p: any) => [

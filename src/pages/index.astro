@@ -12,27 +12,37 @@ import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_INTRO, getCareerEntries } from '../data/career';
 import type { WorkCard } from '../components/home/types';
 import { projectJsonLd } from '../lib/project-jsonld';
+import { PROJECT_KIND_INFO } from '../lib/project-kind';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
   .filter((p) => p.data.featured)
   .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
 
+// Short names (before the colon) of the projects the "All projects" card mentions.
+const shortTitle = (p: (typeof allProjects)[number]) => p.data.title.split(':')[0].trim();
+const MORE_CARD_SLUGS = ['open-text-embeddings', 'smart-hvac-catalogue', 'fluwix', 'talking-book'];
+const moreCardNames = MORE_CARD_SLUGS.map((slug) => {
+  const p = allProjects.find((x) => x.slug === slug);
+  if (!p) throw new Error(`index.astro: no project "${slug}" for the All projects card`);
+  return shortTitle(p);
+});
+
 const workCards: WorkCard[] = [
   ...featuredProjects.map((p): WorkCard => {
     const { kind, org } = p.data;
     return {
       slug: p.slug,
-      title: p.data.title.split(':')[0].trim(),
+      title: shortTitle(p),
       kind,
-      label: kind === 'oss' ? 'Open source' : `Enterprise${org ? ` · ${org}` : ''}`,
+      label: [PROJECT_KIND_INFO[kind].label, org].filter(Boolean).join(' · '),
       tagline: p.data.tagline ?? p.data.description,
       stack: p.data.stack ?? [],
       visual: p.data.visual,
       href: `/projects/${p.slug}/`,
     };
   }),
-  { slug: 'all-projects', title: 'All projects →', kind: 'more', label: 'More', tagline: 'open-text-embeddings, Smart HVAC RAG, Fluwix, Talking Book and more.', stack: [], href: '/projects/' },
+  { slug: 'all-projects', title: 'All projects →', kind: 'more', label: 'More', tagline: `${moreCardNames.join(', ')} and more.`, stack: [], href: '/projects/' },
 ];
 
 const careerEntries = await getCareerEntries();
