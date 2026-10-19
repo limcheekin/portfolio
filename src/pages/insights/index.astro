@@ -8,6 +8,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import ArticleRow from '../../components/ArticleRow.astro';
 import { PAGE_MAIN } from '../../lib/layout';
 import { PAGE_TITLE } from '../../lib/text-styles';
+import { PERSON_REF } from '../../lib/jsonld';
 
 const articles = (await getCollection('articles'))
   .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
@@ -20,7 +21,16 @@ const jsonLd = [
     "itemListElement": articles.map((a, i) => ({
       "@type": "ListItem",
       "position": i + 1,
-      "item": { "@type": "Article", "name": a.data.title, "description": a.data.description, "url": a.data.externalUrl || `${SITE_URL}/insights/${a.slug}/` }
+      "item": {
+        "@type": "Article",
+        "@id": `${SITE_URL}/insights/${a.slug}/#article`,
+        "name": a.data.title,
+        "description": a.data.description,
+        "url": `${SITE_URL}/insights/${a.slug}/`,
+        ...(a.data.externalUrl && { "sameAs": a.data.externalUrl }),
+        "datePublished": a.data.publishDate.toISOString(),
+        "author": PERSON_REF
+      }
     }))
   },
   {

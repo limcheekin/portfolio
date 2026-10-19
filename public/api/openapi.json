@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Lim Chee Kin Portfolio API",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Static portfolio API providing structured data about Lim Chee Kin's projects, work experience, and articles. All responses are pre-generated at build time.",
     "contact": {
       "name": "Lim Chee Kin",
@@ -15,7 +15,10 @@
     }
   },
   "servers": [
-    { "url": "https://kin.rag.wtf", "description": "Production" }
+    {
+      "url": "https://kin.rag.wtf",
+      "description": "Production"
+    }
   ],
   "paths": {
     "/api/portfolio.json": {
@@ -23,17 +26,49 @@
         "summary": "Get full portfolio data",
         "operationId": "getPortfolio",
         "description": "Returns all portfolio data including name, title, contact URLs, projects, work experience history, and articles.",
-        "tags": ["Portfolio"],
+        "tags": [
+          "Portfolio"
+        ],
         "responses": {
           "200": {
             "description": "Full portfolio data",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Portfolio" }
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/Last-Modified"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Window": {
+                "$ref": "#/components/headers/X-RateLimit-Window"
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
+        ]
       }
     },
     "/llms-full.txt": {
@@ -41,17 +76,37 @@
         "summary": "Full portfolio content as plain text",
         "operationId": "getLlmsFullText",
         "description": "Returns all portfolio content (projects with full descriptions, work experience, articles) as a structured plain-text document optimised for LLM consumption.",
-        "tags": ["Discovery"],
+        "tags": [
+          "Discovery"
+        ],
         "responses": {
           "200": {
             "description": "Plain text portfolio content",
             "content": {
               "text/plain": {
-                "schema": { "type": "string" }
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/Last-Modified"
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
+        ]
       }
     },
     "/llms.txt": {
@@ -59,17 +114,37 @@
         "summary": "LLM-readable site index",
         "operationId": "getLlmsTxt",
         "description": "Structured markdown index of the portfolio site for LLM agents, following the llms.txt convention.",
-        "tags": ["Discovery"],
+        "tags": [
+          "Discovery"
+        ],
         "responses": {
           "200": {
             "description": "Structured markdown index",
             "content": {
               "text/plain": {
-                "schema": { "type": "string" }
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/Last-Modified"
               }
             }
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
+        ]
       }
     },
     "/api/projects.json": {
@@ -77,17 +152,52 @@
         "summary": "Get projects only",
         "operationId": "getProjects",
         "description": "Returns only the projects array from the portfolio.",
-        "tags": ["Portfolio"],
+        "tags": [
+          "Portfolio"
+        ],
         "responses": {
           "200": {
             "description": "Array of projects",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Project" } }
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/Last-Modified"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Window": {
+                "$ref": "#/components/headers/X-RateLimit-Window"
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
+        ]
       }
     },
     "/api/experience.json": {
@@ -95,17 +205,52 @@
         "summary": "Get work experience only",
         "operationId": "getExperience",
         "description": "Returns only the work experience array from the portfolio.",
-        "tags": ["Portfolio"],
+        "tags": [
+          "Portfolio"
+        ],
         "responses": {
           "200": {
             "description": "Array of experience entries",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Experience" } }
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Experience"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/Last-Modified"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Window": {
+                "$ref": "#/components/headers/X-RateLimit-Window"
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
+        ]
       }
     },
     "/api/articles.json": {
@@ -113,17 +258,52 @@
         "summary": "Get articles only",
         "operationId": "getArticles",
         "description": "Returns only the articles array from the portfolio.",
-        "tags": ["Portfolio"],
+        "tags": [
+          "Portfolio"
+        ],
         "responses": {
           "200": {
             "description": "Array of articles",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Article" } }
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Article"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/Last-Modified"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Window": {
+                "$ref": "#/components/headers/X-RateLimit-Window"
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
+        ]
       }
     }
   },
@@ -133,73 +313,289 @@
         "type": "object",
         "description": "Complete portfolio data for Lim Chee Kin",
         "properties": {
-          "name": { "type": "string", "example": "Lim Chee Kin" },
-          "title": { "type": "string", "example": "AI Solutions Architect" },
-          "email": { "type": "string", "format": "email", "example": "limcheekin@vobject.com" },
+          "name": {
+            "type": "string",
+            "example": "Lim Chee Kin"
+          },
+          "title": {
+            "type": "string",
+            "example": "AI Solutions Architect"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "limcheekin@vobject.com"
+          },
           "urls": {
             "type": "object",
             "properties": {
-              "github": { "type": "string", "format": "uri" },
-              "linkedin": { "type": "string", "format": "uri" },
-              "medium": { "type": "string", "format": "uri" }
+              "github": {
+                "type": "string",
+                "format": "uri"
+              },
+              "linkedin": {
+                "type": "string",
+                "format": "uri"
+              },
+              "medium": {
+                "type": "string",
+                "format": "uri"
+              }
             }
           },
           "projects": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Project" }
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
           },
           "articles": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Article" }
+            "items": {
+              "$ref": "#/components/schemas/Article"
+            }
           },
           "experience": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Experience" }
+            "items": {
+              "$ref": "#/components/schemas/Experience"
+            }
           },
           "metadata": {
             "type": "object",
             "properties": {
-              "generatedAt": { "type": "string", "format": "date-time" },
-              "version": { "type": "string" }
+              "generatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "version": {
+                "type": "string"
+              }
             }
           }
-        }
+        },
+        "required": [
+          "name",
+          "title",
+          "email",
+          "urls",
+          "projects",
+          "articles",
+          "experience",
+          "metadata"
+        ]
       },
       "Project": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "slug": { "type": "string" },
-          "description": { "type": "string" },
-          "featured": { "type": "boolean" },
-          "kind": { "type": "string", "enum": ["enterprise", "oss"], "description": "enterprise: closed systems built at Daxonet AI (no repository or live link); oss: open-source work" },
-          "org": { "type": "string", "description": "Organisation an enterprise project was built for" },
-          "tagline": { "type": "string", "description": "One-line outcome shown on the project card" },
-          "technologies": { "type": "array", "items": { "type": "string" } },
-          "githubUrl": { "type": "string", "format": "uri" },
-          "liveUrl": { "type": "string", "format": "uri" },
-          "category": { "type": "string" }
-        }
+          "title": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "featured": {
+            "type": "boolean"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "enterprise",
+              "oss"
+            ],
+            "description": "enterprise: closed systems built at Daxonet AI (no repository or live link); oss: open-source work"
+          },
+          "org": {
+            "type": "string",
+            "description": "Organisation an enterprise project was built for"
+          },
+          "tagline": {
+            "type": "string",
+            "description": "One-line outcome shown on the project card"
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "githubUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "liveUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "category": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "slug",
+          "description",
+          "featured",
+          "kind",
+          "technologies"
+        ]
       },
       "Article": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "slug": { "type": "string" },
-          "description": { "type": "string" },
-          "externalUrl": { "type": "string", "format": "uri" },
-          "publishDate": { "type": "string", "format": "date" },
-          "tags": { "type": "array", "items": { "type": "string" } }
-        }
+          "title": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "externalUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "publishDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "slug",
+          "description",
+          "publishDate",
+          "tags"
+        ]
       },
       "Experience": {
         "type": "object",
         "properties": {
-          "company": { "type": "string" },
-          "title": { "type": "string" },
-          "startDate": { "type": "string" },
-          "endDate": { "type": "string" },
-          "technologies": { "type": "array", "items": { "type": "string" } }
+          "company": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "YYYY-MM",
+            "example": "2026-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "YYYY-MM; absent for the current role"
+          },
+          "description": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Responsibilities and outcomes, one per item"
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "company",
+          "title",
+          "startDate",
+          "description",
+          "technologies"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "error",
+          "message"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "not_found"
+          },
+          "message": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "headers": {
+      "ETag": {
+        "description": "Entity tag; send it back in If-None-Match for a conditional GET",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Last-Modified": {
+        "description": "Build time of the deployed data",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Cache-Control": {
+        "description": "public, max-age=3600, must-revalidate",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "X-RateLimit-Limit": {
+        "description": "Advisory: requests per window (not enforced)",
+        "schema": {
+          "type": "integer",
+          "example": 60
+        }
+      },
+      "X-RateLimit-Window": {
+        "description": "Advisory window in seconds",
+        "schema": {
+          "type": "integer",
+          "example": 60
+        }
+      }
+    },
+    "responses": {
+      "NotModified": {
+        "description": "Not modified since the ETag sent in If-None-Match"
+      },
+      "NotFound": {
+        "description": "No such resource",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "IfNoneMatch": {
+        "name": "If-None-Match",
+        "in": "header",
+        "required": false,
+        "description": "ETag from a previous response",
+        "schema": {
+          "type": "string"
         }
       }
     }

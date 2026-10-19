@@ -1,5 +1,6 @@
 import type { CollectionEntry } from 'astro:content';
-import { ENGINEER_NAME, SITE_URL } from '../data/site';
+import { SITE_URL } from '../data/site';
+import { PERSON_REF } from './jsonld';
 import { PROJECT_KIND_INFO } from './project-kind';
 
 /**
@@ -11,7 +12,7 @@ export function projectJsonLd({ slug, data }: CollectionEntry<'projects'>) {
     name: data.title,
     description: data.description,
     url: `${SITE_URL}/projects/${slug}/`,
-    author: { '@type': 'Person', name: ENGINEER_NAME },
+    author: PERSON_REF,
     keywords: data.technologies.join(', '),
   };
   return PROJECT_KIND_INFO[data.kind].openSource

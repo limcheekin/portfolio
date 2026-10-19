@@ -15,15 +15,18 @@ interface Props {
   /** Lenis smooth scroll, driven by GSAP. Only the home page needs it (the pinned Work track and its
    *  scroll-linked pieces); reading pages scroll natively and ship no GSAP. */
   smoothScroll?: boolean;
+  /** Error pages: no canonical URL, and ask indexers to skip the page. */
+  noindex?: boolean;
 }
 
 const {
   title = SITE_TITLE,
-  description = `Personal portfolio for ${ENGINEER_NAME}, a ${ENGINEER_TITLE}, showcasing skills, experience, and AI projects.`,
+  description = `Personal portfolio for ${ENGINEER_NAME}, an ${ENGINEER_TITLE}, showcasing skills, experience, and AI projects.`,
   ogImage = `${SITE_URL}/images/portfolio.png`,
   canonicalUrl = new URL(Astro.url.pathname, SITE_URL).href,
   jsonLd = [],
   smoothScroll = false,
+  noindex = false,
 } = Astro.props;
 
 // Derive current page identifier from pathname for data-current-page attribute
@@ -40,7 +43,7 @@ const currentPage = pathSegments[0] || 'home';
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="author" content={ENGINEER_NAME} />
-  <link rel="canonical" href={canonicalUrl} />
+  {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
   <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -51,7 +54,7 @@ const currentPage = pathSegments[0] || 'home';
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:url" content={canonicalUrl} />
+  {!noindex && <meta property="og:url" content={canonicalUrl} />}
   <meta property="og:type" content="website" />
 
   <meta name="twitter:card" content="summary_large_image" />

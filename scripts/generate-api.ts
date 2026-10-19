@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, copyFileSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
@@ -80,6 +80,7 @@ const portfolio = {
     title: e.title,
     startDate: e.startDate,
     endDate: e.endDate,
+    description: e.description || [],
     technologies: e.technologies || [],
   })),
   metadata: {
@@ -145,3 +146,7 @@ const lines = [
 
 writeFileSync(join(distDir, 'llms-full.txt'), lines.join('\n'));
 console.log('Generated: dist/llms-full.txt');
+
+// Current A2A versions look for the agent card at /.well-known/agent-card.json; serve the same file at both paths.
+copyFileSync(join(distDir, '.well-known', 'agent.json'), join(distDir, '.well-known', 'agent-card.json'));
+console.log('Generated: dist/.well-known/agent-card.json');

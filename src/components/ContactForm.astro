@@ -1,5 +1,6 @@
 ---
 import Button from './Button.astro';
+import { SITE_URL } from '../data/site';
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzdyblya";
 
 const FIELD =
@@ -64,7 +65,8 @@ const ERROR = 'hidden font-mono text-xs text-danger mt-1.5';
     ></textarea>
     <p id="contact-message-error" class={ERROR}></p>
   </div>
-  <input type="hidden" name="_next" value="/contact/?submitted=true" />
+  <!-- Formspree expects an absolute redirect URL. -->
+  <input type="hidden" name="_next" value={`${SITE_URL}/contact/?submitted=true`} />
   <div class="text-center pt-2">
     <Button type="submit" size="lg" data-testid="contact-form-submit">Send Message</Button>
   </div>

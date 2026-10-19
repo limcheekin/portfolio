@@ -22,6 +22,8 @@ const accent = ACCENT[PROJECT_KIND_INFO[kind].accent];
 
 <a
   href={`/projects/${project.slug}/`}
+  data-testid="project-card"
+  data-slug={project.slug}
   class={`group flex h-full flex-col rounded-2xl border border-edge bg-card p-[22px] transition-colors duration-250 ${accent.hover}`}
 >
   <p class={`font-mono text-[11px] uppercase tracking-[0.08em] ${accent.label}`}>{projectLabel(kind, org)}</p>

@@ -1,9 +1,15 @@
 {
-  "schema_version": "v1",
+  "protocolVersion": "0.3.0",
   "name": "Lim Chee Kin Portfolio",
-  "description": "Portfolio of Lim Chee Kin — AI Solutions Architect at Daxonet AI specialising in enterprise AI agents, RAG and voice AI.",
-  "version": "1.0",
-  "url": "https://kin.rag.wtf",
+  "description": "Portfolio of Lim Chee Kin — AI Solutions Architect at Daxonet AI specialising in enterprise AI agents, RAG and voice AI. This is a static, read-only site: it does not accept A2A task requests; the skills below are served as public HTTP resources.",
+  "url": "https://kin.rag.wtf/",
+  "version": "1.1",
+  "provider": {
+    "organization": "Lim Chee Kin",
+    "url": "https://kin.rag.wtf/about/"
+  },
+  "documentationUrl": "https://kin.rag.wtf/llms.txt",
+  "iconUrl": "https://kin.rag.wtf/favicon.svg",
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
@@ -12,20 +18,28 @@
   "authentication": {
     "type": "none"
   },
+  "securitySchemes": {},
+  "security": [],
   "defaultInputModes": ["text/plain"],
-  "defaultOutputModes": ["text/plain"],
+  "defaultOutputModes": ["application/json", "text/plain", "text/markdown"],
   "skills": [
     {
       "id": "portfolio-retrieval",
       "name": "Portfolio Data Retrieval",
-      "description": "Retrieve structured portfolio data including projects, work experience, articles, and contact information via the static JSON API at /api/portfolio.json.",
-      "tags": ["retrieval", "portfolio", "content"]
+      "description": "Structured portfolio data (projects, work experience with responsibilities, articles, contact) from the static JSON API. Full: /api/portfolio.json; per collection: /api/projects.json, /api/experience.json, /api/articles.json. Described by /api/openapi.json.",
+      "tags": ["retrieval", "portfolio", "json", "openapi"],
+      "examples": ["Which enterprise AI systems has Lim Chee Kin built?", "List the open-source projects with their repositories."],
+      "inputModes": ["text/plain"],
+      "outputModes": ["application/json"]
     },
     {
       "id": "content-discovery",
       "name": "Content Discovery",
-      "description": "Discover and access all portfolio content including insights and project pages via the sitemap and llms.txt index.",
-      "tags": ["discovery", "content", "sitemap"]
+      "description": "Discover every page and agent resource through /llms.txt, /llms-full.txt, /sitemap-index.xml and /rss.xml.",
+      "tags": ["discovery", "content", "sitemap", "llms.txt"],
+      "examples": ["What has Lim Chee Kin written about MCP?", "Summarise the portfolio."],
+      "inputModes": ["text/plain"],
+      "outputModes": ["text/plain", "text/markdown"]
     }
   ]
 }

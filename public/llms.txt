@@ -70,5 +70,10 @@ Open source:
 - Portfolio Data (JSON): https://kin.rag.wtf/api/portfolio.json
 - OpenAPI Spec: https://kin.rag.wtf/api/openapi.json
 - Plugin Discovery: https://kin.rag.wtf/ai-plugin.json
-- A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json
+- A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json (also at /.well-known/agent-card.json)
+- MCP Manifest (static resource list; no MCP server endpoint yet): https://kin.rag.wtf/.well-known/mcp.json
 - Agent Policy: https://kin.rag.wtf/.well-known/agent-policy
+
+## Site Map Notes
+- The navigation label "Work" opens /projects/ and "Writing" opens /insights/.
+- Project pages: https://kin.rag.wtf/projects/<slug>/ ; article summaries: https://kin.rag.wtf/insights/<slug>/ (slugs are listed in /api/portfolio.json).

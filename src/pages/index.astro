@@ -12,6 +12,7 @@ import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_INTRO, getCareerEntries } from '../data/career';
 import type { WorkCard } from '../components/home/types';
 import { projectJsonLd } from '../lib/project-jsonld';
+import { PERSON_ID, PERSON_REF, WEBSITE_ID } from '../lib/jsonld';
 import { projectLabel } from '../lib/project-kind';
 
 const allProjects = await getCollection('projects');
@@ -55,8 +56,9 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": PERSON_ID,
     "name": ENGINEER_NAME,
-    "url": SITE_URL,
+    "url": `${SITE_URL}/`,
     "image": `${SITE_URL}/images/profile.png`,
     "jobTitle": ENGINEER_TITLE,
     "description": `${ENGINEER_TITLE} focused on enterprise AI, conversational agents and business workflow integration.`,
@@ -88,10 +90,12 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": WEBSITE_ID,
     "name": `${ENGINEER_NAME} - Portfolio`,
-    "url": SITE_URL,
-    "description": `Personal portfolio for ${ENGINEER_NAME}, a ${ENGINEER_TITLE}`,
-    "author": { "@type": "Person", "name": ENGINEER_NAME },
+    "url": `${SITE_URL}/`,
+    "description": `Personal portfolio for ${ENGINEER_NAME}, an ${ENGINEER_TITLE}`,
+    "author": PERSON_REF,
+    "publisher": PERSON_REF,
     "potentialAction": {
       "@type": "ReadAction",
       "target": [

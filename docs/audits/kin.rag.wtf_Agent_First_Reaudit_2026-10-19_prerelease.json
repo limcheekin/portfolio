@@ -1,0 +1,948 @@
+{
+  "audit_metadata": {
+    "tool": "Agent-First Web Auditor",
+    "version": "1.0",
+    "audit_date": "2026-10-19",
+    "target_url": "http://localhost:8089/",
+    "site_classification": [
+      "content"
+    ],
+    "rendering_type": "SSG",
+    "agent_archetype_assumed": "browser-based",
+    "methodology": "structural-passive",
+    "auditor": "Claude Agent-First Web Auditor Skill"
+  },
+  "overall_score": {
+    "score": 9.3,
+    "verdict": "Agent-Friendly",
+    "structural_readiness_score": 8.8,
+    "task_readiness_score": 8.8,
+    "protocol_readiness_score": 5.8,
+    "protocol_weight_applied": true,
+    "critical_blocker_override_applied": false,
+    "critical_blockers": []
+  },
+  "dimensions": [
+    {
+      "id": "S1",
+      "name": "Discovery & Crawlability",
+      "category": "structural",
+      "score": 9.5,
+      "weight_in_category": 0.25,
+      "findings": [
+        {
+          "finding": "llms.txt and llms-full.txt are served as text/plain with no charset, and both contain UTF-8 em dashes.",
+          "severity": "minor",
+          "evidence": "GET http://localhost:8089/llms.txt and /llms-full.txt -> 'Content-Type: text/plain' (no charset). Non-ASCII '—' on llms.txt line 51 ('NanoChat on a Single GPU — Step by Step') and on 4 lines of llms-full.txt, including the H1 'Lim Chee Kin — Full Portfolio Content'. /.well-known/agent-policy already sends 'text/plain; charset=utf-8', so the files are inconsistent.",
+          "confidence": "high",
+          "remediation": "In nginx set `charset utf-8;` with `charset_types text/plain text/xml application/json text/markdown;` at server level, or add per-location default_type 'text/plain; charset=utf-8' for *.txt.",
+          "effort": "low",
+          "impact": "Clients that fall back to ISO-8859-1 for text/* without a charset (Python requests, some fetch tools) stop showing mojibake in titles."
+        },
+        {
+          "finding": "Some agent surfaces are missing from the discovery indexes: RSS appears in neither llms.txt nor robots.txt, and the per-collection API endpoints are not listed.",
+          "severity": "minor",
+          "evidence": "llms.txt 'Technical' lists llms-full.txt, sitemap-index.xml, portfolio.json, openapi.json, ai-plugin.json, agent.json (+agent-card.json), mcp.json, agent-policy. It leaves out /rss.xml, /api/projects.json, /api/experience.json, /api/articles.json and /.well-known/security.txt. The robots.txt 'Agent discovery' comments also leave out /rss.xml, /.well-known/agent-card.json and the per-collection endpoints. RSS is discoverable only through <link rel=\"alternate\" type=\"application/rss+xml\" href=\"/rss.xml\"> on HTML pages and through the agent card's content-discovery skill.",
+          "confidence": "high",
+          "remediation": "Add 'RSS feed: https://kin.rag.wtf/rss.xml' and the three per-collection endpoints to the llms.txt Technical section and the robots.txt comments.",
+          "effort": "low",
+          "impact": "Agents that start from llms.txt or robots.txt alone can find the change feed and the smaller per-collection payloads."
+        },
+        {
+          "finding": "15 of 28 sitemap URLs have no <lastmod>, and every entry carries a uniform changefreq of 'weekly'.",
+          "severity": "minor",
+          "evidence": "http://localhost:8089/sitemap-0.xml: the 10 /insights/<slug>/ entries have lastmod equal to each article's publishDate (all 10 match /api/articles.json), and /insights/ has the newest (2026-03-13). '/', /about/, /contact/, /projects/ and all 13 /projects/<slug>/ have no lastmod. All 28 have <changefreq>weekly</changefreq>, including articles dated 2023.",
+          "confidence": "high",
+          "remediation": "Optional: use project dateStarted or the content file's git commit date for project lastmod, and drop changefreq or set it per page type (articles 'yearly'). Leaving lastmod off is far better than a fake build date, so this is low priority.",
+          "effort": "low",
+          "impact": "Small crawl-efficiency gain for incremental crawlers on project pages."
+        },
+        {
+          "finding": "security.txt lacks the Expires field, which RFC 9116 requires.",
+          "severity": "minor",
+          "evidence": "GET http://localhost:8089/.well-known/security.txt -> 'Contact: mailto:limcheekin@vobject.com / Preferred-Languages: en / Canonical: https://kin.rag.wtf/.well-known/security.txt', with no 'Expires:' line.",
+          "confidence": "high",
+          "remediation": "Add 'Expires: 2027-10-19T00:00:00.000Z' (less than a year ahead) and renew it each year, or generate it at build time.",
+          "effort": "low",
+          "impact": "Security scanners and validators stop flagging the file as invalid."
+        },
+        {
+          "finding": "llms-full.txt has no filtering support (lang / excludeSpec style parameters).",
+          "severity": "minor",
+          "evidence": "GET http://localhost:8089/llms-full.txt?lang=en&excludeSpec=true -> 200, the same 27200 bytes. The file is static.",
+          "confidence": "high",
+          "remediation": "Not worth a server for a 27 KB file. Optionally publish section files (llms-projects.txt, llms-experience.txt, llms-articles.txt) and list them in llms.txt.",
+          "effort": "low",
+          "impact": "Marginal: lets context-limited agents pull one section."
+        }
+      ],
+      "strengths": [
+        "Fixed: redirects are now relative. GET /sitemap.xml -> 301 'Location: /sitemap-index.xml'; GET /about -> 301 'Location: /about/'; /about?x=1 -> 'Location: /about/?x=1' (query preserved). Behind Cloudflare TLS these resolve to https, so the scheme no longer drops to http.",
+        "Fixed: sitemap lastmod values are real per-page dates, not the build timestamp. Every article lastmod matches its publishDate, and pages without a real date leave lastmod off.",
+        "Fixed: /.well-known/mcp.json and /api/openapi.json are now listed in both robots.txt comments and llms.txt. /.well-known/agent-policy is served 'text/plain; charset=utf-8', and /site.webmanifest 'application/manifest+json'.",
+        "Complete discovery stack, all HTTP 200: robots.txt (User-agent: * Allow: /, Sitemap, 8 commented agent-discovery links), sitemap-index.xml -> sitemap-0.xml (28 URLs, all 28 return 200 on localhost), llms.txt (6.4 KB), llms-full.txt (27 KB; 13 projects, 10 articles, 11 roles), ai-plugin.json (root and /.well-known, byte-identical), agent.json and agent-card.json (identical), mcp.json, agent-policy, security.txt, rss.xml (10 items with pubDate, linked via rel=alternate).",
+        "No agent is blocked: GPTBot, ClaudeBot, PerplexityBot, Google-Extended and a browser UA all get 200 with an identical 54067-byte /about/.",
+        "URL topology is flat and predictable (/projects/<slug>/, /insights/<slug>/, trailing slash enforced by one 301 hop), and llms.txt documents the slug pattern and the Work/Writing label mapping."
+      ],
+      "summary": "Full discovery stack, including feed and agent policy. All three discovery issues from the previous audit are verified fixed on the local build: relative redirects, real lastmod dates, and MCP manifest and OpenAPI listed in the indexes. What remains is hygiene: no charset on the llms files, a few surfaces missing from the indexes, partial lastmod coverage, and security.txt without Expires."
+    },
+    {
+      "id": "S2",
+      "name": "Machine Readability",
+      "category": "structural",
+      "score": 9,
+      "weight_in_category": 0.25,
+      "findings": [
+        {
+          "finding": "Decorative illustration and agent-console text is serialized into the initial HTML, so plain-text extractors that ignore aria-hidden pick up fake strings in the middle of the Work section.",
+          "severity": "minor",
+          "evidence": "home.html: <div aria-hidden=\"true\" data-visual=\"true\"> inside each a[data-testid=work-card] carries text such as 'RM 186.40 merchant Kopi Corner category Meals ... APPROVED' and 'SELECT name, credit_lmt FROM CUST_MSTR WHERE id=1042'; div[data-agent-console][aria-hidden=true] carries 'whatsapp \"PO attached, pls quote\" + po_0412.pdf ...'. A readability-style text strip of <main> interleaves these with real card copy.",
+          "confidence": "high",
+          "remediation": "Draw illustration labels inside the canvas or an aria-hidden <svg> (<text>), or keep the decorative illustration DOM out of SSR (client:only), so the card title, tagline and stack are the only text in each card.",
+          "effort": "medium",
+          "impact": "Cleaner first-pass extraction of the home page for non-JS agents and LLM crawlers; less risk of a summarizer quoting fake receipt or SQL strings as facts."
+        },
+        {
+          "finding": "Raw text-to-HTML ratio stays low on most pages (home 4.9%, project detail 5-6%, article 4.3%, contact 3.1%) because of utility-class markup, ~10 KB of serialized island props and ~16 KB of inline scripts on the home page.",
+          "severity": "minor",
+          "evidence": "analyze.py: home.html 85,511 bytes HTML vs 4,223 visible chars; island props 10,115 bytes; inline script 15,895 bytes. about.html is 22.2%.",
+          "confidence": "high",
+          "remediation": "No action strictly needed (all meaningful text is server-rendered). Optional: pass slugs rather than full objects as island props, move the inline contact-form script into a bundled module, and point agents to /llms-full.txt and /api/portfolio.json via <link rel=alternate>.",
+          "effort": "low",
+          "impact": "Marginal: smaller payloads and better signal-to-noise for token-budgeted fetchers."
+        }
+      ],
+      "strengths": [
+        "Static SSG (Astro) served by nginx: every page returns complete HTML with HTTP 200 (the 404 page returns a real 404 status with Cache-Control: no-store).",
+        "All headings, project copy, career entries, the article list and the contact form are present in raw curl output; no content depends on hydration.",
+        "Hero headline, Work cards and Career entries are SSR'd inside islands (ssr attribute on every astro-island except the decorative DotGrid, which is client:only).",
+        "No content hidden by CSS before reveal: no inline opacity:0 on content; opacity-0 classes in SSR are only on decorative aria-hidden visuals, hover arrows and focus rings.",
+        "Complete machine-readable twins: /api/portfolio.json now includes experience descriptions (11 entries), 13 projects and 10 articles."
+      ],
+      "summary": "Static, fully server-rendered site. A non-JS agent gets every meaningful word from raw HTML. Only nits remain: decorative illustration text leaks into plain-text extraction, and the raw text ratio is low because of markup and serialized props."
+    },
+    {
+      "id": "S3",
+      "name": "Semantic Structure",
+      "category": "structural",
+      "score": 8,
+      "weight_in_category": 0.2,
+      "findings": [
+        {
+          "finding": "No <article> element is used anywhere: not on the article detail page, not on project detail pages, not on the repeated project cards and article rows.",
+          "severity": "minor",
+          "evidence": "grep -c '<article' returns 0 for all 11 fetched pages; /insights/zero-trust-ai-agents/ <main> holds h1#article-title, time, tag list and div.prose-like directly; /projects/claim-pilot/ <main> holds h1#project-title and paragraphs directly.",
+          "confidence": "high",
+          "remediation": "Wrap the main content of /insights/<slug>/ and /projects/<slug>/ in <article aria-labelledby=\"article-title|project-title\">, and optionally render each ArticleRow and ProjectCard as an <article> inside its <li>.",
+          "effort": "low",
+          "impact": "Agents and reader-mode extractors locate the primary content block without heuristics."
+        },
+        {
+          "finding": "About page job-title headings still contain external company links, so each h3 is part heading, part outbound link.",
+          "severity": "minor",
+          "evidence": "about.html: <h3> Senior Java Tech Lead <a href=\"https://dxc.com/my/en\" target=\"_blank\" aria-describedby=\"experience-new-tab-hint\"> @ DXC Technology </a></h3> (same pattern for Zurich, Penril, CMG, Siemens, Online One). The new-tab hint text is now kept out of the heading (fixed).",
+          "confidence": "high",
+          "remediation": "Keep the h3 as plain text ('Senior Java Tech Lead @ DXC Technology') and move the company link to a separate line below the heading.",
+          "effort": "low",
+          "impact": "Cleaner heading outline for agents that list or navigate by headings; links inside headings are a common extraction hazard."
+        },
+        {
+          "finding": "Article titles in ArticleRow are block headings nested in an inline <span> inside the link, which breaks the HTML content model (h2/h3 inside span).",
+          "severity": "minor",
+          "evidence": "insights.html li[data-testid=article-row]: <a href=\"https://limcheekin.medium.com/...\"> <time>Mar 2026</time> <span> <h2>Zero-Trust Security for Autonomous AI Agents</h2> <span>...</span></span>; home.html uses the same structure with <h3>.",
+          "confidence": "high",
+          "remediation": "Replace the wrapping <span> with a <div> (a is transparent and li allows flow content), or put the heading outside the link and link the heading text.",
+          "effort": "low",
+          "impact": "The HTML validates, and strict parsers and accessibility trees treat the heading consistently."
+        },
+        {
+          "finding": "Three of the four numbered home sections are unnamed <section> elements, so only Work is exposed as a region landmark.",
+          "severity": "minor",
+          "evidence": "home.html: <section id=\"work\" aria-labelledby=\"work-title\"> vs <section id=\"career\">, <section id=\"writing\"> and <section id=\"contact\">, which have no aria-labelledby or aria-label although each has an h2.",
+          "confidence": "high",
+          "remediation": "Give each h2 an id and add aria-labelledby to its section (career-title, writing-title, contact-title).",
+          "effort": "low",
+          "impact": "Consistent region landmarks for agents and screen readers that navigate by landmark."
+        },
+        {
+          "finding": "Desktop and mobile nav link names include the decorative numerals ('01. About', '02. Work'), and the 404 page's h1 is the bare string '404'.",
+          "severity": "minor",
+          "evidence": "home.html nav[data-testid=desktop-nav] <a data-testid=\"nav-link-about\"><span>01.</span> About</a> (span not aria-hidden); the mobile nav renders '0<!-- -->1<!-- -->.' + 'About' with no space; 404.html <h1>404</h1><h2>Page Not Found</h2>.",
+          "confidence": "high",
+          "remediation": "Add aria-hidden=\"true\" to the numeral spans; on the 404 page make the h1 'Page not found' and render '404' as a decorative eyebrow.",
+          "effort": "low",
+          "impact": "Link and heading text extracted by agents matches the intended labels."
+        }
+      ],
+      "strengths": [
+        "Every page has one header, one main#main-content, a labelled primary nav, a labelled footer nav and, on inner pages, a Breadcrumb nav with aria-current=page; a skip link targets #main-content.",
+        "The heading outline is clean on every page: one h1, h2 sections, h3 items, no skipped levels. Numbered home headings now extract as '01 Selected Work' / '02 Career' / '03 Latest Writing' (aria-hidden numeral plus an sr-only space), and the accessible name is the plain title.",
+        "Baseline issues fixed: no navigation link styled as a heading, new-tab hints moved out of headings into a shared aria-describedby hint, and Latest Writing items now have per-article h3 headings.",
+        "Interactive controls are native and labelled: the mobile toggle button has aria-expanded, aria-controls and aria-label; the console pause button has aria-pressed and aria-label; the closed mobile drawer is inert.",
+        "Contact form: every field has label[for] -> input[id] and aria-describedby pointing to an error element, and there is a role=status/aria-live success region."
+      ],
+      "summary": "Landmarks, heading hierarchy and ARIA on controls are good, and the heading-quality problems from the baseline are fixed. Remaining gaps are small: no <article> elements, links still inside About job headings, headings nested in spans, unnamed home sections and numeral noise in nav link names."
+    },
+    {
+      "id": "S4",
+      "name": "Content Extraction Friendliness",
+      "category": "structural",
+      "score": 9,
+      "weight_in_category": 0.2,
+      "findings": [
+        {
+          "finding": "SoftwareSourceCode.programmingLanguage is filled from the technologies list, so it claims 'Open Source', 'MCP', 'Voice AI', 'HuggingFace', 'STT', 'LLM', 'TTS', 'Groq API', 'Docker' and others as programming languages.",
+          "severity": "moderate",
+          "evidence": "home.html ItemList item 5: \"programmingLanguage\": [\"Open Source\",\"MCP\",\"TypeScript\",\"SQL\",\"Docker\"]; /projects/talk-to-ai/: \"programmingLanguage\": [\"Open Source\",\"Voice AI\",\"FastRTC\",\"HuggingFace\",\"STT\",\"LLM\",\"TTS\",\"LocalAI\",\"Groq API\",\"Python\",\"FastAPI\"]; the same happens for every oss entry in the /projects/ ItemList (source: src/lib/project-jsonld.ts).",
+          "confidence": "high",
+          "remediation": "Emit only real languages in programmingLanguage, either from an explicit `languages` frontmatter field or by filtering against a known list (Python, TypeScript, Dart, SQL, Java). Keep the rest in keywords; optionally put frameworks in runtimePlatform.",
+          "effort": "low",
+          "impact": "Agents and knowledge graphs that read programmingLanguage get correct facts instead of 'Open Source' as a language."
+        },
+        {
+          "finding": "Project entities have no @id and no image, so the ItemList entries on / and /projects/ cannot be merged with the detail-page entity, and screenshots are not attached to the entity.",
+          "severity": "minor",
+          "evidence": "The /projects/claim-pilot/ SoftwareApplication has name, description, url, author, keywords and applicationCategory, but no @id. /projects/talk-to-ai/ has og:image https://kin.rag.wtf/images/talk-to-ai.png and an <img> screenshot, but its SoftwareSourceCode has no image. Article entities, by contrast, do carry an @id (#article).",
+          "confidence": "high",
+          "remediation": "Add \"@id\": \"https://kin.rag.wtf/projects/<slug>/#software\" to both the list items and the detail entity, add image when the project has one, and add a WebPage node (or mainEntityOfPage) on project pages, as is done for articles.",
+          "effort": "low",
+          "impact": "Consistent entity graph across list and detail pages; richer project cards in AI answers."
+        },
+        {
+          "finding": "The Article schema is thin: no image, dateModified or inLanguage; og:type is 'website' on the article page; there are no article:published_time or article:author tags.",
+          "severity": "minor",
+          "evidence": "The /insights/zero-trust-ai-agents/ Article has @id, headline, description, url, mainEntityOfPage {#webpage}, sameAs (Medium), datePublished, author/publisher @id #person and keywords, but no image, dateModified or inLanguage. <meta property=\"og:type\" content=\"website\">.",
+          "confidence": "high",
+          "remediation": "Add image (a per-article or default 1200x630 image), dateModified and inLanguage \"en\"; set og:type=article and emit article:published_time and article:author on /insights/<slug>/.",
+          "effort": "low",
+          "impact": "Article rich-result eligibility and better attribution metadata for answer engines and social cards."
+        },
+        {
+          "finding": "Minor entity-property issues: alumniOf is used for former employers, Organization names differ from the visible About page, and ContactPage is not linked into the @id graph.",
+          "severity": "minor",
+          "evidence": "Person (home, about): alumniOf [DXC Technology, Zurich Technology Services Malaysia, 'Penril Datability Networks', 'Siemens Multimedia'] while about.html shows '@ Penril Datability (M) Sdn. Bhd.' and '@ Siemens Multimedia Sdn. Bhd.'; worksFor {Organization 'Daxonet AI Sdn. Bhd.'} has no url or @id; contact.html ContactPage {name, url} has no @id, isPartOf #website or mainEntity #person.",
+          "confidence": "medium",
+          "remediation": "Model former employers with hasOccupation/OrganizationRole, or leave them in the experience data (alumniOf is meant for schools); align Organization names with the visible text; give worksFor a url; add isPartOf {@id #website} and mainEntity {@id #person} to ContactPage, and consider ProfilePage with mainEntity #person on /about/.",
+          "effort": "low",
+          "impact": "Cleaner, consistent entity facts; a knowledge graph won't infer education from employment."
+        },
+        {
+          "finding": "The on-site article pages that carry the Article and speakable markup are orphans: no internal link points to /insights/<slug>/. Every article row links straight to Medium, and the article body is one paragraph identical to the meta description.",
+          "severity": "minor",
+          "evidence": "grep for href=\"/insights/zero-trust-ai-agents/\" across all fetched pages: 0 matches; li[data-testid=article-row] > a[href^=\"https://limcheekin.medium.com/\"] on / and /insights/; article.html div.prose-like contains only the description paragraph. The pages are reachable only through sitemap-0.xml.",
+          "confidence": "high",
+          "remediation": "Link each row title to /insights/<slug>/ (keep a secondary 'Read on Medium' link), and add a longer on-site abstract or key takeaways to the article page.",
+          "effort": "low",
+          "impact": "Crawlers and agents that follow links reach the structured article pages, and each article has more extractable, attributable content."
+        }
+      ],
+      "strengths": [
+        "JSON-LD on 11/11 pages checked (0 parse errors), with types that fit each page: Person, WebSite (+ReadAction), FAQPage (10 Q&A), ItemList of SoftwareApplication/SoftwareSourceCode, ItemList of Article, Article+WebPage+SpeakableSpecification, ContactPage, and BreadcrumbList on every inner page.",
+        "@id entity linking is now in place and consistent: Person https://kin.rag.wtf/#person is identical on / and /about/ and is referenced by author/publisher everywhere; WebSite #website is referenced by the article WebPage's isPartOf; Article #article and WebPage #webpage point to each other through mainEntityOfPage/mainEntity.",
+        "Article url now points to the on-site canonical, with sameAs to the Medium original. Speakable cssSelector is ['#article-title', '.prose-like'], and both selectors exist in the DOM (h1#article-title, div.prose-like).",
+        "Enterprise and open-source projects are typed correctly (SoftwareApplication with applicationCategory vs SoftwareSourceCode with codeRepository).",
+        "og:image now varies for projects with screenshots (/projects/talk-to-ai/ -> talk-to-ai.png, /projects/rag-wtf/ -> rag-wtf.png); /api/portfolio.json now includes experience descriptions."
+      ],
+      "summary": "Rich, valid JSON-LD on every page type, with a consistent @id graph for Person, WebSite and Article and speakable on article pages. Most remaining issues are about semantic quality, not missing data: programmingLanguage is filled with non-languages, project entities have no @id or image, the Article schema is thin, and nothing links to the structured article pages."
+    },
+    {
+      "id": "S5",
+      "name": "DOM Stability & Selector Robustness",
+      "category": "structural",
+      "score": 8,
+      "weight_in_category": 0.1,
+      "findings": [
+        {
+          "finding": "Career (home) and experience (about) entries have a data-testid but no data-slug or id, unlike work cards, project cards and article rows.",
+          "severity": "minor",
+          "evidence": "home.html: 6 x <li data-testid=\"career-entry\"> with no data-slug; about.html: 11 x <li data-testid=\"experience-entry\"> with no data-slug or id. Compare <a data-testid=\"project-card\" data-slug=\"claim-pilot\"> and <li data-testid=\"article-row\" data-slug=\"zero-trust-ai-agents\">.",
+          "confidence": "high",
+          "remediation": "Add a stable key such as data-slug=\"daxonet-ai-2026\" (company plus start year), or the experience collection id, to both career-entry and experience-entry.",
+          "effort": "low",
+          "impact": "Agents and tests can target a specific role without relying on position, which shifts whenever a role is added."
+        },
+        {
+          "finding": "Several interactive elements still have no data-testid: the hero console pause button, the home 'Full experience' and 'All writing' links, the home contact-section CTA, the footer social links and the back links on detail pages.",
+          "severity": "minor",
+          "evidence": "home.html <button type=\"button\" aria-pressed=\"false\" aria-label=\"Pause the agent console animation\"> (no testid); <a href=\"/about/\">Full experience →</a>; <a href=\"/insights/\">All writing →</a>; footer nav a[href=\"https://github.com/limcheekin\"] etc.; article.html <a href=\"/insights/\">← All Articles</a>; claim-pilot.html <a href=\"/projects/\">← All Projects</a>.",
+          "confidence": "high",
+          "remediation": "Add a data-testid to each remaining control (console-pause, career-more, writing-more, contact-section-cta, footer-link-github/linkedin/medium/email, back-to-list).",
+          "effort": "low",
+          "impact": "Full selector coverage for agent tool calls and regression tests."
+        }
+      ],
+      "strengths": [
+        "data-testid now covers repeated content items: work-card (7, with data-slug) plus work-card-all, project-card (13, with data-slug), article-row (with data-slug on / and /insights/), career-entry (6) and experience-entry (11).",
+        "Chrome and forms have stable hooks: desktop-nav, mobile-nav, mobile-menu-toggle, nav-link-*, logo-link, resume-button, hero-cta, hero-contact-cta, hero-section, breadcrumb, contact-form, contact-field-*, contact-form-submit, contact-form-success and contact-cta.",
+        "Semantic, stable IDs: #main-content, #site-header, #mobile-nav, #hero, #work, #career, #writing, #contact, #work-title, #about-me, #work-experience, #article-title, #project-title, #contact-name/email/message.",
+        "No hashed or obfuscated class names (Tailwind utilities only); Astro islands are SSR'd, so the server DOM matches the hydrated DOM."
+      ],
+      "summary": "Selector robustness improved a lot: every repeated list item has a data-testid, and work cards, project cards and article rows carry data-slug. Two gaps remain: career and experience entries have no stable key, and a handful of secondary controls have no testid."
+    },
+    {
+      "id": "T1",
+      "name": "Navigation Clarity & Task Discoverability",
+      "category": "task",
+      "score": 8,
+      "weight_in_category": 0.15,
+      "findings": [
+        {
+          "finding": "There is no GET search, no search form and no ?q= route.",
+          "severity": "minor",
+          "evidence": "No <form role=search>, <input type=search> or query-parameter route on any fetched page (/, /about/, /projects/, /insights/, /contact/, 404). The only search is the WebMCP search_portfolio tool, which registers only when navigator.modelContext exists. The rubric's 9-10 band requires GET-based search.",
+          "confidence": "high",
+          "remediation": "Either add a small GET search page (/search/?q=, filtering the build-time JSON client-side, with server-rendered results for the empty query), or say in llms.txt that /api/portfolio.json is the search surface.",
+          "effort": "medium",
+          "impact": "Agents that look for a search box have to fall back to sitemap or API traversal. With about 37 URLs this costs little."
+        },
+        {
+          "finding": "Article detail pages (/insights/<slug>/) are not linked from any HTML page.",
+          "severity": "minor",
+          "evidence": "The /insights/ and home 'Latest Writing' rows link straight to limcheekin.medium.com (ArticleRow href={externalUrl ?? `/insights/${slug}/`}, and every article has an externalUrl). All 10 /insights/<slug>/ URLs appear only in sitemap-0.xml (e.g. /insights/zero-trust-ai-agents/ returns 200 with breadcrumbs and Article JSON-LD). The rows do carry data-slug=\"zero-trust-ai-agents\".",
+          "confidence": "high",
+          "remediation": "Add a secondary on-site link per row (e.g. 'Summary' to /insights/<slug>/) next to the Medium link, or link the title on-site and keep 'Read on Medium' as the external action.",
+          "effort": "low",
+          "impact": "Crawlers that follow links instead of sitemaps never reach the on-site article pages and their Article/speakable schema."
+        },
+        {
+          "finding": "Nav labels differ from URL segments and breadcrumb names.",
+          "severity": "minor",
+          "evidence": "Main nav: 'Work' -> /projects/ (data-testid=nav-link-work), 'Writing' -> /insights/ (nav-link-writing). On /projects/ the breadcrumb says 'Projects', on /insights/ it says 'Writing'. The 404 page labels the links Projects and Writing.",
+          "confidence": "high",
+          "remediation": "Use one name per section, e.g. 'Projects' for the nav label, or document the mapping in llms.txt ('Work = /projects/, Writing = /insights/').",
+          "effort": "low",
+          "impact": "Agents told to 'open the Work section' or 'find insights' have to guess the mapping. The cost is small."
+        },
+        {
+          "finding": "Raw /index.html paths return 200 duplicates, and the BreadcrumbList 'Home' item drops the trailing slash used by the canonical URL.",
+          "severity": "minor",
+          "evidence": "GET /index.html and /about/index.html return 200 (canonical tags point to / and /about/). Every BreadcrumbList has position 1 item 'https://kin.rag.wtf' while the canonical and sitemap use 'https://kin.rag.wtf/'.",
+          "confidence": "high",
+          "remediation": "Add an nginx rule that 301s ^(.*/)index.html$ to $1, and set the breadcrumb Home item to SITE_URL + '/'.",
+          "effort": "low",
+          "impact": "This is URL-hygiene cosmetics. Canonical tags already resolve the duplicates."
+        }
+      ],
+      "strengths": [
+        "<nav aria-label=\"Main navigation\"> with <ol>/<li>/<a href>, and the same links in the mobile drawer and footer <nav>. 0 anchors without href and 0 onclick handlers across all fetched pages. Every <button> is a real type=button/submit.",
+        "Hierarchical, descriptive URLs (/projects/claim-pilot/, /insights/zero-trust-ai-agents/) with trailing-slash canonicalisation.",
+        "Visible breadcrumb <nav aria-label=Breadcrumb> with aria-current=page, plus a matching BreadcrumbList JSON-LD on every inner page (about, projects, project detail, insights, article detail, contact).",
+        "Non-trailing-slash redirects are 301s with relative Location headers (/about -> /about/, /about?ref=x -> /about/?ref=x, /sitemap.xml -> /sitemap-index.xml). The http:// downgrade from the baseline is fixed (absolute_redirect off).",
+        "The 404 page offers Home/Projects/Writing/Contact links plus the full header nav."
+      ],
+      "summary": "Navigation is semantic, link-based and predictable. Breadcrumbs exist in both HTML and JSON-LD, and the redirect scheme downgrade is fixed. The score stays at 8 because there is no GET search (a 9-10 rubric requirement). Smaller issues: the on-site article pages are linked only from the sitemap, and nav labels differ from URL segments."
+    },
+    {
+      "id": "T2",
+      "name": "Form & Workflow Design",
+      "category": "task",
+      "score": 9,
+      "weight_in_category": 0.15,
+      "findings": [
+        {
+          "finding": "The form uses novalidate, so clients without JavaScript get no constraint checking before the third-party POST.",
+          "severity": "minor",
+          "evidence": "<form action=\"https://formspree.io/f/xzdyblya\" method=\"POST\" data-testid=\"contact-form\" novalidate>. Inline messages come only from the client script on the 'invalid' event (verified in the browser: checkValidity() set aria-invalid=true and showed 'Enter your name.', 'Enter your email address.', 'Tell me what you would like to discuss.'). Without JS, validation falls to Formspree.",
+          "confidence": "high",
+          "remediation": "Remove novalidate from the markup and have the script add it at runtime (form.noValidate = true). Browsers without JS then keep native validation.",
+          "effort": "low",
+          "impact": "HTTP-only agents and JS-off clients can post invalid data and get a third-party error page instead of on-site guidance."
+        },
+        {
+          "finding": "Error linkage uses aria-describedby only (no aria-errormessage), and some constraints are loose.",
+          "severity": "minor",
+          "evidence": "Inputs have aria-describedby=\"contact-*-error\" and get aria-invalid=true on failure, but there is no aria-errormessage. name uses pattern=\".{2,}\", which accepts whitespace-only input. There is no maxlength on any field.",
+          "confidence": "high",
+          "remediation": "Add aria-errormessage=\"contact-*-error\" next to aria-describedby, use pattern=\".*\\S.*\" with minlength=2 for name, and add maxlength (name 100, email 254, message 5000).",
+          "effort": "low",
+          "impact": "This is a small gain in the precision of machine-readable error association and constraints."
+        }
+      ],
+      "strengths": [
+        "3/3 visible fields have label[for] coupled to input[id]: contact-name (type=text, required, minlength=2, autocomplete=name), contact-email (type=email, required, autocomplete=email), contact-message (textarea, required, minlength=10).",
+        "Explicit action and method (POST to https://formspree.io/f/xzdyblya). The _next redirect is now absolute: value=\"https://kin.rag.wtf/contact/?submitted=true\" (baseline moderate finding fixed).",
+        "Stable data-testid on the form, every field, the submit button and the success region.",
+        "Single-step workflow, with no overlays or modals.",
+        "The agent policy says automated submission is not allowed, and a mailto alternative (data-testid=contact-cta) is offered on the same page."
+      ],
+      "summary": "The form is well built: typed, labelled and constrained inputs, an explicit POST action, and the absolute _next redirect that fixes the baseline's moderate issue. The remaining gaps are minor: novalidate in static markup, no aria-errormessage, and loose length constraints. Verified read-only. The form was not submitted."
+    },
+    {
+      "id": "T3",
+      "name": "Error Handling & Recovery",
+      "category": "task",
+      "score": 8,
+      "weight_in_category": 0.1,
+      "findings": [
+        {
+          "finding": "Directory URLs, including the API root /api/, return nginx's bare 403 HTML page.",
+          "severity": "moderate",
+          "evidence": "GET /api/ -> 403 text/html, 153 bytes, '<h1>403 Forbidden</h1> ... nginx/1.31.7'. The same for /images/, /_astro/ and /.well-known/. These pages have no JSON body, no navigation and no pointer to /api/openapi.json, and they disclose the nginx version. Security headers are present.",
+          "confidence": "high",
+          "remediation": "Add an exact-match location = /api/ that returns a JSON endpoint index (portfolio/projects/experience/articles.json plus a docs link to openapi.json), or a JSON 404. Map 403 to the 404 page elsewhere (error_page 403 =404 /404.html), and set server_tokens off.",
+          "effort": "low",
+          "impact": "An agent that probes /api/ to discover endpoints, which is common, reaches a dead end with no recovery hint."
+        },
+        {
+          "finding": "Inline field errors are not live regions, and there is no aria-errormessage.",
+          "severity": "minor",
+          "evidence": "The containers #contact-name-error, #contact-email-error and #contact-message-error have no role and no aria-live (checked in the browser). Linkage is aria-describedby plus aria-invalid=true, and focus moves to the first invalid field on submit.",
+          "confidence": "high",
+          "remediation": "Add aria-errormessage to each field. Optionally add a form-level summary with role=alert listing the failing fields.",
+          "effort": "low",
+          "impact": "Agents that read the accessibility tree after a failed submit must re-scan the fields. There is no persistent summary."
+        },
+        {
+          "finding": "Rate-limit guidance is advisory only, and the headers and the policy disagree.",
+          "severity": "minor",
+          "evidence": "/api/* responses send X-RateLimit-Limit: 60, X-RateLimit-Window: 60 and X-RateLimit-Policy: 60;w=60, with no X-RateLimit-Remaining and no Retry-After. /.well-known/agent-policy says 'No hard rate limits are enforced'. The nginx config notes 'no server-side enforcement'.",
+          "confidence": "high",
+          "remediation": "Align the two: either describe the headers as advisory in agent-policy and OpenAPI, or enforce with limit_req and return 429 with Retry-After and a JSON body.",
+          "effort": "low",
+          "impact": "Clients cannot tell whether 60/min is a hard cap. The practical risk is low for a static site."
+        },
+        {
+          "finding": "When the third-party processor fails or rejects a submission, recovery happens off-site.",
+          "severity": "minor",
+          "evidence": "Errors from Formspree (spam filtering, validation, a possible challenge) are shown on formspree.io, not on /contact/. Not verified, because the audit does not submit forms.",
+          "confidence": "low",
+          "remediation": "Optionally submit via fetch with Accept: application/json and render Formspree's JSON errors inline, keeping the plain POST as the no-JS fallback.",
+          "effort": "medium",
+          "impact": "This applies only to the human-only contact workflow. Agents are told not to submit."
+        }
+      ],
+      "strengths": [
+        "Unknown API paths now return JSON: GET /api/nope.json, /api/nope/ and /api/foo/bar/ -> 404 application/json {\"error\":\"not_found\",\"message\":\"No such API resource.\",\"docs\":\"https://kin.rag.wtf/api/openapi.json\"}, Cache-Control: no-store, CORS * (baseline moderate finding fixed).",
+        "OpenAPI defines an Error schema (error, message, docs) and 404/304 responses on every path.",
+        "Missing HTML pages return a true 404 status with a helpful page: 'Page Not Found', recovery links, meta robots noindex, no canonical (baseline canonical issue fixed), Cache-Control: no-store. Nested misses (/projects/nonexistent/, /_astro/nope.js) also return 404.",
+        "Field errors are inline and persistent, specific ('Enter a valid email address, like name@example.com.'), and set aria-invalid=true. The first invalid field gets focus."
+      ],
+      "summary": "Error handling is much better than the baseline: JSON 404s under /api/, a documented Error schema, and a real 404 page with recovery links and no canonical. It stops at 8 because /api/ and other directory URLs fall through to nginx's bare 403 HTML, error regions are not live with no aria-errormessage, and rate-limit guidance is advisory and inconsistent."
+    },
+    {
+      "id": "T4",
+      "name": "Authentication & Session Handling",
+      "category": "task",
+      "score": 9,
+      "weight_in_category": 0.1,
+      "findings": [],
+      "strengths": [
+        "No authentication is needed for any page, API resource or file: all fetched URLs returned 200 without credentials.",
+        "No Set-Cookie on any response from localhost or production (GPTBot GET of https://kin.rag.wtf/), so there is no session state to manage.",
+        "Auth is declared explicitly as none in machine-readable form: ai-plugin.json auth {type: none}, agent.json authentication {type: none} with empty securitySchemes, and OpenAPI with no security requirement."
+      ],
+      "summary": "The site is public and read-only, with nothing behind authentication, and every manifest declares that. Nothing blocks agents. It scores 9 rather than 10 only because the rubric's top band describes a full OAuth, API-key and agent-token stack, which this site neither has nor needs."
+    },
+    {
+      "id": "T5",
+      "name": "Anti-Bot Friction",
+      "category": "task",
+      "score": 9,
+      "weight_in_category": 0.15,
+      "findings": [
+        {
+          "finding": "The contact workflow goes through a third-party processor that may show a CAPTCHA for plain HTML posts.",
+          "severity": "minor",
+          "evidence": "The form posts to formspree.io. Formspree can show reCAPTCHA on non-AJAX submissions depending on form settings. Not verified, because the audit does not submit or contact formspree.io. A mailto:limcheekin@vobject.com alternative is on the same page, and the agent policy reserves the form for humans.",
+          "confidence": "low",
+          "remediation": "Check in the Formspree dashboard whether reCAPTCHA is on. If it is, keep the email alternative prominent (it already is) or switch to AJAX submission with invisible spam scoring.",
+          "effort": "low",
+          "impact": "It could block a human-assisted agent from completing the contact form. The email path stays open."
+        }
+      ],
+      "strengths": [
+        "Production (Cloudflare in front) served HTTP 200 with byte-identical bodies (sha256 554da8d707d2afb0...) to GPTBot, ClaudeBot, PerplexityBot and python-requests. There were no challenge markers (cf-chl, challenge-platform, 'Just a moment', captcha), no cf-mitigated header, no cookies, and no Cloudflare email obfuscation or script injection.",
+        "GET https://kin.rag.wtf/api/portfolio.json as python-requests -> 200 application/json.",
+        "No CAPTCHA, WAF interstitial or bot script anywhere in the site's own markup.",
+        "robots.txt is 'User-agent: * Allow: /'. The agent policy documents courteous rate guidance and conditional GET (ETag verified: If-None-Match returns 304)."
+      ],
+      "summary": "There is no anti-bot friction on any site workflow. Production Cloudflare lets common AI crawlers and generic HTTP clients through without challenge, and serves them the same bytes. The one unverified risk is a possible Formspree reCAPTCHA on the human-only contact form, which has an email alternative."
+    },
+    {
+      "id": "T6",
+      "name": "API/Tool Exposure",
+      "category": "task",
+      "score": 9,
+      "weight_in_category": 0.1,
+      "findings": [
+        {
+          "finding": "OpenAPI declares Article.publishDate as format 'date', but the API returns full ISO date-times.",
+          "severity": "minor",
+          "evidence": "/api/openapi.json components.schemas.Article.properties.publishDate = {type: string, format: date}. In both /api/articles.json and /api/portfolio.json all 10 articles return e.g. \"publishDate\": \"2025-04-23T00:00:00.000Z\".",
+          "confidence": "high",
+          "remediation": "Either emit 'YYYY-MM-DD' in generate-api.ts (publishDate.toISOString().slice(0,10)) or change the schema to format: date-time.",
+          "effort": "low",
+          "impact": "Strict validators and generated clients (e.g. openapi-generator with date parsing) stop rejecting or mis-parsing article dates."
+        },
+        {
+          "finding": "CORS preflight is not supported, so browser agents cannot send explicit conditional requests cross-origin.",
+          "severity": "minor",
+          "evidence": "OPTIONS http://localhost:8089/api/portfolio.json with Origin and Access-Control-Request-Method: GET -> 'HTTP/1.1 405 Not Allowed'. GET sends 'Access-Control-Allow-Origin: *', but If-None-Match (the header the spec and agent-policy invite) is not a CORS-safelisted header, so a cross-origin fetch() that sets it is preflighted and fails.",
+          "confidence": "high",
+          "remediation": "In the nginx /api/ location, answer OPTIONS with 204 plus 'Access-Control-Allow-Methods: GET, HEAD, OPTIONS', 'Access-Control-Allow-Headers: If-None-Match, If-Modified-Since', 'Access-Control-Expose-Headers: ETag, Last-Modified, X-RateLimit-Limit, X-RateLimit-Window', and 'Access-Control-Max-Age: 86400'.",
+          "effort": "low",
+          "impact": "Browser-hosted agents (WebMCP pages, in-browser assistants on other origins) can poll conditionally and read the ETag."
+        },
+        {
+          "finding": "Non-API agent files have no Cache-Control and no CORS header, unlike the /api/ JSON.",
+          "severity": "minor",
+          "evidence": "/llms.txt, /llms-full.txt, /.well-known/agent.json, /.well-known/agent-card.json and /.well-known/mcp.json return ETag and Last-Modified (If-None-Match -> 304 works) but no Cache-Control and no Access-Control-Allow-Origin. /api/*.json have 'Cache-Control: public, max-age=3600, must-revalidate' and 'Access-Control-Allow-Origin: *'.",
+          "confidence": "high",
+          "remediation": "Apply the /api/ header set (Cache-Control and ACAO *) to /llms*.txt and /.well-known/*.json in nginx.conf.",
+          "effort": "low",
+          "impact": "Browser-based A2A and MCP clients can fetch the cards cross-origin, and caching proxies get explicit freshness."
+        },
+        {
+          "finding": "/api/ itself returns a 403 HTML page instead of a JSON index or a pointer to the spec.",
+          "severity": "minor",
+          "evidence": "GET http://localhost:8089/api/ -> 403 text/html (nginx default page); GET /api -> 301 /api/ -> 403. Unknown resources are handled well: /api/nope.json and /api/foo/bar.json -> 404 application/json {\"error\":\"not_found\",\"message\":\"No such API resource.\",\"docs\":\"https://kin.rag.wtf/api/openapi.json\"} with Cache-Control: no-store.",
+          "confidence": "high",
+          "remediation": "Serve a small /api/index.json at /api/ (links to openapi.json and the four resources), or return the same JSON error body with a 'docs' link for the directory.",
+          "effort": "low",
+          "impact": "Agents that probe the API root get a machine-readable map instead of an HTML error."
+        }
+      ],
+      "strengths": [
+        "OpenAPI 3.0.3 spec (info.version 2.1.0) parses cleanly. All 6 documented paths resolve with 200 on localhost: /api/portfolio.json, /api/projects.json, /api/experience.json, /api/articles.json, /llms.txt, /llms-full.txt.",
+        "Fixed: schema fidelity. Field-by-field comparison of all 13 projects, 11 experience entries and 10 articles found no undocumented fields, no documented fields that never appear, no missing required fields, valid kind enum values and YYYY-MM experience dates; the only mismatch is the publishDate format. Per-collection endpoints are byte-identical subsets of portfolio.json.",
+        "Fixed: 304 and 404 responses, the IfNoneMatch parameter, ETag, Last-Modified, Cache-Control and advisory X-RateLimit-* response headers are all documented, and the live headers match ('X-RateLimit-Limit: 60', 'X-RateLimit-Window: 60', 'X-RateLimit-Policy: 60;w=60').",
+        "Conditional GET verified on every API and agent file: If-None-Match -> 304 and If-Modified-Since -> 304. The gzip weak ETag (W/\"6ad5cf71-7629\") also revalidates to 304. HEAD -> 200.",
+        "JSON error contract: unknown /api/*.json and extensionless /api/x (after the trailing-slash 301) return 404 application/json matching the documented Error schema.",
+        "The API is referenced from llms.txt, ai-plugin.json (api.type openapi), robots.txt comments, the agent card skills and mcp.json resources.",
+        "Client-side WebMCP: /_astro/WebMCPTools.*.js calls registerTool for get_projects, get_experience, get_contact_info and search_portfolio."
+      ],
+      "summary": "Accurate, well-documented static read API with real caching semantics and a JSON error contract. The spec now matches the payloads except for one date format. The remaining gaps are CORS preflight, header parity on non-API agent files, the bare /api/ root, and no SDK or developer portal, which a portfolio does not reasonably need."
+    },
+    {
+      "id": "T7",
+      "name": "Observability & Outcome Verification",
+      "category": "task",
+      "score": 8,
+      "weight_in_category": 0.1,
+      "findings": [
+        {
+          "finding": "The success message is in every /contact/ HTML response, hidden only by CSS, and is triggered by a query string anyone can add.",
+          "severity": "moderate",
+          "evidence": "Every GET /contact/ (with or without ?submitted=true, identical bytes) contains <div id=\"contact-success\" role=\"status\" aria-live=\"polite\" data-testid=\"contact-form-success\" class=\"hidden ...\">Thank you for your message! I'll get back to you as soon as possible.</div>. Client JS removes 'hidden' when location.search includes 'submitted=true' (verified in the browser: on /contact/?submitted=true the success region is visible and the form is hidden; on /contact/ it is not). No confirmation ID or timestamp.",
+          "confidence": "high",
+          "remediation": "Do not ship the success text in the default HTML. Use a <template> or set it with JS only when submitted=true, or serve a separate /contact/thanks/ page (noindex) as the _next target. A non-JS agent then sees success text only after an actual redirect. Optionally show the submission time.",
+          "effort": "low",
+          "impact": "An HTTP-only agent that greps the response for confirmation text gets a false positive whether or not the submission worked. Agents that run JS are fine."
+        },
+        {
+          "finding": "Whether a submission succeeds can only be seen through a third-party redirect.",
+          "severity": "minor",
+          "evidence": "_next=\"https://kin.rag.wtf/contact/?submitted=true\" (now absolute) is the only success signal. Formspree returns no on-site ID. Not exercised, because the audit does not submit.",
+          "confidence": "medium",
+          "remediation": "If verification matters, switch to fetch() with Accept: application/json and render Formspree's {ok:true, next} response into the status region.",
+          "effort": "medium",
+          "impact": "This is a small effect on a human-only workflow."
+        }
+      ],
+      "strengths": [
+        "The success region has role=status, aria-live=polite and data-testid=contact-form-success, persists in the DOM, and comes with a URL state change (?submitted=true).",
+        "The submit button shows a 'Sending…' state and is disabled after a valid submit, and re-enabled on bfcache restore.",
+        "API responses are structured JSON with correct status codes (200, 304 via ETag/If-None-Match, 404 JSON error), and metadata.generatedAt plus Last-Modified support freshness checks."
+      ],
+      "summary": "Outcomes can be observed: a persistent role=status success region with a testid, a URL state flag, and structured API status codes. It is held at 8 because the success text ships in every /contact/ response hidden only by CSS, and is triggered by a query string anyone can add, so HTTP-only agents can get a false confirmation. There is also no confirmation ID."
+    },
+    {
+      "id": "T8",
+      "name": "Content Consistency & Determinism",
+      "category": "task",
+      "score": 10,
+      "weight_in_category": 0.1,
+      "findings": [],
+      "strengths": [
+        "Byte-identical responses from localhost across desktop Chrome, iPhone Safari, GPTBot, ClaudeBot, python-requests and curl user agents, with gzip, and with Accept-Language ms-MY, for / (bd4413daa60fc995), /contact/ (705e67925574a5f1), /projects/ (84fd77cb08f518c8) and /api/portfolio.json (98fb1aa70feae24e).",
+        "Three repeated loads of / gave identical hashes, with no A/B or personalisation markers and no cookies.",
+        "Production also served identical bytes to four bot user agents. Viewport differences are CSS or behaviour only: WorkTrack's pin/swipe/reduce mode changes animation, not the DOM.",
+        "Cross-surface data agrees: 13 projects and 10 articles in /api/portfolio.json match /projects/ links and sitemap-0.xml, and the title 'AI Solutions Architect at Daxonet AI' is the same in ai-plugin.json, agent.json, site.webmanifest and llms.txt. No years-of-experience figure appears on any surface.",
+        "The only time-varying content, the looping hero agent console, sits in an aria-hidden decorative region with a pause control and does not displace core content."
+      ],
+      "summary": "Content is fully deterministic: identical bytes regardless of user agent, language, compression or repeat load, both locally and in production. Data matches across HTML, API, sitemap and manifests. Nothing was found."
+    },
+    {
+      "id": "T9",
+      "name": "GEO Alignment",
+      "category": "task",
+      "score": 9,
+      "weight_in_category": 0.05,
+      "findings": [
+        {
+          "finding": "Article pages are short summaries: the citable body lives on Medium, and nothing on the site links to the on-site pages, so generative engines see little attributable article content on kin.rag.wtf.",
+          "severity": "minor",
+          "evidence": "/insights/zero-trust-ai-agents/: 825 visible chars; div.prose-like holds one paragraph equal to the meta description; rows on / and /insights/ link to https://limcheekin.medium.com/...; no internal href points to /insights/<slug>/.",
+          "confidence": "high",
+          "remediation": "Add 3-5 key takeaways or an abstract per article (in the article frontmatter or body) under the h1, and link row titles to the on-site page with a secondary Medium link.",
+          "effort": "medium",
+          "impact": "More quotable, attributable passages on the owned domain; better odds that citations point to kin.rag.wtf rather than Medium."
+        },
+        {
+          "finding": "The FAQPage answers are not visible on any page, so the FAQ schema describes content a reader cannot see.",
+          "severity": "minor",
+          "evidence": "home.html FAQPage with 10 Question/Answer pairs (e.g. 'What is Lim Chee Kin's approach to data sovereignty and private AI?'); none of the question strings appear in the visible text of / or /about/.",
+          "confidence": "high",
+          "remediation": "Render the FAQ as a visible, collapsed <details>/<summary> list on /about/ (or the home page) and move the FAQPage JSON-LD to that page.",
+          "effort": "low",
+          "impact": "Structured data stays consistent with visible content (a search-engine guideline), and answer engines get a visible Q&A block to quote."
+        },
+        {
+          "finding": "Project descriptions and meta descriptions are written in CV voice without a subject, and several exceed ~160 characters.",
+          "severity": "minor",
+          "evidence": "/projects/claim-pilot/ meta description (~290 chars): 'Built expense claim intake through Teams and WhatsApp, ...'; /projects/talk-to-ai/ JSON-LD description: 'Developed 'Talk To AI', an application integrating ...'; the article meta description is ~250 chars.",
+          "confidence": "high",
+          "remediation": "Lead with an entity definition ('Claim Pilot is an enterprise expense-claim system that ...'), keep meta descriptions to ~150-160 chars, and reuse the definition sentence in the JSON-LD description.",
+          "effort": "low",
+          "impact": "Generative engines lift the first sentence as the definition; an 'X is ...' sentence can be quoted as is."
+        },
+        {
+          "finding": "The About page h1 is the generic 'About Me' rather than an entity name.",
+          "severity": "minor",
+          "evidence": "about.html <h1 id=\"about-me\">About Me</h1>; the entity sentence appears only in the first paragraph ('I'm Lim Chee Kin, an AI Solutions Architect at Daxonet AI in Kuala Lumpur.').",
+          "confidence": "high",
+          "remediation": "Use 'About Lim Chee Kin' (or 'Lim Chee Kin, AI Solutions Architect') as the h1.",
+          "effort": "low",
+          "impact": "A stronger entity signal for extractors that weight the h1."
+        }
+      ],
+      "strengths": [
+        "Strong entity declarations: a Person with a stable @id, jobTitle, description, knowsAbout, worksFor, sameAs (GitHub/LinkedIn/Medium) and contactPoint, plus a first-person entity sentence opening /about/.",
+        "FAQPage with 10 definitional Q&As ('What is RAG.WTF?', 'What is Project Concord?', 'What is Lim Chee Kin's career background?'), each with a url linking to the relevant page.",
+        "Citation-ready blocks: dated career entries with concrete outcomes ('Led 6+ engineers across China, Europe and Malaysia', 'RM6M and RM2M banking tenders at Penril'), per-project paragraphs, and dated article rows with <time datetime>.",
+        "Meta descriptions are unique on every page, and the home description's grammar is fixed ('Personal portfolio for Lim Chee Kin, an AI Solutions Architect, showcasing skills, experience, and AI projects.').",
+        "Article pages carry speakable markup whose selectors resolve in the DOM; llms.txt, llms-full.txt and api/portfolio.json give generative engines clean alternates."
+      ],
+      "summary": "Well optimised for generative extraction, with entity declarations, FAQ schema, dated and quantified outcomes, and speakable. What holds it back: thin on-site article bodies, FAQ answers that no page shows, and CV-voice project descriptions instead of definitions."
+    },
+    {
+      "id": "P1",
+      "name": "A2A Readiness",
+      "category": "protocol",
+      "score": 8.5,
+      "weight_in_category": 0.5,
+      "findings": [
+        {
+          "finding": "The card's required 'url' advertises an A2A endpoint that does not speak A2A. Machine clients will try JSON-RPC and get an HTML 405.",
+          "severity": "minor",
+          "evidence": "/.well-known/agent-card.json: \"url\": \"https://kin.rag.wtf/\". There is no preferredTransport, so A2A 0.3 defaults to JSONRPC. POST http://localhost:8089/ with {\"jsonrpc\":\"2.0\",\"method\":\"message/send\",...} -> 405 text/html (nginx). The non-acceptance is stated only in the free-text description ('does not accept A2A task requests'), which clients do not parse.",
+          "confidence": "high",
+          "remediation": "Either stand up a minimal read-only A2A endpoint (e.g. /a2a on a Worker answering message/send from portfolio.json), or keep the card informational and make the skills' examples resource-shaped (e.g. 'GET /api/projects.json') so orchestrators do not route conversational tasks to it.",
+          "effort": "medium",
+          "impact": "Orchestrators stop dispatching tasks that are bound to fail, and the card's claims become accurate at the machine-readable level."
+        },
+        {
+          "finding": "Skill examples suggest question answering that the site cannot do.",
+          "severity": "minor",
+          "evidence": "skills[0].examples = [\"Which enterprise AI systems has Lim Chee Kin built?\", \"List the open-source projects with their repositories.\"]; skills[1].examples = [\"What has Lim Chee Kin written about MCP?\", \"Summarise the portfolio.\"] with inputModes text/plain. The site only serves static resources.",
+          "confidence": "medium",
+          "remediation": "Reword the examples as retrieval instructions, or keep them and back them with a real endpoint (see the finding above).",
+          "effort": "low",
+          "impact": "Capability claims match what an A2A client can actually get."
+        },
+        {
+          "finding": "The agent card is served without Access-Control-Allow-Origin, and it keeps a non-spec 'authentication' field.",
+          "severity": "minor",
+          "evidence": "GET /.well-known/agent-card.json headers: Content-Type application/json, no Access-Control-Allow-Origin, no Cache-Control. The body has both a legacy \"authentication\": {\"type\": \"none\"} (not in the A2A 0.3.0 AgentCard; kept for older readers) and the current \"securitySchemes\": {}, \"security\": [].",
+          "confidence": "high",
+          "remediation": "Add 'Access-Control-Allow-Origin: *' to /.well-known/*.json. Keeping 'authentication' is harmless and serves older readers.",
+          "effort": "low",
+          "impact": "Browser-based A2A registries and inspectors can fetch the card cross-origin."
+        }
+      ],
+      "strengths": [
+        "Fixed: published at both /.well-known/agent-card.json (the current A2A path) and /.well-known/agent.json, byte-identical, 200 application/json, and valid JSON.",
+        "Fixed: has every required A2A 0.3.0 AgentCard field: protocolVersion '0.3.0', name, description, url, version '1.1', capabilities {streaming, pushNotifications, stateTransitionHistory: false}, defaultInputModes, defaultOutputModes, and skills (each with id, name, description, tags, plus examples and input/output modes). Also provider {organization, url}, documentationUrl (llms.txt) and iconUrl (/favicon.svg -> 200 image/svg+xml).",
+        "Auth model is correct for a public site: no security schemes, empty security, and legacy authentication.type 'none'.",
+        "Honest: the description says it is a static, read-only site that does not accept A2A tasks. Every resource named in the skills (/api/*.json, /api/openapi.json, /llms*.txt, /sitemap-index.xml, /rss.xml) returns 200.",
+        "Discoverable: linked from robots.txt ('# A2A Agent Card') and llms.txt (both paths)."
+      ],
+      "summary": "A schema-complete, accurate and discoverable A2A 0.3 card. It stops short of 9-10 because the required url field points at a static origin that rejects JSON-RPC, so the machine-readable layer still implies an interactive agent that the site only disclaims in prose."
+    },
+    {
+      "id": "P2",
+      "name": "MCP Server Readiness",
+      "category": "protocol",
+      "score": 3,
+      "weight_in_category": 0.5,
+      "findings": [
+        {
+          "finding": "No MCP server exists. Every discovery file states this explicitly, and every candidate endpoint fails an MCP initialize request.",
+          "severity": "moderate",
+          "evidence": "/.well-known/mcp.json description: 'There is no MCP server endpoint yet: fetch each resource URI over HTTPS'. llms.txt: 'MCP Manifest (static resource list; no MCP server endpoint yet)'. POST initialize (protocolVersion 2025-06-18) to localhost: /.well-known/mcp.json -> 405 text/html; /mcp -> 301 /mcp/ -> 404; /.well-known/mcp -> 404; /sse, /api/mcp -> 301 -> 404. No MCP URL in ai-plugin.json (api.type openapi), in openapi.json servers (only https://kin.rag.wtf) or in the agent card.",
+          "confidence": "high",
+          "remediation": "Deploy a small read-only MCP server over Streamable HTTP (e.g. https://kin.rag.wtf/mcp proxied by nginx to a sidecar, or a Cloudflare Worker route). Expose resources for portfolio, projects, experience and articles, and tools mirroring the WebMCP set (get_projects, get_experience, get_contact_info, search_portfolio), with no auth. Then add its URL to mcp.json, llms.txt, robots.txt comments, ai-plugin.json and the openapi servers list.",
+          "effort": "medium",
+          "impact": "MCP clients (Claude, IDE agents) can connect directly. For an AI Solutions Architect whose projects centre on MCP, it is also proof of the skill on the portfolio itself."
+        },
+        {
+          "finding": "mcp.json uses a non-standard shape and a protocol version that does not exist.",
+          "severity": "minor",
+          "evidence": "\"mcpVersion\": \"1.0\". MCP protocol revisions are date strings (e.g. 2025-06-18). The file has no transport or endpoint fields and follows no published MCP discovery or server-card format.",
+          "confidence": "high",
+          "remediation": "Drop mcpVersion or set it to the implemented revision. When a server exists, add {\"transport\": \"streamable-http\", \"url\": \"https://kin.rag.wtf/mcp\"} and keep the resource list.",
+          "effort": "low",
+          "impact": "Tools that validate the version field do not reject the manifest."
+        }
+      ],
+      "strengths": [
+        "The manifest is honest and complete: 7 resources (portfolio, projects, experience, articles, openapi, llms-full, llms), each with uri, name, description and mimeType, and all 200 on localhost. It is now listed in robots.txt and llms.txt.",
+        "The tool design already exists client-side: WebMCP registers get_projects, get_experience, get_contact_info and search_portfolio, so a server-side MCP implementation is mostly wiring."
+      ],
+      "summary": "Absent: no MCP server URL exists in any manifest or document, and every probe fails. That places it in the 0-2 band; the honest, well-listed resource manifest and the existing WebMCP tool set earn the top of that band. Still the largest remaining differentiator. Lead auditor kept the baseline's reading of the rubric (3) for a like-for-like comparison; the sub-agent's stricter reading was 2."
+    }
+  ],
+  "task_profiles": [
+    {
+      "profile": "discovery",
+      "status": "pass",
+      "evidence": "robots.txt (Allow all, Sitemap, and comment pointers to llms.txt, llms-full.txt, portfolio.json, ai-plugin.json, agent.json, agent-policy, mcp.json, openapi.json), sitemap-index.xml -> sitemap-0.xml (28 URLs incl. all 13 projects and 10 articles), llms.txt, llms-full.txt and rss.xml all return 200. /sitemap.xml 301s relatively to /sitemap-index.xml.",
+      "blockers": [],
+      "notes": "/api/ itself returns nginx 403 HTML, so endpoint discovery must go through openapi.json or the robots and llms pointers."
+    },
+    {
+      "profile": "navigation",
+      "status": "pass",
+      "evidence": "Semantic <nav> with plain <a href> to /about/, /projects/, /insights/, /contact/, /resume.pdf. 0 JS-only links. BreadcrumbList JSON-LD plus a visible breadcrumb on every inner page. Relative 301 trailing-slash redirects that keep the query string.",
+      "blockers": [],
+      "notes": "No GET search. /insights/<slug>/ pages are reachable only via the sitemap, llms and API, not via HTML links. Nav label 'Work' maps to /projects/."
+    },
+    {
+      "profile": "extraction",
+      "status": "pass",
+      "evidence": "/api/portfolio.json (13 projects, 10 articles, 11 roles) plus projects/experience/articles.json, all 200 JSON with ETag (304 verified). All text is server-rendered. Per-page JSON-LD (Person, WebSite, FAQPage, ItemList, SoftwareApplication/SoftwareSourceCode, Article, ContactPage, BreadcrumbList). Identical bytes for every user agent.",
+      "blockers": [],
+      "notes": ""
+    },
+    {
+      "profile": "action-completion",
+      "status": "pass",
+      "evidence": "Contact form: 3/3 labelled, typed and required fields, explicit POST action, absolute _next=https://kin.rag.wtf/contact/?submitted=true, testids on all controls. A mailto alternative is on the same page, and agent-policy says the form is for humans only.",
+      "blockers": [],
+      "notes": "Not submitted (passive audit). A possible Formspree reCAPTCHA is unverified. The success text is in every /contact/ response hidden by CSS, so HTTP-only agents should check the redirect URL, not the page text."
+    },
+    {
+      "profile": "recovery",
+      "status": "pass",
+      "evidence": "Missing pages return a true 404 with recovery links and noindex, and no canonical. Unknown /api/*.json and /api/*/ paths return 404 JSON {error, message, docs}, documented in the OpenAPI Error schema. Field errors are inline with aria-invalid, and focus moves to the first invalid field.",
+      "blockers": [],
+      "notes": "Remaining gap: directory URLs (/api/, /images/, /_astro/, /.well-known/) return nginx's bare 403 HTML with no recovery hints."
+    }
+  ],
+  "remediation_roadmap": {
+    "immediate": [
+      {
+        "action": "Return 404 (JSON under /api/) instead of nginx's bare 403 for directory URLs: try_files $uri $uri/index.html =404 in location /, try_files $uri =404 in /api/, server_tokens off.",
+        "effort": "low",
+        "dimension": "T3",
+        "impact": "Parseable errors and no nginx version disclosure.",
+        "severity": "moderate"
+      },
+      {
+        "action": "Do not ship the contact success text in every response: use the hidden attribute (or insert the text only when ?submitted=true).",
+        "effort": "low",
+        "dimension": "T7",
+        "impact": "No false confirmation for HTML-only agents.",
+        "severity": "moderate"
+      },
+      {
+        "action": "Fill SoftwareSourceCode.programmingLanguage with real languages only (new frontmatter field or a filter), not the whole technologies list.",
+        "effort": "low",
+        "dimension": "S4",
+        "impact": "Accurate code metadata.",
+        "severity": "moderate"
+      },
+      {
+        "action": "Serve text/plain, XML and JSON with charset=utf-8 (nginx charset utf-8 + charset_types).",
+        "effort": "low",
+        "dimension": "S1",
+        "impact": "No mojibake for clients defaulting to ISO-8859-1.",
+        "severity": "minor"
+      },
+      {
+        "action": "Fix OpenAPI Article.publishDate to format date-time; add Expires to security.txt; list rss.xml, agent-card.json and the per-collection endpoints in llms.txt and robots.txt.",
+        "effort": "low",
+        "dimension": "T6",
+        "impact": "Spec and discovery index fully accurate.",
+        "severity": "minor"
+      }
+    ],
+    "short_term": [
+      {
+        "action": "Install git in the Docker build stage (or pass dates in) so project and page lastmod values survive container builds; today only articles get lastmod there.",
+        "effort": "low",
+        "dimension": "S1",
+        "impact": "Real lastmod on all 28 URLs.",
+        "severity": "minor"
+      },
+      {
+        "action": "Wrap article and project detail content in <article>; name the home sections with aria-labelledby; render ArticleRow wrapper as a div, not span; aria-hide nav numerals.",
+        "effort": "low",
+        "dimension": "S3",
+        "impact": "Cleaner landmarks and valid heading nesting.",
+        "severity": "minor"
+      },
+      {
+        "action": "Give project entities @id and image; add og:type article, inLanguage and image to articles; link ContactPage to #person.",
+        "effort": "low",
+        "dimension": "S4",
+        "impact": "Richer, linked entity graph.",
+        "severity": "minor"
+      },
+      {
+        "action": "Link each article row's on-site summary (/insights/<slug>/) as well as the Medium original.",
+        "effort": "low",
+        "dimension": "T1",
+        "impact": "On-site article pages become reachable without the sitemap.",
+        "severity": "minor"
+      },
+      {
+        "action": "Add data-slug/id to career and experience entries and testids to remaining controls.",
+        "effort": "low",
+        "dimension": "S5",
+        "impact": "Complete selector coverage.",
+        "severity": "minor"
+      },
+      {
+        "action": "Mark A2A skill examples as resource lookups and add CORS + Cache-Control to .well-known JSON and llms files; allow OPTIONS on /api/.",
+        "effort": "low",
+        "dimension": "P1",
+        "impact": "Accurate card, browser-agent friendly fetches.",
+        "severity": "minor"
+      }
+    ],
+    "medium_term": [
+      {
+        "action": "Deploy a read-only MCP server (Streamable HTTP) mirroring the WebMCP tools; document it in llms.txt, ai-plugin.json, mcp.json and the agent card.",
+        "effort": "medium",
+        "dimension": "P2",
+        "impact": "Direct MCP integration; largest remaining protocol gain.",
+        "severity": "moderate"
+      },
+      {
+        "action": "Publish per-page Markdown alternates and a small /api/search.json index.",
+        "effort": "medium",
+        "dimension": "S2",
+        "impact": "Lower token cost; keyword lookup without WebMCP.",
+        "severity": "minor"
+      },
+      {
+        "action": "Show the FAQ answers on a visible page and add 3-5 quotable key points per /insights/ page.",
+        "effort": "medium",
+        "dimension": "T9",
+        "impact": "Schema matches visible content; more citable on-site text.",
+        "severity": "minor"
+      }
+    ]
+  },
+  "configuration_files": {
+    "robots_txt": {
+      "present": true,
+      "url": "http://localhost:8089/robots.txt",
+      "content_type": "text/plain",
+      "content_summary": "User-agent: * / Allow: / ; Sitemap: https://kin.rag.wtf/sitemap-index.xml ; '# Agent discovery' comment block listing llms.txt, llms-full.txt, api/portfolio.json, ai-plugin.json, .well-known/agent.json, .well-known/agent-policy, .well-known/mcp.json and api/openapi.json.",
+      "agent_relevant_directives": [
+        "User-agent: * Allow: /",
+        "Sitemap: https://kin.rag.wtf/sitemap-index.xml",
+        "# A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json",
+        "# Agent Policy: https://kin.rag.wtf/.well-known/agent-policy",
+        "# MCP manifest: https://kin.rag.wtf/.well-known/mcp.json",
+        "# OpenAPI spec: https://kin.rag.wtf/api/openapi.json"
+      ],
+      "gaps": "No mention of /rss.xml, /.well-known/agent-card.json or the per-collection API endpoints."
+    },
+    "sitemap_xml": {
+      "present": true,
+      "redirect": "GET /sitemap.xml -> 301, Location: /sitemap-index.xml (relative; scheme-safe behind TLS)",
+      "index": "/sitemap-index.xml (text/xml) -> one child, /sitemap-0.xml",
+      "url_count": 28,
+      "url_breakdown": "home, /about/, /contact/, /projects/ plus 13 project pages, /insights/ plus 10 article pages; all 28 return 200",
+      "lastmod_real_per_page": true,
+      "lastmod_detail": "13 of 28 URLs carry lastmod: the 10 articles (each equals its publishDate, verified against /api/articles.json) and /insights/ (newest article, 2026-03-13). The other 15 (home, about, contact, /projects/ and 13 project pages) omit lastmod instead of using the build time. No build-timestamp lastmod remains.",
+      "last_modified": "2026-03-13 (newest real lastmod)",
+      "changefreq": "weekly on every entry"
+    },
+    "llms_txt": {
+      "present": true,
+      "content_type": "text/plain (no charset)",
+      "size_bytes": 6427,
+      "content_summary": "H1, summary blockquote, About, Core Skills, Current Projects (5 enterprise plus 5 OSS with links), Past Contributions, Work Experience (11 roles), Articles (10 Medium links), Contact, Technical (links to llms-full, sitemap, portfolio.json, openapi.json, ai-plugin.json, agent.json/agent-card.json, mcp.json with an explicit 'no MCP server endpoint yet', agent-policy), and Site Map Notes (slug patterns, Work/Writing label mapping). No years-of-experience figure.",
+      "llms_full_txt": "present, 27200 bytes, text/plain without charset; 13 projects with full bodies, 10 articles, 11 roles with responsibilities, contact. Query parameters are ignored (static)."
+    },
+    "ai_plugin_json": {
+      "present": true,
+      "paths": [
+        "/ai-plugin.json",
+        "/.well-known/ai-plugin.json"
+      ],
+      "identical": true,
+      "content_type": "application/json",
+      "content_summary": "schema_version v1, name_for_model limcheekin_portfolio, auth none, api.type openapi -> https://kin.rag.wtf/api/openapi.json, logo /favicon.svg, contact email. legal_info_url points to the home page rather than a legal page. No MCP reference."
+    },
+    "agent_json": {
+      "present": true,
+      "paths": [
+        "/.well-known/agent.json",
+        "/.well-known/agent-card.json"
+      ],
+      "identical": true,
+      "content_type": "application/json (no CORS header, no Cache-Control)",
+      "content_summary": "A2A 0.3.0 AgentCard with every required field (protocolVersion, name, description, url, version 1.1, capabilities all false, defaultInput/OutputModes, 2 skills with tags and examples), plus provider, documentationUrl, iconUrl, securitySchemes {}, security [], and the legacy authentication.type none. The description discloses that the site is static and accepts no A2A tasks; POST to url -> 405."
+    },
+    "mcp_json": {
+      "present": true,
+      "path": "/.well-known/mcp.json",
+      "content_type": "application/json",
+      "content_summary": "Static resource manifest: mcpVersion '1.0' (not a real MCP revision), 7 HTTPS resources (portfolio, projects, experience, articles, openapi, llms-full, llms), contact, documentation. It states explicitly that no MCP server endpoint exists; POST initialize -> 405."
+    },
+    "other_well_known": {
+      "agent_policy": "/.well-known/agent-policy -> 200 text/plain; charset=utf-8. Permitted and prohibited uses, rate-limit and ETag guidance (matches live headers), RSS for freshness.",
+      "security_txt": "/.well-known/security.txt -> 200 text/plain. Contact, Preferred-Languages, Canonical; no Expires (required by RFC 9116).",
+      "rss": "/rss.xml -> 200 text/xml, RSS 2.0, 10 items with pubDate and categories, linked from page heads via rel=alternate. No atom:link self or lastBuildDate.",
+      "site_webmanifest": "/site.webmanifest -> 200 application/manifest+json"
+    },
+    "schema_org": {
+      "types_found": [
+        "Person",
+        "Organization",
+        "ContactPoint",
+        "WebSite",
+        "ReadAction",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "ItemList",
+        "ListItem",
+        "SoftwareApplication",
+        "SoftwareSourceCode",
+        "Article",
+        "WebPage",
+        "SpeakableSpecification",
+        "ContactPage",
+        "BreadcrumbList"
+      ],
+      "pages_with_jsonld": 11,
+      "pages_checked": 11,
+      "per_page": {
+        "/": "Person, WebSite(+ReadAction), FAQPage(10), ItemList(7 projects), BreadcrumbList",
+        "/about/": "Person, BreadcrumbList",
+        "/projects/": "ItemList(13 projects), BreadcrumbList",
+        "/projects/claim-pilot/": "SoftwareApplication, BreadcrumbList",
+        "/projects/project-concord/": "SoftwareSourceCode, BreadcrumbList",
+        "/projects/talk-to-ai/ and /projects/rag-wtf/ (extra)": "SoftwareSourceCode, BreadcrumbList",
+        "/insights/": "ItemList(10 Article with @id), BreadcrumbList",
+        "/insights/zero-trust-ai-agents/": "Article(@id #article), WebPage(@id #webpage, speakable), BreadcrumbList",
+        "/contact/": "ContactPage, BreadcrumbList",
+        "/no-such-page/ (404, noindex)": "WebPage with breadcrumb"
+      },
+      "id_linking": "Consistent. Person @id https://kin.rag.wtf/#person appears on / and /about/ and is referenced as author/publisher on every project and article entity; WebSite @id #website is referenced by the article WebPage's isPartOf; Article #article and WebPage #webpage point to each other. Not linked: project entities (no @id), ContactPage and the worksFor Organization.",
+      "quality_assessment": "High. All blocks parse (0 errors across 11 pages), types fit each page, the @id graph is consistent, and the speakable selectors exist in the DOM. Defects: SoftwareSourceCode.programmingLanguage contains non-languages ('Open Source', 'MCP', 'Voice AI', 'Docker', ...); projects have no @id or image; the Article has no image, dateModified or inLanguage, and og:type is 'website'; alumniOf is used for employers; the FAQ content is not visible on any page."
+    }
+  },
+  "emerging_standards_readiness": {
+    "nlweb_mcp_ready": true,
+    "webmcp_ready": true,
+    "voix_ready": false,
+    "notes": "nlweb_mcp_ready: complete JSON-LD on all page types plus a JSON API makes the content ready for conversational querying. webmcp_ready: WebMCPTools.tsx registers get_projects, get_experience, get_contact_info and search_portfolio through navigator.modelContext.registerTool when the API exists (feature-detected, no polyfill; inactive in the Chrome build used for this audit). voix_ready: no Voix markup."
+  }
+}

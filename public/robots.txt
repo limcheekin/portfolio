@@ -10,3 +10,5 @@ Sitemap: https://kin.rag.wtf/sitemap-index.xml
 # Plugin manifest: https://kin.rag.wtf/ai-plugin.json
 # A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json
 # Agent Policy: https://kin.rag.wtf/.well-known/agent-policy
+# MCP manifest: https://kin.rag.wtf/.well-known/mcp.json
+# OpenAPI spec: https://kin.rag.wtf/api/openapi.json

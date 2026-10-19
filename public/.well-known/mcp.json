@@ -1,12 +1,36 @@
 {
   "mcpVersion": "1.0",
   "name": "Lim Chee Kin Portfolio",
-  "description": "MCP-compatible portfolio data for Lim Chee Kin, AI Solutions Architect",
+  "description": "Static manifest of the portfolio's machine-readable resources for Lim Chee Kin, AI Solutions Architect. There is no MCP server endpoint yet: fetch each resource URI over HTTPS (no auth).",
   "resources": [
     {
       "uri": "https://kin.rag.wtf/api/portfolio.json",
       "name": "Portfolio Data",
       "description": "Full structured portfolio including projects, work experience, articles, and contact information",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "https://kin.rag.wtf/api/projects.json",
+      "name": "Projects",
+      "description": "Projects only (enterprise and open source)",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "https://kin.rag.wtf/api/experience.json",
+      "name": "Work Experience",
+      "description": "Work history with responsibilities, newest first",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "https://kin.rag.wtf/api/articles.json",
+      "name": "Articles",
+      "description": "Articles with summaries and links to the originals on Medium",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "https://kin.rag.wtf/api/openapi.json",
+      "name": "OpenAPI Spec",
+      "description": "OpenAPI 3 description of the JSON API",
       "mimeType": "application/json"
     },
     {
@@ -25,5 +49,6 @@
   "contact": {
     "email": "limcheekin@vobject.com",
     "url": "https://kin.rag.wtf/contact/"
-  }
+  },
+  "documentation": "https://kin.rag.wtf/llms.txt"
 }

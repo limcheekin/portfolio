@@ -8,6 +8,7 @@ import Footer from '../../components/Footer.astro';
 import Button from '../../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+import { PERSON_REF, WEBSITE_ID } from '../../lib/jsonld';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -20,25 +21,35 @@ export async function getStaticPaths() {
 const { article } = Astro.props;
 const { Content } = await article.render();
 
+// The page summarises an article whose full text lives on Medium: the Article is this page's main entity,
+// and sameAs points at the original.
+const pageUrl = `${SITE_URL}/insights/${article.slug}/`;
 const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${pageUrl}#article`,
     "headline": article.data.title,
     "description": article.data.description,
-    "url": article.data.externalUrl || `${SITE_URL}/insights/${article.slug}/`,
+    "url": pageUrl,
+    "mainEntityOfPage": { "@id": `${pageUrl}#webpage` },
+    ...(article.data.externalUrl && { "sameAs": article.data.externalUrl }),
     "datePublished": article.data.publishDate.toISOString(),
-    "author": { "@type": "Person", "name": ENGINEER_NAME },
+    "author": PERSON_REF,
+    "publisher": PERSON_REF,
     "keywords": article.data.tags.join(', ')
   },
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${pageUrl}#webpage`,
+    "url": pageUrl,
+    "isPartOf": { "@id": WEBSITE_ID },
+    "mainEntity": { "@id": `${pageUrl}#article` },
     "speakable": {
       "@type": "SpeakableSpecification",
       "cssSelector": ["#article-title", ".prose-like"]
-    },
-    "url": `${SITE_URL}/insights/${article.slug}/`
+    }
   },
   {
     "@context": "https://schema.org",

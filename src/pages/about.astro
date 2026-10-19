@@ -9,6 +9,7 @@ import { ABOUT_CONTENT, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL, EMAIL_ADDRESS }
 import Img from '../components/Img.astro';
 import { PAGE_MAIN } from '../lib/layout';
 import { CHIP, MEASURE, PAGE_TITLE } from '../lib/text-styles';
+import { PERSON_ID } from '../lib/jsonld';
 
 const experience = (await getCollection('experience'))
   .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
@@ -17,8 +18,9 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": PERSON_ID,
     "name": ENGINEER_NAME,
-    "url": SITE_URL,
+    "url": `${SITE_URL}/`,
     "image": `${SITE_URL}/images/profile.png`,
     "jobTitle": ENGINEER_TITLE,
     "email": `mailto:${EMAIL_ADDRESS}`,

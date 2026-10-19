@@ -78,7 +78,7 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
               ? ['text-lg font-semibold text-light-slate', 'mt-1.5']
               : ['text-xl font-semibold tracking-[-0.02em] text-lightest-slate', 'mt-2.5'];
             return (
-              <li key={e.when} className="job group relative pb-[46px] last:pb-0">
+              <li key={e.when} data-testid="career-entry" className="job group relative pb-[46px] last:pb-0">
                 <span
                   aria-hidden="true"
                   className="absolute -left-[34px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-green-accent bg-navy shadow-halo group-data-[pending]:border-lightest-navy group-data-[pending]:shadow-none"

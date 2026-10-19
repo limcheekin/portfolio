@@ -203,11 +203,15 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
           const isMoreCard = card.kind === 'more';
           const accent = ACCENT[card.kind === 'more' ? 'green' : PROJECT_KIND_INFO[card.kind].accent];
           const Visual = card.visual ? VISUALS[card.visual] : undefined;
+          // The "All projects" card is a link to the list, not a section of the page: no heading.
+          const Title = isMoreCard ? 'p' : 'h3';
           return (
             <li key={card.slug} className="shrink-0 snap-center">
               <a
                 href={card.href}
                 data-card
+                data-testid={isMoreCard ? 'work-card-all' : 'work-card'}
+                data-slug={isMoreCard ? undefined : card.slug}
                 onFocus={(e) => onCardFocus(i, e.currentTarget)}
                 className={`relative flex h-full w-[min(360px,80vw)] tall:h-[min(470px,72vh)] flex-col overflow-hidden rounded-2xl border border-edge p-[22px] transition-opacity duration-[400ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green-accent ${
                   isMoreCard ? 'justify-center border-dashed bg-transparent' : 'bg-card'
@@ -235,9 +239,9 @@ export default function WorkTrack({ cards }: { cards: WorkCard[] }) {
                 <p className={`${isMoreCard ? '' : 'mt-[18px]'} font-mono text-[11px] uppercase tracking-[0.08em] ${accent.label}`}>
                   {card.label}
                 </p>
-                <h3 className={`my-2 font-semibold tracking-[-0.02em] ${isMoreCard ? 'text-[28px] text-green-accent' : 'text-2xl text-lightest-slate'}`}>
+                <Title className={`my-2 font-semibold tracking-[-0.02em] ${isMoreCard ? 'text-[28px] text-green-accent' : 'text-2xl text-lightest-slate'}`}>
                   {card.title}
-                </h3>
+                </Title>
                 <p className="text-sm leading-normal text-light-slate">{card.tagline}</p>
                 {card.stack.length > 0 && (
                   <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-4 font-mono text-[11.5px] text-slate-text">
