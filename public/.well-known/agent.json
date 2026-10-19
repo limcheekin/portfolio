@@ -1,9 +1,9 @@
 {
   "protocolVersion": "0.3.0",
   "name": "Lim Chee Kin Portfolio",
-  "description": "Portfolio of Lim Chee Kin — AI Solutions Architect at Daxonet AI specialising in enterprise AI agents, RAG and voice AI. This is a static, read-only site: it does not accept A2A task requests; the skills below are served as public HTTP resources.",
+  "description": "Portfolio of Lim Chee Kin — AI Solutions Architect at Daxonet AI specialising in enterprise AI agents, RAG and voice AI. This static site does not accept A2A task requests: read the data from the JSON API (/api/portfolio.json) or the read-only MCP server at https://kin.rag.wtf/mcp.",
   "url": "https://kin.rag.wtf/",
-  "version": "1.1",
+  "version": "1.2",
   "provider": {
     "organization": "Lim Chee Kin",
     "url": "https://kin.rag.wtf/about/"
@@ -20,26 +20,78 @@
   },
   "securitySchemes": {},
   "security": [],
-  "defaultInputModes": ["text/plain"],
-  "defaultOutputModes": ["application/json", "text/plain", "text/markdown"],
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain",
+    "text/markdown"
+  ],
   "skills": [
     {
       "id": "portfolio-retrieval",
       "name": "Portfolio Data Retrieval",
       "description": "Structured portfolio data (projects, work experience with responsibilities, articles, contact) from the static JSON API. Full: /api/portfolio.json; per collection: /api/projects.json, /api/experience.json, /api/articles.json. Described by /api/openapi.json.",
-      "tags": ["retrieval", "portfolio", "json", "openapi"],
-      "examples": ["Which enterprise AI systems has Lim Chee Kin built?", "List the open-source projects with their repositories."],
-      "inputModes": ["text/plain"],
-      "outputModes": ["application/json"]
+      "tags": [
+        "retrieval",
+        "portfolio",
+        "json",
+        "openapi"
+      ],
+      "examples": [
+        "GET /api/projects.json",
+        "GET /api/experience.json"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
+    },
+    {
+      "id": "mcp-tools",
+      "name": "MCP Tools",
+      "description": "Read-only MCP server at https://kin.rag.wtf/mcp (Streamable HTTP, stateless, POST only, no auth): tools get_projects, get_project, get_experience, get_articles, search_portfolio, get_contact_info, plus portfolio:// resources.",
+      "tags": [
+        "mcp",
+        "tools",
+        "search",
+        "portfolio"
+      ],
+      "examples": [
+        "tools/call search_portfolio {\"query\": \"WhatsApp\"}",
+        "tools/call get_project {\"slug\": \"claim-pilot\"}"
+      ],
+      "inputModes": [
+        "application/json"
+      ],
+      "outputModes": [
+        "application/json"
+      ]
     },
     {
       "id": "content-discovery",
       "name": "Content Discovery",
       "description": "Discover every page and agent resource through /llms.txt, /llms-full.txt, /sitemap-index.xml and /rss.xml.",
-      "tags": ["discovery", "content", "sitemap", "llms.txt"],
-      "examples": ["What has Lim Chee Kin written about MCP?", "Summarise the portfolio."],
-      "inputModes": ["text/plain"],
-      "outputModes": ["text/plain", "text/markdown"]
+      "tags": [
+        "discovery",
+        "content",
+        "sitemap",
+        "llms.txt"
+      ],
+      "examples": [
+        "GET /llms.txt",
+        "GET /sitemap-index.xml"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "text/markdown"
+      ]
     }
   ]
 }

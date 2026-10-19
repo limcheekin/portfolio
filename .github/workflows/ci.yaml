@@ -35,4 +35,11 @@ jobs:
           test -f dist/llms.txt
           test -f dist/ai-plugin.json
           test -f dist/robots.txt
+          test -f build/mcp/server.mjs
           echo "Build artifacts verified"
+
+      - name: MCP server smoke test
+        run: |
+          PORTFOLIO_DIR=dist node build/mcp/server.mjs &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:3001/healthz && break; sleep 0.5; done
+          npm run mcp:smoke -- http://127.0.0.1:3001/mcp

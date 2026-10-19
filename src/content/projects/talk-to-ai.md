@@ -8,6 +8,7 @@ tagline: "Real-time voice AI targeting sub-300 ms responses, with local or cloud
 stack: ["FastRTC", "WebRTC", "LocalAI", "Python"]
 visual: talk
 technologies: ["Open Source", "Voice AI", "FastRTC", "HuggingFace", "STT", "LLM", "TTS", "LocalAI", "Groq API", "Python", "FastAPI"]
+languages: ["Python"]
 image: "/images/talk-to-ai.png"
 githubUrl: "https://github.com/limcheekin/talk-to-ai"
 category: "Voice AI"

@@ -16,6 +16,11 @@ export function projectJsonLd({ slug, data }: CollectionEntry<'projects'>) {
     keywords: data.technologies.join(', '),
   };
   return PROJECT_KIND_INFO[data.kind].openSource
-    ? { '@type': 'SoftwareSourceCode', ...common, codeRepository: data.githubUrl, programmingLanguage: data.technologies }
+    ? {
+        '@type': 'SoftwareSourceCode',
+        ...common,
+        codeRepository: data.githubUrl,
+        ...(data.languages && { programmingLanguage: data.languages }),
+      }
     : { '@type': 'SoftwareApplication', ...common, applicationCategory: 'BusinessApplication' };
 }

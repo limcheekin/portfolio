@@ -8,6 +8,7 @@ tagline: "An MCP server that lets modern AI agents query legacy database schemas
 stack: ["MCP", "TypeScript", "SQL"]
 visual: concord
 technologies: ["Open Source", "MCP", "TypeScript", "SQL", "Docker"]
+languages: ["TypeScript", "SQL"]
 githubUrl: "https://github.com/limcheekin/project-concord"
 category: "AI Infrastructure"
 ---

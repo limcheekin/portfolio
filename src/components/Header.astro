@@ -33,7 +33,7 @@ const currentPath = Astro.url.pathname;
               aria-current={isActive ? 'page' : undefined}
               class={`px-2.5 py-2 transition-colors duration-250 hover:text-green-accent ${isActive ? 'text-green-accent' : 'text-light-slate'}`}
             >
-              <span class="text-green-accent text-xs mr-1">0{index + 1}.</span>
+              <span aria-hidden="true" class="text-green-accent text-xs mr-1">0{index + 1}.</span>
               {link.name}
             </a>
           </li>

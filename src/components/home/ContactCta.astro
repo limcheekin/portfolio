@@ -9,6 +9,7 @@ const LINK = `${TAP_LINK} text-light-slate no-underline hover:text-green-accent`
 
 <section
   id="contact"
+  aria-labelledby="contact-title"
   class={`relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-t border-graphite py-[10vh] text-center ${GUTTER}`}
 >
   <div
@@ -16,7 +17,7 @@ const LINK = `${TAP_LINK} text-light-slate no-underline hover:text-green-accent`
     class="pointer-events-none absolute left-1/2 top-[60%] h-[900px] w-[900px] max-w-[160vw] -translate-x-1/2 -translate-y-1/2 bg-contact-glow"
   ></div>
   <p class="relative mb-[22px] font-mono text-[13px] text-green-accent">{CONTACT_CTA.eyebrow}</p>
-  <h2 class="relative m-0 max-w-[900px] text-[clamp(36px,6vw,76px)] font-semibold leading-[1.04] tracking-[-0.035em] text-lightest-slate">
+  <h2 id="contact-title" class="relative m-0 max-w-[900px] text-[clamp(36px,6vw,76px)] font-semibold leading-[1.04] tracking-[-0.035em] text-lightest-slate">
     {CONTACT_CTA.headline.before}<em class="not-italic text-green-accent">{CONTACT_CTA.headline.accent}</em>
   </h2>
   <p class="relative mb-[44px] mt-6 max-w-[520px] text-lg leading-relaxed text-slate-text">{CONTACT_CTA.paragraph}</p>

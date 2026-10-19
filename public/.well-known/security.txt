@@ -1,3 +1,0 @@
-Contact: mailto:limcheekin@vobject.com
-Preferred-Languages: en
-Canonical: https://kin.rag.wtf/.well-known/security.txt

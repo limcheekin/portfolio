@@ -2,6 +2,8 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import matter from 'gray-matter';
 import { PROJECT_KINDS } from '../src/lib/project-kind';
+import { PortfolioSchema } from '../src/lib/portfolio-schema';
+import { MCP_TOOLS } from '../src/lib/portfolio-tools';
 
 const args = new Set(process.argv.slice(2));
 const RUN_DIST = args.has('--dist');
@@ -266,6 +268,27 @@ check('dist: writing links external', () => homeHtml().includes('href="https://l
 check('dist: contact', () => missing(homeText(), ['Have a workflow that should run itself?', 'Tell me about yours.', 'GitHub', 'LinkedIn', 'Medium']), { dist: true });
 
 // ---------- run ----------
+
+// ---------- agent surfaces stay in step ----------
+
+check('dist: portfolio.json matches its schema', () => {
+  const parsed = PortfolioSchema.safeParse(JSON.parse(readText('dist/api/portfolio.json')));
+  return parsed.success ? [] : parsed.error.issues.slice(0, 5).map((i) => `${i.path.join('.')}: ${i.message}`);
+}, { dist: true });
+
+const DISCOVERY = ['dist/llms.txt', 'dist/robots.txt', 'dist/.well-known/agent.json', 'dist/.well-known/mcp.json', 'dist/ai-plugin.json'];
+check('dist: discovery links resolve to built files', () =>
+  DISCOVERY.flatMap((f) =>
+    [...readText(f).matchAll(/https:\/\/kin\.rag\.wtf(\/[^\s"'<>()]*)?/g)]
+      .map((m) => (m[1] ?? '/').replace(/[.,;:]+$/, ''))
+      .filter((path) => path !== '/mcp' && !existsSync(join('dist', path.endsWith('/') ? `${path}index.html` : path)))
+      .map((path) => `${f}: ${path}`),
+  ), { dist: true });
+
+check('dist: MCP tool names agree across llms.txt and the agent card', () => {
+  const names = Object.keys(MCP_TOOLS);
+  return ['dist/llms.txt', 'dist/.well-known/agent.json'].flatMap((f) => missing(readText(f), names).map((n) => `${f} lacks ${n}`));
+}, { dist: true });
 
 let failed = 0;
 for (const { name, fn } of queue) {

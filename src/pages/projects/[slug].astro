@@ -49,40 +49,42 @@ const jsonLd = [
   <main id="main-content" class={PAGE_MAIN}>
     <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Projects", href: "/projects/" }, { label: project.data.title }]} />
 
-    {project.data.image && (
-      <Img
-        src={project.data.image}
-        alt={`Screenshot of ${project.data.title}`}
-        class="mb-8 h-auto max-h-96 w-full rounded-2xl border border-edge object-cover object-top"
-        loading="eager"
-      />
-    )}
+    <article aria-labelledby="project-title">
+      {project.data.image && (
+        <Img
+          src={project.data.image}
+          alt={`Screenshot of ${project.data.title}`}
+          class="mb-8 h-auto max-h-96 w-full rounded-2xl border border-edge object-cover object-top"
+          loading="eager"
+        />
+      )}
 
-    <h1 id="project-title" class={`${PAGE_TITLE} mb-3`}>{project.data.title}</h1>
-    <p class={`mb-6 font-mono text-[13px] ${accentText}`}>{projectLabel(project.data.kind, project.data.org)}</p>
+      <h1 id="project-title" class={`${PAGE_TITLE} mb-3`}>{project.data.title}</h1>
+      <p class={`mb-6 font-mono text-[13px] ${accentText}`}>{projectLabel(project.data.kind, project.data.org)}</p>
 
-    <p class={`mb-6 ${MEASURE} text-lg leading-relaxed text-slate-text`}>{project.data.description}</p>
+      <p class={`mb-6 ${MEASURE} text-lg leading-relaxed text-slate-text`}>{project.data.description}</p>
 
-    <ul class="mb-8 flex list-none flex-wrap gap-2 p-0">
-      {project.data.technologies.map((tech) => (
-        <li class={CHIP}>{tech}</li>
-      ))}
-    </ul>
+      <ul class="mb-8 flex list-none flex-wrap gap-2 p-0">
+        {project.data.technologies.map((tech) => (
+          <li class={CHIP}>{tech}</li>
+        ))}
+      </ul>
 
-    {(project.data.githubUrl || project.data.liveUrl) && (
-      <div class="mb-12 flex flex-wrap gap-4">
-        {project.data.githubUrl && (
-          <Button href={project.data.githubUrl} size="sm">View Source</Button>
-        )}
-        {project.data.liveUrl && (
-          <Button href={project.data.liveUrl} size="sm">Live Demo</Button>
-        )}
+      {(project.data.githubUrl || project.data.liveUrl) && (
+        <div class="mb-12 flex flex-wrap gap-4">
+          {project.data.githubUrl && (
+            <Button href={project.data.githubUrl} size="sm">View Source</Button>
+          )}
+          {project.data.liveUrl && (
+            <Button href={project.data.liveUrl} size="sm">Live Demo</Button>
+          )}
+        </div>
+      )}
+
+      <div class={`prose-like ${MEASURE} space-y-4 text-base leading-relaxed text-slate-text`}>
+        <Content />
       </div>
-    )}
-
-    <div class={`prose-like ${MEASURE} space-y-4 text-base leading-relaxed text-slate-text`}>
-      <Content />
-    </div>
+    </article>
 
     <div class="mt-16">
       <Button href="/projects/" variant="secondary">&larr; All Projects</Button>

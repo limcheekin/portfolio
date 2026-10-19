@@ -56,6 +56,7 @@ export const ABOUT_CONTENT = {
 
 export const CONTACT_CONTENT = {
   title: "Let's talk about your workflow",
+  success: "Thank you for your message! I'll get back to you as soon as possible.",
   paragraph: "I design and ship AI agents that plug into the systems you already run, from expense claims to trade documents and warehouse operations. Tell me what you'd like to automate, or ask about consulting and open-source collaboration, and I'll get back to you.",
   buttonText: "Email me",
 };

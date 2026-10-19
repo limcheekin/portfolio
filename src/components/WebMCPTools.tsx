@@ -1,119 +1,59 @@
 import { useEffect } from 'react';
+import { runTool, type ToolName } from '../lib/portfolio-query';
+import type { Portfolio } from '../lib/portfolio-schema';
 
-interface PortfolioData {
-  projects: Array<{ title: string; description: string; technologies: string[]; slug: string }>;
-  experience: Array<{ title: string; company: string; startDate: string; endDate?: string }>;
-}
-
+/**
+ * In-browser WebMCP tools (navigator.modelContext), registered only where the browser provides the API.
+ * The tool list and JSON Schemas come from src/lib/portfolio-tools.ts via BaseLayout (built at build time, so
+ * zod stays out of the bundle); answers come from the same handlers as the MCP server at /mcp.
+ */
 interface WebMCPToolsProps {
   portfolioApiUrl: string;
-  contactEmail: string;
-  engineerName: string;
+  tools: Array<{ name: ToolName; description: string; inputSchema: object }>;
 }
 
-export default function WebMCPTools({ portfolioApiUrl, contactEmail, engineerName }: WebMCPToolsProps) {
+export default function WebMCPTools({ portfolioApiUrl, tools }: WebMCPToolsProps) {
   useEffect(() => {
-    const nav = navigator as any;
-    if (!nav.modelContext) return;
+    const mc = (navigator as any).modelContext;
+    if (!mc) return;
 
-    let registered = false;
+    let data: Promise<Portfolio> | undefined;
+    const load = () =>
+      (data ??= fetch(portfolioApiUrl)
+        .then((res) => res.json())
+        .catch((err) => {
+          data = undefined; // let the next call retry after a network error
+          throw err;
+        }));
+    const text = (value: unknown) => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] });
 
-    async function register() {
+    for (const tool of tools) {
       try {
-        const mc = nav.modelContext;
-
         mc.registerTool({
-          name: 'get_projects',
-          description: `Get all projects by ${engineerName}. Returns project titles, descriptions, technologies, and URLs.`,
-          inputSchema: { type: 'object', properties: {} },
-          async execute() {
-            const res = await fetch(portfolioApiUrl);
-            const data: PortfolioData = await res.json();
-            return { content: [{ type: 'text', text: JSON.stringify(data.projects, null, 2) }] };
+          ...tool,
+          async execute(input: object = {}) {
+            try {
+              return text(runTool(tool.name, await load(), input));
+            } catch (err) {
+              return { ...text({ error: (err as Error).message }), isError: true };
+            }
           },
         });
-
-        mc.registerTool({
-          name: 'get_experience',
-          description: `Get work experience history for ${engineerName}. Returns job titles, companies, and date ranges.`,
-          inputSchema: { type: 'object', properties: {} },
-          async execute() {
-            const res = await fetch(portfolioApiUrl);
-            const data: PortfolioData = await res.json();
-            return { content: [{ type: 'text', text: JSON.stringify(data.experience, null, 2) }] };
-          },
-        });
-
-        mc.registerTool({
-          name: 'get_contact_info',
-          description: `Get contact information for ${engineerName}.`,
-          inputSchema: { type: 'object', properties: {} },
-          async execute() {
-            return {
-              content: [{
-                type: 'text',
-                text: JSON.stringify({
-                  name: engineerName,
-                  email: contactEmail,
-                  github: 'https://github.com/limcheekin',
-                  linkedin: 'https://linkedin.com/in/limcheekin',
-                  medium: 'https://medium.com/@limcheekin',
-                }, null, 2)
-              }]
-            };
-          },
-        });
-
-        mc.registerTool({
-          name: 'search_portfolio',
-          description: `Search across all portfolio content (projects, articles, experience) for ${engineerName}. Returns matching items.`,
-          inputSchema: {
-            type: 'object',
-            properties: {
-              query: { type: 'string', description: 'Search query to match against portfolio content' }
-            },
-            required: ['query']
-          },
-          async execute(input: { query: string }) {
-            const res = await fetch(portfolioApiUrl);
-            const data = await res.json();
-            const q = input.query.toLowerCase();
-            const results = {
-              projects: data.projects.filter((p: any) =>
-                p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.technologies.some((t: string) => t.toLowerCase().includes(q))
-              ),
-              articles: data.articles.filter((a: any) =>
-                a.title.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)
-              ),
-              experience: data.experience.filter((e: any) =>
-                e.title.toLowerCase().includes(q) || e.company.toLowerCase().includes(q)
-              ),
-            };
-            return { content: [{ type: 'text', text: JSON.stringify(results, null, 2) }] };
-          },
-        });
-
-        registered = true;
-      } catch (e) {
+      } catch {
         // WebMCP not supported in this browser — silently skip
       }
     }
 
-    register();
-
     return () => {
-      if (registered && nav.modelContext) {
+      for (const tool of tools) {
         try {
-          nav.modelContext.unregisterTool('get_projects');
-          nav.modelContext.unregisterTool('get_experience');
-          nav.modelContext.unregisterTool('get_contact_info');
-          nav.modelContext.unregisterTool('search_portfolio');
+          mc.unregisterTool(tool.name);
         } catch {
           // ignore cleanup errors
         }
       }
     };
-  }, [portfolioApiUrl, contactEmail, engineerName]);
+  }, [portfolioApiUrl, tools]);
 
   return null;
 }

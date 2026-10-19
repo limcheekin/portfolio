@@ -3,6 +3,7 @@ title: "Fluwix: Flutter Showcases"
 description: "A project dedicated to showcasing various Flutter applications and exploring mobile development capabilities with the Flutter framework."
 featured: false
 technologies: ["Open Source", "Flutter", "Dart", "Mobile Development", "Web Development", "UI/UX"]
+languages: ["Dart"]
 githubUrl: "https://github.com/limcheekin/fluwix"
 liveUrl: "https://fluwix.com/"
 category: "Web and Mobile Platform"

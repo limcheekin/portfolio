@@ -2,7 +2,8 @@
 import '@fontsource-variable/inter/wght.css';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '../styles/global.css';
-import { SITE_TITLE, SITE_URL, ENGINEER_NAME, ENGINEER_TITLE, EMAIL_ADDRESS } from '../data/site';
+import { SITE_TITLE, SITE_URL, ENGINEER_NAME, ENGINEER_TITLE } from '../data/site';
+import { webMcpTools } from '../lib/portfolio-tools';
 import WebMCPTools from '../components/WebMCPTools.tsx';
 import SmoothScroll from '../components/motion/SmoothScroll.tsx';
 
@@ -74,6 +75,6 @@ const currentPage = pathSegments[0] || 'home';
   </a>
   {smoothScroll && <SmoothScroll client:load />}
   <slot />
-  <WebMCPTools client:idle portfolioApiUrl={`${SITE_URL}/api/portfolio.json`} contactEmail={EMAIL_ADDRESS} engineerName={ENGINEER_NAME} />
+  <WebMCPTools client:idle portfolioApiUrl={`${SITE_URL}/api/portfolio.json`} tools={webMcpTools()} />
 </body>
 </html>

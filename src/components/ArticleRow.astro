@@ -31,11 +31,11 @@ const Title = detailed ? 'h2' : 'h3';
     class={`relative grid grid-cols-[1fr_20px] items-center gap-5 px-1 py-5 text-inherit no-underline transition-transform motion-safe:group-hover:translate-x-[14px] md:grid-cols-[90px_1fr_auto_24px] ${HOVER_EASE}`}
   >
     <time datetime={publishDate.toISOString()} class="hidden font-mono text-xs text-slate-text md:block">{fmt(publishDate)}</time>
-    <span class="min-w-0">
+    <div class="min-w-0">
       <Title class={`block text-lg tracking-[-0.01em] text-lightest-slate transition-colors group-hover:text-green-accent ${HOVER_EASE}`}>{title}</Title>
       {detailed && <span class={`mt-1 block ${MEASURE} text-sm leading-relaxed text-slate-text`}>{description}</span>}
       {detailed && <span class="mt-2 block font-mono text-xs text-slate-text md:hidden">{fmt(publishDate)}</span>}
-    </span>
+    </div>
     <span class="hidden font-mono text-xs text-slate-text md:block">{tags.slice(0, 2).join(' · ')}</span>
     <span
       class={`inline-block text-slate-text transition-[transform,color] group-hover:text-green-accent motion-safe:group-hover:translate-x-[3px] motion-safe:group-hover:-translate-y-[3px] ${HOVER_EASE}`}

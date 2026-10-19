@@ -10,7 +10,9 @@ Personal portfolio for Lim Chee Kin (AI Solutions Architect, Daxonet AI), live a
 
 ```bash
 npm run dev           # astro dev
-npm run build         # astro build, then tsx scripts/generate-api.ts
+npm run build         # astro build, then tsx scripts/generate-api.ts, then build:mcp (bundles mcp/server.ts to build/mcp/server.mjs)
+npm run mcp:dev       # run the MCP server from source against dist/ (http://127.0.0.1:3001/mcp; build first)
+npm run mcp:smoke     # end-to-end MCP checks against an endpoint (default http://127.0.0.1:3001/mcp; CI runs it)
 npm run preview       # serve dist/
 npm run images        # write .webp next to page PNGs in public/images (after adding or replacing one)
 npm run verify        # content/source checks (scripts/verify-content.ts)
@@ -18,7 +20,7 @@ npm run verify:dist   # same plus checks on built dist/ (run after build)
 npm run verify:links  # same plus HTTP checks of article externalUrls (network)
 ```
 
-There is no test runner and no linter. Verification is `build` plus the three `verify` commands plus manual browser checks.
+There is no test runner and no linter. Verification is `build` plus the three `verify` commands, `mcp:smoke`, plus manual browser checks.
 
 ## Stack and layout
 
@@ -49,22 +51,24 @@ Hero (unnumbered), 01 Selected Work, 02 Career, 03 Latest Writing, 04 Contact.
 
 ### Content collections (`src/content/config.ts`)
 
-- `projects` (md): `title`, `description`, `featured`, `featuredOrder`, `technologies`, `category`, optional `githubUrl/liveUrl/articleUrl/image/dateStarted`, plus card fields `kind` (`enterprise` | `oss`, default `oss`), `org`, `tagline`, `stack` (3–4 items), `visual` (`claim|trade|ware|agent|concord|talk|rag`, selects the illustration). `featuredOrder` sets the Work track order. Enterprise entries have no image or links; detail pages render without them.
+- `projects` (md): `title`, `description`, `featured`, `featuredOrder`, `technologies`, `category`, optional `githubUrl/liveUrl/articleUrl/image/dateStarted`, `languages` (open-source projects: programming languages, used for JSON-LD `programmingLanguage`), plus card fields `kind` (`enterprise` | `oss`, default `oss`), `org`, `tagline`, `stack` (3–4 items), `visual` (`claim|trade|ware|agent|concord|talk|rag`, selects the illustration). `featuredOrder` sets the Work track order. Enterprise entries have no image or links; detail pages render without them.
 - `articles` (md): `title`, `description`, `publishDate`, `tags`, `externalUrl`, `platform`. Synced to https://limcheekin.medium.com/; all have an `externalUrl`. `/insights/<slug>/` pages still build for agents and SEO.
 - `experience` (json): `company`, `title`, `startDate`, `endDate`, `description[]`, `technologies`, `sortOrder` (newest first).
 
 ## Agent-first surfaces
 
-- `public/llms.txt`, `robots.txt`, `site.webmanifest`, `ai-plugin.json`, `api/openapi.json`, `.well-known/{agent.json,ai-plugin.json,mcp.json,agent-policy,security.txt}`.
-- `scripts/generate-api.ts` runs after `astro build` and writes `dist/api/portfolio.json` (plus `projects.json`, `experience.json`, `articles.json`), `dist/llms-full.txt` and `dist/.well-known/agent-card.json` (a copy of `agent.json`) from the content collections. Keep `public/api/openapi.json` in step with the fields it writes.
+- `public/llms.txt`, `robots.txt`, `site.webmanifest`, `ai-plugin.json`, `api/openapi.json`, `.well-known/{agent.json,agent-policy}` (hand-written).
+- `scripts/generate-api.ts` runs after `astro build` and writes, from the content collections: `dist/api/portfolio.json` (plus `projects.json`, `experience.json`, `articles.json`; shape `PortfolioSchema` in `src/lib/portfolio-schema.ts`, with a page `url` per project and article), `dist/llms-full.txt`, and the derived `.well-known` files: `agent-card.json` (copy of `agent.json`), `ai-plugin.json` (copy of the root one), `mcp.json` (from `src/lib/portfolio-tools.ts`) and `security.txt` (`Expires` about 11 months after the build). Keep `public/api/openapi.json` in step with the fields it writes. `verify:dist` checks the JSON against the schema, that every kin.rag.wtf link in the discovery files resolves to a built file, and that llms.txt and the agent card name every MCP tool.
 - `scripts/sitemap-lastmod.mjs` gives the sitemap real per-page `lastmod` dates (article `publishDate`, else the last git commit touching the page's sources; none if unknown).
 - JSON-LD (Person, WebSite, FAQPage) in `index.astro` and `about.astro`; WebMCP tools in `WebMCPTools.tsx`.
+- MCP server `mcp/server.ts` at `https://kin.rag.wtf/mcp`: read-only, Streamable HTTP in stateless mode (POST only, JSON responses, no auth), reading `api/portfolio.json` and `llms-full.txt` from the build it ships with. Tools and resources are defined once in `src/lib/portfolio-tools.ts` (`MCP_TOOLS`: names, descriptions, zod input/output schemas) and answered by `TOOL_HANDLERS` in `src/lib/portfolio-query.ts`; the WebMCP island gets the same tools as JSON Schema from `BaseLayout`, so zod stays out of the browser. Add a tool in those two files, then name it in `llms.txt` and the agent card (verify checks).
 - When changing the title, role, projects or articles, update all of these surfaces, not just the pages.
 
 ## Deploy and CI
 
-- `Dockerfile`: node:20-alpine runs `npm ci && npm run build`; nginx:alpine serves `dist/` with `nginx.conf` (relative trailing-slash redirect via `absolute_redirect off`, `/sitemap.xml` -> `/sitemap-index.xml`, cache headers, JSON 404 under `/api/`, custom 404). Security headers live in `nginx-security-headers.conf` (copied to `/etc/nginx/snippets/`) and must be `include`d in every `location` that has its own `add_header`, because nginx drops inherited headers there.
-- `.github/workflows/ci.yaml` (push/PR to `main`): `npm ci`, `npm run build`, then requires in `dist/`: `index.html`, `404.html`, `api/portfolio.json`, `api/openapi.json`, `llms-full.txt`, `llms.txt`, `ai-plugin.json`, `robots.txt`. Do not break any of them.
+- `Dockerfile`: node:20-alpine runs `npm ci && npm run build`; nginx:alpine (plus `nodejs`) serves `dist/` with `nginx.conf`: relative redirects (`absolute_redirect off`), trailing slash enforced inside `location /`, `/sitemap.xml` -> `/sitemap-index.xml`, cache headers, `charset=utf-8` on text types, `server_tokens off`, JSON 404 under `/api/`, custom 404 that also covers directories without an index. Security headers live in `nginx-security-headers.conf` (copied to `/etc/nginx/snippets/`) and must be `include`d in every `location` that has its own `add_header`, because nginx drops inherited headers there.
+- The same image runs the MCP server on `127.0.0.1:3001`, started with a restart loop by `docker/40-mcp-server.sh` (the image's entrypoint runs it before nginx). nginx proxies `location = /mcp` to it with an enforced rate limit of 60/min per client (keyed on `CF-Connecting-IP`, mirrored in `MCP_RATE_LIMIT`), a 64 KB body limit and JSON 429/503 errors.
+- `.github/workflows/ci.yaml` (push/PR to `main`): `npm ci`, `npm run build`, then requires in `dist/`: `index.html`, `404.html`, `api/portfolio.json`, `api/openapi.json`, `llms-full.txt`, `llms.txt`, `ai-plugin.json`, `robots.txt`, plus `build/mcp/server.mjs`, and runs `mcp:smoke` against the bundled server. Do not break any of them.
 - Deployed `public/resume.pdf` is linked as `/resume.pdf` everywhere.
 
 ## Animation rules

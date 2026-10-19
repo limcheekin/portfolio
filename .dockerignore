@@ -1,0 +1,8 @@
+# The image builds from a clean npm ci; keep host installs, outputs and docs out of the build context.
+node_modules
+dist
+build
+.astro
+.git
+.claude
+docs

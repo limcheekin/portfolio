@@ -56,11 +56,12 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
   return (
     <section
       id="career"
+      aria-labelledby="career-title"
       ref={section}
       className={`mx-auto grid max-w-[1100px] gap-10 py-24 md:grid-cols-[1fr_2fr] md:gap-[6vw] md:py-[16vh] ${GUTTER}`}
     >
       <div className="md:sticky md:top-[14vh] md:self-start">
-        <SectionHeading number="02" className="mb-3.5">Career</SectionHeading>
+        <SectionHeading number="02" id="career-title" className="mb-3.5">Career</SectionHeading>
         <p className="mb-5 max-w-[300px] leading-relaxed text-slate-text">{intro}</p>
         <a href="/about/" className={`${TAP_LINK} -my-3 text-sm text-green-accent hover:underline`}>Full experience →</a>
       </div>

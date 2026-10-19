@@ -39,7 +39,7 @@ export default function HeroIntro({ content }: { content: typeof HERO_CONTENT })
   return (
     <div ref={scope} className="min-w-0">
       <p data-hero-fade className="font-mono text-green-accent mb-5 text-sm md:text-base">{eyebrow}</p>
-      <h1 className="font-display font-bold text-lightest-slate text-4xl sm:text-5xl lg:text-[52px] leading-[1.04] tracking-[-0.015em]">
+      <h1 id="hero-title" className="font-display font-bold text-lightest-slate text-4xl sm:text-5xl lg:text-[52px] leading-[1.04] tracking-[-0.015em]">
         {headline.before}<em className="not-italic text-green-accent">{headline.accent}</em>{headline.after}
       </h1>
       <p data-hero-fade className="text-slate-text text-lg max-w-[520px] mt-6 mb-8 leading-relaxed">{sub}</p>

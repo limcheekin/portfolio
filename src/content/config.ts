@@ -9,6 +9,8 @@ const projects = defineCollection({
     featured: z.boolean().default(false),
     featuredOrder: z.number().optional(),
     technologies: z.array(z.string()),
+    /** Programming languages of an open-source project (schema.org programmingLanguage). */
+    languages: z.array(z.string()).optional(),
     githubUrl: z.string().url().optional(),
     liveUrl: z.string().url().optional(),
     articleUrl: z.string().url().optional(),

@@ -40,9 +40,9 @@ const jsonLd = [
       <p class="text-slate-text text-lg leading-relaxed mb-10">{CONTACT_CONTENT.paragraph}</p>
 
       <!-- Success message (hidden by default, shown via client-side script) -->
-      <div id="contact-success" role="status" aria-live="polite" data-testid="contact-form-success" class="hidden mb-8 rounded-xl border border-green-accent/40 bg-card p-6 font-mono text-sm text-green-accent">
-        Thank you for your message! I'll get back to you as soon as possible.
-      </div>
+      <!-- Live region: empty in the HTML, so an agent reading the page never sees a confirmation that did not happen.
+           The script fills it only after Formspree redirects back with ?submitted=true. -->
+      <div id="contact-success" role="status" aria-live="polite" data-testid="contact-form-success" data-message={CONTACT_CONTENT.success} class="hidden mb-8 rounded-xl border border-green-accent/40 bg-card p-6 font-mono text-sm text-green-accent"></div>
 
       <!-- Form (hidden when success is shown) -->
       <div id="contact-form-container">
@@ -50,8 +50,12 @@ const jsonLd = [
       </div>
 
       <script>
-        if (window.location.search.includes('submitted=true')) {
-          document.getElementById('contact-success')?.classList.remove('hidden');
+        if (new URLSearchParams(window.location.search).get('submitted') === 'true') {
+          const success = document.getElementById('contact-success');
+          if (success) {
+            success.textContent = success.dataset.message ?? '';
+            success.classList.remove('hidden');
+          }
           document.getElementById('contact-form-container')?.classList.add('hidden');
         }
       </script>

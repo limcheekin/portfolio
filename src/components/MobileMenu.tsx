@@ -105,7 +105,7 @@ export default function MobileMenu({ navLinks, currentPath }: MobileMenuProps) {
                     aria-current={isActive ? 'page' : undefined}
                     className={`block p-4 transition-colors duration-250 hover:text-green-accent ${isActive ? 'text-green-accent' : 'text-lightest-slate'}`}
                   >
-                    <span className="text-green-accent block text-sm mb-1">0{index + 1}.</span>
+                    <span aria-hidden="true" className="text-green-accent block text-sm mb-1">0{index + 1}.</span>
                     {link.name}
                   </a>
                 </li>

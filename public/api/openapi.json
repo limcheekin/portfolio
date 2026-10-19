@@ -12,6 +12,12 @@
     "license": {
       "name": "MIT",
       "url": "https://github.com/limcheekin/portfolio/blob/main/LICENSE"
+    },
+    "x-mcp-server": {
+      "url": "https://kin.rag.wtf/mcp",
+      "transport": "streamable-http",
+      "authentication": "none",
+      "manifest": "https://kin.rag.wtf/.well-known/mcp.json"
     }
   },
   "servers": [
@@ -394,6 +400,11 @@
           "slug": {
             "type": "string"
           },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Project page on kin.rag.wtf"
+          },
           "description": {
             "type": "string"
           },
@@ -437,6 +448,7 @@
         "required": [
           "title",
           "slug",
+          "url",
           "description",
           "featured",
           "kind",
@@ -452,6 +464,11 @@
           "slug": {
             "type": "string"
           },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Summary page on kin.rag.wtf"
+          },
           "description": {
             "type": "string"
           },
@@ -461,7 +478,7 @@
           },
           "publishDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "tags": {
             "type": "array",
@@ -473,6 +490,7 @@
         "required": [
           "title",
           "slug",
+          "url",
           "description",
           "publishDate",
           "tags"
@@ -599,5 +617,9 @@
         }
       }
     }
+  },
+  "externalDocs": {
+    "description": "Agent index (llms.txt), including the MCP server",
+    "url": "https://kin.rag.wtf/llms.txt"
   }
 }

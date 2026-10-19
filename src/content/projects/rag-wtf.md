@@ -8,6 +8,7 @@ tagline: "Private, personalised knowledge discovery: your documents, your models
 stack: ["Flutter", "SurrealDB", "open-text-embeddings"]
 visual: rag
 technologies: ["Open Source", "RAG", "Data Privacy", "Local AI", "Cloud AI", "surrealdb.wasm", "Flutter", "Dart"]
+languages: ["Dart"]
 image: "/images/rag-wtf.png"
 githubUrl: "https://github.com/rag-wtf"
 category: "RAG"

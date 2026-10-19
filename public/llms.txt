@@ -71,7 +71,11 @@ Open source:
 - OpenAPI Spec: https://kin.rag.wtf/api/openapi.json
 - Plugin Discovery: https://kin.rag.wtf/ai-plugin.json
 - A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json (also at /.well-known/agent-card.json)
-- MCP Manifest (static resource list; no MCP server endpoint yet): https://kin.rag.wtf/.well-known/mcp.json
+- MCP Server (read-only, Streamable HTTP, POST only, no auth): https://kin.rag.wtf/mcp — tools: get_projects, get_project, get_experience, get_articles, search_portfolio, get_contact_info
+- MCP Manifest: https://kin.rag.wtf/.well-known/mcp.json
+- Per-collection JSON: https://kin.rag.wtf/api/projects.json, https://kin.rag.wtf/api/experience.json, https://kin.rag.wtf/api/articles.json
+- RSS (Writing): https://kin.rag.wtf/rss.xml
+- Security contact: https://kin.rag.wtf/.well-known/security.txt
 - Agent Policy: https://kin.rag.wtf/.well-known/agent-policy
 
 ## Site Map Notes

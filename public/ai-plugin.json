@@ -3,8 +3,10 @@
   "name_for_human": "Lim Chee Kin Portfolio",
   "name_for_model": "limcheekin_portfolio",
   "description_for_human": "Portfolio of Lim Chee Kin, AI Solutions Architect at Daxonet AI specialising in enterprise AI agents, RAG and voice AI.",
-  "description_for_model": "Access structured portfolio data for Lim Chee Kin, an AI Solutions Architect at Daxonet AI focused on enterprise AI agents, RAG and voice AI. Provides projects (Claim Pilot, Trade Pilot, WareBot, Project Concord, Talk To AI, RAG.WTF and more), work experience history, written articles, and contact information. All data is available via a static JSON API at /api/portfolio.json.",
-  "auth": { "type": "none" },
+  "description_for_model": "Access structured portfolio data for Lim Chee Kin, an AI Solutions Architect at Daxonet AI focused on enterprise AI agents, RAG and voice AI. Provides projects (Claim Pilot, Trade Pilot, WareBot, Project Concord, Talk To AI, RAG.WTF and more), work experience history, written articles, and contact information. All data is available via a static JSON API at /api/portfolio.json and through a read-only MCP server (Streamable HTTP, no auth) at https://kin.rag.wtf/mcp.",
+  "auth": {
+    "type": "none"
+  },
   "api": {
     "type": "openapi",
     "url": "https://kin.rag.wtf/api/openapi.json"

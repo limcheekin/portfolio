@@ -3,7 +3,9 @@ import { join } from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { DEFAULT_PROJECT_KIND } from '../src/lib/project-kind';
-import { EMAIL_ADDRESS, ENGINEER_NAME, ENGINEER_TITLE } from '../src/data/site';
+import { EMAIL_ADDRESS, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL } from '../src/data/site';
+import type { Portfolio } from '../src/lib/portfolio-schema';
+import { mcpManifest } from '../src/lib/portfolio-tools';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -57,6 +59,7 @@ const portfolio = {
   projects: projects.map((p: any) => ({
     title: p.title,
     slug: p._slug,
+    url: `${SITE_URL}/projects/${p._slug}/`,
     description: p.description,
     featured: p.featured,
     kind: p.kind ?? DEFAULT_PROJECT_KIND,
@@ -70,9 +73,10 @@ const portfolio = {
   articles: articles.map((a: any) => ({
     title: a.title,
     slug: a._slug,
+    url: `${SITE_URL}/insights/${a._slug}/`,
     description: a.description,
     externalUrl: a.externalUrl,
-    publishDate: a.publishDate,
+    publishDate: new Date(a.publishDate).toISOString(),
     tags: a.tags || [],
   })),
   experience: experience.map((e: any) => ({
@@ -85,9 +89,9 @@ const portfolio = {
   })),
   metadata: {
     generatedAt: new Date().toISOString(),
-    version: "2.0",
+    version: "2.1",
   },
-};
+} satisfies Portfolio;
 
 mkdirSync(join(distDir, 'api'), { recursive: true });
 writeFileSync(join(distDir, 'api', 'portfolio.json'), JSON.stringify(portfolio, null, 2));
@@ -147,6 +151,31 @@ const lines = [
 writeFileSync(join(distDir, 'llms-full.txt'), lines.join('\n'));
 console.log('Generated: dist/llms-full.txt');
 
+// .well-known files that repeat another file or derive from data: generated here so they have one source.
+const wellKnown = (name: string) => join(distDir, '.well-known', name);
+
 // Current A2A versions look for the agent card at /.well-known/agent-card.json; serve the same file at both paths.
-copyFileSync(join(distDir, '.well-known', 'agent.json'), join(distDir, '.well-known', 'agent-card.json'));
-console.log('Generated: dist/.well-known/agent-card.json');
+copyFileSync(wellKnown('agent.json'), wellKnown('agent-card.json'));
+copyFileSync(join(distDir, 'ai-plugin.json'), wellKnown('ai-plugin.json'));
+
+const httpResource = (path: string, name: string, description: string, mimeType: string) => ({ uri: `${SITE_URL}${path}`, name, description, mimeType });
+writeFileSync(wellKnown('mcp.json'), JSON.stringify(mcpManifest([
+  httpResource('/api/portfolio.json', 'Portfolio Data', 'Full structured portfolio: projects, work experience, articles and contact', 'application/json'),
+  httpResource('/api/projects.json', 'Projects', 'Projects only (enterprise and open source)', 'application/json'),
+  httpResource('/api/experience.json', 'Work Experience', 'Work history with responsibilities, newest first', 'application/json'),
+  httpResource('/api/articles.json', 'Articles', 'Articles with summaries and links to the originals on Medium', 'application/json'),
+  httpResource('/api/openapi.json', 'OpenAPI Spec', 'OpenAPI 3 description of the JSON API', 'application/json'),
+  httpResource('/llms-full.txt', 'Full Portfolio Content', 'Extended prose content of all portfolio items for LLMs', 'text/plain'),
+  httpResource('/llms.txt', 'LLM Site Index', 'Structured markdown index following the llms.txt convention', 'text/plain'),
+]), null, 2));
+
+// RFC 9116 requires Expires, at most a year ahead; each deploy moves it forward.
+const expires = new Date(Date.now() + 330 * 24 * 60 * 60 * 1000).toISOString();
+writeFileSync(wellKnown('security.txt'), [
+  `Contact: mailto:${EMAIL_ADDRESS}`,
+  `Expires: ${expires}`,
+  'Preferred-Languages: en',
+  `Canonical: ${SITE_URL}/.well-known/security.txt`,
+  '',
+].join('\n'));
+console.log('Generated: dist/.well-known/{agent-card,ai-plugin,mcp}.json, security.txt');
