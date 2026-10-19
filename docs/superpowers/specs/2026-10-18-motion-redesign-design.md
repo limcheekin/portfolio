@@ -55,7 +55,7 @@ Approved section order and numbering: **Hero (unnumbered) · 01 Selected Work ·
 
 - **Header:** keep the existing fixed, hide-on-scroll header, slimmed down. Logo mark at left. Nav links at right keep the existing page routes: About `/about/`, Work `/projects/`, **Writing** `/insights/`, Contact `/contact/`, plus a Résumé button. The owner renamed the "Insights" label to **"Writing"**. The URL stays `/insights/` so links, RSS and the agent surfaces keep working. *(The rename applies to every visible label: the nav, the home section, the `/insights/` page heading and titles, and breadcrumbs. Routes, slugs, the collection name and machine-readable keys are unchanged; that scope is my call.)* Keep the existing mobile menu island.
 - **Remove `FixedSidebars`** (left social rail and right email rail) site-wide. Socials (GitHub, LinkedIn, Medium) and the email move into the Contact section and the footer.
-- **Footer:** minimal. "© 2026 Lim Chee Kin · Kuala Lumpur, Malaysia", social links, and the existing source-repo link. The text "Inspired by Brittany Chiang" can go, since the design no longer derives from it. *(my call)*
+- **Footer:** minimal. "© 2026 Lim Chee Kin · Kuala Lumpur, Malaysia" and the social and email links. The source-repo link is removed (owner decision, 2026-10-19). The text "Inspired by Brittany Chiang" can go, since the design no longer derives from it. *(my call)*
 - **Smooth scrolling (Lenis)** on every page, wired as in the guide: one provider, `autoRaf: false`, driven from `gsap.ticker` with `lagSmoothing(0)`, `ScrollTrigger.update` on every Lenis scroll event, and cleanup on unmount. Import `lenis/dist/lenis.css`. Remove `scroll-behavior: smooth` from `html` in `global.css`, because it fights Lenis. Hash links (`#main-content` skip link, any in-page anchors) must still work via `lenis.scrollTo()` or Lenis's anchor handling. Leave `syncTouch` at its default (`false`) and `respectReducedMotion` on.
 
 ### Hero: "show, don't tell" (mockup 01, option C)
@@ -289,4 +289,5 @@ Made after the two-axis review of the branch. Each one records a deliberate impl
 - **Animated properties:** CSS hover/focus colour transitions (`color`, `background-color`, `border-color`) are allowed and stay on buttons and links. Transitions of anything else moved to transforms or an overlay's opacity: the Writing row's `padding` nudge and gradient tint, the Work card's border-and-shadow glow, and the `filter` and `box-shadow` hover changes.
 - **Concurrency:** the active Work illustration pauses while the section is off screen. The dot grid only reacts to the pointer.
 - **Career entries:** titles, organisations and dates come from the experience collection, so Zurich shows its full company name.
+- **Footer:** the "Source on GitHub" link is removed (owner request).
 - **Contact links:** the quiet links include the email (as *Global chrome* asks), between Medium and Résumé.
