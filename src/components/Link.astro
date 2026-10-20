@@ -1,0 +1,17 @@
+---
+import { NEW_TAB_HINT, opensNewTab } from '../lib/links';
+
+/**
+ * A link that opens in a new tab when it leaves the site (or when `newTab` says so, e.g. the résumé PDF), with
+ * rel="noopener noreferrer" and a screen-reader hint. Other attributes pass through to the <a>.
+ */
+interface Props {
+  href: string;
+  newTab?: boolean;
+  [attr: string]: unknown;
+}
+
+const { href, newTab = opensNewTab(href), ...rest } = Astro.props;
+---
+
+<a href={href} target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener noreferrer' : undefined} {...rest}><slot />{newTab && <span class="sr-only">{NEW_TAB_HINT}</span>}</a>

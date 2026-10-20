@@ -8,11 +8,26 @@ import matter from 'gray-matter';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-/** ISO date of the newest commit touching any of `paths`, or undefined (no git, shallow clone without history). */
-function gitDate(...paths) {
+// safe.directory: in the Docker build the checkout may belong to another user than the one running git.
+const git = (...args) =>
+  execFileSync('git', ['-c', 'safe.directory=*', ...args], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+
+/** Whether commit history is available. A shallow clone would date every page to its one commit, so it counts as none. */
+const hasHistory = (() => {
   try {
-    const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', ...paths], { cwd: root, encoding: 'utf8' }).trim();
-    return out || undefined;
+    if (git('rev-parse', '--is-shallow-repository') !== 'true') return true;
+    console.warn('sitemap-lastmod: shallow git clone, so pages other than articles get no lastmod');
+  } catch {
+    console.warn('sitemap-lastmod: no git history, so pages other than articles get no lastmod');
+  }
+  return false;
+})();
+
+/** ISO date of the newest commit touching any of `paths`, or undefined (no usable history). */
+function gitDate(...paths) {
+  if (!hasHistory) return undefined;
+  try {
+    return git('log', '-1', '--format=%cI', '--', ...paths) || undefined;
   } catch {
     return undefined;
   }
@@ -32,7 +47,7 @@ const projectDate = (slug) => gitDate(`${projectDir}/${slug}.md`);
 
 const PAGE_SOURCES = {
   '/': ['src/pages/index.astro', 'src/data', 'src/components/home', 'src/content'],
-  '/about/': ['src/pages/about.astro', 'src/content/experience', 'src/data/site.ts'],
+  '/about/': ['src/pages/about.astro', 'src/content/experience', 'src/data/site.ts', 'src/data/faq.ts'],
   '/contact/': ['src/pages/contact.astro', 'src/components/ContactForm.astro'],
   '/projects/': ['src/pages/projects/index.astro', projectDir],
   '/insights/': ['src/pages/insights/index.astro', 'src/content/articles'],

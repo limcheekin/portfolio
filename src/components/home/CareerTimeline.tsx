@@ -63,7 +63,7 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
       <div className="md:sticky md:top-[14vh] md:self-start">
         <SectionHeading number="02" id="career-title" className="mb-3.5">Career</SectionHeading>
         <p className="mb-5 max-w-[300px] leading-relaxed text-slate-text">{intro}</p>
-        <a href="/about/" className={`${TAP_LINK} -my-3 text-sm text-green-accent hover:underline`}>Full experience →</a>
+        <a href="/about/" data-testid="career-full-experience" className={`${TAP_LINK} -my-3 text-sm text-green-accent hover:underline`}>Full experience →</a>
       </div>
 
       <div ref={timeline} className="relative pl-[34px]">
@@ -79,7 +79,7 @@ export default function CareerTimeline({ intro, entries }: { intro: string; entr
               ? ['text-lg font-semibold text-light-slate', 'mt-1.5']
               : ['text-xl font-semibold tracking-[-0.02em] text-lightest-slate', 'mt-2.5'];
             return (
-              <li key={e.when} data-testid="career-entry" className="job group relative pb-[46px] last:pb-0">
+              <li key={e.slug} id={`career-${e.slug}`} data-testid="career-entry" data-slug={e.slug} className="job group relative pb-[46px] last:pb-0">
                 <span
                   aria-hidden="true"
                   className="absolute -left-[34px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-green-accent bg-navy shadow-halo group-data-[pending]:border-lightest-navy group-data-[pending]:shadow-none"

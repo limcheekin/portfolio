@@ -6,9 +6,9 @@ import { ArticleSchema, ExperienceSchema, ProjectSchema } from './portfolio-sche
 import type { ToolName } from './portfolio-query';
 
 /**
- * The one list of portfolio tools and resources. mcp/server.ts registers them, BaseLayout hands their JSON
- * Schemas to the WebMCP island, and scripts/generate-api.ts writes /.well-known/mcp.json from them. The
- * handlers are TOOL_HANDLERS in portfolio-query.ts. Build time and server only (imports zod).
+ * The one list of portfolio tools and resources. mcp/server.ts registers them, and scripts/generate-api.ts
+ * writes /.well-known/mcp.json from them (with JSON Schemas), which the WebMCP island reads in the browser.
+ * The handlers are TOOL_HANDLERS in portfolio-query.ts. Build time and server only (imports zod).
  */
 export const MCP_SERVER = { name: 'kin-portfolio', title: `${ENGINEER_NAME} Portfolio`, version: '1.0.0', url: `${SITE_URL}/mcp` };
 /** nginx enforces this on /mcp (nginx.conf `limit_req_zone ... rate=60r/m`, `burst=30`). */
@@ -84,11 +84,13 @@ export const MCP_TOOLS: Record<ToolName, ToolDef> = {
   },
 };
 
-export const toolEntries = () => Object.entries(MCP_TOOLS) as Array<[ToolName, ToolDef]>;
+/** Stateless (no stream for notifications), so no list_changed. The server registers these; mcp.json repeats them. */
+export const MCP_CAPABILITIES = { tools: { listChanged: false }, resources: { listChanged: false } };
 
-/** Name, description and JSON Schema input of each tool: what the browser-side WebMCP island needs. */
-export const webMcpTools = () =>
-  toolEntries().map(([name, t]) => ({ name, description: t.description, inputSchema: z.toJSONSchema(z.object(t.input)) }));
+/** Every tool only reads the build's own data. */
+export const TOOL_ANNOTATIONS = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
+
+export const toolEntries = () => Object.entries(MCP_TOOLS) as Array<[ToolName, ToolDef]>;
 
 /** Static resources, served at portfolio://<name>; the per-project template is portfolio://projects/{slug}. */
 export const MCP_RESOURCES = [
@@ -112,8 +114,16 @@ export function mcpManifest(httpResources: Array<{ uri: string; name: string; de
     serverInfo: { name: MCP_SERVER.name, version: MCP_SERVER.version },
     authentication: { type: 'none' },
     rateLimit: MCP_RATE_LIMIT,
-    capabilities: { tools: true, resources: true },
-    tools: toolEntries().map(([name, t]) => ({ name, description: t.description })),
+    // The server's initialize result: MCP_CAPABILITIES plus completions (the project template's slug completion).
+    capabilities: { ...MCP_CAPABILITIES, completions: {} },
+    tools: toolEntries().map(([name, t]) => ({
+      name,
+      title: t.title,
+      description: t.description,
+      inputSchema: z.toJSONSchema(z.object(t.input)),
+      outputSchema: z.toJSONSchema(z.object(t.output)),
+      annotations: TOOL_ANNOTATIONS,
+    })),
     resources: [
       ...MCP_RESOURCES.map((r) => ({ uri: `portfolio://${r.name}`, name: r.title, mimeType: r.mimeType })),
       { uri: PROJECT_RESOURCE_TEMPLATE, name: 'One project (template)', mimeType: 'application/json' },

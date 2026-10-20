@@ -1,5 +1,6 @@
 ---
 import { TAP_LINK } from '../lib/text-styles';
+import { breadcrumbJsonLd } from '../lib/jsonld';
 
 interface BreadcrumbItem {
   label: string;
@@ -9,7 +10,11 @@ interface Props {
   items: BreadcrumbItem[];
 }
 const { items } = Astro.props;
+// The same trail as BreadcrumbList JSON-LD (Home is added by the helper; the current page is this URL).
+const jsonLd = breadcrumbJsonLd(...items.slice(1).map((i): [string, string] => [i.label, i.href ?? Astro.url.pathname]));
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
 <nav aria-label="Breadcrumb" data-testid="breadcrumb" class="mb-8 font-mono text-sm text-slate-text">
   <!-- -my-3 takes the links' taller tap areas back out of the layout. -->

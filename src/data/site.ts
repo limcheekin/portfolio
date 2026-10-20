@@ -63,8 +63,8 @@ export const CONTACT_CONTENT = {
 
 /** Social profiles plus email, listed in the footer and the home Contact section. */
 export const CONTACT_LINKS = [
-  ...SOCIAL_LINKS.map(({ name, url }) => ({ name, url, external: true })),
-  { name: 'Email', url: `mailto:${EMAIL_ADDRESS}`, external: false },
+  ...SOCIAL_LINKS.map(({ name, url }) => ({ name, url })),
+  { name: 'Email', url: `mailto:${EMAIL_ADDRESS}` },
 ];
 
 export const FOOTER_TEXT = `© ${new Date().getFullYear()} ${ENGINEER_NAME} · Kuala Lumpur, Malaysia`;

@@ -1,9 +1,10 @@
 ---
 title: "Talking Book"
-description: "Launched the Talking Book YouTube channel, focus primarily on insightful non-fiction, business, and self-improvement books, transforming key concepts into accessible and engaging formats such as engaging conversations, summaries, songs, and AI chats."
+description: "Launched the Talking Book YouTube channel, focusing primarily on insightful non-fiction, business, and self-improvement books, transforming key concepts into accessible and engaging formats such as engaging conversations, summaries, songs, and AI chats."
+summary: "Talking Book is a YouTube channel by Lim Chee Kin that turns non-fiction, business and self-improvement books into conversations, summaries and songs."
 featured: false
 technologies: ["Python", "Podcastfy", "LocalAI", "Kokoro-FASTAPI", "Google Slides"]
-languages: ["Python"]
+languages: ["JavaScript", "HTML", "CSS"]
 githubUrl: "https://github.com/limcheekin/talking-book"
 liveUrl: "https://limcheekin.github.io/talking-book/"
 category: "AI Content Generation"

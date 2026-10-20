@@ -1,6 +1,7 @@
 ---
 title: "WareBot: Warehouse Assistant"
 description: "Delivered a conversational AI assistant for a Warehouse Management System with natural-language stock queries, warehouse operations, SSE streaming and explicit confirmation before writes. Integrated locally hosted Qwen3.5 inference."
+summary: "WareBot is a conversational assistant for a warehouse management system: plain-language stock queries, and every write waits for confirmation."
 featured: true
 featuredOrder: 3
 kind: enterprise

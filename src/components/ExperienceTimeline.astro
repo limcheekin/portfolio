@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { CHIP, MEASURE } from '../lib/text-styles';
+import { roleSlug } from '../lib/paths';
 
 /** Full work history on About, drawn like the home Career rail: one line, a green-ringed dot per role. */
 interface Props {
@@ -16,13 +17,13 @@ const { entries } = Astro.props;
   <div aria-hidden="true" class="absolute bottom-1.5 left-1.5 top-1.5 w-0.5 bg-light-graphite"></div>
   <ol class="m-0 list-none space-y-12 p-0">
     {entries.map((exp) => (
-      <li class="relative" data-testid="experience-entry">
+      <li class="relative" id={`role-${roleSlug(exp.id)}`} data-testid="experience-entry" data-slug={roleSlug(exp.id)}>
         <span aria-hidden="true" class="absolute -left-[34px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-green-accent bg-navy shadow-halo"></span>
         <p class="font-mono text-xs tracking-wide text-green-accent">{exp.data.startDate} – {exp.data.endDate || 'Present'}</p>
         <h3 class="mt-1.5 text-xl font-semibold tracking-[-0.02em] text-lightest-slate">
           {exp.data.title}
           {exp.data.companyUrl ? (
-            <a href={exp.data.companyUrl} target="_blank" rel="noopener noreferrer" aria-describedby="experience-new-tab-hint" class="text-green-accent hover:underline">
+            <a href={exp.data.companyUrl} target="_blank" rel="noopener noreferrer" aria-describedby="experience-new-tab-hint" data-testid="experience-company-link" class="text-green-accent hover:underline">
               {' '}@ {exp.data.company}
             </a>
           ) : (

@@ -34,6 +34,7 @@ function lazy<T>(fn: () => T): () => T {
 }
 
 const readText = memo((path: string) => readFileSync(path, 'utf8'));
+const portfolioJson = lazy(() => JSON.parse(readText('dist/api/portfolio.json')));
 
 /** Recursively list files under `dir` whose extension is in `exts` ('' matches extensionless files). */
 function walk(dir: string, exts: string[]): string[] {
@@ -109,7 +110,7 @@ for (const [name, hit, msg] of SCANS) check(name, () => scan(SCAN, hit, msg));
 check('title is AI Solutions Architect', async () => (await site()).ENGINEER_TITLE === 'AI Solutions Architect' ? [] : ['ENGINEER_TITLE']);
 check('llms.txt names role + employer', () => missing(readText('public/llms.txt'), ['AI Solutions Architect', 'Daxonet AI']).map((s) => `llms.txt missing "${s}"`));
 check('resume.pdf is the Oct 2026 CV', () => existsSync('docs/Resume-202610.pdf') && !readFileSync('public/resume.pdf').equals(readFileSync('docs/Resume-202610.pdf')) ? ['public/resume.pdf differs'] : []);
-check('dist: portfolio.json title', () => JSON.parse(readText('dist/api/portfolio.json')).title === 'AI Solutions Architect' ? [] : ['portfolio.json title'], { dist: true });
+check('dist: portfolio.json title', () => portfolioJson().title === 'AI Solutions Architect' ? [] : ['portfolio.json title'], { dist: true });
 check('dist: no years figure in dist', () => scan(walk('dist', ['.html', '.txt', '.json', '.xml']), (t) => YEARS.test(t)), { dist: true });
 
 // ---------- articles ----------
@@ -230,7 +231,7 @@ check('demoted + hvac', () => {
   else { if (h.featured) out.push('hvac featured'); if (h.kind !== 'enterprise') out.push('hvac kind'); }
   return out;
 });
-check('dist: portfolio.json has kind', () => (JSON.parse(readText('dist/api/portfolio.json')).projects as any[]).filter((p) => !p.kind).map((p) => `${p.slug} lacks kind`), { dist: true });
+check('dist: portfolio.json has kind', () => (portfolioJson().projects as any[]).filter((p) => !p.kind).map((p) => `${p.slug} lacks kind`), { dist: true });
 check('openapi Project matches generated fields', () => {
   const schema = JSON.parse(readText('public/api/openapi.json')).components.schemas.Project.properties;
   const out = ['kind', 'org', 'tagline'].filter((k) => !schema[k]).map((k) => `openapi Project lacks ${k}`);
@@ -272,22 +273,42 @@ check('dist: contact', () => missing(homeText(), ['Have a workflow that should r
 // ---------- agent surfaces stay in step ----------
 
 check('dist: portfolio.json matches its schema', () => {
-  const parsed = PortfolioSchema.safeParse(JSON.parse(readText('dist/api/portfolio.json')));
+  const parsed = PortfolioSchema.safeParse(portfolioJson());
   return parsed.success ? [] : parsed.error.issues.slice(0, 5).map((i) => `${i.path.join('.')}: ${i.message}`);
 }, { dist: true });
+
+/** Whether a site path is built: a file, or a directory with its index.html (pages) or index.json (/api/). */
+const builtFileFor = (path: string) =>
+  path.endsWith('/') ? ['index.html', 'index.json'].some((f) => existsSync(join('dist', path, f))) : existsSync(join('dist', path));
 
 const DISCOVERY = ['dist/llms.txt', 'dist/robots.txt', 'dist/.well-known/agent.json', 'dist/.well-known/mcp.json', 'dist/ai-plugin.json'];
 check('dist: discovery links resolve to built files', () =>
   DISCOVERY.flatMap((f) =>
     [...readText(f).matchAll(/https:\/\/kin\.rag\.wtf(\/[^\s"'<>()]*)?/g)]
-      .map((m) => (m[1] ?? '/').replace(/[.,;:]+$/, ''))
-      .filter((path) => path !== '/mcp' && !existsSync(join('dist', path.endsWith('/') ? `${path}index.html` : path)))
+      .map((m) => (m[1] ?? '/').replace(/#.*$/, '').replace(/[.,;:]+$/, ''))
+      .filter((path) => path !== '/mcp' && !builtFileFor(path))
       .map((path) => `${f}: ${path}`),
   ), { dist: true });
 
 check('dist: MCP tool names agree across llms.txt and the agent card', () => {
   const names = Object.keys(MCP_TOOLS);
   return ['dist/llms.txt', 'dist/.well-known/agent.json'].flatMap((f) => missing(readText(f), names).map((n) => `${f} lacks ${n}`));
+}, { dist: true });
+
+check('dist: Markdown version of every project, article and About', () => {
+  const { projects, articles } = portfolioJson();
+  return [
+    ...projects.map((p: { slug: string }) => `projects/${p.slug}/index.md`),
+    ...articles.map((a: { slug: string }) => `insights/${a.slug}/index.md`),
+    'about/index.md',
+  ].filter((f) => !existsSync(join('dist', f)));
+}, { dist: true });
+
+check('dist: search index covers every project, article and role', () => {
+  const { projects, articles, experience } = portfolioJson();
+  const { items } = JSON.parse(readText('dist/api/search.json'));
+  const expected = projects.length + articles.length + experience.length;
+  return items.length === expected ? [] : [`search.json has ${items.length} items, expected ${expected}`];
 }, { dist: true });
 
 let failed = 0;

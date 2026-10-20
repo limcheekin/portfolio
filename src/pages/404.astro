@@ -3,8 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Button from '../components/Button.astro';
-import { ENGINEER_NAME, SITE_URL } from '../data/site';
+import { ENGINEER_NAME } from '../data/site';
 import { GUTTER } from '../lib/layout';
+import { WEBSITE_ID } from '../lib/jsonld';
 
 const jsonLd = [
   {
@@ -12,13 +13,7 @@ const jsonLd = [
     "@type": "WebPage",
     "name": "Page Not Found",
     "description": "The requested page does not exist. Use the navigation below to find what you're looking for.",
-    "url": `${SITE_URL}/404.html`,
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL }
-      ]
-    }
+    "isPartOf": { "@id": WEBSITE_ID }
   }
 ];
 ---
@@ -26,17 +21,22 @@ const jsonLd = [
 <BaseLayout title={`Page Not Found | ${ENGINEER_NAME}`} description="The page you're looking for doesn't exist." jsonLd={jsonLd} noindex>
   <Header />
   <main id="main-content" class={`mx-auto flex min-h-screen max-w-screen-lg flex-col items-center justify-center text-center ${GUTTER}`}>
-    <h1 class="mb-4 text-6xl font-semibold tracking-[-0.03em] text-green-accent md:text-8xl">404</h1>
-    <h2 class="mb-6 text-2xl font-semibold tracking-[-0.02em] text-lightest-slate md:text-3xl">Page Not Found</h2>
+    <p aria-hidden="true" class="mb-4 text-6xl font-semibold tracking-[-0.03em] text-green-accent md:text-8xl">404</p>
+    <h1 class="mb-6 text-2xl font-semibold tracking-[-0.02em] text-lightest-slate md:text-3xl">Page not found</h1>
     <p class="text-slate-text text-lg mb-10 max-w-md">
       The page you're looking for doesn't exist or has been moved. Here are some places you can go instead:
     </p>
     <div class="flex flex-wrap gap-4 justify-center">
-      <Button href="/">Home</Button>
-      <Button href="/projects/" variant="secondary">Projects</Button>
-      <Button href="/insights/" variant="secondary">Writing</Button>
-      <Button href="/contact/" variant="secondary">Contact</Button>
+      <Button href="/" data-testid="not-found-home">Home</Button>
+      <Button href="/projects/" variant="secondary" data-testid="not-found-projects">Projects</Button>
+      <Button href="/insights/" variant="secondary" data-testid="not-found-writing">Writing</Button>
+      <Button href="/contact/" variant="secondary" data-testid="not-found-contact">Contact</Button>
     </div>
+    <p class="mt-10 font-mono text-xs text-slate-text">
+      For agents: <a href="/llms.txt" class="text-green-accent hover:underline" data-testid="not-found-llms">llms.txt</a> ·
+      <a href="/sitemap-index.xml" class="text-green-accent hover:underline" data-testid="not-found-sitemap">sitemap</a> ·
+      <a href="/api/portfolio.json" class="text-green-accent hover:underline" data-testid="not-found-api">JSON API</a>
+    </p>
   </main>
   <Footer />
 </BaseLayout>

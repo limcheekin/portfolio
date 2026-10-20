@@ -4,26 +4,14 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Button from '../components/Button.astro';
-import { CONTACT_CONTENT, EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL } from '../data/site';
+import { CONTACT_CONTENT, EMAIL_ADDRESS, ENGINEER_NAME } from '../data/site';
+import { PERSON_REF, webPageJsonLd } from '../lib/jsonld';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { PAGE_MAIN } from '../lib/layout';
 import { PAGE_TITLE } from '../lib/text-styles';
 
 const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": `Contact ${ENGINEER_NAME}`,
-    "url": `${SITE_URL}/contact/`
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
-      { "@type": "ListItem", "position": 2, "name": "Contact", "item": `${SITE_URL}/contact/` }
-    ]
-  }
+  webPageJsonLd('/contact/', 'ContactPage', { "name": `Contact ${ENGINEER_NAME}`, "about": PERSON_REF, "mainEntity": PERSON_REF })
 ];
 ---
 
@@ -39,26 +27,7 @@ const jsonLd = [
       <h1 id="whats-next" class={`${PAGE_TITLE} mb-4`}>{CONTACT_CONTENT.title}</h1>
       <p class="text-slate-text text-lg leading-relaxed mb-10">{CONTACT_CONTENT.paragraph}</p>
 
-      <!-- Success message (hidden by default, shown via client-side script) -->
-      <!-- Live region: empty in the HTML, so an agent reading the page never sees a confirmation that did not happen.
-           The script fills it only after Formspree redirects back with ?submitted=true. -->
-      <div id="contact-success" role="status" aria-live="polite" data-testid="contact-form-success" data-message={CONTACT_CONTENT.success} class="hidden mb-8 rounded-xl border border-green-accent/40 bg-card p-6 font-mono text-sm text-green-accent"></div>
-
-      <!-- Form (hidden when success is shown) -->
-      <div id="contact-form-container">
-        <ContactForm />
-      </div>
-
-      <script>
-        if (new URLSearchParams(window.location.search).get('submitted') === 'true') {
-          const success = document.getElementById('contact-success');
-          if (success) {
-            success.textContent = success.dataset.message ?? '';
-            success.classList.remove('hidden');
-          }
-          document.getElementById('contact-form-container')?.classList.add('hidden');
-        }
-      </script>
+      <ContactForm />
 
       <p class="font-mono text-xs text-slate-text mb-4 mt-8">or email directly</p>
       <Button href={`mailto:${EMAIL_ADDRESS}`} size="md" data-testid="contact-cta" variant="secondary">

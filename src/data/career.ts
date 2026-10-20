@@ -1,5 +1,6 @@
 import { getCollection } from 'astro:content';
 import type { CareerEntry } from '../components/home/types';
+import { roleSlug, slugify } from '../lib/paths';
 
 export const CAREER_INTRO =
   'From enterprise Java and banking systems to agentic AI. The same job throughout: make complex systems work for the business.';
@@ -56,9 +57,9 @@ export async function getCareerEntries(): Promise<CareerEntry[]> {
   return HIGHLIGHTS.map((h): CareerEntry => {
     if ('role' in h) {
       const { title, company, startDate, endDate } = job(h.role);
-      return { when: when(startDate, endDate), title, org: company, summary: h.summary, chips: h.chips };
+      return { slug: roleSlug(h.role), when: when(startDate, endDate), title, org: company, summary: h.summary, chips: h.chips };
     }
     const [oldest, newest] = h.span.map(job);
-    return { when: when(oldest.startDate, newest.endDate), title: h.title, summary: h.summary, condensed: true };
+    return { slug: slugify(h.title), when: when(oldest.startDate, newest.endDate), title: h.title, summary: h.summary, condensed: true };
   });
 }

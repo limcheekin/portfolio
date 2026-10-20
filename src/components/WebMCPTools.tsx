@@ -4,15 +4,21 @@ import type { Portfolio } from '../lib/portfolio-schema';
 
 /**
  * In-browser WebMCP tools (navigator.modelContext), registered only where the browser provides the API.
- * The tool list and JSON Schemas come from src/lib/portfolio-tools.ts via BaseLayout (built at build time, so
- * zod stays out of the bundle); answers come from the same handlers as the MCP server at /mcp.
+ * The tool list and JSON Schemas come from /.well-known/mcp.json (written from src/lib/portfolio-tools.ts), fetched
+ * only in such browsers, so pages carry no schemas; answers come from the same handlers as the MCP server at /mcp.
  */
 interface WebMCPToolsProps {
   portfolioApiUrl: string;
-  tools: Array<{ name: ToolName; description: string; inputSchema: object }>;
+  manifestUrl: string;
 }
 
-export default function WebMCPTools({ portfolioApiUrl, tools }: WebMCPToolsProps) {
+interface ManifestTool {
+  name: ToolName;
+  description: string;
+  inputSchema: object;
+}
+
+export default function WebMCPTools({ portfolioApiUrl, manifestUrl }: WebMCPToolsProps) {
   useEffect(() => {
     const mc = (navigator as any).modelContext;
     if (!mc) return;
@@ -27,33 +33,47 @@ export default function WebMCPTools({ portfolioApiUrl, tools }: WebMCPToolsProps
         }));
     const text = (value: unknown) => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] });
 
-    for (const tool of tools) {
-      try {
-        mc.registerTool({
-          ...tool,
-          async execute(input: object = {}) {
-            try {
-              return text(runTool(tool.name, await load(), input));
-            } catch (err) {
-              return { ...text({ error: (err as Error).message }), isError: true };
-            }
-          },
-        });
-      } catch {
-        // WebMCP not supported in this browser — silently skip
-      }
-    }
+    let cancelled = false;
+    const registered: string[] = [];
+    fetch(manifestUrl)
+      .then((res) => res.json())
+      .then(({ tools }: { tools: ManifestTool[] }) => {
+        if (cancelled) return;
+        for (const { name, description, inputSchema } of tools) {
+          try {
+            mc.registerTool({
+              name,
+              description,
+              inputSchema,
+              async execute(input: object = {}) {
+                try {
+                  return text(runTool(name, await load(), input));
+                } catch (err) {
+                  return { ...text({ error: (err as Error).message }), isError: true };
+                }
+              },
+            });
+            registered.push(name);
+          } catch {
+            // WebMCP not supported in this browser — silently skip
+          }
+        }
+      })
+      .catch(() => {
+        // No manifest (offline, blocked): the page works without WebMCP tools
+      });
 
     return () => {
-      for (const tool of tools) {
+      cancelled = true;
+      for (const name of registered) {
         try {
-          mc.unregisterTool(tool.name);
+          mc.unregisterTool(name);
         } catch {
           // ignore cleanup errors
         }
       }
     };
-  }, [portfolioApiUrl, tools]);
+  }, [portfolioApiUrl, manifestUrl]);
 
   return null;
 }

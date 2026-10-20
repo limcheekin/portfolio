@@ -3,6 +3,7 @@ import { CONTACT_CTA, CONTACT_LINKS, HERO_CONTENT } from '../../data/site';
 import MagnetButton from './MagnetButton.tsx';
 import { GUTTER } from '../../lib/layout';
 import { TAP_LINK } from '../../lib/text-styles';
+import Link from '../Link.astro';
 
 const LINK = `${TAP_LINK} text-light-slate no-underline hover:text-green-accent`;
 ---
@@ -26,8 +27,8 @@ const LINK = `${TAP_LINK} text-light-slate no-underline hover:text-green-accent`
   </div>
   <ul class="relative mt-[22px] flex list-none flex-wrap justify-center gap-x-[26px] p-0 font-mono text-[13px]">
     {CONTACT_LINKS.map((l) => (
-      <li><a href={l.url} target={l.external ? '_blank' : undefined} rel={l.external ? 'noopener noreferrer' : undefined} class={LINK}>{l.name}</a></li>
+      <li><Link href={l.url} data-testid={`contact-link-${l.name.toLowerCase()}`} class={LINK}>{l.name}</Link></li>
     ))}
-    <li><a href={HERO_CONTENT.resumeCta.href} target="_blank" rel="noopener noreferrer" class={LINK}>{HERO_CONTENT.resumeCta.label}</a></li>
+    <li><Link href={HERO_CONTENT.resumeCta.href} newTab data-testid="contact-link-resume" class={LINK}>{HERO_CONTENT.resumeCta.label}</Link></li>
   </ul>
 </section>

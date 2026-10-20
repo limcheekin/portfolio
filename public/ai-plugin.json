@@ -11,6 +11,11 @@
     "type": "openapi",
     "url": "https://kin.rag.wtf/api/openapi.json"
   },
+  "mcp": {
+    "url": "https://kin.rag.wtf/mcp",
+    "transport": "streamable-http",
+    "manifest": "https://kin.rag.wtf/.well-known/mcp.json"
+  },
   "logo_url": "https://kin.rag.wtf/favicon.svg",
   "contact_email": "limcheekin@vobject.com",
   "legal_info_url": "https://kin.rag.wtf/"

@@ -5,54 +5,45 @@ import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
-import { ABOUT_CONTENT, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL, EMAIL_ADDRESS } from '../data/site';
+import { ABOUT_CONTENT, ENGINEER_NAME, SITE_URL } from '../data/site';
+import { FAQ } from '../data/faq';
+import { markdownPath } from '../lib/paths';
 import Img from '../components/Img.astro';
 import { PAGE_MAIN } from '../lib/layout';
 import { CHIP, MEASURE, PAGE_TITLE } from '../lib/text-styles';
-import { PERSON_ID } from '../lib/jsonld';
+import { PERSON_REF, webPageJsonLd } from '../lib/jsonld';
+import { personJsonLd } from '../lib/person-jsonld';
 
 const experience = (await getCollection('experience'))
   .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 
 const jsonLd = [
+  await personJsonLd(),
+  webPageJsonLd('/about/', 'ProfilePage', { "name": `About ${ENGINEER_NAME}`, "mainEntity": PERSON_REF }),
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "@id": PERSON_ID,
-    "name": ENGINEER_NAME,
-    "url": `${SITE_URL}/`,
-    "image": `${SITE_URL}/images/profile.png`,
-    "jobTitle": ENGINEER_TITLE,
-    "email": `mailto:${EMAIL_ADDRESS}`,
-    "worksFor": { "@type": "Organization", "name": "Daxonet AI Sdn. Bhd." },
-    "alumniOf": [
-      { "@type": "Organization", "name": "DXC Technology", "url": "https://www.dxc.com" },
-      { "@type": "Organization", "name": "Zurich Technology Services Malaysia" },
-      { "@type": "Organization", "name": "Penril Datability Networks" },
-      { "@type": "Organization", "name": "Siemens Multimedia" }
-    ],
-    "sameAs": ["https://github.com/limcheekin", "https://linkedin.com/in/limcheekin", "https://medium.com/@limcheekin"]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
-      { "@type": "ListItem", "position": 2, "name": "About", "item": `${SITE_URL}/about/` }
-    ]
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/about/#faq`,
+    "mainEntity": FAQ.map((f) => ({
+      "@type": "Question",
+      "name": f.question,
+      "url": `${SITE_URL}${f.path}`,
+      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+    }))
   }
 ];
 ---
 
 <BaseLayout
   title={`About | ${ENGINEER_NAME}`}
+  markdownUrl={markdownPath('/about/')}
   description={`Learn about ${ENGINEER_NAME}'s career in enterprise software, AI engineering and solution architecture.`}
   jsonLd={jsonLd}
 >
   <Header />
   <main id="main-content" class={PAGE_MAIN}>
     <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About" }]} />
-    <h1 id="about-me" class={`${PAGE_TITLE} mb-8`}>About Me</h1>
+    <h1 id="about-me" class={`${PAGE_TITLE} mb-8`}>About {ENGINEER_NAME}</h1>
 
     <div class="grid md:grid-cols-5 gap-10 lg:gap-12 items-start mb-20">
       <div class="md:col-span-3">
@@ -81,6 +72,20 @@ const jsonLd = [
     </h2>
 
     <ExperienceTimeline entries={experience} />
+
+    <section aria-labelledby="faq" class="mt-24">
+      <h2 id="faq" class="mb-10 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">
+        Frequently asked questions
+      </h2>
+      <dl class={`m-0 ${MEASURE} space-y-8`} data-testid="faq">
+        {FAQ.map((f) => (
+          <div data-testid="faq-entry">
+            <dt class="text-lg font-semibold text-lightest-slate">{f.question}</dt>
+            <dd class="m-0 mt-2 leading-relaxed text-slate-text">{f.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   </main>
   <Footer />
 </BaseLayout>

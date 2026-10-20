@@ -127,6 +127,7 @@ export default function AgentConsole({ runs }: { runs: AgentRun[] }) {
         onClick={togglePaused}
         aria-pressed={paused}
         aria-label="Pause the agent console animation"
+        data-testid="console-pause"
         className="absolute -top-0.5 right-0 flex h-11 w-11 items-center justify-center rounded text-slate-text transition-colors duration-250 hover:text-green-accent motion-reduce:hidden"
       >
         <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">

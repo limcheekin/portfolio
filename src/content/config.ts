@@ -6,6 +6,8 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    /** Meta description: one sentence that names the project, at most 160 characters. */
+    summary: z.string().max(160),
     featured: z.boolean().default(false),
     featuredOrder: z.number().optional(),
     technologies: z.array(z.string()),

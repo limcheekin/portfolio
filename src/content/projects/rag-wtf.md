@@ -1,6 +1,7 @@
 ---
 title: "RAG.WTF: Private Knowledge Platform"
 description: "Architected and built RAG.WTF, an open-source platform for private, personalized knowledge discovery and management. Focuses on data ownership, privacy, and efficient local AI processing, integrating SurrealDB.wasm for data sovereignty."
+summary: "RAG.WTF is an open-source platform for private, personalised knowledge discovery with RAG, running local models and SurrealDB.wasm."
 featured: true
 featuredOrder: 7
 kind: oss

@@ -1,6 +1,7 @@
 ---
 title: "open-text-embeddings Python Library"
 description: "Engineered 'open-text-embeddings', a Python library providing an OpenAI-compatible API for diverse open-source sentence transformer models (e.g., BGE, E5). Enables significant cost reduction and eliminates vendor lock-in for embedding generation."
+summary: "open-text-embeddings is an open-source Python library that serves BGE, E5 and other sentence-transformer models behind an OpenAI-compatible API."
 featured: false
 technologies: ["Open Source", "Python", "Text Embeddings", "Sentence Transformers", "OpenAI-compatible API", "NLP"]
 languages: ["Python"]

@@ -1,8 +1,8 @@
 # The image builds from a clean npm ci; keep host installs, outputs and docs out of the build context.
+# .git stays in: the sitemap's lastmod dates come from commit history (scripts/sitemap-lastmod.mjs).
 node_modules
 dist
 build
 .astro
-.git
 .claude
 docs

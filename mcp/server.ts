@@ -14,14 +14,17 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
 import { SITE_URL } from '../src/data/site';
 import { getProject, listArticles, runTool } from '../src/lib/portfolio-query';
 import type { Portfolio } from '../src/lib/portfolio-schema';
 import {
+  MCP_CAPABILITIES,
   MCP_INSTRUCTIONS,
   MCP_RESOURCES,
   MCP_SERVER,
   PROJECT_RESOURCE_TEMPLATE,
+  TOOL_ANNOTATIONS,
   toolEntries,
   type ResourceName,
 } from '../src/lib/portfolio-tools';
@@ -49,7 +52,41 @@ const PROJECT_RESOURCES = portfolio.projects.map((p) => ({
   mimeType: 'application/json',
 }));
 
-const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
+/** MCP's "Resource not found" error (code -32002, not in the SDK's ErrorCode enum). */
+const resourceNotFound = (uri: string) => new McpError(-32002, `Resource not found: ${uri}`, { uri });
+
+type Handler = (request: any, extra: unknown) => Promise<unknown>;
+
+/**
+ * Spec error codes where the SDK's McpServer differs: an unknown tool is a JSON-RPC -32602 error (the SDK turns it
+ * into an isError tool result), and an unknown resource is -32002 (the SDK sends -32602). McpServer offers no hook
+ * for either, so this wraps the handlers it registered; mcp:smoke checks both codes, so an SDK change shows up there.
+ */
+function useSpecErrorCodes(server: McpServer, toolNames: Set<string>) {
+  const handlers: Map<string, Handler> = (server.server as any)._requestHandlers;
+  const wrap = (method: string, fn: (inner: Handler) => Handler) => {
+    const inner = handlers.get(method);
+    if (!inner) throw new Error(`mcp: no ${method} handler to wrap`);
+    handlers.set(method, fn(inner));
+  };
+  wrap('tools/call', (inner) => async (request, extra) => {
+    const name = request.params?.name;
+    if (!toolNames.has(name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
+    return inner(request, extra);
+  });
+  wrap('resources/read', (inner) => async (request, extra) => {
+    try {
+      return await inner(request, extra);
+    } catch (err) {
+      if (err instanceof McpError && err.code === ErrorCode.InvalidParams && /not found/.test(err.message)) {
+        throw resourceNotFound(request.params?.uri);
+      }
+      throw err;
+    }
+  });
+}
+
+const TOOL_NAMES = new Set(toolEntries().map(([name]) => name));
 
 function buildServer(): McpServer {
   const server = new McpServer(
@@ -60,7 +97,7 @@ function buildServer(): McpServer {
   for (const [name, tool] of toolEntries()) {
     server.registerTool(
       name,
-      { title: tool.title, description: tool.description, inputSchema: tool.input, outputSchema: tool.output, annotations: READ_ONLY },
+      { title: tool.title, description: tool.description, inputSchema: tool.input, outputSchema: tool.output, annotations: TOOL_ANNOTATIONS },
       // A thrown Error (e.g. an unknown slug) becomes an isError result in the SDK.
       async (input: object) => {
         const data = runTool(name, portfolio, input);
@@ -87,11 +124,14 @@ function buildServer(): McpServer {
     { title: 'Project', description: 'One project by slug', mimeType: 'application/json' },
     async (uri, { slug }) => {
       const project = getProject(portfolio, String(slug));
-      if (!project) throw new Error(`No project "${slug}"`);
+      if (!project) throw resourceNotFound(uri.href);
       return { contents: [{ uri: uri.href, mimeType: 'application/json', text: pretty(project) }] };
     },
   );
 
+  // McpServer advertises list_changed by default; this stateless server has no stream to send it on.
+  server.server.registerCapabilities(MCP_CAPABILITIES);
+  useSpecErrorCodes(server, TOOL_NAMES);
   return server;
 }
 

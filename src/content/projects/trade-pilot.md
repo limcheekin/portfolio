@@ -1,6 +1,7 @@
 ---
 title: "Trade Pilot: Purchase Orders from WhatsApp"
 description: "Developed WhatsApp intake for purchase orders, delivery orders and item lists from messages, images, PDFs and Excel files. Combined document extraction with a Next.js review portal and AutoCount/Dynamod integration for quotations, sales orders and goods received notes."
+summary: "Trade Pilot turns purchase orders sent on WhatsApp as photos, PDFs or Excel files into quotations and sales orders in AutoCount and Dynamod."
 featured: true
 featuredOrder: 2
 kind: enterprise

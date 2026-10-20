@@ -1,6 +1,7 @@
 ---
 title: "Agentic AI Layer: Agents for Business Systems"
 description: "Architected multi-channel agents connecting accounting and business systems through APIs and role-restricted MCP tools. Implemented Claude Agent SDK workflows, Gemini-backed memory, Pipecat voice, and Telegram/WhatsApp access."
+summary: "Agentic AI Layer: multi-channel agents that reach accounting and business systems through APIs and role-restricted MCP tools, built at Daxonet AI."
 featured: true
 featuredOrder: 4
 kind: enterprise

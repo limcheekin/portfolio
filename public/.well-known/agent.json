@@ -3,7 +3,7 @@
   "name": "Lim Chee Kin Portfolio",
   "description": "Portfolio of Lim Chee Kin — AI Solutions Architect at Daxonet AI specialising in enterprise AI agents, RAG and voice AI. This static site does not accept A2A task requests: read the data from the JSON API (/api/portfolio.json) or the read-only MCP server at https://kin.rag.wtf/mcp.",
   "url": "https://kin.rag.wtf/",
-  "version": "1.2",
+  "version": "1.3",
   "provider": {
     "organization": "Lim Chee Kin",
     "url": "https://kin.rag.wtf/about/"
@@ -13,10 +13,19 @@
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
-    "stateTransitionHistory": false
-  },
-  "authentication": {
-    "type": "none"
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://modelcontextprotocol.io/specification/2025-11-25",
+        "description": "This agent's data is served over MCP, not A2A: a read-only, stateless Streamable HTTP server (POST only, no auth) with tools get_projects, get_project, get_experience, get_articles, search_portfolio, get_contact_info.",
+        "required": false,
+        "params": {
+          "endpoint": "https://kin.rag.wtf/mcp",
+          "transport": "streamable-http",
+          "manifest": "https://kin.rag.wtf/.well-known/mcp.json"
+        }
+      }
+    ]
   },
   "securitySchemes": {},
   "security": [],
@@ -32,7 +41,7 @@
     {
       "id": "portfolio-retrieval",
       "name": "Portfolio Data Retrieval",
-      "description": "Structured portfolio data (projects, work experience with responsibilities, articles, contact) from the static JSON API. Full: /api/portfolio.json; per collection: /api/projects.json, /api/experience.json, /api/articles.json. Described by /api/openapi.json.",
+      "description": "Structured portfolio data (projects, work experience with responsibilities, articles, contact) from the static JSON API. Full: /api/portfolio.json; per collection: /api/projects.json, /api/experience.json, /api/articles.json. Described by /api/openapi.json. Search index: /api/search.json.",
       "tags": [
         "retrieval",
         "portfolio",
@@ -40,8 +49,8 @@
         "openapi"
       ],
       "examples": [
-        "GET /api/projects.json",
-        "GET /api/experience.json"
+        "Which projects did Lim Chee Kin build at Daxonet AI?",
+        "List his work experience, newest first."
       ],
       "inputModes": [
         "text/plain"
@@ -53,7 +62,7 @@
     {
       "id": "mcp-tools",
       "name": "MCP Tools",
-      "description": "Read-only MCP server at https://kin.rag.wtf/mcp (Streamable HTTP, stateless, POST only, no auth): tools get_projects, get_project, get_experience, get_articles, search_portfolio, get_contact_info, plus portfolio:// resources.",
+      "description": "Read-only MCP server at https://kin.rag.wtf/mcp (Streamable HTTP, stateless, POST only, no auth): tools get_projects, get_project, get_experience, get_articles, search_portfolio, get_contact_info, plus portfolio:// resources. Example calls: tools/call search_portfolio {\"query\": \"MCP\"}; tools/call get_project {\"slug\": \"claim-pilot\"}.",
       "tags": [
         "mcp",
         "tools",
@@ -61,8 +70,8 @@
         "portfolio"
       ],
       "examples": [
-        "tools/call search_portfolio {\"query\": \"WhatsApp\"}",
-        "tools/call get_project {\"slug\": \"claim-pilot\"}"
+        "Which projects use MCP?",
+        "Show the Claim Pilot project."
       ],
       "inputModes": [
         "application/json"
@@ -74,7 +83,7 @@
     {
       "id": "content-discovery",
       "name": "Content Discovery",
-      "description": "Discover every page and agent resource through /llms.txt, /llms-full.txt, /sitemap-index.xml and /rss.xml.",
+      "description": "Discover every page and agent resource through /llms.txt, /llms-full.txt, /sitemap-index.xml and /rss.xml. Each project, article and the About page also has a Markdown version at <page URL>index.md.",
       "tags": [
         "discovery",
         "content",
@@ -82,8 +91,8 @@
         "llms.txt"
       ],
       "examples": [
-        "GET /llms.txt",
-        "GET /sitemap-index.xml"
+        "Where is the full portfolio as text?",
+        "What articles has he written?"
       ],
       "inputModes": [
         "text/plain"

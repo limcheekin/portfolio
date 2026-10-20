@@ -6,9 +6,11 @@ import { CHIP, MEASURE, PAGE_TITLE } from '../../lib/text-styles';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Button from '../../components/Button.astro';
+import Link from '../../components/Link.astro';
 import { getCollection } from 'astro:content';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
-import { PERSON_REF, WEBSITE_ID } from '../../lib/jsonld';
+import { PERSON_REF, webPageJsonLd } from '../../lib/jsonld';
+import { articlePath, markdownPath } from '../../lib/paths';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -23,7 +25,9 @@ const { Content } = await article.render();
 
 // The page summarises an article whose full text lives on Medium: the Article is this page's main entity,
 // and sameAs points at the original.
-const pageUrl = `${SITE_URL}/insights/${article.slug}/`;
+const pagePath = articlePath(article.slug);
+const pageUrl = `${SITE_URL}${pagePath}`;
+const ogImage = new URL(article.data.image ?? '/images/portfolio.png', SITE_URL).href;
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -35,37 +39,28 @@ const jsonLd = [
     "mainEntityOfPage": { "@id": `${pageUrl}#webpage` },
     ...(article.data.externalUrl && { "sameAs": article.data.externalUrl }),
     "datePublished": article.data.publishDate.toISOString(),
+    "image": ogImage,
+    "inLanguage": "en",
     "author": PERSON_REF,
     "publisher": PERSON_REF,
     "keywords": article.data.tags.join(', ')
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "@id": `${pageUrl}#webpage`,
-    "url": pageUrl,
-    "isPartOf": { "@id": WEBSITE_ID },
+  webPageJsonLd(pagePath, 'WebPage', {
     "mainEntity": { "@id": `${pageUrl}#article` },
     "speakable": {
       "@type": "SpeakableSpecification",
       "cssSelector": ["#article-title", ".prose-like"]
     }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
-      { "@type": "ListItem", "position": 2, "name": "Writing", "item": `${SITE_URL}/insights/` },
-      { "@type": "ListItem", "position": 3, "name": article.data.title, "item": `${SITE_URL}/insights/${article.slug}/` }
-    ]
-  }
+  })
 ];
 ---
 
 <BaseLayout
   title={`${article.data.title} | ${ENGINEER_NAME}`}
   description={article.data.description}
+  ogImage={ogImage}
+  publishedTime={article.data.publishDate.toISOString()}
+  markdownUrl={markdownPath(pagePath)}
   jsonLd={jsonLd}
 >
   <Header />
@@ -92,9 +87,7 @@ const jsonLd = [
         <div class="mb-8 rounded-xl border border-edge bg-card p-4">
           <p class="text-sm text-slate-text">
             This article was originally published on an external platform.
-            <a href={article.data.externalUrl} target="_blank" rel="noopener noreferrer" class="text-green-accent hover:underline ml-1">
-              Read the full article &rarr;<span class="sr-only"> (opens in a new tab)</span>
-            </a>
+            <Link href={article.data.externalUrl} data-testid="read-full-article" class="text-green-accent hover:underline ml-1">Read the full article &rarr;</Link>
           </p>
         </div>
       )}
@@ -105,7 +98,7 @@ const jsonLd = [
     </article>
 
     <div class="mt-16">
-      <Button href="/insights/" variant="secondary">&larr; All Articles</Button>
+      <Button href="/insights/" variant="secondary" data-testid="back-to-writing">&larr; All Articles</Button>
     </div>
   </main>
   <Footer />

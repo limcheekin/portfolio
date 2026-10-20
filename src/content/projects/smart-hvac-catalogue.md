@@ -1,6 +1,7 @@
 ---
 title: "Smart HVAC Catalogue System: RAG Product Matching"
 description: "Built a RAG backend matching air-conditioners to room type, size and usage. Combined PDF ingestion, dense and sparse retrieval, and product filters, with asynchronous ingestion, LLM evaluation and observability."
+summary: "Smart HVAC Catalogue System: a RAG backend that matches air-conditioners to room type, size and usage with hybrid retrieval and product filters."
 featured: false
 kind: enterprise
 org: "Daxonet AI"

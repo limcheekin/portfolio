@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { NEW_TAB_HINT } from '../lib/links';
 
 interface NavLink {
   name: string;
@@ -101,6 +102,7 @@ export default function MobileMenu({ navLinks, currentPath }: MobileMenuProps) {
                 <li key={link.name} className="relative my-5 mx-auto font-mono text-lg">
                   <a
                     href={link.href}
+                    data-testid={`mobile-nav-link-${link.name.toLowerCase()}`}
                     onClick={() => setMenuOpen(false)}
                     aria-current={isActive ? 'page' : undefined}
                     className={`block p-4 transition-colors duration-250 hover:text-green-accent ${isActive ? 'text-green-accent' : 'text-lightest-slate'}`}
@@ -116,9 +118,10 @@ export default function MobileMenu({ navLinks, currentPath }: MobileMenuProps) {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
+            data-testid="mobile-resume-link"
             className="font-mono text-lg border border-green-accent text-green-accent rounded py-4 px-12 mt-8 transition-colors duration-250 hover:bg-green-tint"
           >
-            Résumé
+            Résumé<span className="sr-only">{NEW_TAB_HINT}</span>
           </a>
         </div>
       </nav>

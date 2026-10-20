@@ -1,6 +1,7 @@
 ---
 title: "Claim Pilot: Expense Claims with AI Extraction"
 description: "Built expense claim intake through Teams and WhatsApp, document capture in a web portal, and claimant, verifier and approver reviews. Implemented Gemini receipt extraction, a FastAPI backend and React portal, with accounting/ERP integration for invoices and general ledger journals."
+summary: "Claim Pilot takes expense claims from Teams and WhatsApp, extracts receipts with Gemini, routes them for human approval and posts GL journals."
 featured: true
 featuredOrder: 1
 kind: enterprise

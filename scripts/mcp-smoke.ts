@@ -23,17 +23,26 @@ const post = (body: string) =>
     body,
   });
 
-async function rpc(method: string, params: Record<string, unknown> = {}) {
+async function send(method: string, params: Record<string, unknown>) {
   const res = await post(JSON.stringify({ jsonrpc: '2.0', id: ++id, method, params }));
   const text = await res.text();
-  let body: any;
   try {
-    body = JSON.parse(text);
+    return JSON.parse(text);
   } catch {
     throw new Error(`${method}: HTTP ${res.status}, non-JSON body: ${text.slice(0, 200)}`);
   }
+}
+
+async function rpc(method: string, params: Record<string, unknown> = {}) {
+  const body = await send(method, params);
   if (body.error) throw new Error(`${method}: ${JSON.stringify(body.error)}`);
   return body.result;
+}
+
+/** The JSON-RPC error code of a call that should fail, or a description of what came back instead. */
+async function errorCode(method: string, params: Record<string, unknown>) {
+  const body = await send(method, params);
+  return body.error?.code ?? `no error (${JSON.stringify(body.result).slice(0, 120)})`;
 }
 
 const call = async (name: string, args: Record<string, unknown> = {}) => rpc('tools/call', { name, arguments: args });
@@ -59,7 +68,9 @@ await check('initialize', async (fail) => {
   });
   if (r.serverInfo?.name !== manifest.serverInfo.name) fail(`serverInfo.name ${r.serverInfo?.name}`);
   if (r.protocolVersion !== manifest.protocolVersion) fail(`protocolVersion ${r.protocolVersion}`);
-  if (!r.capabilities?.tools || !r.capabilities?.resources) fail('missing tools/resources capability');
+  if (JSON.stringify(r.capabilities) !== JSON.stringify(manifest.capabilities)) {
+    fail(`capabilities ${JSON.stringify(r.capabilities)} vs manifest ${JSON.stringify(manifest.capabilities)}`);
+  }
   if (!r.instructions) fail('no instructions');
 });
 
@@ -121,6 +132,15 @@ await check('resources match the manifest', async (fail) => {
   if (!JSON.parse(project.contents[0].text).title?.startsWith('Project Concord')) fail('template read');
   const full = await rpc('resources/read', { uri: 'portfolio://llms-full' });
   if (!full.contents[0].text.includes('## Projects')) fail('llms-full read');
+});
+
+await check('spec error codes', async (fail) => {
+  const tool = await errorCode('tools/call', { name: 'delete_everything', arguments: {} });
+  if (tool !== -32602) fail(`unknown tool: ${tool}, expected -32602`);
+  for (const uri of ['portfolio://projects/nope', 'portfolio://nope']) {
+    const code = await errorCode('resources/read', { uri });
+    if (code !== -32002) fail(`${uri}: ${code}, expected -32002`);
+  }
 });
 
 await check('GET is rejected', async (fail) => {

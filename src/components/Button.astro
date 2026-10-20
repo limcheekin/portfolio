@@ -1,13 +1,14 @@
 ---
 import { BUTTON_BASE, BUTTON_SIZES } from '../lib/button-styles';
+import Link from './Link.astro';
 
 interface Props {
   href?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'primary' | 'secondary';
   class?: string;
-  target?: string;
-  rel?: string;
+  /** Open in a new tab (default: web links only; see Link). */
+  newTab?: boolean;
   type?: string;
   'data-testid'?: string;
 }
@@ -17,8 +18,7 @@ const {
   size = 'md',
   variant = 'primary',
   class: className = '',
-  target,
-  rel,
+  newTab,
   type,
   'data-testid': testId,
   ...rest
@@ -33,15 +33,12 @@ const variantMap: Record<string, string> = {
 
 const classes = `${baseStyles} ${BUTTON_SIZES[size]} ${variantMap[variant]} ${className}`;
 
-const isExternal = href?.startsWith('http') || href?.startsWith('mailto');
-const computedTarget = target || (isExternal ? '_blank' : undefined);
-const computedRel = rel || (isExternal ? 'noopener noreferrer' : undefined);
 ---
 
 {href ? (
-  <a href={href} class={classes} target={computedTarget} rel={computedRel} data-testid={testId} {...rest}>
+  <Link href={href} newTab={newTab} class={classes} data-testid={testId} {...rest}>
     <slot />
-  </a>
+  </Link>
 ) : (
   <button type={type || 'button'} class={classes} data-testid={testId} {...rest}>
     <slot />

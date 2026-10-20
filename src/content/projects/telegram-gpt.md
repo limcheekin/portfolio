@@ -1,6 +1,7 @@
 ---
 title: "TelegramGPT: AI Telegram Bot"
 description: "A Telegram bot powered by Google Gemini's API (Vertex AI / Google AI Studio). This bot leverages PostgreSQL for persistent conversation history and can integrate with self-hosted Speech-to-Text (STT) and Text-to-Speech (TTS) services."
+summary: "TelegramGPT is an open-source Telegram bot on Google Gemini, with PostgreSQL conversation history and optional self-hosted speech services."
 featured: false
 technologies: ["Open Source", "Telegram Bot", "Local AI", "Cloud AI", "Python", "Gemini API", "PostgreSQL", "TTS", "STT"]
 languages: ["Python"]

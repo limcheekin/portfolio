@@ -10,6 +10,7 @@ export const ProjectSchema = z.object({
   title: z.string(),
   slug: z.string(),
   url: z.string().describe('Project page on kin.rag.wtf'),
+  summary: z.string().describe('One sentence, at most 160 characters'),
   description: z.string(),
   featured: z.boolean(),
   kind: z.enum(PROJECT_KINDS).describe('enterprise: closed system built at Daxonet AI; oss: open source'),

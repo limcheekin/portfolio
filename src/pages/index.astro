@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
-import { EMAIL_ADDRESS, ENGINEER_NAME, SITE_URL, ENGINEER_TITLE } from '../data/site';
+import { ENGINEER_NAME, SITE_TITLE, SITE_URL, ENGINEER_TITLE } from '../data/site';
 import Hero from '../components/home/Hero.astro';
 import WorkTrack from '../components/home/WorkTrack.tsx';
 import CareerTimeline from '../components/home/CareerTimeline.tsx';
@@ -12,7 +12,8 @@ import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_INTRO, getCareerEntries } from '../data/career';
 import type { WorkCard } from '../components/home/types';
 import { projectJsonLd } from '../lib/project-jsonld';
-import { PERSON_ID, PERSON_REF, WEBSITE_ID } from '../lib/jsonld';
+import { PERSON_REF, WEBSITE_ID, webPageJsonLd } from '../lib/jsonld';
+import { personJsonLd } from '../lib/person-jsonld';
 import { projectLabel } from '../lib/project-kind';
 
 const allProjects = await getCollection('projects');
@@ -53,40 +54,7 @@ const recentArticles = (await getCollection('articles'))
   .slice(0, 3);
 
 const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "@id": PERSON_ID,
-    "name": ENGINEER_NAME,
-    "url": `${SITE_URL}/`,
-    "image": `${SITE_URL}/images/profile.png`,
-    "jobTitle": ENGINEER_TITLE,
-    "description": `${ENGINEER_TITLE} focused on enterprise AI, conversational agents and business workflow integration.`,
-    "email": `mailto:${EMAIL_ADDRESS}`,
-    "knowsAbout": [
-      "Artificial Intelligence", "Machine Learning", "Retrieval-Augmented Generation",
-      "LLM Deployment", "Python", "Java", "Spring", "React", "TypeScript",
-      "MongoDB", "PostgreSQL", "AWS", "Docker", "Model Context Protocol"
-    ],
-    "worksFor": { "@type": "Organization", "name": "Daxonet AI Sdn. Bhd." },
-    "alumniOf": [
-      { "@type": "Organization", "name": "DXC Technology", "url": "https://www.dxc.com" },
-      { "@type": "Organization", "name": "Zurich Technology Services Malaysia" },
-      { "@type": "Organization", "name": "Penril Datability Networks" },
-      { "@type": "Organization", "name": "Siemens Multimedia" }
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "email": EMAIL_ADDRESS,
-      "contactType": "professional inquiry",
-      "availableLanguage": ["English"]
-    },
-    "sameAs": [
-      "https://github.com/limcheekin",
-      "https://linkedin.com/in/limcheekin",
-      "https://medium.com/@limcheekin"
-    ]
-  },
+  await personJsonLd(),
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -94,6 +62,7 @@ const jsonLd = [
     "name": `${ENGINEER_NAME} - Portfolio`,
     "url": `${SITE_URL}/`,
     "description": `Personal portfolio for ${ENGINEER_NAME}, an ${ENGINEER_TITLE}`,
+    "inLanguage": "en",
     "author": PERSON_REF,
     "publisher": PERSON_REF,
     "potentialAction": {
@@ -104,72 +73,7 @@ const jsonLd = [
       ]
     }
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What does Lim Chee Kin specialize in?",
-        "url": `${SITE_URL}/about/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin specializes in enterprise AI and solution architecture. His current focus areas include conversational agents, multimodal document extraction, Retrieval-Augmented Generation (RAG), real-time voice AI, and integration with accounting and business platforms through role-restricted MCP tools." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is RAG.WTF?",
-        "url": `${SITE_URL}/projects/rag-wtf/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "RAG.WTF is an open-source platform for private, personalized knowledge discovery and management using Retrieval-Augmented Generation (RAG) systems." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is Project Concord?",
-        "url": `${SITE_URL}/projects/project-concord/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Project Concord is a Model Context Protocol (MCP) server that connects modern AI agents with legacy database schemas." }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I contact Lim Chee Kin?",
-        "url": `${SITE_URL}/contact/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "You can reach Lim Chee Kin via email at limcheekin@vobject.com, through LinkedIn at linkedin.com/in/limcheekin, or via GitHub at github.com/limcheekin." }
-      },
-      {
-        "@type": "Question",
-        "name": "What technologies does Lim Chee Kin work with?",
-        "url": `${SITE_URL}/about/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin works with Python, TypeScript, Java, FastAPI, React and Next.js for application development. For AI, he uses the Claude Agent SDK, Google Gemini, the Model Context Protocol (MCP), Pipecat for voice, hybrid retrieval, and Ragas for LLM evaluation. His infrastructure stack includes Docker, Kubernetes, AWS, GCP/GKE, PostgreSQL/pgvector, MongoDB Atlas, and SurrealDB." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is Lim Chee Kin's approach to data sovereignty and private AI?",
-        "url": `${SITE_URL}/about/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin advocates for data ownership and privacy through self-hosted AI infrastructure. He runs local LLMs, embeddings, and STT/TTS services on dedicated hardware (OrangePi 5 Max with Docker and Coolify), and integrates embedded databases like SurrealDB.wasm for client-side data sovereignty." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is open-text-embeddings?",
-        "url": `${SITE_URL}/projects/open-text-embeddings/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "open-text-embeddings is a Python library created by Lim Chee Kin that provides an OpenAI-compatible API for diverse open-source sentence transformer models such as BGE and E5. It enables significant cost reduction and eliminates vendor lock-in for text embedding generation in RAG and NLP applications." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is Lim Chee Kin available for freelance or consulting work?",
-        "url": `${SITE_URL}/contact/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin is open to AI engineering consulting, solution architecture engagements, and collaborations on open-source AI projects. He is particularly interested in RAG systems, local LLM deployment, data sovereignty solutions, and AI agent infrastructure. Reach out via email at limcheekin@vobject.com or LinkedIn." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is Talk To AI?",
-        "url": `${SITE_URL}/projects/talk-to-ai/`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Talk To AI is a real-time voice AI application built by Lim Chee Kin that achieves sub-300ms latency for voice interactions. It supports local and cloud-based speech-to-text (STT), large language model (LLM), and text-to-speech (TTS) services via FastRTC, enabling private, low-latency voice conversations with AI." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is Lim Chee Kin's career background?",
-        "url": `${SITE_URL}/about/#work-experience`,
-        "acceptedAnswer": { "@type": "Answer", "text": "Lim Chee Kin started his software career in 1999. He led enterprise Java teams at DXC Technology and Zurich Technology Services, delivered banking and healthcare systems, built 10+ open-source Grails plugins, worked as an independent Principal AI Architect from 2021 to 2025, and joined Daxonet AI as AI Solutions Architect in 2026." }
-      }
-    ]
-  },
+  webPageJsonLd('/', 'WebPage', { "name": SITE_TITLE, "about": PERSON_REF }),
   {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -179,13 +83,6 @@ const jsonLd = [
       "position": i + 1,
       "item": projectJsonLd(p)
     }))
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL }
-    ]
   }
 ];
 ---

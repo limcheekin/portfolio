@@ -11,6 +11,8 @@ export default defineConfig({
     tailwind(),
     sitemap({
       changefreq: 'weekly',
+      // Form confirmation page: noindex, reached only from Formspree's redirect.
+      filter: (page) => !page.endsWith('/contact/thanks/'),
       serialize(item) {
         const lastmod = lastmodFor(new URL(item.url).pathname);
         if (lastmod) item.lastmod = lastmod;

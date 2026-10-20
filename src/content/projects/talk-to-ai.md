@@ -1,6 +1,7 @@
 ---
 title: "Talk To AI: Real-time Voice AI"
 description: "Developed 'Talk To AI', an application integrating HuggingFace's FastRTC for low-latency (<300ms) real-time voice AI interactions. Features a flexible backend supporting local (LocalAI, Whisper.cpp, Llama.cpp) and cloud-based STT, LLM, and TTS APIs (Groq, Microsoft Edge)."
+summary: "Talk To AI is an open-source real-time voice AI app on FastRTC, targeting sub-300 ms replies with local or cloud speech and language models."
 featured: true
 featuredOrder: 6
 kind: oss
