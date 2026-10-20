@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history: the sitemap's lastmod dates come from git (scripts/sitemap-lastmod.mjs)
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

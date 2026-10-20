@@ -1,6 +1,6 @@
 # Stage 1: Build
 FROM node:20-alpine AS build
-# git: the sitemap takes each page's lastmod from the last commit touching its sources (scripts/sitemap-lastmod.mjs)
+# git: the sitemap's per-page lastmod comes from commit history, fetched during the build (scripts/sitemap-lastmod.mjs)
 RUN apk add --no-cache git
 WORKDIR /app
 COPY package.json package-lock.json ./

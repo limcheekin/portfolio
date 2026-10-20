@@ -1,8 +1,9 @@
 # The image builds from a clean npm ci; keep host installs, outputs and docs out of the build context.
-# .git stays in: the sitemap's lastmod dates come from commit history (scripts/sitemap-lastmod.mjs).
+# .git is left out as Coolify does; scripts/sitemap-lastmod.mjs fetches the commit history it needs from GitHub.
 node_modules
 dist
 build
 .astro
+.git
 .claude
 docs
