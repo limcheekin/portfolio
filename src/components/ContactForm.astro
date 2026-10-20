@@ -90,6 +90,9 @@ const ERROR = 'hidden font-mono text-xs text-danger mt-1.5';
 <script>
   type Field = HTMLInputElement | HTMLTextAreaElement;
 
+  /** Formspree's messages are lower-case fragments ("should be an email"); show them as sentences. */
+  const sentence = (m: string) => `${m.charAt(0).toUpperCase()}${m.slice(1)}${/[.!?]$/.test(m) ? '' : '.'}`;
+
   // Each message names the problem and how to fix it.
   const MESSAGES: Record<string, (f: Field) => string> = {
     'contact-name': (f) => (f.validity.valueMissing ? 'Enter your name.' : 'Your name needs at least 2 characters.'),
@@ -104,11 +107,11 @@ const ERROR = 'hidden font-mono text-xs text-danger mt-1.5';
     const fields = Array.from(form.querySelectorAll<Field>('input:not([type="hidden"]), textarea'));
     const errorFor = (f: Field) => document.getElementById(`${f.id}-error`);
 
-    const showError = (f: Field) => {
+    const showError = (f: Field, message?: string) => {
       const err = errorFor(f);
       f.setAttribute('aria-invalid', 'true');
       if (err) {
-        err.textContent = MESSAGES[f.id]?.(f) ?? f.validationMessage;
+        err.textContent = message ?? MESSAGES[f.id]?.(f) ?? f.validationMessage;
         err.classList.remove('hidden');
       }
     };
@@ -155,12 +158,27 @@ const ERROR = 'hidden font-mono text-xs text-danger mt-1.5';
       setState('sending');
       try {
         // Formspree answers JSON when asked: { ok: true } on delivery, { errors: [{ field, message }] } otherwise.
+        // Anything else (including a 2xx that is not that JSON) is not a confirmed delivery.
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
         const body = await res.json().catch(() => ({}));
-        if (!res.ok || body.ok === false) {
-          const errors: Array<{ field?: string; message: string }> = body.errors ?? [];
-          const sentence = (m: string) => (/[.!?]$/.test(m) ? m : `${m}.`);
-          throw new Error(errors.map((x) => sentence(x.message)).join(' ') || `The message could not be sent (HTTP ${res.status}).`);
+        if (body.ok !== true) {
+          // Errors about one of our fields go next to it; the rest go to the form-level alert.
+          const general: string[] = [];
+          let first: Field | undefined;
+          for (const { field, message } of (body.errors ?? []) as Array<{ field?: string; message: string }>) {
+            const input = fields.find((f) => f.name === field);
+            if (input) {
+              showError(input, sentence(message));
+              first ??= input;
+            } else general.push(sentence(message));
+          }
+          first?.focus();
+          const fallback = first
+            ? 'The message was not sent: check the highlighted fields.'
+            : res.ok
+              ? 'The message could not be confirmed as sent.'
+              : `The message could not be sent (HTTP ${res.status}).`;
+          throw new Error(general.join(' ') || fallback);
         }
         const email = (form.elements.namedItem('email') as HTMLInputElement).value;
         const sentAt = new Date();
