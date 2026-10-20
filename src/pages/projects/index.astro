@@ -14,7 +14,8 @@ const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
   .filter((p) => p.data.featured)
   .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
-const otherProjects = allProjects.filter((p) => !p.data.featured);
+// By title, so the order (and the ItemList) does not follow the content loader's file order between builds.
+const otherProjects = allProjects.filter((p) => !p.data.featured).sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 // In the order the page shows them: featured (by featuredOrder), then the rest.
 const jsonLd = [

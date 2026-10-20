@@ -81,7 +81,7 @@ const currentPage = pathSegments[0] || 'home';
   <link rel="alternate" type="application/rss+xml" title={`Writing by ${ENGINEER_NAME}`} href="/rss.xml" />
   {markdownUrl && <link rel="alternate" type="text/markdown" title="This page as Markdown" href={markdownUrl} />}
   <!-- Agent entry points: the llms.txt index, the JSON API's OpenAPI description and the MCP manifest -->
-  <link rel="help" type="text/markdown" title="LLM site index" href="/llms.txt" />
+  <link rel="help" type="text/plain" title="LLM site index" href="/llms.txt" />
   <link rel="service-desc" type="application/openapi+json" title="Portfolio JSON API" href="/api/openapi.json" />
   <link rel="describedby" type="application/json" title="MCP server manifest" href="/.well-known/mcp.json" />
 
