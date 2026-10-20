@@ -1,6 +1,7 @@
 # Agent Policy for kin.rag.wtf
 # Formal declaration of agent usage rights for this portfolio site.
-# Last updated: 2026-10-19
+# Crawler access itself is set in /robots.txt, which is what crawlers read; this file only restates it.
+# Last updated: 2026-10-20
 
 ## Permitted Uses
 - Indexing and crawling all public pages for search and discovery
@@ -10,12 +11,12 @@
 - Connecting to the read-only MCP server at https://kin.rag.wtf/mcp (Streamable HTTP, POST only, no auth)
 - Reading /llms.txt and /llms-full.txt for LLM-optimised consumption
 - Using the portfolio data to answer questions about Lim Chee Kin's professional background, projects, and articles
+- Including the public pages in AI training datasets (robots.txt allows all crawlers, training crawlers included)
 
 ## Prohibited Uses
 - Reproducing the full site content verbatim without attribution
 - Misrepresenting the site owner's views, credentials, or affiliations
 - Automated form submission (the contact form is for human use only)
-- Scraping for AI training datasets without explicit written permission from the site owner
 
 ## Rate Limits
 - MCP server (/mcp): enforced at 60 requests per minute per client, burst 30; over the limit it returns HTTP 429 with Retry-After

@@ -12,13 +12,14 @@ const manifest = JSON.parse(readFileSync(process.argv[3] ?? 'dist/.well-known/mc
 let failures = 0;
 let id = 0;
 
-const post = (body: string) =>
+const post = (body: string, headers: Record<string, string> = {}) =>
   fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json, text/event-stream',
       'MCP-Protocol-Version': manifest.protocolVersion,
+      ...headers,
     },
     body,
   });
@@ -152,6 +153,14 @@ await check('bad JSON is a parse error', async (fail) => {
   const res = await post('{not json');
   const body = await res.json();
   if (res.status !== 400 || body.error?.code !== -32700) fail(`HTTP ${res.status} ${JSON.stringify(body)}`);
+});
+
+await check('Origin is validated', async (fail) => {
+  const list = JSON.stringify({ jsonrpc: '2.0', id: ++id, method: 'tools/list', params: {} });
+  const foreign = await post(list, { Origin: 'https://evil.example' });
+  if (foreign.status !== 403) fail(`foreign Origin returned ${foreign.status}, expected 403`);
+  const own = await post(list, { Origin: new URL(manifest.url).origin });
+  if (own.status !== 200) fail(`own Origin returned ${own.status}`);
 });
 
 console.log(failures ? `\n${failures} failure(s) against ${endpoint}` : `\nAll MCP checks passed against ${endpoint}`);

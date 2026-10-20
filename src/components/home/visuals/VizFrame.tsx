@@ -35,8 +35,11 @@ export default function VizFrame({
     return () => ro.disconnect();
   }, []);
 
+  // A picture: its labels are part of the drawing (WCAG 1.4.3 "incidental" text, dimmed on inactive cards), so it
+  // is hidden from assistive tech and inert, which also tells contrast checkers it is not text to read. Pointer
+  // events pass through to the card link underneath.
   return (
-    <div ref={frame} aria-hidden="true" className="relative h-full w-full overflow-hidden">
+    <div ref={frame} aria-hidden="true" inert className="relative h-full w-full overflow-hidden">
       <div ref={canvas} className="absolute left-0 top-0 h-[170px] w-[312px] origin-top-left">
         {children}
       </div>

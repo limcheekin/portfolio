@@ -144,6 +144,21 @@ const CORS_HEADERS = {
   'Access-Control-Max-Age': '86400',
 };
 
+/**
+ * Streamable HTTP requires a 403 when an Origin header is present and not allowed (the DNS-rebinding defence).
+ * Server-side clients send no Origin; browser callers may come from this site or a local developer tool such as
+ * the MCP Inspector (localhost on any port).
+ */
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
+function originAllowed(origin: string | undefined) {
+  if (origin === undefined || origin === SITE_URL) return true;
+  try {
+    return LOCAL_HOSTS.has(new URL(origin).hostname);
+  } catch {
+    return false; // includes the opaque origin "null"
+  }
+}
+
 function sendError(res: ServerResponse, status: number, code: number, message: string, headers: Record<string, string> = {}) {
   res.writeHead(status, { 'Content-Type': 'application/json', ...headers });
   res.end(JSON.stringify({ jsonrpc: '2.0', error: { code, message }, id: null }));
@@ -160,6 +175,7 @@ const http = createServer(async (req, res) => {
     return;
   }
   if (path !== '/mcp') return sendError(res, 404, -32601, 'Not found. The MCP endpoint is POST /mcp.');
+  if (!originAllowed(req.headers.origin)) return sendError(res, 403, -32000, `Forbidden origin: ${req.headers.origin}`);
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     res.end();
