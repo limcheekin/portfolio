@@ -84,6 +84,20 @@ function threshold(key: LimitKey, limit: number | null | undefined): number {
   return limit != null && Number.isFinite(limit) && limitAllowed(key, limit) ? limit : CRITICAL[key];
 }
 
+/** DIY against its limit, and how long the agent has been live: DIY counts as FIRE only above the limit after 3 months. */
+export function diyRule(review: NonNullable<HireAnswers['review']>, assessmentDate: string): { over: boolean; limit: number; months: number | null } | null {
+  const diy = review.metrics.diy.value;
+  if (diy === null || diy === undefined) return null;
+  const limit = threshold('diy', review.metrics.diy.limit);
+  return { over: diy > limit, limit, months: review.launchDate ? monthsBetween(review.launchDate, assessmentDate) : null };
+}
+
+/** Whether the months-live rule kept a DIY rate above its limit from counting as FIRE. */
+export function diyHeldBack(review: NonNullable<HireAnswers['review']>, assessmentDate: string): boolean {
+  const d = diyRule(review, assessmentDate);
+  return !!d && d.over && (d.months === null || d.months < 3);
+}
+
 export function readLive(review: NonNullable<HireAnswers['review']>, assessmentDate: string): LiveReading {
   const out: LiveReading = { bands: {}, fire: [], watch: [], pairs: [], unmeasured: [], notes: [] };
   const mt = review.metrics;
@@ -116,13 +130,11 @@ export function readLive(review: NonNullable<HireAnswers['review']>, assessmentD
       else if (irr == null || prevIrr == null) out.notes.push('IRR trend unknown');
     }
   }
-  if (diy != null) {
-    const t = threshold('diy', mt.diy.limit);
-    if (diy > t) {
-      const months = review.launchDate ? monthsBetween(review.launchDate, assessmentDate) : null;
-      if (months !== null && months >= 3) { fired.add('diy'); out.fire.push({ key: 'diy', text: `DIY ${fmt(diy)}% is above the ${fmt(t)}% limit after ${months} months live` }); }
-      else if (months === null) out.notes.push('No launch date, so a DIY rate above its limit cannot count as FIRE');
-    }
+  const diyCheck = diyRule(review, assessmentDate);
+  if (diy != null && diyCheck?.over) {
+    const { limit: t, months } = diyCheck;
+    if (months !== null && months >= 3) { fired.add('diy'); out.fire.push({ key: 'diy', text: `DIY ${fmt(diy)}% is above the ${fmt(t)}% limit after ${months} months live` }); }
+    else if (months === null) out.notes.push('No launch date, so a DIY rate above its limit cannot count as FIRE');
   }
   if (rlr != null && rlr > 0) {
     fired.add('rlr');
@@ -141,7 +153,7 @@ export function readLive(review: NonNullable<HireAnswers['review']>, assessmentD
     if (!b || b === 'Good' || fired.has(k)) continue;
     const v = val(k) as number;
     if (b === 'Warning') out.watch.push(`${METRIC_SHORT[k]} is in the Warning band (${fmt(v)}${METRIC_DEFS[k].unit === '%' ? '%' : ' turns'})`);
-    else if (k === 'diy') out.watch.push(`DIY ${fmt(v)}% is Critical but under 3 months live, so a warning only`);
+    else if (k === 'diy') out.watch.push(`DIY ${fmt(v)}% is Critical but ${review.launchDate ? 'under 3 months live' : 'the launch date is unknown'}, so a warning only`);
     else if (k === 'ppr') out.watch.push(`PPR ${fmt(v)} is Critical but IRR is not known to be falling, so a warning only`);
     else out.watch.push(`${METRIC_SHORT[k]} is Critical (${fmt(v)}%)`);
   }

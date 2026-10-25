@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { metricBand, monthsBetween, readLive } from '../../src/lib/hire/live.ts';
+import { diyHeldBack, metricBand, monthsBetween, readLive } from '../../src/lib/hire/live.ts';
 import { m } from './helpers.ts';
 
 const D = '2026-10-25';
@@ -59,4 +59,19 @@ test('small sample is flagged, never changes fire', () => {
 });
 test('booleans fire', () => {
   assert.deepEqual(readLive({ ...m({}), maintenanceExceedsValue: true, betterSolution: true }, D).fire.map((f) => f.key), ['maintenance', 'betterSolution']);
+});
+test('DIY critical with no launch date: the watch item says the date is unknown, not "under 3 months"', () => {
+  const r = readLive({ ...m({ diy: 20 }), launchDate: null }, D);
+  assert.deepEqual(r.fire, []);
+  assert.deepEqual(r.watch, ['DIY 20% is Critical but the launch date is unknown, so a warning only']);
+  assert.ok(r.notes.includes('No launch date, so a DIY rate above its limit cannot count as FIRE'));
+  assert.deepEqual(readLive(m({ diy: 20 }, { launch: '2026-08-01' }), D).watch, ['DIY 20% is Critical but under 3 months live, so a warning only']);
+});
+test('diyHeldBack: only when DIY is over its limit and the months rule withheld FIRE', () => {
+  assert.equal(diyHeldBack(m({ diy: 20 }, { launch: '2026-08-01' }), D), true); // 2 months
+  assert.equal(diyHeldBack({ ...m({ diy: 20 }), launchDate: null }, D), true);
+  assert.equal(diyHeldBack(m({ diy: 20 }, { launch: '2026-07-25' }), D), false); // fired
+  assert.equal(diyHeldBack(m({ diy: 10 }, { launch: '2026-08-01' }), D), false); // Warning, under 15
+  assert.equal(diyHeldBack(m({ diy: 10 }, { launch: '2026-08-01', limits: { diy: 8 } }), D), true); // over a custom limit
+  assert.equal(diyHeldBack(m({}), D), false);
 });
