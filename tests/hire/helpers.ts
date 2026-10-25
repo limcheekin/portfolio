@@ -27,27 +27,10 @@ export function allWorst(): HireAnswers {
   };
 }
 
-// Temporary inline fraud case; Task 6 replaces it with FRAUD_CASE.
-export const fraud: HireAnswers = {
-  v: 1,
-  name: 'Fraud Support Agent',
-  isLive: false,
-  assessmentDate: '2026-08-29',
-  part1: { canStateBusinessProblem: true, businessProblem: 'Analysts spend too long on fraud support cases.', canDefineJobAndKpis: true },
-  r: {
-    ruleBased: false,
-    informational: false,
-    traits: { ambiguity: true, multiStepReasoning: true, intermediateStates: true, retrying: false, adapting: false },
-    table: {
-      rule: { does: 'Route known patterns', why: 'Cannot handle ambiguous cases' },
-      chatbot: { does: 'Answer policy questions', why: 'Cannot act on cases' },
-      agent: { does: 'Investigate and propose actions', why: 'Reasons across fragmented data' },
-    },
-  },
-  h: { trust: 2, culturalFit: 3, userControl: 3, changeManagement: 2, dataQuality: 3, systemIntegration: 3, interaction: 1 },
-  i: { frequency: 5, timeSavings: 3, roi: 5, strategicValue: 2 },
-  e: { worstCase: 'moderate', hitl: 5, security: 5, rollback: 5, audit: 5, tenant: 5, access: -10, fallback: 5 },
-};
+import { FRAUD_CASE } from '../../src/lib/hire/example.ts';
+
+export { FRAUD_CASE };
+export const fraud: HireAnswers = FRAUD_CASE;
 
 export function m(
   v: Partial<Record<'ucr' | 'ppr' | 'diy' | 'irr' | 'rlr' | 'prevIrr' | 'prevPpr', number>>,
@@ -74,3 +57,10 @@ export const withNA: HireAnswers = { ...fraud, e: { ...fraud.e, tenant: { na: 's
 export function liveFraud(values: Parameters<typeof m>[0]): HireAnswers {
   return { ...fraud, isLive: true, assessmentDate: '2026-10-25', review: m(values, { launch: '2026-01-01' }) };
 }
+
+export const hireFixture: HireAnswers = { ...FRAUD_CASE, e: { ...FRAUD_CASE.e, access: 10 } };
+export const stopped: HireAnswers = {
+  ...blankAnswers(),
+  part1: { canStateBusinessProblem: false, canDefineJobAndKpis: null },
+};
+export const liveFire: HireAnswers = liveFraud({ rlr: 0.3 });
