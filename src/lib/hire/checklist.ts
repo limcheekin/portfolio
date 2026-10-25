@@ -267,6 +267,14 @@ export const KPI_SUGGESTIONS: Array<{ key: MetricKey; name: string; target: stri
   { key: 'ppr', name: 'Ping Pong Rate (PPR)', target: 'PPR ≤ 1.2 turns' },
 ];
 
+/** The scored sections' names, as this tool heads them (steps, result, reasons, PDF). */
+export const SECTION_NAMES = { h: 'Human & Habits', i: 'Impact & Intent', e: 'Exposure & Execution' } as const;
+
+/** Every scored H, I and E item's checklist label, by key. */
+export const ITEM_LABEL: Record<string, string> = Object.fromEntries(
+  [...H_ITEMS, ...I_ITEMS, ...E_GUARDRAILS, ...E_BOUNDARIES].map((x) => [x.key, x.label]),
+);
+
 export interface FlowStep {
   id: string;
   letter: 'I' | 'R' | 'E' | 'H' | 'M' | '·';
@@ -282,9 +290,9 @@ export const FLOW: FlowStep[] = [
   { id: 'tool', letter: 'R', title: 'The right tool', part: 1 },
   { id: 'worst', letter: 'E', title: 'Worst case', part: 1 },
   { id: 'metrics', letter: 'M', title: 'Live metrics', part: 2, liveOnly: true },
-  { id: 'human', letter: 'H', title: 'Human & Habits', part: 3 },
-  { id: 'impact', letter: 'I', title: 'Impact & Intent', part: 3 },
-  { id: 'exposure', letter: 'E', title: 'Exposure & Execution', part: 3 },
+  { id: 'human', letter: 'H', title: SECTION_NAMES.h, part: 3 },
+  { id: 'impact', letter: 'I', title: SECTION_NAMES.i, part: 3 },
+  { id: 'exposure', letter: 'E', title: SECTION_NAMES.e, part: 3 },
   { id: 'result', letter: '·', title: 'Result', part: 4 },
 ];
 

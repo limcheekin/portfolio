@@ -3,8 +3,8 @@
 import type * as PdfLibTypes from 'pdf-lib';
 import { COLORS } from '../palette.mjs';
 import {
-  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_DEFS, METRIC_KEYS, METRIC_SHORT,
-  MIT_LICENCE_TEXT, R_QUESTIONS, R_TRAITS, SIGN_OFF_ROLES, THRESHOLDS, WORST_CASE_OPTIONS,
+  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, ITEM_LABEL, METRIC_DEFS, METRIC_KEYS, METRIC_SHORT,
+  MIT_LICENCE_TEXT, R_QUESTIONS, R_TRAITS, SECTION_NAMES, SIGN_OFF_ROLES, THRESHOLDS, WORST_CASE_OPTIONS,
 } from './checklist.ts';
 import type { ChecklistItem } from './checklist.ts';
 import { fmtNum } from './helpers.ts';
@@ -262,9 +262,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     page.drawText(t, { x: M.x + 372, y, size: 9, font: regular, color: col('print-muted') });
     y -= 4;
   };
-  secRow('Human & Habits', r.scores.h, ...SECTION_RANGE.h, r.scores.complete.h);
-  secRow('Impact & Intent', r.scores.i, ...SECTION_RANGE.i, r.scores.complete.i);
-  secRow('Exposure & Execution', r.scores.e, ...SECTION_RANGE.e, r.scores.complete.e);
+  for (const k of ['h', 'i', 'e'] as const) secRow(SECTION_NAMES[k], r.scores[k], ...SECTION_RANGE[k], r.scores.complete[k]);
   y -= 4;
   bullet(`Total: ${total} of ${SCORE_MAX}. Bands: ${DNB} or less DO NOT BUILD (FIRE when live), ${DNB + 1} to ${TRAIN_MAX} TRAIN, above ${TRAIN_MAX} HIRE.`, { font: bold });
   if (r.stop) {
@@ -319,7 +317,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   }
   if (r.naItems.length) {
     h3('Marked not applicable');
-    for (const n of r.naItems) bullet(`${[...E_GUARDRAILS, ...E_BOUNDARIES].find((i) => i.key === n.key)?.label ?? n.key}: ${n.reason} (scored ${n.score})`);
+    for (const n of r.naItems) bullet(`${ITEM_LABEL[n.key] ?? n.key}: ${n.reason} (scored ${n.score})`);
   }
   h3("This tool's reading");
   para('The framework is silent or ambiguous on these points, so this tool says what it assumed.', { size: 9, color: 'print-muted', gap: 2 });
@@ -353,9 +351,9 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     }
   };
 
-  h2('Human & Habits (H)');
+  h2(`${SECTION_NAMES.h} (H)`);
   items(H_ITEMS, a.h as Record<string, unknown>);
-  h2('Impact & Intent (I)');
+  h2(`${SECTION_NAMES.i} (I)`);
   items(I_ITEMS, a.i as unknown as Record<string, unknown>);
   const f = a.i.figures;
   if (f && Object.values(f).some((v) => v !== undefined)) {
@@ -390,7 +388,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     }
   }
 
-  h2('Exposure & Execution (E)');
+  h2(`${SECTION_NAMES.e} (E)`);
   const wc = WORST_CASE_OPTIONS.find((o) => o.value === a.e.worstCase);
   para('Worst case', { font: bold, size: 10 });
   para(wc ? `${wc.label} (for example ${wc.example})` : 'Not answered', { gap: 5 });

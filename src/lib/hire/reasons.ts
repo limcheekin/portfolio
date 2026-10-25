@@ -1,5 +1,5 @@
 import type { HireAnswers, PathStep } from './types.ts';
-import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, THRESHOLDS, WORST_CASE_OPTIONS } from './checklist.ts';
+import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, SECTION_NAMES, THRESHOLDS, WORST_CASE_OPTIONS } from './checklist.ts';
 import type { ChecklistItem } from './checklist.ts';
 import { eItemScore, isNA, SECTION_RANGE } from './score.ts';
 import type { RedFlag, SectionScores } from './score.ts';
@@ -110,8 +110,8 @@ export function buildReasons(
   const done = (['H', 'I', 'E'] as const).filter((k) => scores.complete[k.toLowerCase() as 'h' | 'i' | 'e']);
   if (done.length >= 2) {
     const s = [...done].sort((x, y) => rel(y) - rel(x));
-    const name = { H: 'Human & Habits', I: 'Impact & Intent', E: 'Exposure & Execution' };
-    out.push(`Strongest section: ${name[s[0]]}. Weakest section: ${name[s[s.length - 1]]} (each measured against its own range).`);
+    const name = (k: 'H' | 'I' | 'E') => SECTION_NAMES[k.toLowerCase() as 'h' | 'i' | 'e'];
+    out.push(`Strongest section: ${name(s[0])}. Weakest section: ${name(s[s.length - 1])} (each measured against its own range).`);
   }
   if (flags.length) out.push(`${flags.length} red flag${flags.length === 1 ? '' : 's'} raised: ${flags.map((f) => f.text).join('; ')}.`);
   if (live?.fire.length) out.push(`FIRE criteria met: ${live.fire.map((f) => f.text).join('; ')}.`);

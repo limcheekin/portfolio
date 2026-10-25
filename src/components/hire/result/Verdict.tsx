@@ -1,11 +1,10 @@
-import { THRESHOLDS } from '../../../lib/hire/checklist';
+import { SECTION_NAMES as NAMES, THRESHOLDS } from '../../../lib/hire/checklist';
 import { fireCheckIncomplete } from '../../../lib/hire/assess';
 import { SECTION_RANGE } from '../../../lib/hire/score';
 import type { Assessment, Verdict as V } from '../../../lib/hire/types';
 import { signed } from '../Rail';
 import { HINT, PANEL, verdictBorder, verdictText } from '../styles';
 
-const NAMES = { h: 'Human & Habits', i: 'Impact & Intent', e: 'Exposure & Execution' } as const;
 
 const PILL_TINT: Record<V, string> = {
   HIRE: 'bg-green-tint',

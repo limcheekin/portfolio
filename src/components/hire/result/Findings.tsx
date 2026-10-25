@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react';
-import { E_BOUNDARIES, E_GUARDRAILS, THRESHOLDS } from '../../../lib/hire/checklist';
+import { ITEM_LABEL, THRESHOLDS } from '../../../lib/hire/checklist';
 import { fireCheckIncomplete } from '../../../lib/hire/assess';
 import { READINGS, type ReadingKey } from '../../../lib/hire/reasons';
 import type { Assessment } from '../../../lib/hire/types';
 import Reading from '../Reading';
 import { points } from '../styles';
 
-const E_LABEL = Object.fromEntries([...E_GUARDRAILS, ...E_BOUNDARIES].map((x) => [x.key, x.label]));
 
 const LIST = 'm-0 list-disc space-y-2 pl-5 text-sm leading-relaxed text-light-slate marker:text-slate-text';
 
@@ -60,7 +59,7 @@ export default function Findings({ assessment: a }: { assessment: Assessment }) 
           <ul className={LIST}>
             {a.naItems.map((x) => (
               <li key={x.key}>
-                <span className="text-lightest-slate">{E_LABEL[x.key] ?? x.key}</span>
+                <span className="text-lightest-slate">{ITEM_LABEL[x.key] ?? x.key}</span>
                 <span className="font-mono text-xs text-slate-text"> {points(x.score)}</span>: {x.reason}
               </li>
             ))}
