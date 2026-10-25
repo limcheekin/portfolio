@@ -1,13 +1,15 @@
 /**
- * Read-only MCP server for the portfolio, served at https://kin.rag.wtf/mcp.
+ * Read-only MCP server for the portfolio, served at https://kin.rag.wtf/mcp. The same process serves the HIRE check
+ * server at /mcp/hire (mcp/hire-server.ts), with the same HTTP rules.
  *
  * Streamable HTTP in stateless mode: every POST gets a fresh server and transport (the SDK's stateless pattern),
  * responses are plain JSON (no SSE stream, no sessions). It runs inside the nginx container
  * (docker/40-mcp-server.sh), and nginx proxies `location = /mcp` to it with a rate limit. Data comes from the
  * same build it ships with (api/portfolio.json and llms-full.txt). Tools and resources are defined in
  * src/lib/portfolio-tools.ts, their handlers in src/lib/portfolio-query.ts. No writes, no auth, no secrets.
+ * Request bodies are never stored or logged (the HIRE server receives a user's answers in them).
  *
- * Local: npm run build && npm run mcp:dev   (serves http://127.0.0.1:3001/mcp from dist/)
+ * Local: npm run build && npm run mcp:dev   (serves http://127.0.0.1:3001/mcp and /mcp/hire from dist/)
  */
 import { createServer, type ServerResponse } from 'node:http';
 import { readFileSync } from 'node:fs';
@@ -15,6 +17,8 @@ import { join } from 'node:path';
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import { buildHireServer } from './hire-server';
+import { wrapRequestHandler } from './request-handlers';
 import { SITE_URL } from '../src/data/site';
 import { getProject, listArticles, runTool } from '../src/lib/portfolio-query';
 import type { Portfolio } from '../src/lib/portfolio-schema';
@@ -55,20 +59,13 @@ const PROJECT_RESOURCES = portfolio.projects.map((p) => ({
 /** MCP's "Resource not found" error (code -32002, not in the SDK's ErrorCode enum). */
 const resourceNotFound = (uri: string) => new McpError(-32002, `Resource not found: ${uri}`, { uri });
 
-type Handler = (request: any, extra: unknown) => Promise<unknown>;
-
 /**
  * Spec error codes where the SDK's McpServer differs: an unknown tool is a JSON-RPC -32602 error (the SDK turns it
  * into an isError tool result), and an unknown resource is -32002 (the SDK sends -32602). McpServer offers no hook
  * for either, so this wraps the handlers it registered; mcp:smoke checks both codes, so an SDK change shows up there.
  */
 function useSpecErrorCodes(server: McpServer, toolNames: Set<string>) {
-  const handlers: Map<string, Handler> = (server.server as any)._requestHandlers;
-  const wrap = (method: string, fn: (inner: Handler) => Handler) => {
-    const inner = handlers.get(method);
-    if (!inner) throw new Error(`mcp: no ${method} handler to wrap`);
-    handlers.set(method, fn(inner));
-  };
+  const wrap = (method: string, fn: Parameters<typeof wrapRequestHandler>[2]) => wrapRequestHandler(server, method, fn);
   wrap('tools/call', (inner) => async (request, extra) => {
     const name = request.params?.name;
     if (!toolNames.has(name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
@@ -164,17 +161,21 @@ function sendError(res: ServerResponse, status: number, code: number, message: s
   res.end(JSON.stringify({ jsonrpc: '2.0', error: { code, message }, id: null }));
 }
 
+/** The MCP endpoints this process serves, by path. */
+const SERVERS: Record<string, () => McpServer> = { '/mcp': buildServer, '/mcp/hire': buildHireServer };
+
 const http = createServer(async (req, res) => {
   for (const [name, value] of Object.entries(CORS_HEADERS)) res.setHeader(name, value);
   const path = new URL(req.url ?? '/', 'http://localhost').pathname;
 
-  // Liveness probe; nginx only proxies /mcp, so this is reachable from inside the container alone.
+  // Liveness probe; nginx only proxies /mcp and /mcp/hire, so this is reachable from inside the container alone.
   if (path === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('ok');
     return;
   }
-  if (path !== '/mcp') return sendError(res, 404, -32601, 'Not found. The MCP endpoint is POST /mcp.');
+  const build = Object.hasOwn(SERVERS, path) ? SERVERS[path] : undefined;
+  if (!build) return sendError(res, 404, -32601, 'Not found. The MCP endpoints are POST /mcp (portfolio) and POST /mcp/hire (HIRE check).');
   if (!originAllowed(req.headers.origin)) return sendError(res, 403, -32000, `Forbidden origin: ${req.headers.origin}`);
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -182,13 +183,13 @@ const http = createServer(async (req, res) => {
     return;
   }
   if (req.method !== 'POST') {
-    return sendError(res, 405, -32000, 'Method not allowed. This stateless server takes POST /mcp only (no SSE stream).', {
+    return sendError(res, 405, -32000, `Method not allowed. This stateless server takes POST ${path} only (no SSE stream).`, {
       Allow: 'POST, OPTIONS',
     });
   }
 
   // The transport reads and size-checks the body itself (413 over the limit, 400/-32700 for invalid JSON).
-  const server = buildServer();
+  const server = build();
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
     enableJsonResponse: true,
@@ -202,14 +203,16 @@ const http = createServer(async (req, res) => {
     await server.connect(transport);
     await transport.handleRequest(req, res);
   } catch (err) {
-    console.error('mcp: request failed', err);
+    // Only the error's name: request bodies must never reach logs (the HIRE server receives a user's answers, and
+    // an error, its message or its stack can carry parts of the body).
+    console.error(`mcp: request to ${path} failed: ${err instanceof Error ? err.name : 'error'}`);
     if (!res.headersSent) sendError(res, 500, -32603, 'Internal error.');
   }
 });
 
 http.listen(PORT, HOST, () => {
   console.log(
-    `mcp: listening on http://${HOST}:${PORT}/mcp (data ${DATA_DIR}: ${portfolio.projects.length} projects, ` +
+    `mcp: listening on http://${HOST}:${PORT}/mcp and /mcp/hire (data ${DATA_DIR}: ${portfolio.projects.length} projects, ` +
       `${portfolio.articles.length} articles, ${portfolio.experience.length} roles)`,
   );
 });

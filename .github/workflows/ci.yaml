@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Unit tests
+        run: npm test
+
       - name: Build
         run: npm run build
 
@@ -37,6 +40,7 @@ jobs:
           test -f dist/llms.txt
           test -f dist/ai-plugin.json
           test -f dist/robots.txt
+          test -f dist/.well-known/mcp-hire.json
           test -f build/mcp/server.mjs
           echo "Build artifacts verified"
 

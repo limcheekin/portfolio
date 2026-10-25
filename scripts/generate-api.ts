@@ -8,6 +8,7 @@ import { ABOUT_CONTENT, EMAIL_ADDRESS, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL }
 import { FAQ } from '../src/data/faq';
 import type { Portfolio } from '../src/lib/portfolio-schema';
 import { mcpManifest } from '../src/lib/portfolio-tools';
+import { hireManifest } from '../src/lib/hire-tools';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -291,6 +292,8 @@ copyFileSync(wellKnown('agent.json'), wellKnown('agent-card.json'));
 copyFileSync(join(distDir, 'ai-plugin.json'), wellKnown('ai-plugin.json'));
 
 writeFileSync(wellKnown('mcp.json'), JSON.stringify(mcpManifest(HTTP_RESOURCES), null, 2));
+// The HIRE check server at /mcp/hire has its own manifest (tools only, no resources).
+writeFileSync(wellKnown('mcp-hire.json'), JSON.stringify(hireManifest(), null, 2));
 
 // RFC 9116 requires Expires, at most a year ahead; each deploy moves it forward.
 const expires = new Date(Date.now() + 330 * 24 * 60 * 60 * 1000).toISOString();
@@ -301,4 +304,4 @@ writeFileSync(wellKnown('security.txt'), [
   `Canonical: ${SITE_URL}/.well-known/security.txt`,
   '',
 ].join('\n'));
-console.log('Generated: dist/.well-known/{agent-card,ai-plugin,mcp}.json, security.txt');
+console.log('Generated: dist/.well-known/{agent-card,ai-plugin,mcp,mcp-hire}.json, security.txt');
