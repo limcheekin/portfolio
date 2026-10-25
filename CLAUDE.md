@@ -15,12 +15,13 @@ npm run mcp:dev       # run the MCP server from source against dist/ (http://127
 npm run mcp:smoke     # end-to-end MCP checks against an endpoint (default http://127.0.0.1:3001/mcp; CI runs it)
 npm run preview       # serve dist/
 npm run images        # write .webp next to page PNGs in public/images (after adding or replacing one)
+npm test              # unit tests (node:test via tsx) for the HIRE scoring module
 npm run verify        # content/source checks (scripts/verify-content.ts)
 npm run verify:dist   # same plus checks on built dist/ (run after build)
 npm run verify:links  # same plus HTTP checks of article externalUrls (network)
 ```
 
-There is no test runner and no linter. Verification is `build` plus the three `verify` commands, `mcp:smoke`, plus manual browser checks.
+Unit tests: `npm test` (node:test via tsx) for the HIRE scoring module. There is no linter. Verification is `build` plus the three `verify` commands, `mcp:smoke`, plus manual browser checks.
 
 ## Stack and layout
 
