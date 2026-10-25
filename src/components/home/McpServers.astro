@@ -1,0 +1,23 @@
+---
+import McpConsole from './McpConsole.tsx';
+import SectionHeading from './SectionHeading.tsx';
+import { MCP_PROMPT, MCP_SERVERS } from '../../data/mcp-servers';
+import { GUTTER } from '../../lib/layout';
+import { MEASURE, TAP_LINK } from '../../lib/text-styles';
+---
+
+<section id="mcp" aria-labelledby="mcp-title" class={`border-t border-graphite pb-14 pt-16 ${GUTTER}`}>
+  <div class="mb-[22px] flex flex-wrap items-end justify-between gap-x-6">
+    <SectionHeading number="04" id="mcp-title" className="m-0">MCP Servers</SectionHeading>
+    <a href="/hire/" class={`${TAP_LINK} -my-3 shrink-0 font-mono text-[13px] text-green-accent no-underline hover:underline`}>Try HIRE in the browser →</a>
+  </div>
+  <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-12">
+    <p class={`${MEASURE} m-0 leading-relaxed text-slate-text`}>
+      Two MCP servers your agent can call, no account needed. HIRE check scores whether an AI agent is worth building,
+      using Inês Bolaños's H.I.R.E. checklist, and never stores your answers. Portfolio answers questions about my
+      projects, roles and writing.
+    </p>
+    <!-- Hydrates before it scrolls into view, so the rows are hidden (gsap.set) before anyone sees them. -->
+    <McpConsole client:visible={{ rootMargin: '600px' }} servers={MCP_SERVERS} prompts={MCP_PROMPT} />
+  </div>
+</section>

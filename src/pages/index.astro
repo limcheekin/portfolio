@@ -8,6 +8,7 @@ import Hero from '../components/home/Hero.astro';
 import WorkTrack from '../components/home/WorkTrack.tsx';
 import CareerTimeline from '../components/home/CareerTimeline.tsx';
 import LatestWriting from '../components/home/LatestWriting.astro';
+import McpServers from '../components/home/McpServers.astro';
 import ContactCta from '../components/home/ContactCta.astro';
 import { CAREER_INTRO, getCareerEntries } from '../data/career';
 import type { WorkCard } from '../components/home/types';
@@ -99,6 +100,8 @@ const jsonLd = [
     <CareerTimeline client:load intro={CAREER_INTRO} entries={careerEntries} />
 
     <LatestWriting articles={recentArticles} />
+
+    <McpServers />
 
     <ContactCta />
 

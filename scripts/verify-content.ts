@@ -258,7 +258,7 @@ check('dist: footer + nav', () => flagged([[!homeText().includes('Kuala Lumpur, 
 
 check('dist: old home gone', () => present(homeText(), ['Hi, my name is', "Some Things I've Built", 'I help']), { dist: true });
 check('dist: home order', () => {
-  const idx = ['id="hero"', 'id="work"', 'id="career"', 'id="writing"', 'id="contact"'].map((s) => homeHtml().indexOf(s));
+  const idx = ['id="hero"', 'id="work"', 'id="career"', 'id="writing"', 'id="mcp"', 'id="contact"'].map((s) => homeHtml().indexOf(s));
   return idx.every((v, i) => v > -1 && (i === 0 || v > idx[i - 1])) ? [] : ['section order ' + idx];
 }, { dist: true });
 check('banner removed', () => ['src/components/Banner.tsx', 'src/data/value-props.ts', 'src/components/SectionWrapper.astro'].filter(existsSync));
@@ -273,6 +273,27 @@ check('dist: career SSR', () => missing(homeText(), ['Career', 'AI Solutions Arc
 
 check('dist: writing rows', () => missing(homeText(), ['Latest Writing', 'All writing', 'Zero-Trust Security for Autonomous AI Agents', 'Solving the LLM Load Testing Paradox', "Reproducing Karpathy's NanoChat"]), { dist: true });
 check('dist: writing links external', () => homeHtml().includes('href="https://limcheekin.medium.com/zero-trust-security-for-autonomous-ai-agents-691b5cbcec21"') ? [] : ['zero-trust link'], { dist: true });
+check('dist: mcp section SSR', async () => {
+  const { MCP_SERVERS, MCP_PROMPT } = await import('../src/data/mcp-servers.ts');
+  // The HIRE transcript is fixed by the spec; the portfolio one comes from the data file. Every panel is in the HTML.
+  const HIRE_LINES = [
+    '$ claude mcp add --transport http hire https://kin.rag.wtf/mcp/hire',
+    '✓ connected · 2 tools',
+    'you › Should we build a fraud triage agent?',
+    'agent › calls get_hire_checklist, interviews you…',
+    'agent › calls assess_agent → TRAIN · 42/77',
+    'agent › Report: kin.rag.wtf/hire/#a=…',
+  ];
+  const lines = MCP_SERVERS.flatMap((s) => s.transcript.map((r) => `${MCP_PROMPT[r.who]} ${r.text}`));
+  const html = homeHtml();
+  return [
+    ...missing(homeText(), [...new Set([...HIRE_LINES, ...lines, 'MCP Servers', 'Try HIRE in the browser', 'search_portfolio {"query":"MCP"}'])]),
+    // Links in the body, not the head's <link rel="describedby"> to mcp.json.
+    ...['/hire/', '/.well-known/mcp.json', '/.well-known/mcp-hire.json'].filter((h) => !new RegExp(`<a\\b[^>]*href="${h}"`).test(html)).map((h) => `link ${h}`),
+    ...missing(html, ['role="tablist"']),
+    ...flagged([[(html.match(/role="tabpanel"/g) ?? []).length !== MCP_SERVERS.length, 'one tabpanel per server']]),
+  ];
+}, { dist: true });
 check('dist: contact', () => missing(homeText(), ['Have a workflow that should run itself?', 'Tell me about yours.', 'GitHub', 'LinkedIn', 'Medium']), { dist: true });
 
 // ---------- run ----------
