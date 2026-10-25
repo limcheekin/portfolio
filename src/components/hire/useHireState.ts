@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import type { HireAnswers } from '../../lib/hire/types.ts';
+import { blankReview } from '../../lib/hire/live.ts';
 import { isNA } from '../../lib/hire/score.ts';
 
 export type Action =
@@ -34,15 +35,6 @@ export function blankHireAnswers(): HireAnswers {
   };
 }
 
-export function blankReview(launchDate: string | null = null): NonNullable<HireAnswers['review']> {
-  return {
-    launchDate,
-    metrics: { ucr: { value: null }, ppr: { value: null }, diy: { value: null }, irr: { value: null }, rlr: { value: null } },
-    maintenanceExceedsValue: null,
-    betterSolution: null,
-  };
-}
-
 type Node = Record<string, unknown> | unknown[];
 
 /** Immutable write at `keys`; missing containers are created (an array when the next key is an index). */
@@ -60,21 +52,20 @@ function setIn(node: unknown, keys: string[], value: unknown): unknown {
 }
 
 /**
- * A live assessment always has a whole review. A link (or MCP call) may say `isLive: true` and leave `review` out, which
- * the validator allows; a field write into that gap would otherwise build a partial review that `assess` can't read.
+ * A live assessment, and any write into a review, always has a whole review. A link (or MCP call) may say
+ * `isLive: true` and leave `review` out, which the validator allows; a field write into that gap would otherwise
+ * build a partial review that `assess` can't read.
  */
-function withReview(s: HireAnswers): HireAnswers {
-  return s.isLive && !s.review ? { ...s, review: blankReview() } : s;
+function withReview(s: HireAnswers, writingReview = false): HireAnswers {
+  return (s.isLive || writingReview) && !s.review ? { ...s, review: blankReview() } : s;
 }
 
 export function hireReducer(s: HireAnswers, a: Action): HireAnswers {
   switch (a.type) {
     case 'set': {
       const keys = a.path.split('.');
-      // A write into a missing review starts from a blank one, live or not, so it is never partial.
-      const base = keys[0] === 'review' && keys.length > 1 && !s.review ? { ...s, review: blankReview() } : s;
       // Writing a number over an N/A object replaces it, so its reason goes with it.
-      return withReview(setIn(base, keys, a.value) as HireAnswers);
+      return withReview(setIn(withReview(s, keys[0] === 'review' && keys.length > 1), keys, a.value) as HireAnswers);
     }
     case 'load':
       return withReview(a.answers);

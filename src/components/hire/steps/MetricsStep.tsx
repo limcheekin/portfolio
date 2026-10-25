@@ -1,8 +1,7 @@
 import { useContext, useId } from 'react';
 import { METRIC_DEFS, METRIC_KEYS, METRIC_SHORT as SHORT } from '../../../lib/hire/checklist';
-import { CRITICAL, monthsBetween } from '../../../lib/hire/live';
+import { blankReview, CRITICAL, monthsBetween } from '../../../lib/hire/live';
 import type { HireAnswers, MetricKey } from '../../../lib/hire/types';
-import { blankReview } from '../useHireState';
 import MetricMeter from '../MetricMeter';
 import { fmtRate, limitError, sampleError, unitOf, valueError } from '../metric-ranges';
 import NumberField from '../NumberField';

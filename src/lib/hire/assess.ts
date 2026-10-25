@@ -1,7 +1,7 @@
 import type { Assessment, HireAnswers, MetricKey, Verdict } from './types.ts';
 import { ALTERNATIVES, CHECKLIST_SOURCE, METRIC_SHORT, THRESHOLDS } from './checklist.ts';
 import { band, firstStop, naItems, redFlags, sectionScores, stopVerdict, traitsNote } from './score.ts';
-import { readLive } from './live.ts';
+import { blankReview, readLive } from './live.ts';
 import { buildReasons, pathToHire, READINGS } from './reasons.ts';
 
 const MEANING: Record<Verdict, string> = {
@@ -14,12 +14,6 @@ const MEANING: Record<Verdict, string> = {
 /** The Documentation field offers only HIRE, TRAIN or FIRE, so a pre-build DO NOT BUILD is recorded as FIRE. */
 const DECISION: Record<Verdict, NonNullable<Assessment['decision']>> = { HIRE: 'HIRE', TRAIN: 'TRAIN', 'DO NOT BUILD': 'FIRE', FIRE: 'FIRE' };
 
-const BLANK_REVIEW: NonNullable<HireAnswers['review']> = {
-  launchDate: null,
-  metrics: { ucr: { value: null }, ppr: { value: null }, diy: { value: null }, irr: { value: null }, rlr: { value: null } },
-  maintenanceExceedsValue: null,
-  betterSolution: null,
-};
 
 /** The note a live review carries while any metric is unmeasured; the result shows it under the verdict. */
 export const fireCheckIncomplete = (unmeasured: MetricKey[]): string =>
@@ -31,7 +25,9 @@ export function assess(a: HireAnswers): Assessment {
   const scores = sectionScores(a);
   const stop = firstStop(a);
   const flags = redFlags(a);
-  const reading = live ? readLive(a.review ?? BLANK_REVIEW, a.assessmentDate) : null;
+  // A link or MCP call may mark the agent live and leave the review out: it reads as nothing measured yet.
+  const review = live ? (a.review ?? blankReview()) : null;
+  const reading = review ? readLive(review, a.assessmentDate) : null;
   const na = naItems(a);
   const note = traitsNote(a);
 
@@ -71,8 +67,7 @@ export function assess(a: HireAnswers): Assessment {
     if (stop) readingKeys.push('liveStop');
     if (reading!.watch.length) readingKeys.push('watch');
     if (!stop && verdict === 'FIRE' && scores.total <= THRESHOLDS.doNotBuildMax && incomplete.length === 0) readingKeys.push('liveLowScore');
-    const rv = a.review ?? BLANK_REVIEW;
-    const mt = rv.metrics;
+    const mt = review!.metrics;
     if (reading!.bands.diy === 'Critical' || (mt.diy.value != null && reading!.fire.every((f) => f.key !== 'diy') && reading!.watch.some((w) => w.startsWith('DIY')))) readingKeys.push('diyMonths');
     if (mt.ppr.value != null && reading!.bands.ppr === 'Critical') readingKeys.push('pprTrend');
     if (mt.rlr.value != null && mt.rlr.value > 0 && mt.rlr.value <= 1) readingKeys.push('rlrBand');

@@ -30,6 +30,16 @@ export function metricBand(key: MetricKey, v: number): Band {
   }
 }
 
+/** A review with nothing measured or answered yet: what a live assessment starts from. */
+export function blankReview(launchDate: string | null = null): NonNullable<HireAnswers['review']> {
+  return {
+    launchDate,
+    metrics: Object.fromEntries(METRIC_KEYS.map((k) => [k, { value: null }])) as Record<MetricKey, { value: null }>,
+    maintenanceExceedsValue: null,
+    betterSolution: null,
+  };
+}
+
 function parts(iso: string): [number, number, number] {
   const [y, mo, d] = iso.split('-').map(Number);
   return [y, mo, d];
