@@ -1,6 +1,7 @@
+import { METRIC_SHORT as SHORT } from '../../lib/hire/checklist';
 import { metricBand, type Band } from '../../lib/hire/live';
 import type { MetricKey } from '../../lib/hire/types';
-import { fmtRate, limitError, SCALE, SHORT } from './metric-ranges';
+import { fmtRate, limitError, SCALE } from './metric-ranges';
 
 // Band inks. Amber is reserved for the TRAIN verdict and coral for errors and FIRE, so Warning stays neutral and
 // Critical (the band the checklist fires on) takes coral; the band is always written out, never colour alone.

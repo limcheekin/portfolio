@@ -1,19 +1,32 @@
 import type { HireAnswers, MetricKey } from './types.ts';
-import { METRIC_DEFS } from './checklist.ts';
+import { METRIC_DEFS, METRIC_KEYS, METRIC_SHORT } from './checklist.ts';
+import { fmtNum as fmt } from './helpers.ts';
 
 export type Band = 'Good' | 'Warning' | 'Critical';
-export const SMALL_SAMPLE = 30; // display-only flag threshold (this tool's reading)
+const SMALL_SAMPLE = 30; // display-only flag threshold (this tool's reading)
 
-const KEYS: MetricKey[] = ['ucr', 'ppr', 'diy', 'irr', 'rlr'];
-const SHORT: Record<MetricKey, string> = { ucr: 'UCR', ppr: 'PPR', diy: 'DIY', irr: 'IRR', rlr: 'RLR' };
+/** The metrics guide's band edges: Good up to `good`, Warning up to `critical`. IRR runs the other way: high is good. */
+export const BAND_EDGES: Record<MetricKey, { good: number; critical: number }> = {
+  ucr: { good: 15, critical: 30 },
+  ppr: { good: 1.2, critical: 2.0 },
+  diy: { good: 5, critical: 15 },
+  irr: { good: 60, critical: 40 },
+  rlr: { good: 0, critical: 1 },
+};
+
+/** What a rate (this period or the previous one) may be: a percentage from 0 to 100; PPR counts turns, 1 or more. */
+export const RATE_RANGE: Record<MetricKey, { min: number; max: number }> = Object.fromEntries(
+  METRIC_KEYS.map((k) => [k, k === 'ppr' ? { min: 1, max: Infinity } : { min: 0, max: 100 }]),
+) as Record<MetricKey, { min: number; max: number }>;
 
 export function metricBand(key: MetricKey, v: number): Band {
+  const { good, critical } = BAND_EDGES[key];
   switch (key) {
-    case 'ucr': return v < 15 ? 'Good' : v <= 30 ? 'Warning' : 'Critical';
-    case 'ppr': return v <= 1.2 ? 'Good' : v <= 2.0 ? 'Warning' : 'Critical';
-    case 'diy': return v < 5 ? 'Good' : v <= 15 ? 'Warning' : 'Critical';
-    case 'irr': return v > 60 ? 'Good' : v >= 40 ? 'Warning' : 'Critical';
-    case 'rlr': return v === 0 ? 'Good' : v <= 1 ? 'Warning' : 'Critical';
+    case 'ucr':
+    case 'diy': return v < good ? 'Good' : v <= critical ? 'Warning' : 'Critical';
+    case 'ppr': return v <= good ? 'Good' : v <= critical ? 'Warning' : 'Critical';
+    case 'irr': return v > good ? 'Good' : v >= critical ? 'Warning' : 'Critical';
+    case 'rlr': return v === good ? 'Good' : v <= critical ? 'Warning' : 'Critical';
   }
 }
 
@@ -38,22 +51,28 @@ export interface LiveReading {
   notes: string[];
 }
 
-// Default critical thresholds and the range a custom limit must sit in (exclusive of the default).
-const CRITICAL: Record<'ucr' | 'ppr' | 'diy' | 'irr', number> = { ucr: 30, ppr: 2.0, diy: 15, irr: 40 };
+export type LimitKey = Exclude<MetricKey, 'rlr'>;
 
-/** The limit that applies: a custom one only when tighter than Critical and inside the spec's range. */
-function threshold(key: 'ucr' | 'ppr' | 'diy' | 'irr', limit: number | null | undefined): number {
+/** Each rate's default FIRE threshold: its Critical band edge. RLR has none: any red line fires. */
+export const CRITICAL: Record<LimitKey, number> = {
+  ucr: BAND_EDGES.ucr.critical, ppr: BAND_EDGES.ppr.critical, diy: BAND_EDGES.diy.critical, irr: BAND_EDGES.irr.critical,
+};
+
+/** Whether `n` may be a custom FIRE limit: inside the rate's range and never looser than Critical (the spec's ranges). */
+export function limitAllowed(key: LimitKey, n: number): boolean {
   const c = CRITICAL[key];
-  if (limit == null || !Number.isFinite(limit)) return c;
-  const ok =
-    key === 'ucr' ? limit > 0 && limit < c :
-    key === 'ppr' ? limit >= 1.0 && limit < c :
-    key === 'diy' ? limit > 0 && limit < c :
-    limit > c && limit < 100;
-  return ok ? limit : c;
+  switch (key) {
+    case 'ucr':
+    case 'diy': return n > 0 && n <= c;
+    case 'ppr': return n >= 1 && n <= c;
+    case 'irr': return n >= c && n < 100;
+  }
 }
 
-const fmt = (n: number) => String(Math.round(n * 100) / 100);
+/** The limit that applies: a custom one when it is allowed, else Critical. */
+function threshold(key: LimitKey, limit: number | null | undefined): number {
+  return limit != null && Number.isFinite(limit) && limitAllowed(key, limit) ? limit : CRITICAL[key];
+}
 
 export function readLive(review: NonNullable<HireAnswers['review']>, assessmentDate: string): LiveReading {
   const out: LiveReading = { bands: {}, fire: [], watch: [], pairs: [], unmeasured: [], notes: [] };
@@ -61,13 +80,13 @@ export function readLive(review: NonNullable<HireAnswers['review']>, assessmentD
   const val = (k: MetricKey) => mt[k].value;
   const prev = (k: MetricKey) => mt[k].previous ?? null;
 
-  for (const k of KEYS) {
+  for (const k of METRIC_KEYS) {
     const v = val(k);
     if (v === null || v === undefined) { out.unmeasured.push(k); continue; }
     out.bands[k] = metricBand(k, v);
     const s = mt[k].sample;
     if (s != null && s < SMALL_SAMPLE) {
-      out.notes.push(`${SHORT[k]} rests on a small sample (${s} ${METRIC_DEFS[k].denominator.split(' (')[0]}); read it with care`);
+      out.notes.push(`${METRIC_SHORT[k]} rests on a small sample (${s} ${METRIC_DEFS[k].denominator.split(' (')[0]}); read it with care`);
     }
   }
 
@@ -107,14 +126,14 @@ export function readLive(review: NonNullable<HireAnswers['review']>, assessmentD
   if (review.maintenanceExceedsValue === true) out.fire.push({ key: 'maintenance', text: 'Maintenance costs exceed the value delivered' });
   if (review.betterSolution === true) out.fire.push({ key: 'betterSolution', text: 'A better solution is available' });
 
-  for (const k of KEYS) {
+  for (const k of METRIC_KEYS) {
     const b = out.bands[k];
     if (!b || b === 'Good' || fired.has(k)) continue;
     const v = val(k) as number;
-    if (b === 'Warning') out.watch.push(`${SHORT[k]} is in the Warning band (${fmt(v)}${METRIC_DEFS[k].unit === '%' ? '%' : ' turns'})`);
+    if (b === 'Warning') out.watch.push(`${METRIC_SHORT[k]} is in the Warning band (${fmt(v)}${METRIC_DEFS[k].unit === '%' ? '%' : ' turns'})`);
     else if (k === 'diy') out.watch.push(`DIY ${fmt(v)}% is Critical but under 3 months live, so a warning only`);
     else if (k === 'ppr') out.watch.push(`PPR ${fmt(v)} is Critical but IRR is not known to be falling, so a warning only`);
-    else out.watch.push(`${SHORT[k]} is Critical (${fmt(v)}%)`);
+    else out.watch.push(`${METRIC_SHORT[k]} is Critical (${fmt(v)}%)`);
   }
 
   // Pair readings (this tool's thresholds)

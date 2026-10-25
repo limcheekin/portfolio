@@ -8,12 +8,15 @@ import {
   E_GUARDRAILS,
   H_ITEMS,
   I_ITEMS,
+  METRIC_KEYS,
   WORST_CASE_OPTIONS,
   type ChecklistItem,
 } from './hire/checklist.ts';
+import { RATE_RANGE } from './hire/live.ts';
 import { REPORT_BASE } from './hire/link.ts';
 import { MAX_KPIS, TEXT_CAPS } from './hire/validate.ts';
 import type { HireToolName } from './hire/tools-runtime.ts';
+import type { MetricKey } from './hire/types.ts';
 
 /**
  * The HIRE check MCP server's tools, served at /mcp/hire by the same Node process as the portfolio server.
@@ -79,8 +82,9 @@ const naOr = (item: ChecklistItem) =>
     );
 const shapeOf = <T>(items: ChecklistItem[], f: (item: ChecklistItem) => T) => Object.fromEntries(items.map((x) => [x.key, f(x)]));
 
-const metric = (lo: number, hi?: number) => {
-  const rate = hi === undefined ? z.number().min(lo) : z.number().min(lo).max(hi);
+const metric = (k: MetricKey) => {
+  const { min, max } = RATE_RANGE[k];
+  const rate = max === Infinity ? z.number().min(min) : z.number().min(min).max(max);
   return z
     .object({
       value: rate.nullable().optional().describe('This period; null when not measured (never 0 for unmeasured)'),
@@ -177,7 +181,7 @@ const ANSWERS_INPUT = {
     .object({
       launchDate: date('YYYY-MM-DD').nullable().optional(),
       metrics: z
-        .object({ ucr: metric(0, 100), ppr: metric(1), diy: metric(0, 100), irr: metric(0, 100), rlr: metric(0, 100) })
+        .object(Object.fromEntries(METRIC_KEYS.map((k) => [k, metric(k)])))
         .optional()
         .describe('Rates in % (PPR in turns, at least 1)'),
       maintenanceExceedsValue: yesNo('Does maintenance now cost more than the value the agent delivers?'),

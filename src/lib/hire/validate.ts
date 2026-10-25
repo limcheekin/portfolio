@@ -1,4 +1,5 @@
-import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, WORST_CASE_OPTIONS } from './checklist.ts';
+import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_KEYS, WORST_CASE_OPTIONS } from './checklist.ts';
+import { RATE_RANGE } from './live.ts';
 import { firstStop } from './score.ts';
 import type { HireAnswers, MetricInput, MetricKey } from './types.ts';
 
@@ -28,7 +29,6 @@ const E_ALLOWED = allowed([...E_GUARDRAILS, ...E_BOUNDARIES]);
 const WORST = WORST_CASE_OPTIONS.map((o) => o.value);
 const I_KEYS = ['frequency', 'timeSavings', 'roi', 'strategicValue'] as const;
 const I_ALLOWED = allowed(I_ITEMS);
-const METRIC_KEYS: MetricKey[] = ['ucr', 'ppr', 'diy', 'irr', 'rlr'];
 const SIGN_OFF = ['productManager', 'engineering', 'dataAnalytics', 'securityCompliance', 'endUsers'];
 const TRAITS = ['ambiguity', 'multiStepReasoning', 'intermediateStates', 'retrying', 'adapting'] as const;
 
@@ -238,11 +238,10 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
       const p = `review.metrics.${k}`;
       const mi = obj(ms[k], p, bad) ?? {};
       keys(mi, p, ['value', 'previous', 'sample', 'limit'], bad);
-      const lo = k === 'ppr' ? 1 : 0;
-      const hi = k === 'ppr' ? Infinity : 100;
+      const { min, max } = RATE_RANGE[k];
       const rate = (x: unknown, path: string): number | null | undefined => {
         if (x === null) return null;
-        return num(x, path, bad, lo, hi);
+        return num(x, path, bad, min, max);
       };
       const m: MetricInput = { value: null };
       if (mi.value !== undefined) m.value = rate(mi.value, `${p}.value`) ?? null;

@@ -3,10 +3,11 @@
 import type * as PdfLibTypes from 'pdf-lib';
 import { COLORS } from '../palette.mjs';
 import {
-  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_DEFS,
+  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_DEFS, METRIC_KEYS, METRIC_SHORT,
   MIT_LICENCE_TEXT, R_QUESTIONS, R_TRAITS, SIGN_OFF_ROLES, WORST_CASE_OPTIONS,
 } from './checklist.ts';
 import type { ChecklistItem } from './checklist.ts';
+import { fmtNum } from './helpers.ts';
 import { isNA } from './score.ts';
 import type { Assessment, HireAnswers, MetricKey, Verdict } from './types.ts';
 
@@ -60,7 +61,6 @@ const hexToRgb = (hex: string): [number, number, number] => {
 // Amber is the TRAIN verdict's ink only, so a Warning band prints neutral; the band is also written out as text.
 const BAND_TOKEN = { Good: 'print-green', Warning: 'print-muted', Critical: 'print-coral' } as const;
 const METER_MAX: Record<MetricKey, number> = { ucr: 100, ppr: 5, diy: 100, irr: 100, rlr: 5 };
-const fmtNum = (n: number) => String(Math.round(n * 100) / 100);
 
 export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessment): Promise<Uint8Array> {
   const { PDFDocument, rgb } = deps.PDFLib;
@@ -229,7 +229,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   const meaning = r.stop ? r.stop.message : r.meaning ?? 'The answers are not complete yet, so there is no verdict.';
   para(meaning, { size: 12, align: 'center', x: M.x + 30, width: CONTENT_W - 60, gap: 10 });
   if (a.isLive && r.live) {
-    const un = r.live.unmeasured.map((k) => k.toUpperCase());
+    const un = r.live.unmeasured.map((k) => METRIC_SHORT[k]);
     para(
       un.length ? `Not yet measured: ${un.join(', ')}. Unmeasured metrics are never counted as zero.` : 'All five agent metrics were measured.',
       { size: 10, color: 'print-muted', align: 'center', x: M.x + 30, width: CONTENT_W - 60, gap: 6 },
@@ -294,7 +294,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   if (a.isLive && r.live) {
     h3('Live metrics');
     const rev = a.review;
-    for (const k of Object.keys(METRIC_DEFS) as MetricKey[]) {
+    for (const k of METRIC_KEYS) {
       const def = METRIC_DEFS[k];
       const v = rev?.metrics[k]?.value ?? null;
       const band = r.live.bands[k];
@@ -399,7 +399,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   if (a.isLive && a.review) {
     h2('Live review answers');
     kv('Launch date', a.review.launchDate ?? '');
-    for (const k of Object.keys(METRIC_DEFS) as MetricKey[]) {
+    for (const k of METRIC_KEYS) {
       const m = a.review.metrics[k];
       const parts = [m.value === null ? 'Not measured' : `${fmtNum(m.value)}${METRIC_DEFS[k].unit === '%' ? '%' : ' turns'}`];
       if (m.previous != null) parts.push(`previous ${fmtNum(m.previous)}`);

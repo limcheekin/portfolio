@@ -1,3 +1,6 @@
+/** A number rounded to at most two decimals, without trailing zeros ("2", "1.25"). */
+export const fmtNum = (n: number): string => String(Math.round(n * 100) / 100);
+
 export interface TimeSaved {
   savedPerProcess: number;
   savedPct: number;

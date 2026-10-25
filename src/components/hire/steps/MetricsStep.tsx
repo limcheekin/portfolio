@@ -1,10 +1,10 @@
 import { useContext, useId } from 'react';
-import { METRIC_DEFS } from '../../../lib/hire/checklist';
-import { monthsBetween } from '../../../lib/hire/live';
+import { METRIC_DEFS, METRIC_KEYS, METRIC_SHORT as SHORT } from '../../../lib/hire/checklist';
+import { CRITICAL, monthsBetween } from '../../../lib/hire/live';
 import type { HireAnswers, MetricKey } from '../../../lib/hire/types';
 import { blankReview } from '../useHireState';
 import MetricMeter from '../MetricMeter';
-import { fmtRate, KEYS, limitError, sampleError, SHORT, unitOf, valueError } from '../metric-ranges';
+import { fmtRate, limitError, sampleError, unitOf, valueError } from '../metric-ranges';
 import NumberField from '../NumberField';
 import { ChoiceGroup } from '../Question';
 import Reading from '../Reading';
@@ -84,7 +84,7 @@ function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch:
           onChange={put('limit')}
           suffix={unit}
           check={(n) => limitError(k, n)}
-          hint={`Default: the Critical band (${k === 'irr' ? 'below ' : 'above '}${fmtRate(k, { ucr: 30, ppr: 2, diy: 15, irr: 40 }[k])}).`}
+          hint={`Default: the Critical band (${k === 'irr' ? 'below ' : 'above '}${fmtRate(k, CRITICAL[k])}).`}
           testId={`metric-${k}-limit`}
         />
       )}
@@ -146,7 +146,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
           </span>
         }
       >
-        {KEYS.map((k) => <Rate key={k} k={k} review={review} dispatch={dispatch} />)}
+        {METRIC_KEYS.map((k) => <Rate key={k} k={k} review={review} dispatch={dispatch} />)}
       </Group>
 
       <Group title="Cost and alternatives">

@@ -255,6 +255,9 @@ export const METRIC_DEFS: Record<MetricKey, { name: string; unit: '%' | 'turns';
   },
 };
 
+export const METRIC_KEYS = Object.keys(METRIC_DEFS) as MetricKey[];
+export const METRIC_SHORT: Record<MetricKey, string> = { ucr: 'UCR', ppr: 'PPR', diy: 'DIY', irr: 'IRR', rlr: 'RLR' };
+
 // The metrics guide's Good bands.
 export const KPI_SUGGESTIONS: Array<{ key: MetricKey; name: string; target: string }> = [
   { key: 'irr', name: 'Instant Resolution Rate (IRR)', target: 'IRR > 60%' },

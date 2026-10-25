@@ -1,5 +1,5 @@
 import type { Assessment, HireAnswers, Verdict } from './types.ts';
-import { ALTERNATIVES, CHECKLIST_SOURCE } from './checklist.ts';
+import { ALTERNATIVES, CHECKLIST_SOURCE, METRIC_SHORT } from './checklist.ts';
 import { band, firstStop, naItems, redFlags, sectionScores, traitsNote } from './score.ts';
 import { readLive } from './live.ts';
 import { buildReasons, pathToHire, READINGS } from './reasons.ts';
@@ -17,7 +17,6 @@ const BLANK_REVIEW: NonNullable<HireAnswers['review']> = {
   maintenanceExceedsValue: null,
   betterSolution: null,
 };
-const SHORT = { ucr: 'UCR', ppr: 'PPR', diy: 'DIY', irr: 'IRR', rlr: 'RLR' } as const;
 
 export function assess(a: HireAnswers): Assessment {
   const live = a.isLive;
@@ -50,7 +49,7 @@ export function assess(a: HireAnswers): Assessment {
   if (note) notes.push(note);
   if (reading) {
     notes.push(...reading.notes);
-    if (reading.unmeasured.length) notes.push(`FIRE check incomplete: ${reading.unmeasured.map((k) => SHORT[k]).join(', ')} not measured`);
+    if (reading.unmeasured.length) notes.push(`FIRE check incomplete: ${reading.unmeasured.map((k) => METRIC_SHORT[k]).join(', ')} not measured`);
   }
 
   const showPath = !stop && (verdict === 'TRAIN' || (!live && verdict === 'DO NOT BUILD'));

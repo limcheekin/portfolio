@@ -1,7 +1,7 @@
+import { METRIC_KEYS } from '../../../lib/hire/checklist';
 import { monthsBetween } from '../../../lib/hire/live';
 import type { Assessment, HireAnswers } from '../../../lib/hire/types';
 import MetricMeter from '../MetricMeter';
-import { KEYS } from '../metric-ranges';
 import { HINT } from '../styles';
 import { Block } from './Findings';
 
@@ -21,7 +21,7 @@ export default function LiveMetrics({ answers, assessment }: { answers: HireAnsw
           {months !== null && months >= 0 ? ` · ${months} month${months === 1 ? '' : 's'} live` : ''}
         </p>
         <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
-          {KEYS.map((k) => (
+          {METRIC_KEYS.map((k) => (
             <MetricMeter key={k} k={k} value={review.metrics[k].value} limit={k === 'rlr' ? null : review.metrics[k].limit} />
           ))}
         </div>
