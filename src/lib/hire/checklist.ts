@@ -165,6 +165,21 @@ export const WORST_CASE_OPTIONS: Array<{ value: string; label: string; example: 
   { value: 'catastrophic', label: 'Catastrophic impact', example: 'life-or-death, legal liability', points: null },
 ];
 
+// Part 1 gates of I (Intent check, Job Description Exercise), verbatim.
+export const I_GATES = {
+  intent: {
+    label: 'Need vs. Hype',
+    question: 'are we building this because of a clear business need or just industry hype?',
+    stop: "If you can't clearly articulate the business problem, STOP.",
+  },
+  role: { label: 'Role Definition', question: 'can you write a clear job description for this agent?' },
+  review: {
+    label: 'Performance Review',
+    question: "how will you measure this agent's success? What target do you plan to achieve for each?",
+  },
+  jobStop: "If you can't define the job description and metrics of success, STOP",
+} as const;
+
 export const R_QUESTIONS = {
   ruleBased: {
     question: 'Is the task predictable and rule-based?',

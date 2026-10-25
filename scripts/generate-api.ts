@@ -9,7 +9,7 @@ import { FAQ } from '../src/data/faq';
 import type { Portfolio } from '../src/lib/portfolio-schema';
 import { mcpManifest } from '../src/lib/portfolio-tools';
 import { hireManifest } from '../src/lib/hire-tools';
-import { HIRE_CREDIT_MARKDOWN, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_PRIVACY_STATEMENT, checklistMarkdown } from '../src/lib/hire/copy';
+import { HIRE_CREDIT_MARKDOWN, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_PRIVACY_STATEMENT, HIRE_READINGS, HIRE_READINGS_INTRO, checklistMarkdown } from '../src/lib/hire/copy';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -256,6 +256,12 @@ writeMarkdown('/hire/', [
   '## The checklist',
   '',
   ...checklistMarkdown(),
+  "## This tool's readings",
+  '',
+  HIRE_READINGS_INTRO,
+  '',
+  ...HIRE_READINGS.map((r, n) => `${n + 1}. ${r.text}`),
+  '',
 ]);
 console.log('Generated: dist/{projects,insights}/<slug>/index.md, dist/about/index.md, dist/hire/index.md');
 

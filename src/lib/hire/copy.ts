@@ -1,7 +1,8 @@
 import {
-  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, RED_FLAGS, R_QUESTIONS, R_TRAITS,
+  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_GATES, I_ITEMS, RED_FLAGS, R_QUESTIONS, R_TRAITS,
   SIGN_OFF_ROLES, THRESHOLDS, WORST_CASE_OPTIONS, type ChecklistItem,
 } from './checklist.ts';
+import { READINGS, UI_READINGS, type ReadingKey } from './reasons.ts';
 
 /** Page copy shared by /hire/ (Astro) and /hire/index.md (generate-api). */
 export const HIRE_TITLE = 'Should you build that AI agent?';
@@ -28,17 +29,23 @@ export const HIRE_CREDIT_MARKDOWN = (() => {
   const c = HIRE_CREDIT_PARTS;
   return `${c.lead}[${c.licence}](${c.licenceUrl})${c.mid}[${c.repo}](${c.repoUrl})${c.end} Repository: ${c.repoUrl}`;
 })();
+/** Footnotes for every "this tool's reading" label in the tool; each gets the anchor #reading-<key>. */
+export const HIRE_READINGS_INTRO =
+  "Where the checklist is silent or ambiguous, the tool decides and says so. Each such rule carries a \"this tool's reading\" label in the tool, the report and the MCP output, and is listed here.";
+export const HIRE_READINGS = (Object.entries({ ...READINGS, ...UI_READINGS }) as Array<[ReadingKey, string]>).map(([key, text]) => ({ key, text }));
 export const HIRE_NOSCRIPT = 'The interactive check needs JavaScript. The checklist text below is complete, so you can work through it by hand.';
 
 export interface TextEntry { title: string; lines: string[] }
 export interface TextSection { id: string; heading: string; entries: TextEntry[] }
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const item = (i: ChecklistItem): TextEntry => ({
   title: i.label,
   lines: [
-    i.question.charAt(0).toUpperCase() + i.question.slice(1),
+    cap(i.question),
     ...(i.consider ? [`Consider: ${i.consider}`] : []),
-    `Options: ${i.options.map((o) => `${o.label} (${o.value > 0 && typeof o.value === 'number' ? '+' : ''}${o.value})`).join(' / ')}`,
+    `Options: ${i.options.map((o) => `${o.label} (${typeof o.value === 'number' && o.value > 0 ? '+' : ''}${o.value})`).join(' / ')}`,
   ],
 });
 
@@ -47,7 +54,15 @@ const flags = (prefix: string) => Object.entries(RED_FLAGS).filter(([k]) => k.st
 /** The whole checklist as headed text entries, in the framework's order. */
 export const CHECKLIST_SECTIONS: TextSection[] = [
   { id: 'h', heading: 'H: Human and Habits', entries: [...H_ITEMS.map(item), { title: 'Red flags', lines: flags('h') }] },
-  { id: 'i', heading: 'I: Impact and Intent', entries: [...I_ITEMS.map(item), { title: 'Red flags', lines: flags('i') }] },
+  {
+    id: 'i', heading: 'I: Impact and Intent',
+    entries: [
+      { title: I_GATES.intent.label, lines: [cap(I_GATES.intent.question), I_GATES.intent.stop] },
+      { title: I_GATES.role.label, lines: [cap(I_GATES.role.question), 'Title', 'Key Responsibilities', 'Boundaries (what it CANNOT do)'] },
+      { title: I_GATES.review.label, lines: [cap(I_GATES.review.question), 'KPI 1, KPI 2, KPI 3, each with its target', I_GATES.jobStop] },
+      ...I_ITEMS.map(item), { title: 'Red flags', lines: flags('i') },
+    ],
+  },
   {
     id: 'r', heading: 'R: The right tool',
     entries: [

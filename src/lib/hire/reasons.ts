@@ -23,6 +23,13 @@ export const READINGS = {
   path: "The path to HIRE ranks controllable levers (guardrails and boundaries, readiness, time savings and ROI) ahead of intrinsic properties of the problem; each step is a proposed change, so re-score once it is built and verified.",
 } as const;
 
+// Readings the interactive tool adds where it suggests or fills answers; they never enter a result.
+export const UI_READINGS = {
+  exampleTraits: "The fraud case study does not list which R traits it checked: the example's three (ambiguity, multi-step reasoning, remembering intermediate states) are this tool's reading of its R section.",
+  timeBands: "The time-saved suggestion reads the checklist's bands as continuous: 10% or less suggests 1, above 10% up to 20% suggests 2, above 20% up to 50% suggests 3, above 50% suggests 4.",
+} as const;
+export type ReadingKey = keyof typeof READINGS | keyof typeof UI_READINGS;
+
 const KEYED: Array<{ item: ChecklistItem; section: 'H' | 'I' | 'E' }> = [
   ...E_GUARDRAILS.map((item) => ({ item, section: 'E' as const })),
   ...E_BOUNDARIES.map((item) => ({ item, section: 'E' as const })),

@@ -12,7 +12,7 @@ import { MEASURE, PAGE_TITLE } from '../../lib/text-styles';
 import { PERSON_REF, webPageJsonLd } from '../../lib/jsonld';
 import { markdownPath } from '../../lib/paths';
 import { CHECKLIST_SOURCE } from '../../lib/hire/checklist';
-import { HIRE_CREDIT_PARTS as C, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_NOSCRIPT, HIRE_PRIVACY_STATEMENT, HIRE_TITLE } from '../../lib/hire/copy';
+import { HIRE_CREDIT_PARTS as C, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_NOSCRIPT, HIRE_PRIVACY_STATEMENT, HIRE_READINGS, HIRE_READINGS_INTRO, HIRE_TITLE } from '../../lib/hire/copy';
 
 const jsonLd = [
   webPageJsonLd('/hire/', 'WebPage', { name: 'HIRE check' }),
@@ -54,9 +54,17 @@ const jsonLd = [
       <ChecklistText />
     </section>
 
+    <section id="hire-readings" aria-labelledby="hire-readings-heading" class="mb-20 scroll-mt-28">
+      <h2 id="hire-readings-heading" class="mb-4 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">This tool's readings</h2>
+      <p class={`mb-6 leading-relaxed text-slate-text ${MEASURE}`}>{HIRE_READINGS_INTRO}</p>
+      <ol class={`m-0 list-decimal space-y-3 pl-5 text-slate-text ${MEASURE}`}>
+        {HIRE_READINGS.map((r) => <li id={`reading-${r.key}`} class="scroll-mt-28 leading-relaxed">{r.text}</li>)}
+      </ol>
+    </section>
+
     <section aria-labelledby="hire-credit">
       <h2 id="hire-credit" class="mb-4 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">Credit and licence</h2>
-      <p class={`mb-4 leading-relaxed text-slate-text ${MEASURE}`}>
+      <p class={`mb-4 break-words leading-relaxed text-slate-text ${MEASURE}`}>
         {C.lead}<Link href={C.licenceUrl} class="text-green-accent hover:underline">{C.licence}</Link>{C.mid}<Link href={C.repoUrl} class="text-green-accent hover:underline">{C.repo}</Link>{C.end}
       </p>
     </section>
