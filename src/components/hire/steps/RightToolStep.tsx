@@ -59,7 +59,7 @@ export function Traits({ answers, dispatch }: StepProps) {
             <input
               type="checkbox"
               className="mt-0.5 size-4 shrink-0 accent-green-accent"
-              checked={r.traits[t.key as keyof typeof r.traits]}
+              checked={r.traits[t.key]}
               onChange={(e) => dispatch({ type: 'set', path: `r.traits.${t.key}`, value: e.target.checked })}
             />
             <KeyHint n={n + 1} />

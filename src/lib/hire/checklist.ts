@@ -1,4 +1,4 @@
-import type { MetricKey, SignOffRole } from './types.ts';
+import type { MetricKey, SignOffRole, TraitKey } from './types.ts';
 
 // Vendored from Ines Bolanos's H.I.R.E. checklist (MIT). Wording is verbatim, including its spelling.
 export const CHECKLIST_SOURCE = {
@@ -195,7 +195,7 @@ export const R_QUESTIONS = {
   verdict: 'If you checked 3+ boxes above, you likely need an AI agent.',
 } as const;
 
-export const R_TRAITS: Array<{ key: string; label: string }> = [
+export const R_TRAITS: Array<{ key: TraitKey; label: string }> = [
   { key: 'ambiguity', label: 'Ambiguity and context-dependent decisions?' },
   { key: 'multiStepReasoning', label: 'Multi-step reasoning across fragmented information?' },
   { key: 'intermediateStates', label: 'Remembering intermediate states?' },

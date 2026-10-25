@@ -9,6 +9,8 @@ import {
   H_ITEMS,
   I_ITEMS,
   METRIC_KEYS,
+  R_TRAITS,
+  SIGN_OFF_ROLES,
   WORST_CASE_OPTIONS,
   type ChecklistItem,
 } from './hire/checklist.ts';
@@ -124,13 +126,7 @@ const ANSWERS_INPUT = {
       ruleBased: yesNo('Is the task predictable and rule-based? true stops: use automation'),
       informational: yesNo('Is the task purely informational? true stops: use a chatbot'),
       traits: z
-        .object({
-          ambiguity: z.boolean().optional(),
-          multiStepReasoning: z.boolean().optional(),
-          intermediateStates: z.boolean().optional(),
-          retrying: z.boolean().optional(),
-          adapting: z.boolean().optional(),
-        })
+        .object(Object.fromEntries(R_TRAITS.map((t) => [t.key, z.boolean().optional()])))
         .optional()
         .describe('Reasoning traits the task needs (3 or more suggests an agent)'),
       table: z
@@ -195,11 +191,7 @@ const ANSWERS_INPUT = {
       nextSteps: text(TEXT_CAPS.nextSteps),
       reviewDate: date('YYYY-MM-DD').optional(),
       signOff: z
-        .object(
-          Object.fromEntries(
-            ['productManager', 'engineering', 'dataAnalytics', 'securityCompliance', 'endUsers'].map((k) => [k, text(TEXT_CAPS.signOffName)]),
-          ),
-        )
+        .object(Object.fromEntries(SIGN_OFF_ROLES.map((x) => [x.key, text(TEXT_CAPS.signOffName)])))
         .optional(),
     })
     .optional()

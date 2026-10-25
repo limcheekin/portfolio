@@ -4,6 +4,7 @@ export type WorstCase = 'minor' | 'moderate' | 'severe' | 'catastrophic';
 export type MetricKey = 'ucr' | 'ppr' | 'diy' | 'irr' | 'rlr';
 export type Verdict = 'HIRE' | 'TRAIN' | 'DO NOT BUILD' | 'FIRE';
 export type SignOffRole = 'productManager' | 'engineering' | 'dataAnalytics' | 'securityCompliance' | 'endUsers';
+export type TraitKey = 'ambiguity' | 'multiStepReasoning' | 'intermediateStates' | 'retrying' | 'adapting';
 
 export interface MetricInput {
   value: number | null;
@@ -27,13 +28,7 @@ export interface HireAnswers {
   r: {
     ruleBased: boolean | null;
     informational: boolean | null;
-    traits: {
-      ambiguity: boolean;
-      multiStepReasoning: boolean;
-      intermediateStates: boolean;
-      retrying: boolean;
-      adapting: boolean;
-    };
+    traits: Record<TraitKey, boolean>;
     table?: Partial<Record<'rule' | 'chatbot' | 'agent', { does?: string; why?: string }>>;
   };
   h: Record<

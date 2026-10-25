@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { R_TRAITS } from '../../lib/hire/checklist.ts';
 import type { HireAnswers } from '../../lib/hire/types.ts';
 import { blankReview } from '../../lib/hire/live.ts';
 import { isNA } from '../../lib/hire/score.ts';
@@ -27,7 +28,7 @@ export function blankHireAnswers(): HireAnswers {
     r: {
       ruleBased: null,
       informational: null,
-      traits: { ambiguity: false, multiStepReasoning: false, intermediateStates: false, retrying: false, adapting: false },
+      traits: Object.fromEntries(R_TRAITS.map((t) => [t.key, false])) as HireAnswers['r']['traits'],
     },
     h: { trust: null, culturalFit: null, userControl: null, changeManagement: null, dataQuality: null, systemIntegration: null, interaction: null },
     i: { frequency: null, timeSavings: null, roi: null, strategicValue: null },

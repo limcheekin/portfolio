@@ -376,7 +376,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   para(R_QUESTIONS.informational.question, { font: bold, size: 10 });
   para(a.r.informational === null ? 'Not answered' : a.r.informational ? 'Yes' : 'No', { gap: 5 });
   para(`${R_QUESTIONS.traits} (reasoning traits)`, { font: bold, size: 10 });
-  for (const t of R_TRAITS) bullet(`${t.label} ${(a.r.traits as Record<string, boolean>)[t.key] ? 'Yes' : 'No'}`, { size: 9.5 });
+  for (const t of R_TRAITS) bullet(`${t.label} ${a.r.traits[t.key] ? 'Yes' : 'No'}`, { size: 9.5 });
   const tbl = a.r.table;
   if (tbl) {
     h3('Rule-based vs chatbot vs reasoning agent');

@@ -1,7 +1,7 @@
-import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_KEYS, WORST_CASE_OPTIONS } from './checklist.ts';
+import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_KEYS, R_TRAITS, SIGN_OFF_ROLES, WORST_CASE_OPTIONS } from './checklist.ts';
 import { RATE_RANGE } from './live.ts';
 import { firstStop } from './score.ts';
-import type { HireAnswers, MetricInput, MetricKey } from './types.ts';
+import type { HireAnswers, MetricInput, MetricKey, SignOffRole } from './types.ts';
 
 export type Validation = { ok: true; answers: HireAnswers } | { ok: false; issues: string[] };
 
@@ -29,10 +29,11 @@ const E_ALLOWED = allowed([...E_GUARDRAILS, ...E_BOUNDARIES]);
 const WORST = WORST_CASE_OPTIONS.map((o) => o.value);
 const I_KEYS = ['frequency', 'timeSavings', 'roi', 'strategicValue'] as const;
 const I_ALLOWED = allowed(I_ITEMS);
-const SIGN_OFF = ['productManager', 'engineering', 'dataAnalytics', 'securityCompliance', 'endUsers'];
-const TRAITS = ['ambiguity', 'multiStepReasoning', 'intermediateStates', 'retrying', 'adapting'] as const;
+const SIGN_OFF = SIGN_OFF_ROLES.map((x) => x.key);
+const TRAITS = R_TRAITS.map((x) => x.key);
 
 type Obj = Record<string, unknown>;
+type Bad = (m: string) => void;
 const isObj = (x: unknown): x is Obj => typeof x === 'object' && x !== null && !Array.isArray(x);
 const isDate = (s: unknown): s is string => {
   if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
@@ -53,40 +54,50 @@ export function validateAnswers(input: unknown, opts: { requireComplete?: boolea
   }
 }
 
-function keys(o: Obj, path: string, known: readonly string[], bad: (m: string) => void) {
+function keys(o: Obj, path: string, known: readonly string[], bad: Bad) {
   for (const k of Object.keys(o)) if (!known.includes(k)) bad(`${path ? path + '.' : ''}${k}: unknown field`);
 }
-function obj(x: unknown, path: string, bad: (m: string) => void): Obj | null {
+function obj(x: unknown, path: string, bad: Bad): Obj | null {
   if (x === undefined) return {};
   if (isObj(x)) return x;
   bad(`${path}: must be an object`);
   return null;
 }
-function text(x: unknown, path: string, cap: number, bad: (m: string) => void): string | undefined {
+function text(x: unknown, path: string, cap: number, bad: Bad): string | undefined {
   if (x === undefined) return undefined;
   if (typeof x !== 'string') { bad(`${path}: must be text`); return undefined; }
   if (x.length > cap) bad(`${path}: at most ${cap} characters (got ${x.length})`);
   return x;
 }
-function bool(x: unknown, path: string, bad: (m: string) => void): boolean | null {
+function bool(x: unknown, path: string, bad: Bad): boolean | null {
   if (x === undefined || x === null) return null;
   if (typeof x === 'boolean') return x;
   bad(`${path}: must be true, false or null`);
   return null;
 }
-function score(x: unknown, path: string, vals: number[], bad: (m: string) => void): number | null {
+function score(x: unknown, path: string, vals: number[], bad: Bad): number | null {
   if (x === undefined || x === null) return null;
   if (typeof x === 'number' && vals.includes(x)) return x;
   bad(`${path}: must be ${listOf(vals)}`);
   return null;
 }
-function num(x: unknown, path: string, bad: (m: string) => void, min = 0, max = Infinity): number | undefined {
+function num(x: unknown, path: string, bad: Bad, min = 0, max = Infinity): number | undefined {
   if (typeof x !== 'number' || !Number.isFinite(x)) { bad(`${path}: must be a finite number`); return undefined; }
   if (x < min || x > max) bad(`${path}: must be ${max === Infinity ? `at least ${min}` : `between ${min} and ${max}`}`);
   return x;
 }
 
-function run(input: unknown, bad: (m: string) => void): HireAnswers {
+/** The text fields of `src` named in `caps` that are present, each checked against its cap. */
+function pickTexts<K extends string>(src: Obj, path: string, caps: Record<K, number>, bad: Bad): Partial<Record<K, string>> {
+  const out: Partial<Record<K, string>> = {};
+  for (const k of Object.keys(caps) as K[]) {
+    const t = text(src[k], `${path}.${k}`, caps[k], bad);
+    if (t !== undefined) out[k] = t;
+  }
+  return out;
+}
+
+function run(input: unknown, bad: Bad): HireAnswers {
   if (!isObj(input)) { bad('input: must be an object'); return {} as HireAnswers; }
   keys(input, '', ['v', 'name', 'isLive', 'assessmentDate', 'part1', 'r', 'h', 'i', 'e', 'review', 'doc'], bad);
   if (input.v !== undefined && input.v !== 1) bad('v: must be 1');
@@ -98,9 +109,21 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
     if (isDate(input.assessmentDate)) assessmentDate = input.assessmentDate;
     else bad('assessmentDate: must be a real date as YYYY-MM-DD');
   }
+  const out: HireAnswers = {
+    v: 1, name, isLive, assessmentDate,
+    part1: readPart1(input.part1, bad),
+    r: readR(input.r, bad),
+    h: readH(input.h, bad),
+    i: readI(input.i, bad),
+    e: readE(input.e, bad),
+  };
+  if (input.review !== undefined) out.review = readReview(input.review, bad);
+  if (input.doc !== undefined) out.doc = readDoc(input.doc, bad);
+  return out;
+}
 
-  // Part 1
-  const p1 = obj(input.part1, 'part1', bad) ?? {};
+function readPart1(x: unknown, bad: Bad): HireAnswers['part1'] {
+  const p1 = obj(x, 'part1', bad) ?? {};
   keys(p1, 'part1', ['canStateBusinessProblem', 'businessProblem', 'canDefineJobAndKpis', 'job', 'kpis'], bad);
   const part1: HireAnswers['part1'] = {
     canStateBusinessProblem: bool(p1.canStateBusinessProblem, 'part1.canStateBusinessProblem', bad),
@@ -111,14 +134,7 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
   if (p1.job !== undefined) {
     const j = obj(p1.job, 'part1.job', bad) ?? {};
     keys(j, 'part1.job', ['title', 'responsibilities', 'boundaries'], bad);
-    const job: NonNullable<HireAnswers['part1']['job']> = {};
-    const t = text(j.title, 'part1.job.title', TEXT_CAPS.jobTitle, bad);
-    const rs = text(j.responsibilities, 'part1.job.responsibilities', TEXT_CAPS.responsibilities, bad);
-    const bd = text(j.boundaries, 'part1.job.boundaries', TEXT_CAPS.boundaries, bad);
-    if (t !== undefined) job.title = t;
-    if (rs !== undefined) job.responsibilities = rs;
-    if (bd !== undefined) job.boundaries = bd;
-    part1.job = job;
+    part1.job = pickTexts(j, 'part1.job', { title: TEXT_CAPS.jobTitle, responsibilities: TEXT_CAPS.responsibilities, boundaries: TEXT_CAPS.boundaries }, bad);
   }
   if (p1.kpis !== undefined) {
     if (!Array.isArray(p1.kpis)) bad('part1.kpis: must be a list');
@@ -135,9 +151,11 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
       });
     }
   }
+  return part1;
+}
 
-  // R
-  const rr = obj(input.r, 'r', bad) ?? {};
+function readR(x: unknown, bad: Bad): HireAnswers['r'] {
+  const rr = obj(x, 'r', bad) ?? {};
   keys(rr, 'r', ['ruleBased', 'informational', 'traits', 'table'], bad);
   const tr = obj(rr.traits, 'r.traits', bad) ?? {};
   keys(tr, 'r.traits', TRAITS, bad);
@@ -159,23 +177,21 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
       if (tb[k] === undefined) continue;
       const row = obj(tb[k], `r.table.${k}`, bad) ?? {};
       keys(row, `r.table.${k}`, ['does', 'why'], bad);
-      const cell: { does?: string; why?: string } = {};
-      const d = text(row.does, `r.table.${k}.does`, TEXT_CAPS.tableCell, bad);
-      const w = text(row.why, `r.table.${k}.why`, TEXT_CAPS.tableCell, bad);
-      if (d !== undefined) cell.does = d;
-      if (w !== undefined) cell.why = w;
-      table[k] = cell;
+      table[k] = pickTexts(row, `r.table.${k}`, { does: TEXT_CAPS.tableCell, why: TEXT_CAPS.tableCell }, bad);
     }
     r.table = table;
   }
+  return r;
+}
 
-  // H
-  const hh = obj(input.h, 'h', bad) ?? {};
+function readH(x: unknown, bad: Bad): HireAnswers['h'] {
+  const hh = obj(x, 'h', bad) ?? {};
   keys(hh, 'h', Object.keys(H_ALLOWED), bad);
-  const h = Object.fromEntries(Object.keys(H_ALLOWED).map((k) => [k, score(hh[k], `h.${k}`, H_ALLOWED[k], bad)])) as HireAnswers['h'];
+  return Object.fromEntries(Object.keys(H_ALLOWED).map((k) => [k, score(hh[k], `h.${k}`, H_ALLOWED[k], bad)])) as HireAnswers['h'];
+}
 
-  // I
-  const ii = obj(input.i, 'i', bad) ?? {};
+function readI(x: unknown, bad: Bad): HireAnswers['i'] {
+  const ii = obj(x, 'i', bad) ?? {};
   keys(ii, 'i', [...I_KEYS, 'figures'], bad);
   const i = Object.fromEntries(I_KEYS.map((k) => [k, score(ii[k], `i.${k}`, I_ALLOWED[k], bad)])) as unknown as HireAnswers['i'];
   if (ii.figures !== undefined) {
@@ -197,9 +213,11 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
     }
     i.figures = figures;
   }
+  return i;
+}
 
-  // E
-  const ee = obj(input.e, 'e', bad) ?? {};
+function readE(x: unknown, bad: Bad): HireAnswers['e'] {
+  const ee = obj(x, 'e', bad) ?? {};
   keys(ee, 'e', ['worstCase', ...Object.keys(E_ALLOWED)], bad);
   const e = { worstCase: null } as unknown as HireAnswers['e'];
   if (ee.worstCase === undefined || ee.worstCase === null) e.worstCase = null;
@@ -219,82 +237,66 @@ function run(input: unknown, bad: (m: string) => void): HireAnswers {
       (e as unknown as Obj)[k] = score(v, p, E_ALLOWED[k], bad);
     }
   }
+  return e;
+}
 
-  const out: HireAnswers = { v: 1, name, isLive, assessmentDate, part1, r, h, i, e };
-
-  // Review
-  if (input.review !== undefined) {
-    const rv = obj(input.review, 'review', bad) ?? {};
-    keys(rv, 'review', ['launchDate', 'metrics', 'maintenanceExceedsValue', 'betterSolution'], bad);
-    let launchDate: string | null = null;
-    if (rv.launchDate !== undefined && rv.launchDate !== null) {
-      if (isDate(rv.launchDate)) launchDate = rv.launchDate;
-      else bad('review.launchDate: must be a real date as YYYY-MM-DD or null');
-    }
-    const ms = obj(rv.metrics, 'review.metrics', bad) ?? {};
-    keys(ms, 'review.metrics', METRIC_KEYS, bad);
-    const metrics = {} as Record<MetricKey, MetricInput>;
-    for (const k of METRIC_KEYS) {
-      const p = `review.metrics.${k}`;
-      const mi = obj(ms[k], p, bad) ?? {};
-      keys(mi, p, ['value', 'previous', 'sample', 'limit'], bad);
-      const { min, max } = RATE_RANGE[k];
-      const rate = (x: unknown, path: string): number | null | undefined => {
-        if (x === null) return null;
-        return num(x, path, bad, min, max);
-      };
-      const m: MetricInput = { value: null };
-      if (mi.value !== undefined) m.value = rate(mi.value, `${p}.value`) ?? null;
-      if (mi.previous !== undefined) { const x = rate(mi.previous, `${p}.previous`); if (x !== undefined) m.previous = x; }
-      if (mi.sample !== undefined) {
-        if (mi.sample === null) m.sample = null;
-        else { const x = num(mi.sample, `${p}.sample`, bad); if (x !== undefined) m.sample = x; }
-      }
-      if (mi.limit !== undefined) {
-        if (k === 'rlr') bad(`${p}.limit: not allowed on RLR`);
-        else if (mi.limit === null) m.limit = null;
-        else { const x = rate(mi.limit, `${p}.limit`); if (x !== undefined) m.limit = x; }
-      }
-      metrics[k] = m;
-    }
-    out.review = {
-      launchDate,
-      metrics,
-      maintenanceExceedsValue: bool(rv.maintenanceExceedsValue, 'review.maintenanceExceedsValue', bad),
-      betterSolution: bool(rv.betterSolution, 'review.betterSolution', bad),
-    };
+function readReview(x: unknown, bad: Bad): NonNullable<HireAnswers['review']> {
+  const rv = obj(x, 'review', bad) ?? {};
+  keys(rv, 'review', ['launchDate', 'metrics', 'maintenanceExceedsValue', 'betterSolution'], bad);
+  let launchDate: string | null = null;
+  if (rv.launchDate !== undefined && rv.launchDate !== null) {
+    if (isDate(rv.launchDate)) launchDate = rv.launchDate;
+    else bad('review.launchDate: must be a real date as YYYY-MM-DD or null');
   }
-
-  // Doc
-  if (input.doc !== undefined) {
-    const d = obj(input.doc, 'doc', bad) ?? {};
-    keys(d, 'doc', ['rationale', 'nextSteps', 'reviewDate', 'signOff'], bad);
-    const doc: NonNullable<HireAnswers['doc']> = {};
-    const ra = text(d.rationale, 'doc.rationale', TEXT_CAPS.rationale, bad);
-    const ns = text(d.nextSteps, 'doc.nextSteps', TEXT_CAPS.nextSteps, bad);
-    if (ra !== undefined) doc.rationale = ra;
-    if (ns !== undefined) doc.nextSteps = ns;
-    if (d.reviewDate !== undefined) {
-      if (isDate(d.reviewDate)) doc.reviewDate = d.reviewDate;
-      else bad('doc.reviewDate: must be a real date as YYYY-MM-DD');
+  const ms = obj(rv.metrics, 'review.metrics', bad) ?? {};
+  keys(ms, 'review.metrics', METRIC_KEYS, bad);
+  const metrics = {} as Record<MetricKey, MetricInput>;
+  for (const k of METRIC_KEYS) {
+    const p = `review.metrics.${k}`;
+    const mi = obj(ms[k], p, bad) ?? {};
+    keys(mi, p, ['value', 'previous', 'sample', 'limit'], bad);
+    const { min, max } = RATE_RANGE[k];
+    const rate = (v: unknown, path: string): number | null | undefined => (v === null ? null : num(v, path, bad, min, max));
+    const m: MetricInput = { value: null };
+    if (mi.value !== undefined) m.value = rate(mi.value, `${p}.value`) ?? null;
+    if (mi.previous !== undefined) { const v = rate(mi.previous, `${p}.previous`); if (v !== undefined) m.previous = v; }
+    if (mi.sample !== undefined) {
+      if (mi.sample === null) m.sample = null;
+      else { const v = num(mi.sample, `${p}.sample`, bad); if (v !== undefined) m.sample = v; }
     }
-    if (d.signOff !== undefined) {
-      const so = obj(d.signOff, 'doc.signOff', bad) ?? {};
-      keys(so, 'doc.signOff', SIGN_OFF, bad);
-      const signOff: NonNullable<NonNullable<HireAnswers['doc']>['signOff']> = {};
-      for (const k of SIGN_OFF) {
-        const t = text(so[k], `doc.signOff.${k}`, TEXT_CAPS.signOffName, bad);
-        if (t !== undefined) (signOff as Record<string, string>)[k] = t;
-      }
-      doc.signOff = signOff;
+    if (mi.limit !== undefined) {
+      if (k === 'rlr') bad(`${p}.limit: not allowed on RLR`);
+      else if (mi.limit === null) m.limit = null;
+      else { const v = rate(mi.limit, `${p}.limit`); if (v !== undefined) m.limit = v; }
     }
-    out.doc = doc;
+    metrics[k] = m;
   }
-  return out;
+  return {
+    launchDate,
+    metrics,
+    maintenanceExceedsValue: bool(rv.maintenanceExceedsValue, 'review.maintenanceExceedsValue', bad),
+    betterSolution: bool(rv.betterSolution, 'review.betterSolution', bad),
+  };
+}
+
+function readDoc(x: unknown, bad: Bad): NonNullable<HireAnswers['doc']> {
+  const d = obj(x, 'doc', bad) ?? {};
+  keys(d, 'doc', ['rationale', 'nextSteps', 'reviewDate', 'signOff'], bad);
+  const doc: NonNullable<HireAnswers['doc']> = pickTexts(d, 'doc', { rationale: TEXT_CAPS.rationale, nextSteps: TEXT_CAPS.nextSteps }, bad);
+  if (d.reviewDate !== undefined) {
+    if (isDate(d.reviewDate)) doc.reviewDate = d.reviewDate;
+    else bad('doc.reviewDate: must be a real date as YYYY-MM-DD');
+  }
+  if (d.signOff !== undefined) {
+    const so = obj(d.signOff, 'doc.signOff', bad) ?? {};
+    keys(so, 'doc.signOff', SIGN_OFF, bad);
+    doc.signOff = pickTexts(so, 'doc.signOff', Object.fromEntries(SIGN_OFF.map((k) => [k, TEXT_CAPS.signOffName])) as Record<SignOffRole, number>, bad);
+  }
+  return doc;
 }
 
 // "Complete enough" to assess: a stop needs only the answers up to its gate; otherwise every scored item.
-function completeness(a: HireAnswers, bad: (m: string) => void) {
+function completeness(a: HireAnswers, bad: Bad) {
   if (firstStop(a)) return;
   const need = (v: unknown, path: string) => { if (v === null || v === undefined) bad(`${path}: required`); };
   need(a.part1.canStateBusinessProblem, 'part1.canStateBusinessProblem');
