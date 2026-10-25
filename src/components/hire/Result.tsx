@@ -9,14 +9,14 @@ import Verdict from './result/Verdict';
 import { PANEL } from './styles';
 import type { StepProps } from './steps/common';
 
-/** The answers as scored and linked (a half-typed N/A counts as unanswered), and their report link once encoded. */
-export interface ReportLink { scored: HireAnswers; url: string }
+/** The answers as scored and linked (a half-typed N/A counts as unanswered), their report link once encoded, and whether encoding failed. */
+export interface ReportLink { scored: HireAnswers; url: string; failed: boolean }
 
 /**
  * The result step: the verdict and its reasons, the live review when there is one, the report link and PDF, and
  * the checklist's documentation block. Presentational parts live in `./result/`.
  */
-export default function Result({ answers, dispatch, assessment, report: { scored, url } }: StepProps & { report: ReportLink }) {
+export default function Result({ answers, dispatch, assessment, report: { scored, url, failed } }: StepProps & { report: ReportLink }) {
   const pdfAnswers = useMemo(() => withDocDefaults(scored, assessment), [scored, assessment]);
   return (
     <div className="space-y-12" data-testid="hire-result">
@@ -30,7 +30,7 @@ export default function Result({ answers, dispatch, assessment, report: { scored
           </p>
         </div>
         <PdfButton answers={pdfAnswers} assessment={assessment} />
-        <ShareLink url={url} />
+        <ShareLink url={url} failed={failed} />
       </div>
 
       <LiveMetrics answers={scored} assessment={assessment} />

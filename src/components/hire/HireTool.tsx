@@ -87,13 +87,17 @@ export default function HireTool() {
   const step = steps[index];
   const [link, setLink] = useState<'reading' | 'ready' | 'bad'>('reading');
   const [code, setCode] = useState(''); // the answers' #a= code, written 300 ms after the last change
+  const [encodeFailed, setEncodeFailed] = useState(false); // this browser could not compress the answers
 
   const root = useRef<HTMLDivElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const guided = useRef<HTMLElement>(null);
   const writes = useRef(0);
   const lastCode = useRef(''); // the #a= code last read or written, so our own link is never reloaded
-  const report = useMemo<ReportLink>(() => ({ scored, url: code ? `${REPORT_BASE}#a=${code}` : '' }), [scored, code]);
+  const report = useMemo<ReportLink>(
+    () => ({ scored, url: code ? `${REPORT_BASE}#a=${code}` : '', failed: encodeFailed }),
+    [scored, code, encodeFailed],
+  );
 
   const toStep = (id: string) => setAt((p) => ({ ...p, step: id }));
   const markMove = useMoveFocus(step.id, heading, root);
@@ -157,8 +161,16 @@ export default function HireTool() {
     if (link === 'reading') return;
     const n = ++writes.current;
     const t = window.setTimeout(async () => {
-      const next = await encodeAnswers(scored);
+      let next: string;
+      try {
+        next = await encodeAnswers(scored);
+      } catch {
+        // No CompressionStream (or it failed): the report link says so instead of staying silently empty.
+        if (n === writes.current) { setCode(''); setEncodeFailed(true); }
+        return;
+      }
       if (n !== writes.current) return;
+      setEncodeFailed(false);
       setCode(next);
       const { pathname, search, hash } = window.location;
       if (isFresh(scored)) {

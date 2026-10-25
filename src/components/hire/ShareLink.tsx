@@ -6,7 +6,7 @@ import { BTN_SECONDARY, FIELD, HINT, LABEL } from './styles';
  * The report link: answers compressed into the `#a=` fragment (encoded by HireTool), which browsers never send to a
  * server. The copy button uses the Clipboard API and falls back to selecting the text so the user can copy it by hand.
  */
-export default function ShareLink({ url }: { url: string }) {
+export default function ShareLink({ url, failed = false }: { url: string; failed?: boolean }) {
   const id = useId();
   const [said, setSaid] = useState('');
   const field = useRef<HTMLInputElement>(null);
@@ -54,6 +54,12 @@ export default function ShareLink({ url }: { url: string }) {
           Copy link
         </button>
       </div>
+      {failed && (
+        <p className="mt-2 text-sm leading-relaxed text-lightest-slate" data-testid="hire-share-error">
+          This browser could not make the report link. The PDF still works; to share a link, try a current Chrome, Edge,
+          Firefox or Safari.
+        </p>
+      )}
       <p id={`${id}-who`} className={`mt-2 ${HINT}`}>
         Anyone with this link can read your answers. They live in the part after <span className="font-mono">#</span>, which your browser never sends to a server.
       </p>
