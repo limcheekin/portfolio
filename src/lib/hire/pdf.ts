@@ -331,9 +331,11 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     h3('Marked not applicable');
     for (const n of r.naItems) bullet(`${ITEM_LABEL[n.key] ?? n.key}: ${n.reason} (scored ${n.score})`);
   }
-  h3("This tool's reading");
-  para('The framework is silent or ambiguous on these points, so this tool says what it assumed.', { size: 9, color: 'print-muted', gap: 2 });
-  for (const t of r.readings) bullet(t, { size: 9.5 });
+  if (r.readings.length) {
+    h3("This tool's reading");
+    para('The framework is silent or ambiguous on these points, so this tool says what it assumed.', { size: 9, color: 'print-muted', gap: 2 });
+    for (const t of r.readings) bullet(t, { size: 9.5 });
+  }
 
   // ---------------------------------------------------------------- Detail pages
   newPage();
@@ -345,7 +347,9 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   kv('Responsibilities', a.part1.job?.responsibilities ?? '');
   kv('Boundaries', a.part1.job?.boundaries ?? '');
   h3('KPIs');
-  if (a.part1.kpis?.length) for (const k of a.part1.kpis) bullet(`${k.name}: ${k.target}`);
+  // A row with neither a name nor a target is a blank the form left behind: skip it.
+  const kpis = (a.part1.kpis ?? []).map((k) => [k.name, k.target].map((t) => t.trim()).filter(Boolean).join(': ')).filter(Boolean);
+  if (kpis.length) for (const k of kpis) bullet(k);
   else para('None listed.', { color: 'print-muted' });
 
   const optLabel = (item: ChecklistItem, v: unknown) => {
@@ -358,7 +362,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     for (const it of list) {
       ensure(40);
       para(it.label, { size: 10, font: bold });
-      para(it.question.charAt(0).toUpperCase() + it.question.slice(1) + (it.question.endsWith('?') ? '' : ''), { size: 9, color: 'print-muted' });
+      para(it.question.charAt(0).toUpperCase() + it.question.slice(1), { size: 9, color: 'print-muted' });
       para(optLabel(it, src[it.key]), { gap: 5 });
     }
   };

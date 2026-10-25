@@ -81,6 +81,16 @@ test('a value that runs onto a new page leaves no gap before the next row', asyn
   assert.ok(gap > 0 && gap < 30, `gap of ${gap.toFixed(1)} pt before "Next steps"`);
 });
 
+test('no readings heading without readings; blank KPI rows are skipped', async () => {
+  const a = { ...hireFixture, part1: { ...hireFixture.part1, kpis: [{ name: '', target: ' ' }, { name: 'Escalations', target: '' }] } };
+  assert.deepEqual(assess(a).readings, []);
+  const texts = (await textDraws(a)).map((d) => d.text);
+  assert.ok(!texts.includes("THIS TOOL'S READING"));
+  assert.ok(texts.includes('Escalations'));
+  assert.ok(!texts.some((t) => t.trim() === ':' || t.startsWith(': ') || t.endsWith(': ')));
+  assert.ok(!texts.includes('None listed.'));
+});
+
 test('dial clamps', () => {
   assert.equal(dialAngle(-100), dialAngle(-55));
   assert.equal(dialAngle(-55), 0);
