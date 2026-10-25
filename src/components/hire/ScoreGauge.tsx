@@ -17,7 +17,7 @@ const ORIGIN = `${CX} ${CY}`;
 
 const clamp = (v: number) => Math.min(CEIL, Math.max(FLOOR, v));
 /** Needle rotation in degrees: −90 at the floor, 0 at the middle, +90 at the ceiling. */
-export const needleAngle = (total: number) => ((clamp(total) - FLOOR) / SPAN) * 180 - 90;
+const needleAngle = (total: number) => ((clamp(total) - FLOOR) / SPAN) * 180 - 90;
 
 function polar(v: number, r: number): [number, number] {
   const a = Math.PI * (1 - (clamp(v) - FLOOR) / SPAN);

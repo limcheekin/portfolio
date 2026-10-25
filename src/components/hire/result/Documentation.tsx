@@ -18,10 +18,10 @@ function addMonths(iso: string, n: number): string {
 }
 
 /** The checklist says to revisit in 3–6 months; the default is 3 months after the assessment date. */
-export const defaultReviewDate = (a: HireAnswers) => addMonths(a.assessmentDate, 3);
+const defaultReviewDate = (a: HireAnswers) => addMonths(a.assessmentDate, 3);
 
 /** The rationale the reasons generate, within its cap. */
-export function generatedRationale(x: Assessment): string {
+function generatedRationale(x: Assessment): string {
   const s = x.reasons.join(' ');
   const cap = TEXT_CAPS.rationale;
   return s.length <= cap ? s : `${s.slice(0, cap - 1).trimEnd()}…`;

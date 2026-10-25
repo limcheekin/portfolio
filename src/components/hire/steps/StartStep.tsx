@@ -8,7 +8,7 @@ import { BTN_SECONDARY, BTN_TEXT, ERROR, FIELD, HINT, LABEL } from '../styles';
 import { YES_NO, type StepProps } from './common';
 
 /** The `#a=` code from a pasted report link, or the paste itself when it is only the code. */
-export function linkCode(paste: string): string {
+function linkCode(paste: string): string {
   const s = paste.trim();
   const at = s.indexOf('#a=');
   return at >= 0 ? s.slice(at + 3) : s;

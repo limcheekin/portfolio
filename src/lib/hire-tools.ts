@@ -39,7 +39,7 @@ export const HIRE_SERVER = {
 };
 
 /** The privacy statement the spec requires the manifest to carry (verify checks for "never stores or logs"). */
-export const HIRE_PRIVACY =
+const HIRE_PRIVACY =
   'The answers arrive in the request, are computed in memory and are never stored; the server never stores or logs ' +
   'request bodies, including in error logs. Free text (job description, KPIs, R table, rationale, sign-off names) is optional.';
 

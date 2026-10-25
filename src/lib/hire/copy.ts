@@ -15,11 +15,10 @@ export const HIRE_INTRO = [
 export const HIRE_PRIVACY_STATEMENT =
   'Private by construction: the web tool never sends your answers anywhere. The MCP path necessarily receives answers in the request (the agent posts them); the server computes in memory, never stores or logs request bodies (including in error logs), and free text is optional there.';
 /** The credit paragraph as parts, so the page (with links) and the Markdown copy come from one source. */
-export const HIRE_LICENCE_URL = `${CHECKLIST_SOURCE.repo}/blob/${CHECKLIST_SOURCE.commit}/LICENSE`;
 export const HIRE_CREDIT_PARTS = {
   lead: 'Built on the H.I.R.E. framework by Inês Bolaños, ',
   licence: `${CHECKLIST_SOURCE.licence} licensed`,
-  licenceUrl: HIRE_LICENCE_URL,
+  licenceUrl: `${CHECKLIST_SOURCE.repo}/blob/${CHECKLIST_SOURCE.commit}/LICENSE`,
   mid: ` (${CHECKLIST_SOURCE.copyright}). Checklist wording is from ${CHECKLIST_SOURCE.file} at commit ${CHECKLIST_SOURCE.commit} of `,
   repo: 'the framework repository',
   repoUrl: CHECKLIST_SOURCE.repo,

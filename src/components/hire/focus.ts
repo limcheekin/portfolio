@@ -93,7 +93,7 @@ export function isTypingField(el: ElementLike | null | undefined): boolean {
 }
 
 /** Elements whose Enter already does something (activates them), so Focus mode leaves Enter to them. */
-export function activatesOnEnter(el: ElementLike | null | undefined): boolean {
+function activatesOnEnter(el: ElementLike | null | undefined): boolean {
   if (!el) return false;
   const tag = el.tagName.toUpperCase();
   if (tag === 'BUTTON' || tag === 'A' || tag === 'SUMMARY') return true;
