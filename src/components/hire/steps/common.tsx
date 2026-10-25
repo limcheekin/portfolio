@@ -3,7 +3,7 @@ import type { ChecklistItem } from '../../../lib/hire/checklist';
 import type { Assessment, HireAnswers, NA } from '../../../lib/hire/types';
 import type { Dispatch } from '../useHireState';
 import Question from '../Question';
-import { BTN_SECONDARY } from '../styles';
+import { BTN_SECONDARY, WELL } from '../styles';
 
 /**
  * What every step gets. Steps read and write answers only; layout, navigation and the score live in the
@@ -64,7 +64,7 @@ export const YES_NO = (yes: ReactNode, no: ReactNode) => [
 /** A computed suggestion beside the question it fills; the user can take it or pick their own answer. */
 export function Suggestion({ children, onUse, applied, testId }: { children: ReactNode; onUse: () => void; applied: boolean; testId: string }) {
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-edge bg-well p-4 sm:flex-row sm:items-center sm:justify-between" data-testid={testId}>
+    <div className={`flex flex-col gap-3 ${WELL} p-4 sm:flex-row sm:items-center sm:justify-between`} data-testid={testId}>
       <div className="min-w-0 text-sm leading-relaxed text-light-slate">{children}</div>
       <button type="button" className={`${BTN_SECONDARY} shrink-0`} onClick={onUse} disabled={applied}>
         {applied ? 'Suggestion in use' : 'Use suggestion'}

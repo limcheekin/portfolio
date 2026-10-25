@@ -4,7 +4,7 @@ import type { Assessment, HireAnswers } from '../../../lib/hire/types';
 import { TEXT_CAPS } from '../../../lib/hire/validate';
 import Reading from '../Reading';
 import type { Dispatch } from '../useHireState';
-import { BTN_TEXT, FIELD, HINT, LABEL, verdictText } from '../styles';
+import { BTN_TEXT, FIELD, HINT, LABEL, verdictStyle } from '../styles';
 import { Block } from './Findings';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -87,7 +87,7 @@ export default function Documentation({ answers, assessment, dispatch }: { answe
           <div className="min-w-0">
             <dt className={LABEL}>Decision</dt>
             <dd className="flex flex-wrap items-center gap-2">
-              <span className={`font-mono font-semibold uppercase tracking-[0.06em] ${verdictText(d)}`} data-testid="result-decision">{d ?? 'Pending'}</span>
+              <span className={`font-mono font-semibold uppercase tracking-[0.06em] ${verdictStyle(d).text}`} data-testid="result-decision">{d ?? 'Pending'}</span>
               {assessment.verdict === 'DO NOT BUILD' && <Reading k="preBuildFire" />}
             </dd>
           </div>

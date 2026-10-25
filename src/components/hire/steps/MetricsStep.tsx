@@ -7,12 +7,11 @@ import { fmtRate, limitError, sampleError, unitOf, valueError } from '../metric-
 import NumberField from '../NumberField';
 import { ChoiceGroup } from '../Question';
 import Reading from '../Reading';
-import { BTN_TEXT, FIELD, HINT, LABEL, PANEL } from '../styles';
+import { BTN_TEXT, FIELD, HINT, LABEL, NOTE, PANEL } from '../styles';
 import { Group, ScoreHidden, Suggestion, YES_NO, type StepProps } from './common';
 
 type Review = NonNullable<HireAnswers['review']>;
 
-const NOTE = 'rounded-lg border border-edge bg-well px-4 py-3 text-sm leading-relaxed text-light-slate';
 
 /** One rate: this period (blank = not measured), the previous period, its sample size and an optional tighter limit. */
 function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch: StepProps['dispatch'] }) {

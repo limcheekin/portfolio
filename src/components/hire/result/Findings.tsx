@@ -4,7 +4,7 @@ import { fireCheckIncomplete } from '../../../lib/hire/assess';
 import { READINGS, type ReadingKey } from '../../../lib/hire/reasons';
 import type { Assessment } from '../../../lib/hire/types';
 import Reading from '../Reading';
-import { points } from '../styles';
+import { points, WELL } from '../styles';
 
 
 const LIST = 'm-0 list-disc space-y-2 pl-5 text-sm leading-relaxed text-light-slate marker:text-slate-text';
@@ -71,7 +71,7 @@ export default function Findings({ assessment: a }: { assessment: Assessment }) 
         <Block title="What it takes to reach HIRE" reading="path" testId="result-path">
           <ol className="m-0 list-none space-y-2 p-0">
             {a.pathToHire.map((p, n) => (
-              <li key={p.key} className="flex flex-col gap-1 rounded-lg border border-edge bg-well px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <li key={p.key} className={`flex flex-col gap-1 ${WELL} px-4 py-3 sm:flex-row sm:items-center sm:justify-between`}>
                 <span className="text-sm text-lightest-slate">
                   <span className="mr-2 font-mono text-xs text-slate-text">{n + 1}.</span>
                   {p.label.charAt(0).toUpperCase() + p.label.slice(1)}, {points(p.gain)}

@@ -4,7 +4,7 @@ import { isNA } from '../../lib/hire/score';
 import { TEXT_CAPS } from '../../lib/hire/validate';
 import type { NA } from '../../lib/hire/types';
 import Reading from './Reading';
-import { ERROR, FIELD, HINT, LABEL, points } from './styles';
+import { ERROR, FIELD, HINT, LABEL, OPTION, OPTION_INPUT, points } from './styles';
 
 export interface Choice<V> {
   value: V;
@@ -28,9 +28,6 @@ export function KeyHint({ n }: { n: number }) {
   );
 }
 
-const OPTION =
-  'flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border border-edge bg-well px-3 py-2.5 text-sm text-light-slate transition-colors duration-250 hover:border-edge-strong has-[:checked]:border-green-accent has-[:checked]:bg-green-tint has-[:checked]:text-lightest-slate';
-const RADIO = 'mt-0.5 size-4 shrink-0 accent-green-accent';
 
 /**
  * One go/no-go or scored question as native radios in a fieldset. `legend` is the question as the checklist
@@ -59,7 +56,7 @@ export function ChoiceGroup<V extends string | number | boolean>({
           <label key={String(c.value)} className={OPTION}>
             <input
               type="radio"
-              className={RADIO}
+              className={OPTION_INPUT}
               name={id}
               value={String(c.value)}
               checked={value === c.value}

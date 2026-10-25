@@ -8,7 +8,7 @@ import Result from './Result';
 import ScoreGauge, { FLOOR } from './ScoreGauge';
 import StopNotice from './StopNotice';
 import { INTRO, PART } from './step-copy';
-import { BTN_PRIMARY, BTN_SECONDARY, PANEL, STEP_TITLE, verdictBorder } from './styles';
+import { BTN_PRIMARY, BTN_SECONDARY, PANEL, STEP_TITLE, verdictStyle } from './styles';
 import { useStepTransition } from './useStepTransition';
 import { ItemQuestion, ScoreHidden, type StepProps } from './steps/common';
 import StartStep from './steps/StartStep';
@@ -75,7 +75,7 @@ function ScreenBody({ id, props }: { id: string; props: StepProps }) {
 /** The end of Focus mode: the gauge comes in here, its needle sweeping once from the floor to the total. */
 function Reveal({ assessment }: { assessment: Assessment }) {
   return (
-    <div className={`${PANEL} ${verdictBorder(assessment.verdict)}`} data-testid="hire-reveal">
+    <div className={`${PANEL} ${verdictStyle(assessment.verdict).border}`} data-testid="hire-reveal">
       <ScoreGauge
         total={assessment.scores.total}
         verdict={assessment.verdict}

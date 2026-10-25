@@ -5,7 +5,7 @@ import { useMatchMedia } from '../../lib/use-match-media';
 import { THRESHOLDS } from '../../lib/hire/checklist';
 import { SCORE_FLOOR } from '../../lib/hire/score';
 import type { Verdict } from '../../lib/hire/types';
-import { points } from './styles';
+import { points, verdictStyle } from './styles';
 
 export const FLOOR = SCORE_FLOOR;
 const CEIL = THRESHOLDS.ceiling;
@@ -86,11 +86,6 @@ export default function ScoreGauge({ total, verdict, label, className = '', from
     { dependencies: [deg], revertOnUpdate: true },
   );
 
-  const tone =
-    verdict === 'HIRE' ? 'stroke-green-accent fill-green-accent'
-      : verdict === 'TRAIN' ? 'stroke-amber fill-amber'
-        : verdict ? 'stroke-danger fill-danger' : 'stroke-lightest-slate fill-lightest-slate';
-
   return (
     <svg ref={svg} viewBox="0 0 200 112" role="img" aria-label={label} className={className} data-testid="hire-gauge" data-total={total}>
       {BANDS.map((b) => (
@@ -102,7 +97,7 @@ export default function ScoreGauge({ total, verdict, label, className = '', from
       })}
       <text x={CX - R} y={CY + 11} textAnchor="middle" className="fill-slate-text font-mono text-[9px]">{points(FLOOR)}</text>
       <text x={CX + R} y={CY + 11} textAnchor="middle" className="fill-slate-text font-mono text-[9px]">{CEIL}</text>
-      <g ref={needle} className={tone}>
+      <g ref={needle} className={verdictStyle(verdict).gauge}>
         <line x1={CX} y1={CY} x2={CX} y2={CY - R + 14} strokeWidth={2.5} strokeLinecap="round" />
         <circle cx={CX} cy={CY} r={5} />
       </g>

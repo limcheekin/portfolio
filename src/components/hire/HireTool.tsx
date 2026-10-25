@@ -18,7 +18,7 @@ import Result from './Result';
 import FocusMode from './FocusMode';
 import StopNotice from './StopNotice';
 import { INTRO, PART } from './step-copy';
-import { BTN_PRIMARY, BTN_SECONDARY, BTN_TEXT, PANEL, STEP_TITLE } from './styles';
+import { BTN_PRIMARY, BTN_SECONDARY, BTN_TEXT, PANEL, STEP_TITLE, WELL } from './styles';
 import { useStepTransition } from './useStepTransition';
 
 const STEPS: Record<string, ComponentType<StepProps>> = {
@@ -194,7 +194,7 @@ export default function HireTool() {
       )}
 
       <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
-        <div role="group" aria-label="Mode" className="inline-flex shrink-0 self-start rounded-lg border border-edge bg-well p-1">
+        <div role="group" aria-label="Mode" className={`inline-flex shrink-0 self-start ${WELL} p-1`}>
           {MODES.map((m) => (
             <button
               key={m.id}

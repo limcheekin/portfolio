@@ -3,13 +3,10 @@ import { THRESHOLDS, type FlowStep } from '../../lib/hire/checklist';
 import { SECTION_RANGE } from '../../lib/hire/score';
 import type { Assessment } from '../../lib/hire/types';
 import ScoreGauge from './ScoreGauge';
-import { points, verdictBorder, verdictText } from './styles';
+import { signed, verdictStyle } from './styles';
 
 const CEIL = THRESHOLDS.ceiling;
 const PART_LABEL: Record<number, string> = { 1: 'Part 1 · Should this exist?', 2: 'Live review', 3: 'Part 2 · How ready is it?' };
-
-/** "−12" with a true minus sign; positive totals print bare. */
-export const signed = (n: number) => (n < 0 ? points(n) : String(n));
 
 export function gaugeLabel(a: Assessment): string {
   return `Score ${signed(a.scores.total)} of ${CEIL}, ${a.verdict ?? 'pending'}`;
@@ -26,7 +23,7 @@ interface RailProps {
 function VerdictLine({ assessment, className = '' }: { assessment: Assessment; className?: string }) {
   const v = assessment.verdict;
   return (
-    <p role="status" aria-live="polite" className={`font-mono text-sm font-semibold uppercase tracking-[0.08em] ${verdictText(v)} ${className}`} data-testid="hire-verdict">
+    <p role="status" aria-live="polite" className={`font-mono text-sm font-semibold uppercase tracking-[0.08em] ${verdictStyle(v).text} ${className}`} data-testid="hire-verdict">
       <span className="sr-only">Verdict: </span>
       {v ?? 'Pending'}
     </p>
@@ -44,7 +41,7 @@ export default function Rail({ steps, current, done, assessment, onGo }: RailPro
   let lastPart = 0;
   return (
     <aside className="sticky top-28 space-y-6 self-start" aria-label="Score and steps">
-      <div className={`rounded-xl border bg-card p-4 ${verdictBorder(assessment.verdict)}`} data-testid="hire-rail-score">
+      <div className={`rounded-xl border bg-card p-4 ${verdictStyle(assessment.verdict).border}`} data-testid="hire-rail-score">
         <ScoreGauge total={s.total} verdict={assessment.verdict} label={gaugeLabel(assessment)} className="mx-auto block w-full max-w-[13rem]" />
         <p className="mt-1 text-center text-lightest-slate" aria-hidden="true">
           <span className="text-3xl font-semibold tabular-nums" data-testid="hire-total">{signed(s.total)}</span>
@@ -106,7 +103,7 @@ export function ScoreBar({ steps, current, assessment, onGo, className = '' }: O
   const id = useId();
   const v = assessment.verdict;
   return (
-    <div className={`sticky bottom-0 z-20 mt-8 flex items-center justify-between gap-3 rounded-t-xl border border-b-0 bg-graphite px-4 py-2 ${verdictBorder(v)} ${className}`} data-testid="hire-score-bar">
+    <div className={`sticky bottom-0 z-20 mt-8 flex items-center justify-between gap-3 rounded-t-xl border border-b-0 bg-graphite px-4 py-2 ${verdictStyle(v).border} ${className}`} data-testid="hire-score-bar">
       <div className="min-w-0 leading-tight">
         <span className="text-xl font-semibold tabular-nums text-lightest-slate" role="img" aria-label={gaugeLabel(assessment)}>
           <span aria-hidden="true">{signed(assessment.scores.total)}</span>

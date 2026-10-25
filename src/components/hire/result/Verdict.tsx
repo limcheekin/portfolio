@@ -1,17 +1,10 @@
 import { SECTION_NAMES as NAMES, THRESHOLDS } from '../../../lib/hire/checklist';
 import { fireCheckIncomplete } from '../../../lib/hire/assess';
 import { SECTION_RANGE } from '../../../lib/hire/score';
-import type { Assessment, Verdict as V } from '../../../lib/hire/types';
-import { signed } from '../Rail';
-import { HINT, PANEL, verdictBorder, verdictText } from '../styles';
+import type { Assessment } from '../../../lib/hire/types';
+import { HINT, PANEL, signed, verdictStyle } from '../styles';
 
 
-const PILL_TINT: Record<V, string> = {
-  HIRE: 'bg-green-tint',
-  TRAIN: 'bg-amber/10',
-  'DO NOT BUILD': 'bg-danger/10',
-  FIRE: 'bg-danger/10',
-};
 
 /** A section's score on a bar from its floor to its ceiling, with a zero line when the floor is negative. */
 function SectionBar({ k, value, complete }: { k: 'h' | 'i' | 'e'; value: number; complete: boolean }) {
@@ -47,14 +40,15 @@ function SectionBar({ k, value, complete }: { k: 'h' | 'i' | 'e'; value: number;
 export default function Verdict({ assessment: a, isLive }: { assessment: Assessment; isLive: boolean }) {
   const s = a.scores;
   const v = a.verdict;
+  const style = verdictStyle(v);
   const incomplete = a.live?.unmeasured.length ? fireCheckIncomplete(a.live.unmeasured) : null;
   const open = (['h', 'i', 'e'] as const).filter((k) => !s.complete[k]).map((k) => NAMES[k]);
   return (
-    <div className={`${PANEL} ${verdictBorder(v)}`}>
+    <div className={`${PANEL} ${style.border}`}>
       <p className="font-mono text-xs uppercase tracking-[0.12em] text-slate-text">{isLive ? 'Should we keep it?' : 'Should we build it?'}</p>
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
         <p
-          className={`inline-flex rounded-full border px-4 py-1.5 font-mono text-xl font-semibold uppercase tracking-[0.06em] ${verdictText(v)} ${verdictBorder(v)} ${v ? PILL_TINT[v] : ''}`}
+          className={`inline-flex rounded-full border px-4 py-1.5 font-mono text-xl font-semibold uppercase tracking-[0.06em] ${style.text} ${style.border} ${style.tint}`}
           data-testid="hire-result-verdict"
         >
           {v ?? 'Pending'}

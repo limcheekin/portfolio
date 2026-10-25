@@ -4,7 +4,7 @@ import { traitCount, traitsNote } from '../../../lib/hire/score';
 import { TEXT_CAPS } from '../../../lib/hire/validate';
 import { ChoiceGroup, KeyHint } from '../Question';
 import Reading from '../Reading';
-import { FIELD, HINT, LABEL } from '../styles';
+import { FIELD, HINT, LABEL, OPTION, OPTION_INPUT } from '../styles';
 import { Group, set, type StepProps } from './common';
 
 // The comparison table, with the row and column wording of the framework's case-study template.
@@ -52,13 +52,10 @@ export function Traits({ answers, dispatch }: StepProps) {
       <legend className="mb-3 text-base text-lightest-slate"><strong className="font-semibold">{R_QUESTIONS.traits}</strong></legend>
       <div className="grid gap-2">
         {R_TRAITS.map((t, n) => (
-          <label
-            key={t.key}
-            className="flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border border-edge bg-well px-3 py-2.5 text-sm text-light-slate transition-colors duration-250 hover:border-edge-strong has-[:checked]:border-green-accent has-[:checked]:bg-green-tint has-[:checked]:text-lightest-slate"
-          >
+          <label key={t.key} className={OPTION}>
             <input
               type="checkbox"
-              className="mt-0.5 size-4 shrink-0 accent-green-accent"
+              className={OPTION_INPUT}
               checked={r.traits[t.key]}
               onChange={(e) => dispatch({ type: 'set', path: `r.traits.${t.key}`, value: e.target.checked })}
             />
