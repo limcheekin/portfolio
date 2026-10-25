@@ -37,3 +37,16 @@ test('readings listed', () => {
   assert.ok(r.readings.some((t) => t.includes('Not applicable')));
   assert.deepEqual(r.naItems, [{ key: 'tenant', reason: 'single-tenant internal tool', score: 5 }]);
 });
+
+test('live stop: FIRE wording, no DO NOT BUILD, liveStop reading', () => {
+  const r = assess({ ...liveFraud({}), e: { ...fraud.e, worstCase: 'catastrophic' } });
+  assert.equal(r.verdict, 'FIRE');
+  assert.ok(!JSON.stringify([r.reasons, r.stop, r.meaning]).includes('DO NOT BUILD'));
+  assert.ok(r.readings.some((t) => t.includes('Part 1 stop')));
+});
+test('watch items add the watch reading', () => {
+  const r = assess(liveFraud({ irr: 50, ucr: 20, ppr: 1.1, diy: 3, rlr: 0 }));
+  assert.equal(r.verdict, 'TRAIN');
+  assert.ok(r.live!.watch.length > 0);
+  assert.ok(r.readings.some((t) => t.includes('watch items')));
+});

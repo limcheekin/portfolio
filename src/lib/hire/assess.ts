@@ -23,7 +23,8 @@ export function assess(a: HireAnswers): Assessment {
   const live = a.isLive;
   const mode = live ? 'live' : 'pre-build';
   const scores = sectionScores(a);
-  const stop = firstStop(a);
+  const rawStop = firstStop(a);
+  const stop = rawStop && live ? { ...rawStop, message: rawStop.message.replace('DO NOT BUILD', 'FIRE') } : rawStop;
   const flags = redFlags(a);
   const reading = live ? readLive(a.review ?? BLANK_REVIEW, a.assessmentDate) : null;
   const na = naItems(a);
@@ -59,6 +60,8 @@ export function assess(a: HireAnswers): Assessment {
   if (a.i.figures?.buildCost !== undefined) readings.push(READINGS.roiHorizon);
   if (!live && verdict === 'DO NOT BUILD') readings.push(READINGS.preBuildFire);
   if (live) {
+    if (stop) readings.push(READINGS.liveStop);
+    if (reading!.watch.length) readings.push(READINGS.watch);
     if (!stop && verdict === 'FIRE' && scores.total <= 30 && incomplete.length === 0) readings.push(READINGS.liveLowScore);
     const rv = a.review ?? BLANK_REVIEW;
     const mt = rv.metrics;

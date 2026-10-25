@@ -18,6 +18,8 @@ export const READINGS = {
   rlrBand: "RLR between 0% and 1% shows Warning on its meter (the metrics guide's band) but any red line is FIRE (the checklist's zero tolerance).",
   pairs: "Metric pair readings use this tool's thresholds.",
   sampleSize: "Sample size is display-only: it never changes the verdict.",
+  liveStop: "A live agent that fails a Part 1 stop gets FIRE with the alternatives: this tool's reading, since every pre-build DO NOT BUILD outcome maps to FIRE once the agent exists.",
+  watch: "Warning rates and Critical rates that do not fire are watch items: they never change the verdict.",
   path: "The path to HIRE ranks controllable levers (guardrails and boundaries, readiness, time savings and ROI) ahead of intrinsic properties of the problem; each step is a proposed change, so re-score once it is built and verified.",
 } as const;
 
@@ -88,7 +90,7 @@ export function buildReasons(
   stop?: { message: string } | null,
 ): string[] {
   const out: string[] = [];
-  if (stop) out.push(`Stopped at a gate: ${stop.message}`);
+  if (stop) out.push(`Stopped at a gate: ${live ? stop.message.replace('DO NOT BUILD', 'FIRE') : stop.message}`);
   else {
     const gates = [a.part1.canStateBusinessProblem, a.part1.canDefineJobAndKpis, a.r.ruleBased === null ? null : !a.r.ruleBased, a.r.informational === null ? null : !a.r.informational];
     if (gates.every((g) => g === true) && a.e.worstCase !== null) out.push('All gates passed: the problem and job are defined, an agent is the right kind of tool and the worst case is not catastrophic.');
