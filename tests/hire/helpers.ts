@@ -1,4 +1,4 @@
-import type { HireAnswers } from '../../src/lib/hire/types.ts';
+import type { HireAnswers, MetricInput, MetricKey } from '../../src/lib/hire/types.ts';
 
 export function blankAnswers(): HireAnswers {
   return {
@@ -48,3 +48,20 @@ export const fraud: HireAnswers = {
   i: { frequency: 5, timeSavings: 3, roi: 5, strategicValue: 2 },
   e: { worstCase: 'moderate', hitl: 5, security: 5, rollback: 5, audit: 5, tenant: 5, access: -10, fallback: 5 },
 };
+
+export function m(
+  v: Partial<Record<'ucr' | 'ppr' | 'diy' | 'irr' | 'rlr' | 'prevIrr' | 'prevPpr', number>>,
+  opts: { launch?: string; limits?: Partial<Record<MetricKey, number>> } = {},
+): NonNullable<HireAnswers['review']> {
+  const mk = (k: MetricKey, previous?: number): MetricInput => ({
+    value: v[k] ?? null,
+    ...(previous !== undefined ? { previous } : {}),
+    ...(opts.limits?.[k] !== undefined ? { limit: opts.limits[k] } : {}),
+  });
+  return {
+    launchDate: opts.launch ?? '2026-01-01',
+    metrics: { ucr: mk('ucr'), ppr: mk('ppr', v.prevPpr), diy: mk('diy'), irr: mk('irr', v.prevIrr), rlr: mk('rlr') },
+    maintenanceExceedsValue: null,
+    betterSolution: null,
+  };
+}
