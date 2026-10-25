@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
-import { FLOW, I_ITEMS } from '../../lib/hire/checklist';
+import { FLOW, I_ITEMS, type ChecklistItem } from '../../lib/hire/checklist';
 import type { Assessment, HireAnswers } from '../../lib/hire/types';
 import { currentScreen, focusKey, focusScreens, STOP_SCREEN, type FocusScreen } from './focus';
 import { KeyHints } from './Question';
 import { gaugeLabel } from './Rail';
-import Result from './Result';
+import Result, { type ReportLink } from './Result';
 import ScoreGauge, { FLOOR } from './ScoreGauge';
 import StopNotice from './StopNotice';
-import { INTRO, PART } from './step-copy';
-import { BTN_PRIMARY, BTN_SECONDARY, PANEL, STEP_TITLE, verdictStyle } from './styles';
+import { StepHeader, StepNav, useMoveFocus } from './StepShell';
+import { PANEL, verdictStyle } from './styles';
 import { useStepTransition } from './useStepTransition';
 import { ItemQuestion, ScoreHidden, type StepProps } from './steps/common';
 import StartStep from './steps/StartStep';
@@ -22,21 +22,19 @@ import { E_GROUPS } from './steps/GuardrailsStep';
 
 const GROUP_HEAD = 'font-mono text-xs uppercase tracking-[0.12em] text-green-accent';
 
-/** The group a scored item sits in, with the checklist's note for E's groups. */
-function itemGroup(section: string, key: string): { title: string; intro?: ReactNode } | null {
-  const groups = section === 'h' ? H_GROUPS : section === 'e' ? E_GROUPS : [];
-  const g = groups.find((x) => x.items.some((it) => it.key === key));
-  return g ? { title: g.title, intro: 'intro' in g ? (g.intro as ReactNode) : undefined } : null;
-}
+/** The screens that ask one scored item on its own, by screen id, with the group (and E's note) it sits in. */
+const ITEM_SCREENS: Record<string, { section: 'h' | 'i' | 'e'; item: ChecklistItem; group?: { title: string; intro?: ReactNode } }> = {};
+for (const g of H_GROUPS) for (const item of g.items) ITEM_SCREENS[`h.${item.key}`] = { section: 'h', item, group: { title: g.title } };
+for (const g of E_GROUPS) for (const item of g.items) ITEM_SCREENS[`e.${item.key}`] = { section: 'e', item, group: g };
+// Time savings and ROI carry their figures, so they have screens of their own below.
+for (const item of I_ITEMS) if (item.key === 'frequency' || item.key === 'strategicValue') ITEM_SCREENS[`i.${item.key}`] = { section: 'i', item };
 
 /** The body of one screen, built from the same step parts Guided mode uses. */
 function ScreenBody({ id, props }: { id: string; props: StepProps }) {
   const { answers, dispatch } = props;
-  const [section, key] = id.split('.');
-  if (section === 'h' || section === 'e' || (section === 'i' && (key === 'frequency' || key === 'strategicValue'))) {
-    const list = section === 'i' ? I_ITEMS : [...H_GROUPS, ...E_GROUPS].flatMap((g) => g.items);
-    const item = list.find((x) => x.key === key)!;
-    const group = itemGroup(section, key);
+  const scored = ITEM_SCREENS[id];
+  if (scored) {
+    const { section, item, group } = scored;
     return (
       <div className="space-y-6">
         {group && (
@@ -98,10 +96,11 @@ const onScreen = (el: Element) => {
  * continues once the screen is answered, Backspace goes back; all three are off while a typing field has focus.
  * The score stays out of sight (no gauge, no running verdict, no live region) until the result's reveal.
  */
-export default function FocusMode({ answers, dispatch, assessment, screenId, stepId, onMove, toolRoot }: {
+export default function FocusMode({ answers, dispatch, assessment, report, screenId, stepId, onMove, toolRoot }: {
   answers: HireAnswers;
   dispatch: StepProps['dispatch'];
   assessment: Assessment;
+  report: ReportLink;
   screenId: string;
   stepId: string;
   onMove: (screenId: string, stepId: string) => void;
@@ -119,11 +118,12 @@ export default function FocusMode({ answers, dispatch, assessment, screenId, ste
   const section = useRef<HTMLElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
-  const navigated = useRef(false);
   useStepTransition(section, screen.id);
+  // After a move the user made, the heading takes focus, so the keys keep working and a reader hears it.
+  const markMove = useMoveFocus(screen.id, heading, toolRoot);
 
   const move = (s: FocusScreen) => {
-    navigated.current = true;
+    markMove();
     setStatus('');
     onMove(s.id, s.step);
   };
@@ -131,15 +131,6 @@ export default function FocusMode({ answers, dispatch, assessment, screenId, ste
     const s = screens.find((x) => x.step === stepTo);
     if (s) move(s);
   };
-
-  // After a move the user made: focus the screen's heading, so the keys keep working and a reader hears it.
-  useEffect(() => {
-    if (!navigated.current) return;
-    navigated.current = false;
-    heading.current?.focus({ preventScroll: true });
-    const el = toolRoot.current;
-    if (el && el.getBoundingClientRect().top < 0) el.scrollIntoView({ block: 'start' });
-  }, [screen.id, toolRoot]);
 
   // The key handler reads the latest render through this ref, so the listener is added once.
   const latest = useRef({ screen, prev, next, done, answers, move });
@@ -198,21 +189,13 @@ export default function FocusMode({ answers, dispatch, assessment, screenId, ste
   return (
     <KeyHints.Provider value>
       <section ref={section} aria-labelledby="hire-step-title" className="min-w-0 max-w-2xl" data-step={step.id} data-screen={screen.id}>
-        <p className="mb-2 font-mono text-xs text-green-accent">
-          {`Question ${index + 1} of ${screens.length}`}
-          {PART[step.part] && <span className="text-slate-text">{` · ${PART[step.part]}`}</span>}
-        </p>
-        <h3 id="hire-step-title" ref={heading} tabIndex={-1} className={`${STEP_TITLE} focus:outline-none`}>
-          {step.letter !== '·' && <span className="mr-2 font-mono text-green-accent">{step.letter}</span>}
-          {step.title}
-        </h3>
-        <p className="mb-10 mt-2 text-sm leading-relaxed text-slate-text">{INTRO[step.id]}</p>
+        <StepHeader kicker={`Question ${index + 1} of ${screens.length}`} step={step} headingRef={heading} />
 
         <div ref={body}>
           {screen.id === 'result' ? (
             <div className="space-y-8">
               <Reveal assessment={assessment} />
-              <Result {...props} />
+              <Result {...props} report={report} />
             </div>
           ) : (
             <ScoreHidden.Provider value>
@@ -229,19 +212,15 @@ export default function FocusMode({ answers, dispatch, assessment, screenId, ste
 
         <p role="status" className="mt-6 min-h-5 font-mono text-xs text-light-slate" data-testid="hire-focus-status">{status}</p>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-edge pt-6">
-          {prev ? (
-            <button type="button" className={BTN_SECONDARY} onClick={() => move(prev)} data-testid="hire-back">
-              <span aria-hidden="true">←&nbsp;</span>Back
-            </button>
-          ) : <span />}
-          {next && (
-            <button type="button" className={done ? BTN_PRIMARY : BTN_SECONDARY} onClick={() => move(next)} data-testid="hire-next">
-              {next.id === 'result' ? (done ? 'See the result' : 'Skip to the result') : done ? 'Continue' : 'Skip'}
-              <span aria-hidden="true">&nbsp;→</span>
-            </button>
-          )}
-        </div>
+        <StepNav
+          className="mt-6"
+          onBack={prev && (() => move(prev))}
+          next={next && {
+            label: next.id === 'result' ? (done ? 'See the result' : 'Skip to the result') : done ? 'Continue' : 'Skip',
+            primary: done,
+            onClick: () => move(next),
+          }}
+        />
       </section>
     </KeyHints.Provider>
   );

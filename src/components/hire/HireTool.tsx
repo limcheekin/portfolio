@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { assess } from '../../lib/hire/assess';
 import { FLOW, type FlowStep } from '../../lib/hire/checklist';
-import { decodeAnswers, encodeAnswers } from '../../lib/hire/link';
+import { decodeAnswers, encodeAnswers, REPORT_BASE } from '../../lib/hire/link';
 import type { Assessment, HireAnswers } from '../../lib/hire/types';
 import Rail, { ScoreBar } from './Rail';
 import { blankHireAnswers, scoringAnswers, useHireState } from './useHireState';
@@ -14,12 +14,14 @@ import ReadinessStep from './steps/ReadinessStep';
 import ImpactStep from './steps/ImpactStep';
 import GuardrailsStep from './steps/GuardrailsStep';
 import MetricsStep from './steps/MetricsStep';
-import Result from './Result';
-import FocusMode from './FocusMode';
+import Result, { type ReportLink } from './Result';
 import StopNotice from './StopNotice';
-import { INTRO, PART } from './step-copy';
-import { BTN_PRIMARY, BTN_SECONDARY, BTN_TEXT, PANEL, STEP_TITLE, WELL } from './styles';
+import { StepHeader, StepNav, useMoveFocus } from './StepShell';
+import { BTN_TEXT, PANEL, WELL } from './styles';
 import { useStepTransition } from './useStepTransition';
+
+// Focus mode loads when first chosen: the server renders Guided, and most visits never switch.
+const FocusMode = lazy(() => import('./FocusMode'));
 
 const STEPS: Record<string, ComponentType<StepProps>> = {
   start: StartStep,
@@ -30,7 +32,6 @@ const STEPS: Record<string, ComponentType<StepProps>> = {
   human: ReadinessStep,
   impact: ImpactStep,
   exposure: GuardrailsStep,
-  result: Result,
 };
 
 /** Which step a stop belongs to, so its notice shows where the stopping answer was given. */
@@ -57,7 +58,9 @@ function openingStep(a: HireAnswers): string {
   return visibleSteps(a).find((s) => s.id in done && !done[s.id])?.id ?? 'start';
 }
 
-const isFresh = (a: HireAnswers) => JSON.stringify(a) === JSON.stringify({ ...blankHireAnswers(), assessmentDate: a.assessmentDate });
+// Fresh = nothing answered yet, whatever the date. The blank is serialised once.
+const BLANK_JSON = JSON.stringify({ ...blankHireAnswers(), assessmentDate: '' });
+const isFresh = (a: HireAnswers) => JSON.stringify({ ...a, assessmentDate: '' }) === BLANK_JSON;
 
 type Mode = 'guided' | 'focus';
 const MODES: Array<{ id: Mode; label: string }> = [{ id: 'guided', label: 'Guided' }, { id: 'focus', label: 'Focus' }];
@@ -77,23 +80,26 @@ export default function HireTool() {
   const scored = useMemo(() => scoringAnswers(answers), [answers]);
   const assessment = useMemo(() => assess(scored), [scored]);
   const steps = visibleSteps(answers);
-  const [stepId, setStepId] = useState('start');
-  const [screenId, setScreenId] = useState('start'); // Focus mode's screen; it maps to and from stepId
+  // Where the user is: a Guided step (a FLOW id) and Focus mode's screen within it, which maps to and from the step.
+  const [at, setAt] = useState({ step: 'start', screen: 'start' });
   const [mode, setMode] = useState<Mode>('guided');
-  const index = Math.max(0, steps.findIndex((s) => s.id === stepId));
+  const index = Math.max(0, steps.findIndex((s) => s.id === at.step));
   const step = steps[index];
   const [link, setLink] = useState<'reading' | 'ready' | 'bad'>('reading');
+  const [code, setCode] = useState(''); // the answers' #a= code, written 300 ms after the last change
 
   const root = useRef<HTMLDivElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const guided = useRef<HTMLElement>(null);
-  const navigated = useRef(false);
   const writes = useRef(0);
   const lastCode = useRef(''); // the #a= code last read or written, so our own link is never reloaded
+  const report = useMemo<ReportLink>(() => ({ scored, url: code ? `${REPORT_BASE}#a=${code}` : '' }), [scored, code]);
 
+  const toStep = (id: string) => setAt((p) => ({ ...p, step: id }));
+  const markMove = useMoveFocus(step.id, heading, root);
   const go = (id: string) => {
-    navigated.current = true;
-    setStepId(id);
+    markMove();
+    toStep(id);
   };
 
   // The viewer's last mode, read after hydration (the server renders Guided). Storage may be unavailable.
@@ -128,11 +134,11 @@ export default function HireTool() {
       if (res.ok) {
         lastCode.current = m[1];
         dispatch({ type: 'load', answers: res.answers });
-        if (first) setStepId(openingStep(res.answers));
+        if (first) toStep(openingStep(res.answers));
         setLink('ready');
       } else {
         dispatch({ type: 'reset' });
-        if (first) setStepId('start');
+        if (first) toStep('start');
         setLink('bad');
       }
     };
@@ -145,33 +151,26 @@ export default function HireTool() {
     };
   }, [dispatch]);
 
-  // Keep the link in step with the answers, 300 ms after the last change. A fresh assessment has no link.
+  // Encode the answers once, 300 ms after the last change: the result's report link shows the code and the page URL
+  // carries it. A fresh assessment keeps its code for the report link but leaves the page URL without one.
   useEffect(() => {
     if (link === 'reading') return;
     const n = ++writes.current;
     const t = window.setTimeout(async () => {
+      const next = await encodeAnswers(scored);
+      if (n !== writes.current) return;
+      setCode(next);
       const { pathname, search, hash } = window.location;
       if (isFresh(scored)) {
         lastCode.current = '';
         if (hash) history.replaceState(history.state, '', pathname + search);
         return;
       }
-      const code = await encodeAnswers(scored);
-      if (n !== writes.current) return;
-      lastCode.current = code;
-      history.replaceState(history.state, '', `${pathname}${search}#a=${code}`);
+      lastCode.current = next;
+      history.replaceState(history.state, '', `${pathname}${search}#a=${next}`);
     }, 300);
     return () => window.clearTimeout(t);
   }, [scored, link]);
-
-  // After a step change the user made: focus the new step's heading and bring the tool's top into view.
-  useEffect(() => {
-    if (!navigated.current) return;
-    navigated.current = false;
-    heading.current?.focus({ preventScroll: true });
-    const el = root.current;
-    if (el && el.getBoundingClientRect().top < 0) el.scrollIntoView({ block: 'start' });
-  }, [step.id]);
 
   const Body = STEPS[step.id];
   const next = steps[index + 1];
@@ -212,18 +211,19 @@ export default function HireTool() {
       </div>
 
       {mode === 'focus' ? (
-        <FocusMode
-          answers={answers}
-          dispatch={dispatch}
-          assessment={assessment}
-          screenId={screenId}
-          stepId={step.id}
-          onMove={(sc, st) => {
-            setScreenId(sc);
-            setStepId(st);
-          }}
-          toolRoot={root}
-        />
+        // The fallback holds the space while the Focus chunk loads (once per visit).
+        <Suspense fallback={<div className="min-h-[60vh]" />}>
+          <FocusMode
+            answers={answers}
+            dispatch={dispatch}
+            assessment={assessment}
+            report={report}
+            screenId={at.screen}
+            stepId={step.id}
+            onMove={(screen, st) => setAt({ screen, step: st })}
+            toolRoot={root}
+          />
+        </Suspense>
       ) : (
         <>
           <div className="md:grid md:grid-cols-[12.5rem_minmax(0,1fr)] md:gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
@@ -232,17 +232,9 @@ export default function HireTool() {
             </div>
 
             <section ref={guided} aria-labelledby="hire-step-title" className="min-w-0" data-step={step.id}>
-              <p className="mb-2 font-mono text-xs text-green-accent">
-                {`Step ${index + 1} of ${steps.length}`}
-                {PART[step.part] && <span className="text-slate-text">{` · ${PART[step.part]}`}</span>}
-              </p>
-              <h3 id="hire-step-title" ref={heading} tabIndex={-1} className={`${STEP_TITLE} focus:outline-none`}>
-                {step.letter !== '·' && <span className="mr-2 font-mono text-green-accent">{step.letter}</span>}
-                {step.title}
-              </h3>
-              <p className="mb-10 mt-2 text-sm leading-relaxed text-slate-text">{INTRO[step.id]}</p>
+              <StepHeader kicker={`Step ${index + 1} of ${steps.length}`} step={step} headingRef={heading} />
 
-              <Body {...props} />
+              {step.id === 'result' ? <Result {...props} report={report} /> : <Body {...props} />}
 
               {stopHere && (
                 <div className="mt-10">
@@ -254,19 +246,11 @@ export default function HireTool() {
                 </div>
               )}
 
-              <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-edge pt-6">
-                {prev ? (
-                  <button type="button" className={BTN_SECONDARY} onClick={() => go(prev.id)} data-testid="hire-back">
-                    <span aria-hidden="true">←&nbsp;</span>Back
-                  </button>
-                ) : <span />}
-                {next && (
-                  <button type="button" className={BTN_PRIMARY} onClick={() => go(next.id)} data-testid="hire-next">
-                    {next.id === 'result' ? 'See the result' : `Continue: ${next.title}`}
-                    <span aria-hidden="true">&nbsp;→</span>
-                  </button>
-                )}
-              </div>
+              <StepNav
+                className="mt-12"
+                onBack={prev && (() => go(prev.id))}
+                next={next && { label: next.id === 'result' ? 'See the result' : `Continue: ${next.title}`, primary: true, onClick: () => go(next.id) }}
+              />
             </section>
           </div>
 

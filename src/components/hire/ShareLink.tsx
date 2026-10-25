@@ -1,23 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { LONG_LINK, reportUrl } from '../../lib/hire/link';
-import type { HireAnswers } from '../../lib/hire/types';
+import { LONG_LINK } from '../../lib/hire/link';
 import { BTN_SECONDARY, FIELD, HINT, LABEL } from './styles';
 
 /**
- * The report link: answers compressed into the `#a=` fragment, which browsers never send to a server. The copy
- * button uses the Clipboard API and falls back to selecting the text so the user can copy it by hand.
+ * The report link: answers compressed into the `#a=` fragment (encoded by HireTool), which browsers never send to a
+ * server. The copy button uses the Clipboard API and falls back to selecting the text so the user can copy it by hand.
  */
-export default function ShareLink({ answers }: { answers: HireAnswers }) {
+export default function ShareLink({ url }: { url: string }) {
   const id = useId();
-  const [url, setUrl] = useState('');
   const [said, setSaid] = useState('');
   const field = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    let alive = true;
-    reportUrl(answers).then((u) => { if (alive) setUrl(u); }, () => { if (alive) setUrl(''); });
-    return () => { alive = false; };
-  }, [answers]);
 
   useEffect(() => {
     if (!said) return;
