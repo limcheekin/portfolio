@@ -1,11 +1,12 @@
-import { useId, useState, type ReactNode } from 'react';
+import { useId } from 'react';
 import { I_ITEMS } from '../../../lib/hire/checklist';
 import { roi, timeSaved } from '../../../lib/hire/helpers';
 import type { HireAnswers, NA } from '../../../lib/hire/types';
+import NumberField from '../NumberField';
 import Question from '../Question';
 import Reading from '../Reading';
-import { BTN_SECONDARY, ERROR, FIELD, HINT, LABEL } from '../styles';
-import { Group, set, type StepProps } from './common';
+import { FIELD, HINT, LABEL } from '../styles';
+import { Group, set, Suggestion, type StepProps } from './common';
 
 type Figures = NonNullable<HireAnswers['i']['figures']>;
 type FigureKey = 'current' | 'expected' | 'buildCost' | 'annualMaintenanceCost' | 'expectedAnnualSavings';
@@ -13,69 +14,6 @@ type FigureKey = 'current' | 'expected' | 'buildCost' | 'annualMaintenanceCost' 
 const item = (key: string) => I_ITEMS.find((x) => x.key === key)!;
 const optionLabel = (key: string, v: number) => item(key).options.find((o) => o.value === v)?.label ?? String(v);
 const fmt = (n: number, digits = 1) => n.toLocaleString('en-US', { maximumFractionDigits: digits });
-
-const parse = (s: string): number | undefined => {
-  if (s.trim() === '') return undefined;
-  const n = Number(s);
-  return Number.isFinite(n) && n >= 0 ? n : undefined;
-};
-
-/**
- * A number field that keeps what the user types (so "1." or "-" can be on the way to a number) and stores only a
- * finite value of 0 or more; anything else is left out of the answers and flagged.
- */
-function NumberField({ label, value, onChange, suffix }: {
-  label: ReactNode;
-  value: number | undefined;
-  onChange: (v: number | undefined) => void;
-  suffix?: string;
-}) {
-  const id = useId();
-  const [text, setText] = useState(value === undefined ? '' : String(value));
-  const [prev, setPrev] = useState(value);
-  if (value !== prev) {
-    // Changed from outside (a loaded link or the example): show it, unless the text already says the same.
-    setPrev(value);
-    if (parse(text) !== value) setText(value === undefined ? '' : String(value));
-  }
-  const invalid = text.trim() !== '' && parse(text) === undefined;
-  return (
-    <div className="min-w-0">
-      <label htmlFor={id} className={LABEL}>{label}</label>
-      <div className="flex items-center gap-2">
-        <input
-          id={id}
-          type="text"
-          inputMode="decimal"
-          className={FIELD}
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            const n = parse(e.target.value);
-            setPrev(n);
-            onChange(n);
-          }}
-          aria-invalid={invalid}
-          aria-describedby={invalid ? `${id}-err` : undefined}
-          autoComplete="off"
-        />
-        {suffix && <span className="shrink-0 font-mono text-xs text-slate-text">{suffix}</span>}
-      </div>
-      {invalid && <p id={`${id}-err`} className={ERROR}>Enter a number of 0 or more.</p>}
-    </div>
-  );
-}
-
-function Suggestion({ children, onUse, applied, testId }: { children: ReactNode; onUse: () => void; applied: boolean; testId: string }) {
-  return (
-    <div className="flex flex-col gap-3 rounded-lg border border-edge bg-well p-4 sm:flex-row sm:items-center sm:justify-between" data-testid={testId}>
-      <div className="min-w-0 text-sm leading-relaxed text-light-slate">{children}</div>
-      <button type="button" className={`${BTN_SECONDARY} shrink-0`} onClick={onUse} disabled={applied}>
-        {applied ? 'Suggestion in use' : 'Use suggestion'}
-      </button>
-    </div>
-  );
-}
 
 /** Part 2, I · Impact & Intent: frequency, time savings and ROI (with their helpers), strategic value. */
 export default function ImpactStep({ answers, dispatch }: StepProps) {

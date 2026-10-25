@@ -13,7 +13,8 @@ import WorstCaseStep from './steps/WorstCaseStep';
 import ReadinessStep from './steps/ReadinessStep';
 import ImpactStep from './steps/ImpactStep';
 import GuardrailsStep from './steps/GuardrailsStep';
-import { MetricsInterim, ResultInterim } from './steps/Interim';
+import MetricsStep from './steps/MetricsStep';
+import Result from './Result';
 import { BTN_PRIMARY, BTN_SECONDARY, BTN_TEXT, PANEL, STEP_TITLE } from './styles';
 
 const STEPS: Record<string, ComponentType<StepProps>> = {
@@ -21,11 +22,11 @@ const STEPS: Record<string, ComponentType<StepProps>> = {
   job: JobStep,
   tool: RightToolStep,
   worst: WorstCaseStep,
-  metrics: MetricsInterim,
+  metrics: MetricsStep,
   human: ReadinessStep,
   impact: ImpactStep,
   exposure: GuardrailsStep,
-  result: ResultInterim,
+  result: Result,
 };
 
 const INTRO: Record<string, string> = {
