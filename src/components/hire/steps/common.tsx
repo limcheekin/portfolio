@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { createContext, type ReactNode } from 'react';
 import type { ChecklistItem } from '../../../lib/hire/checklist';
 import type { Assessment, HireAnswers, NA } from '../../../lib/hire/types';
 import type { Dispatch } from '../useHireState';
@@ -16,6 +16,12 @@ export interface StepProps {
   /** Move to another step by FLOW id (optional: a mode may not offer jumps). */
   go?: (id: string) => void;
 }
+
+/**
+ * True in Focus mode before the result: steps leave out anything that tells the verdict (a met FIRE criterion,
+ * say), so the score keeps for the reveal. The rules themselves (what counts as FIRE) still show.
+ */
+export const ScoreHidden = createContext(false);
 
 export const set = (dispatch: Dispatch, path: string) => (value: unknown) => dispatch({ type: 'set', path, value });
 

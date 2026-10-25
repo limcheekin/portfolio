@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useContext, useId } from 'react';
 import { METRIC_DEFS } from '../../../lib/hire/checklist';
 import { monthsBetween } from '../../../lib/hire/live';
 import type { HireAnswers, MetricKey } from '../../../lib/hire/types';
@@ -9,7 +9,7 @@ import NumberField from '../NumberField';
 import { ChoiceGroup } from '../Question';
 import Reading from '../Reading';
 import { BTN_TEXT, FIELD, HINT, LABEL, PANEL } from '../styles';
-import { Group, Suggestion, YES_NO, type StepProps } from './common';
+import { Group, ScoreHidden, Suggestion, YES_NO, type StepProps } from './common';
 
 type Review = NonNullable<HireAnswers['review']>;
 
@@ -25,6 +25,7 @@ function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch:
   const unit = unitOf(k);
   const measured = m.value !== null && m.value !== undefined;
   const sampleNoun = def.denominator.split(' (')[0];
+  const hidden = useContext(ScoreHidden);
 
   return (
     <fieldset className={`${PANEL} min-w-0 space-y-5`} data-testid={`metric-${k}`} aria-describedby={`${id}-denom`}>
@@ -65,7 +66,8 @@ function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch:
           reports 0.0% because nothing labels corrections. Check that corrections are recorded before you rely on it.
         </p>
       )}
-      {k === 'rlr' && m.value != null && m.value > 0 && m.value <= 1 && (
+      {/* Shown only once a red line is entered, this note would give the verdict away in Focus mode. */}
+      {k === 'rlr' && !hidden && m.value != null && m.value > 0 && m.value <= 1 && (
         <p className={NOTE} data-testid="hint-rlr-band">
           RLR is in the metrics guide's Warning band, but the checklist treats any red line as FIRE.{' '}
           <Reading k="rlrBand" />
@@ -101,6 +103,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
   const costly = f?.annualMaintenanceCost !== undefined && f?.expectedAnnualSavings !== undefined && f.annualMaintenanceCost > f.expectedAnnualSavings;
   const cur = f?.currency ? `${f.currency} ` : '';
   const money = (n: number) => `${cur}${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  const hidden = useContext(ScoreHidden);
 
   return (
     <div className="space-y-12">
@@ -175,7 +178,11 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
         />
       </Group>
 
-      {live && (
+      {/* Focus mode keeps the FIRE summary for the result; only what is not measured shows, and nothing is announced. */}
+      {live && hidden && live.unmeasured.length > 0 && (
+        <p className="font-mono text-xs text-slate-text" data-testid="metric-unmeasured">Not measured: {live.unmeasured.map((k) => SHORT[k]).join(', ')}</p>
+      )}
+      {live && !hidden && (
         <div className={`${PANEL} ${live.fire.length ? 'border-danger/50' : ''}`} data-testid="metric-fire-summary" aria-live="polite">
           {live.fire.length ? (
             <>

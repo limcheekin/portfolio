@@ -10,7 +10,7 @@ import StopNotice from './StopNotice';
 import { INTRO, PART } from './step-copy';
 import { BTN_PRIMARY, BTN_SECONDARY, PANEL, STEP_TITLE, verdictBorder } from './styles';
 import { useStepTransition } from './useStepTransition';
-import { ItemQuestion, type StepProps } from './steps/common';
+import { ItemQuestion, ScoreHidden, type StepProps } from './steps/common';
 import StartStep from './steps/StartStep';
 import { IntentCheck, JobExercise } from './steps/JobStep';
 import { CompareTable, InformationalQuestion, RuleBasedQuestion, Traits } from './steps/RightToolStep';
@@ -215,7 +215,9 @@ export default function FocusMode({ answers, dispatch, assessment, screenId, ste
               <Result {...props} />
             </div>
           ) : (
-            <ScreenBody id={screen.id} props={props} />
+            <ScoreHidden.Provider value>
+              <ScreenBody id={screen.id} props={props} />
+            </ScoreHidden.Provider>
           )}
         </div>
 
