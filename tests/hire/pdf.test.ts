@@ -14,23 +14,27 @@ const font = (w: number) => {
 };
 const deps: PdfDeps = { PDFLib, fontkit, regular: font(400), bold: font(700) };
 
+// One fraud build, shared by the tests that need it (each build embeds and subsets two fonts, ~2 s).
+const fraudPdf = buildReportPdf(deps, FRAUD_CASE, assess(FRAUD_CASE)).then((b) => PDFLib.PDFDocument.load(b));
+
 test('fraud report: A4, cover + why + detail pages, titled', async () => {
-  const bytes = await buildReportPdf(deps, FRAUD_CASE, assess(FRAUD_CASE));
-  const doc = await PDFLib.PDFDocument.load(bytes);
+  const doc = await fraudPdf;
   assert.ok(doc.getPageCount() >= 3);
   assert.deepEqual(doc.getPage(0).getSize(), { width: 595.28, height: 841.89 });
   assert.equal(doc.getTitle(), 'HIRE check: Fraud Support Agent');
   assert.equal(doc.getAuthor(), 'kin.rag.wtf/hire');
 });
 
-test('every verdict and a stop render', async () => {
-  for (const a of [hireFixture, lowScore, stopped, liveFire]) await buildReportPdf(deps, a, assess(a));
-});
-
-test('a pending verdict renders', async () => {
-  const a = { ...FRAUD_CASE, i: { ...FRAUD_CASE.i, roi: null } };
-  assert.equal(assess(a).verdict, null);
-  await buildReportPdf(deps, a, assess(a));
+test('every verdict, a stop, and a pending verdict with negative E and an N/A item render', async () => {
+  // Pending (ROI unanswered), with hitl and rollback at -5 (E is -10) and tenant marked not applicable.
+  const pending = {
+    ...FRAUD_CASE,
+    i: { ...FRAUD_CASE.i, roi: null },
+    e: { ...FRAUD_CASE.e, hitl: -5 as const, rollback: -5 as const, tenant: { na: 'single tenant' } },
+  };
+  assert.equal(assess(pending).verdict, null);
+  assert.equal(assess(pending).scores.e, -10);
+  for (const a of [hireFixture, lowScore, stopped, liveFire, pending]) await buildReportPdf(deps, a, assess(a));
 });
 
 test('long text with emoji, symbols and no spaces paginates without throwing', async () => {
@@ -41,9 +45,8 @@ test('long text with emoji, symbols and no spaces paginates without throwing', a
     part1: { ...FRAUD_CASE.part1, businessProblem: long, job: { title: long.slice(0, 80), responsibilities: long, boundaries: `${long}\n${long}` } },
     doc: { rationale: long, nextSteps: long, reviewDate: '2027-01-01', signOff: { productManager: 'Ana 😀' } },
   };
-  const small = await PDFLib.PDFDocument.load(await buildReportPdf(deps, FRAUD_CASE, assess(FRAUD_CASE)));
   const big = await PDFLib.PDFDocument.load(await buildReportPdf(deps, a, assess(a)));
-  assert.ok(big.getPageCount() >= small.getPageCount());
+  assert.ok(big.getPageCount() >= (await fraudPdf).getPageCount());
 });
 
 test('dial clamps', () => {
@@ -60,9 +63,4 @@ test('report file name', () => {
 
 test('no raw colours in the module', () => {
   assert.doesNotMatch(readFileSync('src/lib/hire/pdf.ts', 'utf8'), /#[0-9a-f]{6}|rgb\(\s*\d/i);
-});
-
-test('negative section scores and N/A items render', async () => {
-  const a = { ...FRAUD_CASE, e: { ...FRAUD_CASE.e, hitl: -5 as const, rollback: -5 as const, tenant: { na: 'single tenant' } } };
-  await buildReportPdf(deps, a, assess(a));
 });
