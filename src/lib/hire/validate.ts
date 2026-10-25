@@ -1,5 +1,5 @@
 import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_KEYS, R_TRAITS, SIGN_OFF_ROLES, WORST_CASE_OPTIONS } from './checklist.ts';
-import { RATE_RANGE } from './live.ts';
+import { LIMIT_RULE, limitAllowed, RATE_RANGE } from './live.ts';
 import { firstStop } from './score.ts';
 import type { HireAnswers, MetricInput, MetricKey, SignOffRole } from './types.ts';
 
@@ -267,7 +267,14 @@ function readReview(x: unknown, bad: Bad): NonNullable<HireAnswers['review']> {
     if (mi.limit !== undefined) {
       if (k === 'rlr') bad(`${p}.limit: not allowed on RLR`);
       else if (mi.limit === null) m.limit = null;
-      else { const v = rate(mi.limit, `${p}.limit`); if (v !== undefined) m.limit = v; }
+      else {
+        // The same rule the UI enforces: a custom limit may only tighten Critical, never loosen it.
+        const v = rate(mi.limit, `${p}.limit`);
+        if (v !== undefined && v !== null) {
+          if (limitAllowed(k, v)) m.limit = v;
+          else bad(`${p}.limit: must be ${LIMIT_RULE[k]} (never looser than Critical)`);
+        }
+      }
     }
     metrics[k] = m;
   }

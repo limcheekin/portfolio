@@ -79,6 +79,14 @@ export function limitAllowed(key: LimitKey, n: number): boolean {
   }
 }
 
+/** The allowed custom limits in words (validator issues and the UI's field errors). */
+export const LIMIT_RULE: Record<LimitKey, string> = {
+  ucr: `above 0% and at most ${CRITICAL.ucr}%`,
+  ppr: `from 1.0 to ${CRITICAL.ppr.toFixed(1)} turns`,
+  diy: `above 0% and at most ${CRITICAL.diy}%`,
+  irr: `at least ${CRITICAL.irr}% and below 100%`,
+};
+
 /** The limit that applies: a custom one when it is allowed, else Critical. */
 function threshold(key: LimitKey, limit: number | null | undefined): number {
   return limit != null && Number.isFinite(limit) && limitAllowed(key, limit) ? limit : CRITICAL[key];

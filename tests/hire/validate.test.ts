@@ -84,3 +84,18 @@ test('an unstopped incomplete one is not, and issues are capped', () => {
   assert.ok(issues.length >= 1 && issues.length <= 20);
   bad({ ...FRAUD_CASE, h: { ...FRAUD_CASE.h, trust: null } }, { requireComplete: true });
 });
+
+test('custom FIRE limits: the validator applies the UI rule (tighten, never loosen)', () => {
+  const v = (k: string, limit: number) => validateAnswers({ ...liveFire, review: { ...liveFire.review, metrics: { ...liveFire.review!.metrics, [k]: { value: null, limit } } } });
+  const ok = (k: string, limit: number) => assert.equal(v(k, limit).ok, true, `${k} limit ${limit}`);
+  const no = (k: string, limit: number) => { const r = v(k, limit); assert.equal(r.ok, false, `${k} limit ${limit}`); return r.ok ? '' : r.issues[0]; };
+  ok('ucr', 30); no('ucr', 30.1); no('ucr', 0);
+  ok('ppr', 1.0); ok('ppr', 2.0); no('ppr', 2.01);
+  ok('diy', 15); no('diy', 15.5);
+  ok('irr', 40); ok('irr', 99); no('irr', 100); no('irr', 39);
+  for (const n of [0, 0.5, 1, 50]) no('rlr', n);
+  assert.equal(no('ucr', 50), 'review.metrics.ucr.limit: must be above 0% and at most 30% (never looser than Critical)');
+  assert.equal(no('irr', 100), 'review.metrics.irr.limit: must be at least 40% and below 100% (never looser than Critical)');
+  // An allowed limit is kept.
+  assert.equal((v('ucr', 20) as any).answers.review.metrics.ucr.limit, 20);
+});

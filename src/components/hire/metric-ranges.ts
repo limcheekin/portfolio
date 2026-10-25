@@ -3,7 +3,7 @@
 // limit looser than Critical.
 import { METRIC_KEYS, METRIC_SHORT } from '../../lib/hire/checklist';
 import { fmtNum } from '../../lib/hire/helpers';
-import { BAND_EDGES, CRITICAL, limitAllowed, RATE_RANGE, type Band, type LimitKey } from '../../lib/hire/live';
+import { BAND_EDGES, LIMIT_RULE, limitAllowed, RATE_RANGE, type Band, type LimitKey } from '../../lib/hire/live';
 import type { MetricKey } from '../../lib/hire/types';
 
 /** A rate (this period or the previous one): percentages 0–100, PPR 1.0 turns or more. */
@@ -12,13 +12,6 @@ export function valueError(k: MetricKey, n: number): string | null {
   if (k === 'ppr') return n >= min ? null : 'PPR counts turns: enter 1.0 or more.';
   return n >= min && n <= max ? null : `${METRIC_SHORT[k]} is a percentage: enter 0 to 100.`;
 }
-
-const LIMIT_RULE: Record<LimitKey, string> = {
-  ucr: `above 0% and at most ${CRITICAL.ucr}%`,
-  ppr: `from 1.0 to ${CRITICAL.ppr.toFixed(1)} turns`,
-  diy: `above 0% and at most ${CRITICAL.diy}%`,
-  irr: `at least ${CRITICAL.irr}% and below 100%`,
-};
 
 /** A tighter FIRE limit, never looser than Critical (the spec's ranges). RLR takes none. */
 export function limitError(k: LimitKey, n: number): string | null {
