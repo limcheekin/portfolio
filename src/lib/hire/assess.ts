@@ -1,7 +1,7 @@
 import type { Assessment, HireAnswers, MetricKey, Verdict } from './types.ts';
 import { ALTERNATIVES, CHECKLIST_SOURCE, METRIC_SHORT, THRESHOLDS } from './checklist.ts';
 import { band, firstStop, naItems, redFlags, sectionScores, stopVerdict, traitsNote } from './score.ts';
-import { blankReview, readLive } from './live.ts';
+import { blankReview, diyHeldBack, readLive } from './live.ts';
 import { buildReasons, pathToHire, READINGS } from './reasons.ts';
 
 const MEANING: Record<Verdict, string> = {
@@ -68,7 +68,7 @@ export function assess(a: HireAnswers): Assessment {
     if (reading!.watch.length) readingKeys.push('watch');
     if (!stop && verdict === 'FIRE' && scores.total <= THRESHOLDS.doNotBuildMax && incomplete.length === 0) readingKeys.push('liveLowScore');
     const mt = review!.metrics;
-    if (reading!.bands.diy === 'Critical' || (mt.diy.value != null && reading!.fire.every((f) => f.key !== 'diy') && reading!.watch.some((w) => w.startsWith('DIY')))) readingKeys.push('diyMonths');
+    if (diyHeldBack(review!, a.assessmentDate)) readingKeys.push('diyMonths');
     if (mt.ppr.value != null && reading!.bands.ppr === 'Critical') readingKeys.push('pprTrend');
     if (mt.rlr.value != null && mt.rlr.value > 0 && mt.rlr.value <= 1) readingKeys.push('rlrBand');
     if (reading!.pairs.length) readingKeys.push('pairs');

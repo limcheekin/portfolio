@@ -66,3 +66,23 @@ test('live: a met FIRE criterion gives FIRE at once, with sections still open', 
   // A blank live review (every rate unmeasured) never fires on its own.
   assert.equal(assess({ ...blankAnswers(), isLive: true }).verdict, null);
 });
+
+test('diyMonths reading only when the months rule withheld a FIRE', () => {
+  const keys = (a: ReturnType<typeof liveFraud>) => assess(a).readingKeys;
+  const calm = { irr: 70, ucr: 5, ppr: 1.1, rlr: 0 };
+  assert.ok(!keys(liveFraud({ ...calm, diy: 10 })).includes('diyMonths')); // plain Warning DIY
+  const recent = { ...liveFraud({ ...calm, diy: 20 }), assessmentDate: '2026-02-15' }; // 1 month live
+  assert.ok(keys(recent).includes('diyMonths'));
+  assert.equal(assess(recent).verdict, 'TRAIN');
+  const fired = liveFraud({ ...calm, diy: 20 }); // 9 months live
+  assert.equal(assess(fired).verdict, 'FIRE');
+  assert.ok(!keys(fired).includes('diyMonths'));
+});
+test('no launch date: a Critical DIY warns with the launch date unknown', () => {
+  const a = liveFraud({ irr: 70, ucr: 5, ppr: 1.1, rlr: 0, diy: 20 });
+  const r = assess({ ...a, review: { ...a.review!, launchDate: null } });
+  assert.equal(r.verdict, 'TRAIN');
+  assert.ok(r.live!.watch.includes('DIY 20% is Critical but the launch date is unknown, so a warning only'));
+  assert.ok(!r.live!.watch.some((w) => w.includes('under 3 months')));
+  assert.ok(r.readingKeys.includes('diyMonths'));
+});
