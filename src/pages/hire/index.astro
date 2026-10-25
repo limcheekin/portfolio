@@ -6,6 +6,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import Link from '../../components/Link.astro';
 import ChecklistText from '../../components/hire/ChecklistText.astro';
 import HireTool from '../../components/hire/HireTool';
+import HireWebMCP from '../../components/hire/HireWebMCP';
 import { ENGINEER_NAME, SITE_URL } from '../../data/site';
 import { PAGE_MAIN } from '../../lib/layout';
 import { MEASURE, PAGE_TITLE } from '../../lib/text-styles';
@@ -46,6 +47,7 @@ const jsonLd = [
     <section aria-labelledby="hire-tool" class="mb-20">
       <h2 id="hire-tool" class="sr-only">The check</h2>
       <HireTool client:load />
+      <HireWebMCP client:idle manifestUrl="/.well-known/mcp-hire.json" />
       <noscript><p class={`text-slate-text ${MEASURE}`}>{HIRE_NOSCRIPT}</p></noscript>
     </section>
 
