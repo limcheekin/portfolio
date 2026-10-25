@@ -28,7 +28,7 @@ Unit tests: `npm test` (node:test via tsx) for the HIRE scoring module. There is
 - Astro 5, `@astrojs/react` (React islands), `@astrojs/tailwind` (Tailwind 3, config in `tailwind.config.mjs`), `@astrojs/sitemap`. `trailingSlash: 'always'`. Dark only.
 - Motion: `gsap` (ScrollTrigger, SplitText), `@gsap/react`, `lenis`.
 - `src/pages/` — `index`, `about`, `contact` (+ `contact/thanks`, the no-JS form confirmation), `projects/` (index + `[slug]`), `insights/` (index + `[slug]`), `404`, `rss.xml.ts`.
-- `src/layouts/BaseLayout.astro` — head/meta/JSON-LD, Header, Footer, `<SmoothScroll client:load />` (home page only, via the `smoothScroll` prop; inner pages scroll natively and ship no GSAP), `WebMCPTools`.
+- `src/layouts/BaseLayout.astro` — head/meta/JSON-LD, Header, Footer, `<SmoothScroll client:load />` (home page only, via the `smoothScroll` prop; inner pages scroll natively and ship no GSAP, except `/hire/`, whose tool uses it for its score gauge and step transitions), `WebMCPTools`.
 - `src/components/` — shared `.astro` pieces (Header, Footer, Button, `Link` (every link that may open a new tab: target, rel and the screen-reader hint, derived from the URL or `newTab`; Button renders its anchors through it), Breadcrumb (also emits the page's BreadcrumbList JSON-LD), ContactForm, ExperienceTimeline, `ProjectCard` for `/projects/`, `ArticleRow` for Latest Writing and `/insights/`, `Img` for content images), `MobileMenu.tsx` (drawer is `inert` while closed; while open, `#main-content` and the footer are `inert`), `WebMCPTools.tsx`.
 - Inner pages (About, Projects, a project, Writing, an article, Contact) share `PAGE_MAIN` (`src/lib/layout.ts`), `PAGE_TITLE`, `CHIP`, `MEASURE` (reading measure for prose and leads) and `TAP_LINK` (44px tap area for small text links) (`src/lib/text-styles.ts`) and the `Breadcrumb` component, and use the same card, chip and rail language as the home page. The skip link lives in `BaseLayout`.
 - Fonts: body text is Inter Variable, self-hosted from `@fontsource-variable/inter` (imported in `BaseLayout`, which also preloads the latin file). The hero h1 uses the `font-display` (system-ui) stack.
@@ -91,7 +91,7 @@ Translated from the redesign guide (Next.js) to Astro. Binary rules; follow them
 - Explicit `width`/`height` on every `<img>`; render content images through `Img.astro`.
 - Any loop that runs alongside reading content needs a pause control (the hero console has one, outside its `aria-hidden` region) and holds while hovered.
 - CSS transitions on moving chrome (header, mobile drawer, hamburger bars) carry `motion-reduce:transition-none`.
-- No effect that makes the page crowded: one idea per section, no side rails.
+- No effect that makes the page crowded: one idea per section, no side rails. The one exception is the `/hire/` tool's score rail (Guided mode).
 
 ## Content rules
 

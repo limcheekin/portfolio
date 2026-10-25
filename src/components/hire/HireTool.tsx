@@ -15,7 +15,11 @@ import ImpactStep from './steps/ImpactStep';
 import GuardrailsStep from './steps/GuardrailsStep';
 import MetricsStep from './steps/MetricsStep';
 import Result from './Result';
+import FocusMode from './FocusMode';
+import StopNotice from './StopNotice';
+import { INTRO, PART } from './step-copy';
 import { BTN_PRIMARY, BTN_SECONDARY, BTN_TEXT, PANEL, STEP_TITLE } from './styles';
+import { useStepTransition } from './useStepTransition';
 
 const STEPS: Record<string, ComponentType<StepProps>> = {
   start: StartStep,
@@ -28,20 +32,6 @@ const STEPS: Record<string, ComponentType<StepProps>> = {
   exposure: GuardrailsStep,
   result: Result,
 };
-
-const INTRO: Record<string, string> = {
-  start: 'Name the agent and say whether it is already live. Your answers stay in this page and its link.',
-  job: 'Go/no-go: if you cannot state the problem or define the job, stop here.',
-  tool: 'Classify the task against the job you just wrote: rules, a chatbot or an agent.',
-  worst: 'Go/no-go: a catastrophic worst case stops the assessment. The other cases carry into the E score.',
-  metrics: 'What the agent has done since launch.',
-  human: 'Will people trust and use it, and are the data and the plumbing ready? Each item scores 1 to 3.',
-  impact: 'How often, how much time, what return, and what else it is worth.',
-  exposure: 'What stops a mistake from doing damage.',
-  result: 'The verdict, with the score from every answered item.',
-};
-
-const PART: Record<number, string> = { 1: 'Part 1 · Should this exist?', 2: 'Live review', 3: 'Part 2 · How ready is it?' };
 
 /** Which step a stop belongs to, so its notice shows where the stopping answer was given. */
 const STOP_STEP = { problem: 'job', job: 'job', ruleBased: 'tool', informational: 'tool', catastrophic: 'worst' } as const;
@@ -69,35 +59,34 @@ function openingStep(a: HireAnswers): string {
 
 const isFresh = (a: HireAnswers) => JSON.stringify(a) === JSON.stringify({ ...blankHireAnswers(), assessmentDate: a.assessmentDate });
 
-function StopNotice({ assessment, onResult, onContinue }: { assessment: Assessment; onResult: () => void; onContinue?: () => void }) {
-  return (
-    <div className={`${PANEL} border-danger/50`} data-testid="hire-stop">
-      <p className="font-mono text-lg font-semibold uppercase tracking-[0.06em] text-danger">{assessment.verdict}</p>
-      <p className="mt-2 text-lightest-slate">{assessment.stop!.message}</p>
-      <p className="mt-1 text-sm text-slate-text">{assessment.meaning}</p>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <button type="button" className={BTN_PRIMARY} onClick={onResult} data-testid="hire-stop-result">See the result</button>
-        {onContinue && (
-          <button type="button" className={BTN_SECONDARY} onClick={onContinue} data-testid="hire-stop-finish">Finish the rest for the record</button>
-        )}
-      </div>
-    </div>
-  );
-}
+type Mode = 'guided' | 'focus';
+const MODES: Array<{ id: Mode; label: string }> = [{ id: 'guided', label: 'Guided' }, { id: 'focus', label: 'Focus' }];
+const MODE_KEY = 'hire-mode'; // this viewer's last mode: a convenience only, never part of the #a= link
 
-// Guided is the only mode so far; Focus mode (Task 12) renders the same steps one question at a time.
+const MODE_NOTE: Record<Mode, string> = {
+  guided: 'A few questions per screen, with the score and verdict as you go.',
+  focus: 'One question per screen; the score waits for the end. Keys: 1–9 pick, Enter continues, Backspace goes back (all off while you type in a field).',
+};
+
+/**
+ * The HIRE check: one set of answers in two modes. Guided shows a step per screen with the live score in a rail;
+ * Focus (`FocusMode`) shows one question per screen and keeps the score for a reveal at the end.
+ */
 export default function HireTool() {
   const [answers, dispatch] = useHireState();
   const scored = useMemo(() => scoringAnswers(answers), [answers]);
   const assessment = useMemo(() => assess(scored), [scored]);
   const steps = visibleSteps(answers);
   const [stepId, setStepId] = useState('start');
+  const [screenId, setScreenId] = useState('start'); // Focus mode's screen; it maps to and from stepId
+  const [mode, setMode] = useState<Mode>('guided');
   const index = Math.max(0, steps.findIndex((s) => s.id === stepId));
   const step = steps[index];
   const [link, setLink] = useState<'reading' | 'ready' | 'bad'>('reading');
 
   const root = useRef<HTMLDivElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const guided = useRef<HTMLElement>(null);
   const navigated = useRef(false);
   const writes = useRef(0);
   const lastCode = useRef(''); // the #a= code last read or written, so our own link is never reloaded
@@ -106,6 +95,21 @@ export default function HireTool() {
     navigated.current = true;
     setStepId(id);
   };
+
+  // The viewer's last mode, read after hydration (the server renders Guided). Storage may be unavailable.
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem(MODE_KEY) === 'focus') setMode('focus');
+    } catch { /* private window or blocked storage: stay Guided */ }
+  }, []);
+  const switchMode = (m: Mode) => {
+    setMode(m);
+    try {
+      window.localStorage.setItem(MODE_KEY, m);
+    } catch { /* not remembered; the switch still works */ }
+  };
+
+  useStepTransition(guided, mode === 'guided' ? step.id : '');
 
   // Read #a= on load, and again when the user changes the hash by hand (pastes another link, or goes Back to one).
   // A link that fails to decode loads nothing. Only the first read picks the step; a later one keeps the user's.
@@ -189,51 +193,86 @@ export default function HireTool() {
         </div>
       )}
 
-      <div className="md:grid md:grid-cols-[12.5rem_minmax(0,1fr)] md:gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
-        <div className="hidden md:block">
-          <Rail steps={steps} current={step.id} done={done} assessment={assessment} onGo={go} />
+      <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+        <div role="group" aria-label="Mode" className="inline-flex shrink-0 self-start rounded-lg border border-edge bg-well p-1">
+          {MODES.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              aria-pressed={mode === m.id}
+              onClick={() => switchMode(m.id)}
+              className={`min-h-11 rounded-md px-4 text-sm transition-colors duration-250 ${mode === m.id ? 'bg-light-graphite font-semibold text-lightest-slate' : 'text-light-slate hover:text-lightest-slate'}`}
+              data-testid={`hire-mode-${m.id}`}
+            >
+              {m.label}
+            </button>
+          ))}
         </div>
-
-        <section aria-labelledby="hire-step-title" className="min-w-0" data-step={step.id}>
-          <p className="mb-2 font-mono text-xs text-green-accent">
-            {`Step ${index + 1} of ${steps.length}`}
-            {PART[step.part] && <span className="text-slate-text">{` · ${PART[step.part]}`}</span>}
-          </p>
-          <h3 id="hire-step-title" ref={heading} tabIndex={-1} className={`${STEP_TITLE} focus:outline-none`}>
-            {step.letter !== '·' && <span className="mr-2 font-mono text-green-accent">{step.letter}</span>}
-            {step.title}
-          </h3>
-          <p className="mb-10 mt-2 text-sm leading-relaxed text-slate-text">{INTRO[step.id]}</p>
-
-          <Body {...props} />
-
-          {stopHere && (
-            <div className="mt-10">
-              <StopNotice
-                assessment={assessment}
-                onResult={() => go('result')}
-                onContinue={next && next.id !== 'result' ? () => go(next.id) : undefined}
-              />
-            </div>
-          )}
-
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-edge pt-6">
-            {prev ? (
-              <button type="button" className={BTN_SECONDARY} onClick={() => go(prev.id)} data-testid="hire-back">
-                <span aria-hidden="true">←&nbsp;</span>Back
-              </button>
-            ) : <span />}
-            {next && (
-              <button type="button" className={BTN_PRIMARY} onClick={() => go(next.id)} data-testid="hire-next">
-                {next.id === 'result' ? 'See the result' : `Continue: ${next.title}`}
-                <span aria-hidden="true">&nbsp;→</span>
-              </button>
-            )}
-          </div>
-        </section>
+        <p className="text-sm leading-relaxed text-slate-text" data-testid="hire-mode-note">{MODE_NOTE[mode]}</p>
       </div>
 
-      <ScoreBar steps={steps} current={step.id} assessment={assessment} onGo={go} className="md:hidden" />
+      {mode === 'focus' ? (
+        <FocusMode
+          answers={answers}
+          dispatch={dispatch}
+          assessment={assessment}
+          screenId={screenId}
+          stepId={step.id}
+          onMove={(sc, st) => {
+            setScreenId(sc);
+            setStepId(st);
+          }}
+          toolRoot={root}
+        />
+      ) : (
+        <>
+          <div className="md:grid md:grid-cols-[12.5rem_minmax(0,1fr)] md:gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
+            <div className="hidden md:block">
+              <Rail steps={steps} current={step.id} done={done} assessment={assessment} onGo={go} />
+            </div>
+
+            <section ref={guided} aria-labelledby="hire-step-title" className="min-w-0" data-step={step.id}>
+              <p className="mb-2 font-mono text-xs text-green-accent">
+                {`Step ${index + 1} of ${steps.length}`}
+                {PART[step.part] && <span className="text-slate-text">{` · ${PART[step.part]}`}</span>}
+              </p>
+              <h3 id="hire-step-title" ref={heading} tabIndex={-1} className={`${STEP_TITLE} focus:outline-none`}>
+                {step.letter !== '·' && <span className="mr-2 font-mono text-green-accent">{step.letter}</span>}
+                {step.title}
+              </h3>
+              <p className="mb-10 mt-2 text-sm leading-relaxed text-slate-text">{INTRO[step.id]}</p>
+
+              <Body {...props} />
+
+              {stopHere && (
+                <div className="mt-10">
+                  <StopNotice
+                    assessment={assessment}
+                    onResult={() => go('result')}
+                    onContinue={next && next.id !== 'result' ? () => go(next.id) : undefined}
+                  />
+                </div>
+              )}
+
+              <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-edge pt-6">
+                {prev ? (
+                  <button type="button" className={BTN_SECONDARY} onClick={() => go(prev.id)} data-testid="hire-back">
+                    <span aria-hidden="true">←&nbsp;</span>Back
+                  </button>
+                ) : <span />}
+                {next && (
+                  <button type="button" className={BTN_PRIMARY} onClick={() => go(next.id)} data-testid="hire-next">
+                    {next.id === 'result' ? 'See the result' : `Continue: ${next.title}`}
+                    <span aria-hidden="true">&nbsp;→</span>
+                  </button>
+                )}
+              </div>
+            </section>
+          </div>
+
+          <ScoreBar steps={steps} current={step.id} assessment={assessment} onGo={go} className="md:hidden" />
+        </>
+      )}
     </div>
   );
 }

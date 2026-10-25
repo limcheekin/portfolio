@@ -39,14 +39,18 @@ const BANDS = [
 ];
 
 /**
- * The live score dial, −55 to 77 with band ticks at 30 and 50. The needle turns with a GSAP rotation tween;
- * under reduced motion it is set directly. The SVG is an image with a text equivalent (`label`).
+ * The live score dial, −55 to 77 with band ticks at 30 and 50. The needle turns with a GSAP rotation tween
+ * (with `from`, its first run sweeps from there: Focus mode's reveal); under reduced motion it is set directly. The SVG is an image with a text equivalent (`label`).
  */
-export default function ScoreGauge({ total, verdict, label, className = '' }: {
+export default function ScoreGauge({ total, verdict, label, className = '', from, duration = 0.6 }: {
   total: number;
   verdict: Verdict | null;
   label: string;
   className?: string;
+  /** Where the needle starts on its first run (Focus mode's reveal sweeps from the floor); default: no sweep. */
+  from?: number;
+  /** Seconds for the needle's turn (the reveal takes longer than a live update, but stays under 1.5 s). */
+  duration?: number;
 }) {
   const svg = useRef<SVGSVGElement>(null);
   const needle = useRef<SVGGElement>(null);
@@ -62,12 +66,12 @@ export default function ScoreGauge({ total, verdict, label, className = '' }: {
       mm.add(MQ.motion, () => {
         gsap.fromTo(
           n,
-          { rotation: shown.current ?? deg, svgOrigin: ORIGIN },
+          { rotation: shown.current ?? (from === undefined ? deg : needleAngle(from)), svgOrigin: ORIGIN },
           {
             rotation: deg,
             svgOrigin: ORIGIN,
-            duration: 0.6,
-            ease: 'power3.out',
+            duration: shown.current === null ? duration : 0.6,
+            ease: shown.current === null && from !== undefined ? 'power2.inOut' : 'power3.out',
             onUpdate: () => { shown.current = Number(gsap.getProperty(n, 'rotation')); },
           },
         );

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
-import type { Assessment, HireAnswers } from '../../../lib/hire/types';
+import type { ChecklistItem } from '../../../lib/hire/checklist';
+import type { Assessment, HireAnswers, NA } from '../../../lib/hire/types';
 import type { Dispatch } from '../useHireState';
+import Question from '../Question';
 import { BTN_SECONDARY } from '../styles';
 
 /**
@@ -16,6 +18,23 @@ export interface StepProps {
 }
 
 export const set = (dispatch: Dispatch, path: string) => (value: unknown) => dispatch({ type: 'set', path, value });
+
+/**
+ * One scored checklist item of H, I or E, wired to its answer. E items offer Not applicable and print signed
+ * scores; so does I's ROI, whose options run from −5 to +5.
+ */
+export function ItemQuestion({ section, item, answers, dispatch }: { section: 'h' | 'i' | 'e'; item: ChecklistItem; answers: HireAnswers; dispatch: Dispatch }) {
+  const e = section === 'e';
+  return (
+    <Question
+      item={item}
+      value={(answers[section] as Record<string, number | NA | null | undefined>)[item.key]}
+      onChange={set(dispatch, `${section}.${item.key}`) as (v: number | NA) => void}
+      allowNA={e}
+      signed={e || item.key === 'roi'}
+    />
+  );
+}
 
 export function Group({ title, intro, children }: { title?: string; intro?: ReactNode; children: ReactNode }) {
   return (

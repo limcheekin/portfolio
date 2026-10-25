@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from 'react';
+import { createContext, useContext, useId, type ReactNode } from 'react';
 import type { ChecklistItem } from '../../lib/hire/checklist';
 import { isNA } from '../../lib/hire/score';
 import { TEXT_CAPS } from '../../lib/hire/validate';
@@ -13,6 +13,19 @@ export interface Choice<V> {
   tag?: string;
   /** Extra line under the label, e.g. the checklist's example. */
   sub?: ReactNode;
+}
+
+/** True in Focus mode: options show the number key that picks them. */
+export const KeyHints = createContext(false);
+
+/** The number key for the nth option (1-based), shown only in Focus mode and only for the first nine. */
+export function KeyHint({ n }: { n: number }) {
+  if (!useContext(KeyHints) || n > 9) return null;
+  return (
+    <kbd aria-hidden="true" className="mt-px grid size-5 shrink-0 place-items-center rounded border border-edge font-mono text-[11px] text-slate-text">
+      {n}
+    </kbd>
+  );
 }
 
 const OPTION =
@@ -53,6 +66,7 @@ export function ChoiceGroup<V extends string | number | boolean>({
               onChange={() => onChange(c.value)}
               data-choice={n}
             />
+            <KeyHint n={n + 1} />
             <span className="min-w-0">
               {c.tag !== undefined && <span className="mr-2 font-mono text-xs text-slate-text">{c.tag}</span>}
               {c.label}

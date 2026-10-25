@@ -1,9 +1,8 @@
 import { H_ITEMS } from '../../../lib/hire/checklist';
-import type { NA } from '../../../lib/hire/types';
-import Question from '../Question';
-import { Group, set, type StepProps } from './common';
+import { Group, ItemQuestion, type StepProps } from './common';
 
-const GROUPS = [
+/** H's two groups, as the checklist heads them (Focus mode shows the group over each item). */
+export const H_GROUPS = [
   { title: 'Cultural Readiness', items: H_ITEMS.slice(0, 4) },
   { title: 'Infrastructure Readiness', items: H_ITEMS.slice(4) },
 ];
@@ -12,16 +11,9 @@ const GROUPS = [
 export default function ReadinessStep({ answers, dispatch }: StepProps) {
   return (
     <div className="space-y-12">
-      {GROUPS.map((g) => (
+      {H_GROUPS.map((g) => (
         <Group key={g.title} title={g.title}>
-          {g.items.map((item) => (
-            <Question
-              key={item.key}
-              item={item}
-              value={answers.h[item.key as keyof typeof answers.h]}
-              onChange={set(dispatch, `h.${item.key}`) as (v: number | NA) => void}
-            />
-          ))}
+          {g.items.map((item) => <ItemQuestion key={item.key} section="h" item={item} answers={answers} dispatch={dispatch} />)}
         </Group>
       ))}
     </div>
