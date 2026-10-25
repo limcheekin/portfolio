@@ -171,6 +171,8 @@ export default function McpConsole({ servers, prompts }: { servers: McpServerCar
             <button
               type="button"
               onClick={() => copy(s)}
+              // A stable name: the visible label swaps to "Copied" (announced by the live region below).
+              aria-label="Copy command"
               className="inline-grid min-h-11 items-center rounded text-green-accent transition-colors duration-250 hover:text-white-text focus:outline-none focus-visible:ring-2 focus-visible:ring-green-accent/70"
             >
               <span className={`[grid-area:1/1] ${copied === s.id ? 'invisible' : ''}`}>Copy command</span>
