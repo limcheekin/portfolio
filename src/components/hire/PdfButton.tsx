@@ -5,9 +5,22 @@ import boldUrl from '@fontsource/inter/files/inter-latin-700-normal.woff?url';
 import type { Assessment, HireAnswers } from '../../lib/hire/types';
 import { BTN_PRIMARY, ERROR } from './styles';
 
-async function fontBytes(res: Response): Promise<ArrayBuffer> {
+async function fontBytes(url: string): Promise<ArrayBuffer> {
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`font ${res.status}`);
   return res.arrayBuffer();
+}
+
+// Fetched on the first click and kept for later ones; a failed fetch is retried on the next click.
+let fonts: Promise<[ArrayBuffer, ArrayBuffer]> | null = null;
+function loadFonts(): Promise<[ArrayBuffer, ArrayBuffer]> {
+  if (!fonts) {
+    fonts = Promise.all([fontBytes(regularUrl), fontBytes(boldUrl)]);
+    fonts.catch(() => {
+      fonts = null;
+    });
+  }
+  return fonts;
 }
 
 /**
@@ -24,14 +37,12 @@ export default function PdfButton({ answers, assessment }: { answers: HireAnswer
     setError('');
     setStatus('Building the PDF report');
     try {
-      const [report, PDFLib, fontkitModule, regularRes, boldRes] = await Promise.all([
+      const [report, PDFLib, fontkitModule, [regular, bold]] = await Promise.all([
         import('../../lib/hire/pdf'), // the report layout, so the island doesn't carry it either
         import('pdf-lib'),
         import('@pdf-lib/fontkit'),
-        fetch(regularUrl),
-        fetch(boldUrl),
+        loadFonts(),
       ]);
-      const [regular, bold] = await Promise.all([fontBytes(regularRes), fontBytes(boldRes)]);
       const fontkit = (fontkitModule as { default?: unknown }).default ?? fontkitModule;
       const bytes = await report.buildReportPdf({ PDFLib, fontkit, regular, bold }, answers, assessment);
       const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/pdf' }));
