@@ -165,6 +165,76 @@ export const WORST_CASE_OPTIONS: Array<{ value: string; label: string; example: 
   { value: 'catastrophic', label: 'Catastrophic impact', example: 'life-or-death, legal liability', points: null },
 ];
 
+// E's Risk Assessment question and its STOP line, verbatim (emphasis dropped).
+export const E_WORST_CASE = {
+  question: 'If this agent makes the worst possible mistake, what happens?',
+  stop: 'If you selected "Catastrophic impact," DO NOT BUILD THIS AGENT. For the other cases, implement strict guardrails.',
+} as const;
+
+// The notes under E's Guardrails & Safety and Execution Boundaries, verbatim.
+export const E_NOTES = {
+  guardrails: "Note: if some of the guardrails don't apply to your use case, adjust the score accordingly",
+  boundaries: "Note: if some of the execution boundaries don't apply to your use case, adjust the score accordingly",
+} as const;
+
+// The fill-in lines under I's Time Savings and ROI items, verbatim (the blanks are the checklist's).
+export const I_FIGURES: Partial<Record<string, readonly string[]>> = {
+  timeSavings: [
+    'Current time to resolve: _______ minutes/hours',
+    'Expected time with agent: _______ minutes/hours',
+    'Time saved per process: _______ minutes/hours',
+  ],
+  roi: [
+    'Engineering cost to build: _______',
+    'Ongoing maintenance cost: _______',
+    'Expected annual savings: _______',
+    'Break-even timeline: _______',
+    'ROI: _______',
+  ],
+};
+
+// R's comparison table, verbatim.
+export const R_TABLE = {
+  columns: ['Approach', 'What It Would Do', "Why It's Not Enough"],
+  rows: [
+    { approach: 'Rule', does: 'Explain what automation would do instead of an AI Agent', why: "Why automation doesn't solve this problem" },
+    { approach: 'Chatbot', does: 'Explain what a chatbot would do instead of an AI Agent', why: "Why a chatbot doesn't solve this problem" },
+  ],
+} as const;
+
+export type FireKey = MetricKey | 'maintenance' | 'betterSolution';
+
+// "When we would FIRE this agent", verbatim (emphasis and the guide's link target dropped). Keys match live.ts FireHit.
+export const FIRE_CRITERIA: { heading: string; intro: string; criteria: Array<{ key: FireKey; text: string }> } = {
+  heading: 'When we would FIRE this agent:',
+  intro:
+    "Deprecation criteria. Fire the agent when a metric sits in the Critical band of the AI Agent Metrics Guide — that table holds the numbers, so they can't drift apart from this list. Tighten them for your own risk tolerance if needed. What each one means here:",
+  criteria: [
+    { key: 'ucr', text: "User Correction Rate (UCR) in the critical band: the user is redoing the agent's work" },
+    { key: 'ppr', text: 'Ping Pong Rate (PPR) critical, with IRR falling alongside it' },
+    { key: 'diy', text: 'Do It Yourself Rate (DIY) critical months after launch: users have routed around the agent' },
+    { key: 'rlr', text: 'Red Line Rate (RLR) above 0%: any violation is a compliance event, so this is the one threshold not to relax' },
+    { key: 'irr', text: 'Instant Resolution Rate (IRR) critical: triage is adding a step instead of removing one' },
+    { key: 'maintenance', text: 'Maintenance costs exceed value delivered' },
+    { key: 'betterSolution', text: 'A better solution is available' },
+  ],
+};
+
+// The Documentation block and the sign-off lead-ins, verbatim (emphasis dropped; the blanks are fields).
+export const DOCUMENTATION = {
+  intro: "Once you've completed this checklist, document your decision:",
+  fields: [
+    { key: 'name', label: 'Agent Name' },
+    { key: 'decision', label: 'Decision', note: 'HIRE / TRAIN / FIRE' },
+    { key: 'rationale', label: 'Rationale' },
+    { key: 'nextSteps', label: 'Next Steps' },
+    { key: 'reviewDate', label: 'Review Date', note: '(Revisit this decision in 3-6 months)' },
+  ],
+  signOffHeading: 'Stakeholder Sign-Off',
+  signOffIntro: 'Before proceeding, ensure alignment across teams:',
+  remember: 'Remember: having the courage to FIRE an agent before building it is what makes great product strategy.',
+} as const;
+
 // Part 1 gates of I (Intent check, Job Description Exercise), verbatim.
 export const I_GATES = {
   intent: {

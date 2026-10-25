@@ -1,5 +1,5 @@
 import type { HireAnswers, MetricKey } from './types.ts';
-import { METRIC_DEFS, METRIC_KEYS, METRIC_SHORT } from './checklist.ts';
+import { METRIC_DEFS, METRIC_KEYS, METRIC_SHORT, type FireKey } from './checklist.ts';
 import { fmtNum as fmt } from './helpers.ts';
 
 export type Band = 'Good' | 'Warning' | 'Critical';
@@ -51,7 +51,7 @@ export function monthsBetween(fromISO: string, toISO: string): number {
   return (y2 - y1) * 12 + (m2 - m1) - (d2 < d1 ? 1 : 0);
 }
 
-export interface FireHit { key: MetricKey | 'maintenance' | 'betterSolution'; text: string }
+export interface FireHit { key: FireKey; text: string }
 export interface LiveReading {
   bands: Partial<Record<MetricKey, Band>>;
   fire: FireHit[];

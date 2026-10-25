@@ -243,8 +243,8 @@ check('openapi Project matches generated fields', () => {
 
 // ---------- HIRE check page ----------
 
-check('dist: hire page SSR', () => missing(htmlText(readText('dist/hire/index.html')), ['Should you build that AI agent?', 'Inês Bolaños', 'MIT', 'Trust assessment', 'Catastrophic failure would cause irreversible harm', 'If you checked 3+ boxes above, you likely need an']), { dist: true });
-check('dist: hire Markdown', () => existsSync('dist/hire/index.md') ? missing(readText('dist/hire/index.md'), ['# HIRE check', CHECKLIST_SOURCE.commit]) : ['dist/hire/index.md missing'], { dist: true });
+check('dist: hire page SSR', () => missing(htmlText(readText('dist/hire/index.html')), ['Should you build that AI agent?', 'Inês Bolaños', 'MIT', 'Trust assessment', 'Catastrophic failure would cause irreversible harm', 'If you checked 3+ boxes above, you likely need an', 'triage is adding a step instead of removing one']), { dist: true });
+check('dist: hire Markdown', () => existsSync('dist/hire/index.md') ? missing(readText('dist/hire/index.md'), ['# HIRE check', CHECKLIST_SOURCE.commit, '### When we would FIRE this agent']) : ['dist/hire/index.md missing'], { dist: true });
 check('dist: hire JSON-LD', () => missing(readText('dist/hire/index.html'), ['"@type":"WebApplication"', `"isBasedOn":"${CHECKLIST_SOURCE.repo}"`]), { dist: true });
 
 // ---------- site chrome ----------

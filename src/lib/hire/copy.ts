@@ -1,6 +1,7 @@
 import {
-  ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_GATES, I_ITEMS, RED_FLAGS, R_QUESTIONS, R_TRAITS,
-  SIGN_OFF_ROLES, THRESHOLDS, WORST_CASE_OPTIONS, type ChecklistItem,
+  ALTERNATIVES, CHECKLIST_SOURCE, DOCUMENTATION, E_BOUNDARIES, E_GUARDRAILS, E_NOTES, E_WORST_CASE, FIRE_CRITERIA, H_ITEMS,
+  I_FIGURES, I_GATES, I_ITEMS, RED_FLAGS, R_QUESTIONS, R_TABLE, R_TRAITS, SIGN_OFF_ROLES, THRESHOLDS, WORST_CASE_OPTIONS,
+  type ChecklistItem,
 } from './checklist.ts';
 import { READINGS, UI_READINGS, type ReadingKey } from './reasons.ts';
 
@@ -44,9 +45,11 @@ const item = (i: ChecklistItem): TextEntry => ({
   lines: [
     cap(i.question),
     ...(i.consider ? [`Consider: ${i.consider}`] : []),
+    ...(I_FIGURES[i.key] ?? []),
     `Options: ${i.options.map((o) => `${o.label} (${typeof o.value === 'number' && o.value > 0 ? '+' : ''}${o.value})`).join(' / ')}`,
   ],
 });
+const row = (cells: readonly string[]) => cells.join(' | ');
 
 const flags = (prefix: string) => Object.entries(RED_FLAGS).filter(([k]) => k.startsWith(prefix)).map(([, v]) => v);
 
@@ -68,6 +71,7 @@ export const CHECKLIST_SECTIONS: TextSection[] = [
       { title: R_QUESTIONS.ruleBased.question, lines: [R_QUESTIONS.ruleBased.yes, R_QUESTIONS.ruleBased.no] },
       { title: R_QUESTIONS.informational.question, lines: [R_QUESTIONS.informational.yes, R_QUESTIONS.informational.no] },
       { title: R_QUESTIONS.traits, lines: [...R_TRAITS.map((t) => t.label), R_QUESTIONS.verdict] },
+      { title: row(R_TABLE.columns), lines: R_TABLE.rows.map((r) => row([r.approach, r.does, r.why])) },
       { title: 'Red flags', lines: flags('r') },
     ],
   },
@@ -75,11 +79,16 @@ export const CHECKLIST_SECTIONS: TextSection[] = [
     id: 'e', heading: 'E: Exposure and Execution',
     entries: [
       {
-        title: 'Worst case',
-        lines: WORST_CASE_OPTIONS.map((o) => `${o.label} (${o.example}): ${o.points === null ? 'STOP, do not build' : o.points}`),
+        title: E_WORST_CASE.question,
+        lines: [
+          ...WORST_CASE_OPTIONS.map((o) => `${o.label} (${o.example}): ${o.points === null ? 'STOP, do not build' : o.points}`),
+          E_WORST_CASE.stop,
+        ],
       },
       ...E_GUARDRAILS.map(item),
+      { title: 'Guardrails & Safety', lines: [E_NOTES.guardrails] },
       ...E_BOUNDARIES.map(item),
+      { title: 'Execution Boundaries', lines: [E_NOTES.boundaries] },
       { title: 'Red flags', lines: flags('e') },
     ],
   },
@@ -94,12 +103,26 @@ export const CHECKLIST_SECTIONS: TextSection[] = [
       ],
     }],
   },
+  {
+    id: 'fire', heading: FIRE_CRITERIA.heading.replace(/:$/, ''),
+    entries: [{ title: 'Deprecation criteria', lines: [FIRE_CRITERIA.intro, ...FIRE_CRITERIA.criteria.map((c) => c.text)] }],
+  },
   { id: 'alternatives', heading: 'Alternatives to an agent', entries: ALTERNATIVES.map((a) => ({ title: a.name, lines: [a.description] })) },
   {
     id: 'documentation', heading: 'Documentation and sign-off',
     entries: [
-      { title: 'Decision', lines: ['HIRE / TRAIN / DO NOT BUILD (FIRE for a live agent)'] },
-      { title: 'Sign-off', lines: SIGN_OFF_ROLES.map((r) => r.label) },
+      {
+        title: 'Documentation',
+        lines: [
+          DOCUMENTATION.intro,
+          ...DOCUMENTATION.fields.flatMap((f) => [
+            'note' in f ? `${f.label}: ${f.note}` : f.label,
+            // The tool records a pre-build DO NOT BUILD here as FIRE: say so beside the checklist's wording.
+            ...(f.key === 'decision' ? [`This tool's reading: ${READINGS.preBuildFire}`] : []),
+          ]),
+        ],
+      },
+      { title: DOCUMENTATION.signOffHeading, lines: [DOCUMENTATION.signOffIntro, ...SIGN_OFF_ROLES.map((r) => r.label), DOCUMENTATION.remember] },
     ],
   },
 ];
