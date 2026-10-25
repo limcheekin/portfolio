@@ -7,16 +7,25 @@
  */
 import { assess } from './assess.ts';
 import {
+  ALTERNATIVES,
   CHECKLIST_SOURCE,
+  DOCUMENTATION,
   E_BOUNDARIES,
   E_GUARDRAILS,
+  E_NOTES,
+  E_WORST_CASE,
+  FIRE_CRITERIA,
   FLOW,
   H_ITEMS,
+  I_FIGURES,
+  I_GATES,
   I_ITEMS,
   METRIC_DEFS,
   RED_FLAGS,
   R_QUESTIONS,
+  R_TABLE,
   R_TRAITS,
+  SIGN_OFF_ROLES,
   THRESHOLDS,
   WORST_CASE_OPTIONS,
 } from './checklist.ts';
@@ -40,15 +49,28 @@ export class HireInputError extends Error {
 const CHECKLIST = Object.freeze({
   source: CHECKLIST_SOURCE,
   flow: FLOW,
+  // Part 1: the I gates and E's worst-case STOP (R's two stops are sections.r.questions).
+  gates: { ...I_GATES, worstCase: E_WORST_CASE },
   sections: {
     h: H_ITEMS,
     i: I_ITEMS,
-    r: { questions: R_QUESTIONS, traits: R_TRAITS },
-    e: { worstCase: WORST_CASE_OPTIONS, guardrails: E_GUARDRAILS, boundaries: E_BOUNDARIES },
+    r: { questions: R_QUESTIONS, traits: R_TRAITS, table: R_TABLE },
+    e: { worstCase: WORST_CASE_OPTIONS, guardrails: E_GUARDRAILS, boundaries: E_BOUNDARIES, notes: E_NOTES },
   },
+  figures: I_FIGURES,
   redFlags: RED_FLAGS,
   metrics: METRIC_DEFS,
   thresholds: THRESHOLDS,
+  fire: {
+    ...FIRE_CRITERIA,
+    // The live review's yes/no answers and the criterion each one decides.
+    liveQuestions: [
+      { field: 'review.maintenanceExceedsValue', criterion: 'maintenance' },
+      { field: 'review.betterSolution', criterion: 'betterSolution' },
+    ],
+  },
+  alternatives: ALTERNATIVES,
+  documentation: { ...DOCUMENTATION, signOff: SIGN_OFF_ROLES },
   textCaps: TEXT_CAPS,
   readings: Object.values(READINGS) as string[],
 });

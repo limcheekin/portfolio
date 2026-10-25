@@ -39,6 +39,27 @@ test('get_hire_checklist: 7 H items, 13 red flags, every reading', async () => {
   assert.equal(z.object(HIRE_TOOLS.get_hire_checklist.output).safeParse(r).success, true);
 });
 
+test('get_hire_checklist: Part 1 gates, FIRE criteria, live yes/no questions, documentation', async () => {
+  const r: any = await runHireTool('get_hire_checklist', {});
+  assert.equal(r.gates.intent.label, 'Need vs. Hype');
+  assert.equal(r.gates.intent.stop, "If you can't clearly articulate the business problem, STOP.");
+  assert.equal(r.gates.role.label, 'Role Definition');
+  assert.equal(r.gates.review.label, 'Performance Review');
+  assert.equal(r.gates.jobStop, "If you can't define the job description and metrics of success, STOP");
+  assert.match(r.gates.worstCase.stop, /DO NOT BUILD THIS AGENT/);
+  assert.equal(r.fire.criteria.length, 7);
+  assert.deepEqual(r.fire.liveQuestions.map((q: any) => q.field), ['review.maintenanceExceedsValue', 'review.betterSolution']);
+  assert.ok(r.fire.liveQuestions.every((q: any) => r.fire.criteria.some((c: any) => c.key === q.criterion)));
+  assert.equal(r.alternatives.length, 4);
+  assert.equal(r.documentation.signOff.length, 5);
+  assert.equal(r.documentation.fields[1].note, 'HIRE / TRAIN / FIRE');
+  assert.equal(r.sections.r.table.rows.length, 2);
+  assert.equal(r.figures.roi.length, 5);
+  // The published output schema names the new keys (no silent passthrough).
+  const json: any = z.toJSONSchema(z.object(HIRE_TOOLS.get_hire_checklist.output));
+  for (const k of ['gates', 'fire', 'alternatives', 'documentation', 'figures']) assert.ok(json.required.includes(k), k);
+});
+
 test('the published input schema accepts every valid fixture (never stricter than the validator)', () => {
   for (const a of [FRAUD_CASE, hireFixture, lowScore, withNA, stopped, liveFire, liveFraud({ ppr: 2.5, prevIrr: 70, irr: 50 }), blankAnswers()]) {
     const r = input.safeParse(a);

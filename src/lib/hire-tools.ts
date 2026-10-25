@@ -216,25 +216,58 @@ const ItemSchema = z.object({
 });
 const RQuestion = z.object({ question: z.string(), yes: z.string(), no: z.string() });
 
+const Gate = z.object({ label: z.string(), question: z.string() });
 const CHECKLIST_OUTPUT = {
   source: SourceSchema,
   flow: z.array(z.object({ id: z.string(), letter: z.string(), title: z.string(), part: z.number(), liveOnly: z.boolean().optional() })),
+  gates: z
+    .object({
+      intent: Gate.extend({ stop: z.string() }),
+      role: Gate,
+      review: Gate,
+      jobStop: z.string(),
+      worstCase: z.object({ question: z.string(), stop: z.string() }),
+    })
+    .describe("Part 1 gates and their STOP lines (R's two stops are in sections.r.questions)"),
   sections: z.object({
     h: z.array(ItemSchema),
     i: z.array(ItemSchema),
     r: z.object({
       questions: z.object({ ruleBased: RQuestion, informational: RQuestion, traits: z.string(), verdict: z.string() }),
       traits: z.array(z.object({ key: z.string(), label: z.string() })),
+      table: z.object({
+        columns: z.array(z.string()),
+        rows: z.array(z.object({ approach: z.string(), does: z.string(), why: z.string() })),
+      }),
     }),
     e: z.object({
       worstCase: z.array(z.object({ value: z.string(), label: z.string(), example: z.string(), points: z.number().nullable() })),
       guardrails: z.array(ItemSchema),
       boundaries: z.array(ItemSchema),
+      notes: z.object({ guardrails: z.string(), boundaries: z.string() }),
     }),
   }),
+  figures: z.record(z.string(), z.array(z.string())).describe("The checklist's fill-in lines under Time Savings and ROI, by item key"),
   redFlags: z.record(z.string(), z.string()),
   metrics: z.record(z.string(), z.object({ name: z.string(), unit: z.string(), denominator: z.string(), question: z.string() })),
   thresholds: z.object({ doNotBuildMax: z.number(), trainMax: z.number(), ceiling: z.number() }),
+  fire: z
+    .object({
+      heading: z.string(),
+      intro: z.string(),
+      criteria: z.array(z.object({ key: z.string(), text: z.string() })),
+      liveQuestions: z.array(z.object({ field: z.string(), criterion: z.string() })),
+    })
+    .describe('When to FIRE a live agent: the checklist criteria, and the live review answers that decide the last two'),
+  alternatives: z.array(z.object({ name: z.string(), description: z.string() })),
+  documentation: z.object({
+    intro: z.string(),
+    fields: z.array(z.object({ key: z.string(), label: z.string(), note: z.string().optional() })),
+    signOffHeading: z.string(),
+    signOffIntro: z.string(),
+    remember: z.string(),
+    signOff: z.array(z.object({ key: z.string(), label: z.string() })),
+  }),
   textCaps: z.record(z.string(), z.number()),
   readings: z.array(z.string()).describe("Every \"this tool's reading\" the tool may apply where the framework is silent"),
 } satisfies z.ZodRawShape;
@@ -292,9 +325,11 @@ export const HIRE_TOOLS: Record<HireToolName, ToolDef> = {
   get_hire_checklist: {
     title: 'Get the H.I.R.E. checklist',
     description:
-      `The full H.I.R.E. checklist as data (${FRAMEWORK}): flow order, Part 1 gates, every question with its allowed ` +
-      'scores and "Consider" hints, red flags, live metric definitions, verdict thresholds, free-text caps and the ' +
-      "places where this tool's reading fills a gap. Use it to interview the user before calling assess_agent.",
+      `The full H.I.R.E. checklist as data (${FRAMEWORK}): flow order, Part 1 gates and STOP lines, every question with ` +
+      'its allowed scores and "Consider" hints, the time and ROI fill-in lines, the R comparison table, red flags, ' +
+      'live metric definitions, verdict thresholds, the FIRE criteria, alternatives, the documentation and sign-off ' +
+      "block, free-text caps and the places where this tool's reading fills a gap. Use it to interview the user before " +
+      'calling assess_agent.',
     input: {},
     output: CHECKLIST_OUTPUT,
   },

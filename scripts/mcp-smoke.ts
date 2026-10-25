@@ -220,6 +220,8 @@ await server('HIRE check server', hireEndpoint, async () => {
     if (r.sections?.h?.length !== 7) fail(`${r.sections?.h?.length} H items, expected 7`);
     if (Object.keys(r.redFlags ?? {}).length !== 13) fail(`${Object.keys(r.redFlags ?? {}).length} red flags, expected 13`);
     if (!r.source?.commit) fail('no framework source');
+    if (r.gates?.intent?.label !== 'Need vs. Hype') fail('no Part 1 gates');
+    if (r.fire?.criteria?.length !== 7) fail(`${r.fire?.criteria?.length} FIRE criteria, expected 7`);
   });
 
   await check('assess_agent: the fraud example', async (fail) => {
