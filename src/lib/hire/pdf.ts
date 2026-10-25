@@ -8,7 +8,7 @@ import {
 } from './checklist.ts';
 import type { ChecklistItem } from './checklist.ts';
 import { fmtNum } from './helpers.ts';
-import { isNA, SCORE_FLOOR, SECTION_RANGE } from './score.ts';
+import { isNA, SCORE_FLOOR, SECTION_RANGE, traitsNote } from './score.ts';
 import type { Assessment, HireAnswers, MetricKey, Verdict } from './types.ts';
 
 export interface PdfDeps {
@@ -245,6 +245,8 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
 
   const meaning = r.stop ? r.stop.message : r.meaning ?? 'The answers are not complete yet, so there is no verdict.';
   para(meaning, { size: 12, align: 'center', x: M.x + 30, width: CONTENT_W - 60, gap: 10 });
+  const traits = traitsNote(a);
+  if (traits) para(`Note: ${traits} (this tool's reading)`, { size: 10, color: 'print-muted', align: 'center', x: M.x + 30, width: CONTENT_W - 60, gap: 6 });
   if (a.isLive && r.live) {
     const un = r.live.unmeasured.map((k) => METRIC_SHORT[k]);
     para(

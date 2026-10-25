@@ -1,7 +1,8 @@
 import { SECTION_NAMES as NAMES, THRESHOLDS } from '../../../lib/hire/checklist';
 import { fireCheckIncomplete } from '../../../lib/hire/assess';
-import { SECTION_RANGE } from '../../../lib/hire/score';
+import { isTraitsNote, SECTION_RANGE } from '../../../lib/hire/score';
 import type { Assessment } from '../../../lib/hire/types';
+import Reading from '../Reading';
 import { HINT, PANEL, signed, verdictStyle } from '../styles';
 
 
@@ -36,13 +37,14 @@ function SectionBar({ k, value, complete }: { k: 'h' | 'i' | 'e'; value: number;
   );
 }
 
-/** The verdict pill, total, one-line meaning, any stop, the FIRE-check gap and the H, I, E bars. */
+/** The verdict pill, total, one-line meaning, the traits note, any stop, the FIRE-check gap and the H, I, E bars. */
 export default function Verdict({ assessment: a, isLive }: { assessment: Assessment; isLive: boolean }) {
   const s = a.scores;
   const v = a.verdict;
   const style = verdictStyle(v);
   const incomplete = a.live?.unmeasured.length ? fireCheckIncomplete(a.live.unmeasured) : null;
   const open = (['h', 'i', 'e'] as const).filter((k) => !s.complete[k]).map((k) => NAMES[k]);
+  const traits = a.notes.find(isTraitsNote);
   return (
     <div className={`${PANEL} ${style.border}`}>
       <p className="font-mono text-xs uppercase tracking-[0.12em] text-slate-text">{isLive ? 'Should we keep it?' : 'Should we build it?'}</p>
@@ -64,6 +66,11 @@ export default function Verdict({ assessment: a, isLive }: { assessment: Assessm
         </p>
       )}
       {a.meaning && <p className="mt-3 text-light-slate" data-testid="hire-result-meaning">{a.meaning}</p>}
+      {traits && (
+        <p className={`mt-2 ${HINT}`} data-testid="hire-traits-note">
+          Note: {traits} <Reading k="traits" />
+        </p>
+      )}
       {a.stop && <p className="mt-2 text-light-slate">{a.stop.message}</p>}
       {a.notAssessed.length > 0 && <p className={`mt-2 ${HINT}`}>Not assessed: {a.notAssessed.join(', ')}.</p>}
       {v === null && (

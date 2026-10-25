@@ -106,12 +106,18 @@ export function traitCount(a: HireAnswers): number {
   return Object.values(a.r.traits).filter(Boolean).length;
 }
 
+const TRAITS_NOTE_LEAD = 'may not need an AI agent';
+
+/** With fewer than 3 of the 5 R traits (and neither stop), a note that scoring goes on past (this tool's reading). */
 export function traitsNote(a: HireAnswers): string | null {
   if (a.r.ruleBased === false && a.r.informational === false && traitCount(a) < 3) {
-    return `may not need an AI agent (${traitCount(a)} of 5 traits)`;
+    return `${TRAITS_NOTE_LEAD} (${traitCount(a)} of 5 traits)`;
   }
   return null;
 }
+
+/** Whether one of an assessment's notes is the traits note (the result shows it under the verdict). */
+export const isTraitsNote = (note: string): boolean => note.startsWith(TRAITS_NOTE_LEAD);
 
 export function naItems(a: HireAnswers): Array<{ key: string; reason: string; score: number }> {
   const out: Array<{ key: string; reason: string; score: number }> = [];

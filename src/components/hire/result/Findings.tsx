@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ITEM_LABEL, THRESHOLDS } from '../../../lib/hire/checklist';
 import { fireCheckIncomplete } from '../../../lib/hire/assess';
+import { isTraitsNote } from '../../../lib/hire/score';
 import { READINGS, type ReadingKey } from '../../../lib/hire/reasons';
 import type { Assessment } from '../../../lib/hire/types';
 import Reading from '../Reading';
@@ -23,9 +24,9 @@ export function Block({ title, reading, testId, children }: { title: string; rea
 
 /** Why the verdict is what it is: reasons, red flags, notes, N/A items, the path to HIRE, the alternatives, the readings. */
 export default function Findings({ assessment: a }: { assessment: Assessment }) {
-  // The FIRE-check gap shows under the verdict instead.
+  // The FIRE-check gap and the traits note show under the verdict instead.
   const incomplete = a.live?.unmeasured.length ? fireCheckIncomplete(a.live.unmeasured) : null;
-  const notes = a.notes.filter((n) => n !== incomplete);
+  const notes = a.notes.filter((n) => n !== incomplete && !isTraitsNote(n));
   const ceil = THRESHOLDS.ceiling;
   return (
     <div className="space-y-10">

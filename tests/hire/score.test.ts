@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { band, eItemScore, firstStop, naItems, redFlags, SCORE_FLOOR, SECTION_RANGE, sectionScores, traitsNote } from '../../src/lib/hire/score.ts';
+import { band, eItemScore, firstStop, naItems, redFlags, SCORE_FLOOR, SECTION_RANGE, sectionScores, traitsNote, isTraitsNote } from '../../src/lib/hire/score.ts';
 import { THRESHOLDS } from '../../src/lib/hire/checklist.ts';
 import { allWorst, blankAnswers, fraud } from './helpers.ts';
 import type { HireAnswers } from '../../src/lib/hire/types.ts';
@@ -64,6 +64,8 @@ test('red flag triggers', () => {
 test('traits note, not a red flag', () => {
   const two = { ...fraud, r: { ...fraud.r, traits: { ...fraud.r.traits, intermediateStates: false } } };
   assert.equal(traitsNote(two), 'may not need an AI agent (2 of 5 traits)');
+  assert.ok(isTraitsNote(traitsNote(two)!));
+  assert.ok(!isTraitsNote('IRR trend unknown'));
   assert.ok(!redFlags(two).some((f) => f.key === 'r3'));
   assert.equal(traitsNote(fraud), null);
   assert.equal(traitsNote({ ...two, r: { ...two.r, ruleBased: true } }), null);

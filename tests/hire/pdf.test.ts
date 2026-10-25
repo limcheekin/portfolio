@@ -91,6 +91,15 @@ test('no readings heading without readings; blank KPI rows are skipped', async (
   assert.ok(!texts.includes('None listed.'));
 });
 
+test('the cover carries the traits note when fewer than 3 traits are checked', async () => {
+  const a = { ...FRAUD_CASE, r: { ...FRAUD_CASE.r, traits: { ...FRAUD_CASE.r.traits, intermediateStates: false } } };
+  const draws = await textDraws(a);
+  const cover = draws.filter((d) => d.page === draws[0].page).map((d) => d.text);
+  assert.ok(cover.includes("Note: may not need an AI agent (2 of 5 traits) (this tool's reading)"), JSON.stringify(cover));
+  const plain = (await textDraws(FRAUD_CASE)).map((d) => d.text);
+  assert.ok(!plain.some((t) => t.includes('may not need')));
+});
+
 test('dial clamps', () => {
   assert.equal(dialAngle(-100), dialAngle(-55));
   assert.equal(dialAngle(-55), 0);
