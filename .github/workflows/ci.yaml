@@ -41,6 +41,8 @@ jobs:
           test -f dist/ai-plugin.json
           test -f dist/robots.txt
           test -f dist/.well-known/mcp-hire.json
+          test -f dist/hire/index.html
+          test -f dist/hire/index.md
           test -f build/mcp/server.mjs
           echo "Build artifacts verified"
 

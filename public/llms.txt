@@ -60,6 +60,9 @@ Lim Chee Kin is an AI Solutions Architect at Daxonet AI, based in Kuala Lumpur, 
 - A2A Agent Card: https://kin.rag.wtf/.well-known/agent.json (also at /.well-known/agent-card.json)
 - MCP Server (read-only, Streamable HTTP, POST only, no auth): https://kin.rag.wtf/mcp — tools: get_projects, get_project, get_experience, get_articles, search_portfolio, get_contact_info
 - MCP Manifest: https://kin.rag.wtf/.well-known/mcp.json
+- HIRE check MCP server (decides whether an AI agent should be built or kept; pure computation, no auth, never stores or logs the answers; shares the /mcp rate limit): https://kin.rag.wtf/mcp/hire — tools: get_hire_checklist, assess_agent
+- HIRE MCP Manifest: https://kin.rag.wtf/.well-known/mcp-hire.json
+- HIRE check (web tool, same verdict as the MCP server): https://kin.rag.wtf/hire/ (Markdown: https://kin.rag.wtf/hire/index.md)
 - Per-collection JSON: https://kin.rag.wtf/api/projects.json, https://kin.rag.wtf/api/experience.json, https://kin.rag.wtf/api/articles.json (index of all endpoints: https://kin.rag.wtf/api/)
 - Search index (GET, no MCP needed): https://kin.rag.wtf/api/search.json — every project, article and role with keywords and page URL
 - RSS (Writing): https://kin.rag.wtf/rss.xml

@@ -27,6 +27,15 @@ This portfolio provides a comprehensive overview of my experience in the softwar
 * **Dark Mode:** A visually appealing dark theme for a comfortable viewing experience.
 * **CI/CD Pipeline:** Automated deployment to GitHub Pages using GitHub Actions.
 
+## HIRE check
+
+A free tool that decides whether an AI agent should be built (HIRE, TRAIN or DO NOT BUILD) or, once live, kept (HIRE, TRAIN or FIRE). It applies the [H.I.R.E. checklist](https://github.com/inesbolanos/HIRE-AI-framework) by Inês Bolaños (MIT licence, see the framework's [LICENSE](https://github.com/inesbolanos/HIRE-AI-framework/blob/main/LICENSE)). Pure computation, no LLM.
+
+- Web tool: `/hire/` (Guided and Focus modes, shareable link, PDF report).
+- MCP server: `https://kin.rag.wtf/mcp/hire` (tools `get_hire_checklist`, `assess_agent`; manifest at `/.well-known/mcp-hire.json`). Connect with `claude mcp add --transport http hire https://kin.rag.wtf/mcp/hire`.
+- Privacy: answers are computed in memory and never stored or logged, by the web tool or the server.
+- Tests: `npm test`.
+
 ## Installation
 
 To get a local copy up and running, follow these simple steps:

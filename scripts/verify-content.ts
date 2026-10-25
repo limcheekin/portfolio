@@ -5,6 +5,7 @@ import { PROJECT_KINDS } from '../src/lib/project-kind';
 import { PortfolioSchema } from '../src/lib/portfolio-schema';
 import { CHECKLIST_SOURCE } from '../src/lib/hire/checklist';
 import { MCP_TOOLS } from '../src/lib/portfolio-tools';
+import { HIRE_TOOLS } from '../src/lib/hire-tools';
 
 const args = new Set(process.argv.slice(2));
 const RUN_DIST = args.has('--dist');
@@ -314,14 +315,24 @@ check('dist: discovery links resolve to built files', () =>
   DISCOVERY.flatMap((f) =>
     [...readText(f).matchAll(/https:\/\/kin\.rag\.wtf(\/[^\s"'<>()]*)?/g)]
       .map((m) => (m[1] ?? '/').replace(/#.*$/, '').replace(/[.,;:]+$/, ''))
-      .filter((path) => path !== '/mcp' && !builtFileFor(path))
+      .filter((path) => path !== '/mcp' && path !== '/mcp/hire' && !builtFileFor(path))
       .map((path) => `${f}: ${path}`),
   ), { dist: true });
 
 check('dist: MCP tool names agree across llms.txt and the agent card', () => {
-  const names = Object.keys(MCP_TOOLS);
+  const names = [...Object.keys(MCP_TOOLS), ...Object.keys(HIRE_TOOLS)];
   return ['dist/llms.txt', 'dist/.well-known/agent.json'].flatMap((f) => missing(readText(f), names).map((n) => `${f} lacks ${n}`));
 }, { dist: true });
+
+check('dist: HIRE manifest', () => {
+  const m = JSON.parse(readText('dist/.well-known/mcp-hire.json'));
+  return [
+    ...(m.url === 'https://kin.rag.wtf/mcp/hire' ? [] : [`url is ${m.url}`]),
+    ...(String(m.description ?? '').includes('never stores or logs') ? [] : ['description lacks "never stores or logs"']),
+  ];
+}, { dist: true });
+
+check('dist: HIRE page and Markdown built', () => ['hire/index.html', 'hire/index.md'].filter((f) => !existsSync(join('dist', f))), { dist: true });
 
 check('dist: Markdown version of every project, article and About', () => {
   const { projects, articles } = portfolioJson();

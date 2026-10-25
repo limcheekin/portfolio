@@ -7,8 +7,8 @@ import { articlePath, markdownPath, projectPath, rolePath } from '../src/lib/pat
 import { ABOUT_CONTENT, EMAIL_ADDRESS, ENGINEER_NAME, ENGINEER_TITLE, SITE_URL } from '../src/data/site';
 import { FAQ } from '../src/data/faq';
 import type { Portfolio } from '../src/lib/portfolio-schema';
-import { mcpManifest } from '../src/lib/portfolio-tools';
-import { hireManifest } from '../src/lib/hire-tools';
+import { MCP_SERVER, mcpManifest } from '../src/lib/portfolio-tools';
+import { HIRE_SERVER, hireManifest } from '../src/lib/hire-tools';
 import { HIRE_CREDIT_MARKDOWN, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_PRIVACY_STATEMENT, HIRE_READINGS, HIRE_READINGS_INTRO, checklistMarkdown } from '../src/lib/hire/copy';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -308,6 +308,10 @@ writeFileSync(join(distDir, 'api', 'index.json'), JSON.stringify({
   description: 'Static, read-only JSON. No auth. Described by openapi.json; the same data is served by the MCP server.',
   endpoints: HTTP_RESOURCES.filter((r) => r.uri.startsWith(`${SITE_URL}/api/`)).map(({ uri, description }) => ({ url: uri, description })),
   mcp: `${SITE_URL}/mcp`,
+  mcpServers: [
+    { name: HIRE_SERVER.name, url: HIRE_SERVER.url, manifest: `${SITE_URL}/.well-known/mcp-hire.json` },
+    { name: MCP_SERVER.name, url: `${SITE_URL}/mcp`, manifest: `${SITE_URL}/.well-known/mcp.json` },
+  ],
   llms: `${SITE_URL}/llms.txt`,
 }, null, 2));
 console.log('Generated: dist/api/index.json');

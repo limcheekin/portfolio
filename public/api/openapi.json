@@ -772,6 +772,19 @@
             "type": "string",
             "format": "uri"
           },
+          "mcpServers": {
+            "type": "array",
+            "description": "Every MCP server of this site: the HIRE check and the read-only portfolio server.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "manifest": { "type": "string", "format": "uri" }
+              },
+              "required": ["name", "url", "manifest"]
+            }
+          },
           "llms": {
             "type": "string",
             "format": "uri"
