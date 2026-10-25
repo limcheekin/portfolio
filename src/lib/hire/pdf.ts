@@ -58,6 +58,7 @@ const hexToRgb = (hex: string): [number, number, number] => {
 };
 
 const BAND_TOKEN = { Good: 'print-green', Warning: 'print-amber', Critical: 'print-coral' } as const;
+const METER_MAX: Record<MetricKey, number> = { ucr: 100, ppr: 5, diy: 100, irr: 100, rlr: 5 };
 const fmtNum = (n: number) => String(Math.round(n * 100) / 100);
 
 export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessment): Promise<Uint8Array> {
@@ -240,11 +241,29 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   // ---------------------------------------------------------------- Page 2: why
   newPage();
   h2('Why');
-  const sec = (label: string, v: number, max: number, done: boolean) => `${label}: ${done ? `${v} of ${max}` : `${v} so far (not fully assessed)`}`;
   h3('Section scores');
-  bullet(sec('Human & Habits', r.scores.h, 21, r.scores.complete.h));
-  bullet(sec('Impact & Intent', r.scores.i, 17, r.scores.complete.i));
-  bullet(sec('Exposure & Execution', r.scores.e, 39, r.scores.complete.e));
+  /** Horizontal meter on [min, max]: track, zero line when the range is negative, fill clamped so it never leaves the track. */
+  const meter = (x: number, by: number, w: number, h: number, min: number, max: number, v: number, token: Token) => {
+    page.drawRectangle({ x, y: by, width: w, height: h, color: col('print-rule') });
+    const at = (n: number) => x + ((Math.min(max, Math.max(min, n)) - min) / (max - min)) * w;
+    const z = at(0);
+    const e = at(v);
+    page.drawRectangle({ x: Math.min(z, e), y: by, width: Math.abs(e - z), height: h, color: col(token) });
+    if (min < 0) page.drawLine({ start: { x: z, y: by - 2 }, end: { x: z, y: by + h + 2 }, thickness: 0.8, color: col('print-ink') });
+  };
+  const secRow = (label: string, v: number, min: number, max: number, done: boolean) => {
+    ensure(20);
+    y -= 15;
+    page.drawText(label, { x: M.x, y, size: 10, font: regular, color: col('print-ink') });
+    meter(M.x + 160, y - 1, 200, 9, min, max, v, v < 0 ? 'print-coral' : 'print-ink');
+    const t = done ? `${v} of ${max}` : `${v} so far (partial)`;
+    page.drawText(t, { x: M.x + 372, y, size: 9, font: regular, color: col('print-muted') });
+    y -= 4;
+  };
+  secRow('Human & Habits', r.scores.h, 7, 21, r.scores.complete.h);
+  secRow('Impact & Intent', r.scores.i, -2, 17, r.scores.complete.i);
+  secRow('Exposure & Execution', r.scores.e, -60, 39, r.scores.complete.e);
+  y -= 4;
   bullet(`Total: ${total} of ${SCORE_MAX}. Bands: 30 or less DO NOT BUILD (FIRE when live), 31 to 50 TRAIN, above 50 HIRE.`, { font: bold });
   if (r.stop) {
     h3('Stopped at a gate', 'print-coral');
@@ -286,8 +305,8 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
       if (v === null || !band) para('Not measured', { x: M.x + 240, size: 9.5, color: 'print-muted' });
       else {
         const unit = def.unit === '%' ? '%' : ' turns';
-        page.drawRectangle({ x: M.x + 240, y: y - 11, width: 8, height: 8, color: col(BAND_TOKEN[band]) });
-        para(`${fmtNum(v)}${unit}  ${band}`, { x: M.x + 254, size: 9.5, font: bold, color: BAND_TOKEN[band] });
+        meter(M.x + 240, y - 11, 90, 8, 0, METER_MAX[k], v, BAND_TOKEN[band]);
+        para(`${fmtNum(v)}${unit}  ${band}`, { x: M.x + 340, size: 9.5, font: bold, color: BAND_TOKEN[band] });
       }
       y = Math.min(y, after) - 2;
     }
@@ -298,7 +317,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
   }
   if (r.naItems.length) {
     h3('Marked not applicable');
-    for (const n of r.naItems) bullet(`${n.key}: ${n.reason} (scored ${n.score})`);
+    for (const n of r.naItems) bullet(`${[...E_GUARDRAILS, ...E_BOUNDARIES].find((i) => i.key === n.key)?.label ?? n.key}: ${n.reason} (scored ${n.score})`);
   }
   h3("This tool's reading");
   para('The framework is silent or ambiguous on these points, so this tool says what it assumed.', { size: 9, color: 'print-muted', gap: 2 });

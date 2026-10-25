@@ -61,3 +61,8 @@ test('report file name', () => {
 test('no raw colours in the module', () => {
   assert.doesNotMatch(readFileSync('src/lib/hire/pdf.ts', 'utf8'), /#[0-9a-f]{6}|rgb\(\s*\d/i);
 });
+
+test('negative section scores and N/A items render', async () => {
+  const a = { ...FRAUD_CASE, e: { ...FRAUD_CASE.e, hitl: -5 as const, rollback: -5 as const, tenant: { na: 'single tenant' } } };
+  await buildReportPdf(deps, a, assess(a));
+});
