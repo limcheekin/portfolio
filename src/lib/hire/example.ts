@@ -2,6 +2,7 @@ import type { HireAnswers } from './types.ts';
 
 // The fraud / banking support agent worked example (pre-build), from the framework's case study.
 // The case study does not list which R traits it ticked: the three set here are this tool's reading of its R section.
+// Link length headroom: the report link for this case is close to LONG_LINK (2000); keep added text short.
 export const FRAUD_CASE: HireAnswers = {
   v: 1,
   name: 'Fraud Support Agent',
@@ -25,7 +26,7 @@ export const FRAUD_CASE: HireAnswers = {
     },
     kpis: [
       { name: 'Instant Resolution Rate (IRR)', target: '>60%' },
-      { name: 'Fine, Do It Yourself Rate (DIY)', target: '<15% (guide Good: <5%)' },
+      { name: 'Fine, Do It Yourself Rate (DIY)', target: '<15%' },
       { name: 'Red Line Rate (RLR)', target: '0%' },
       { name: 'User Correction Rate (UCR)', target: '<15%' },
       { name: 'Ping Pong Rate (PPR)', target: '≤1.2 turns' },
@@ -56,6 +57,6 @@ export const FRAUD_CASE: HireAnswers = {
   e: { worstCase: 'moderate', hitl: 5, security: 5, rollback: 5, audit: 5, tenant: 5, access: -10, fallback: 5 },
   doc: {
     rationale:
-      "The case study's scores, so it reproduces 42/77 TRAIN. A strict reading of the checklist would lower E: Human-in-the-Loop asks that users approve critical actions before execution, and Tenant Isolation asks that the agent is not used for cross customer learning. The metrics guide's table puts DIY Good at <5%.",
+      "The case study's scores, so it reproduces 42/77 TRAIN. A strict reading of the checklist would lower E: Human-in-the-Loop asks that users approve critical actions before execution, and Tenant Isolation asks that the agent is not used for cross customer learning. The DIY target <15% is the metrics guide's Warning ceiling; its table puts Good at <5%.",
   },
 };
