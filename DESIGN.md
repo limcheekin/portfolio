@@ -12,6 +12,7 @@ colors:
   green-accent: "#00d992"
   green-tint: "rgba(0, 217, 146, 0.1)"
   danger: "#fb565b"
+  amber: "#f5a524"
   sky: "#38bdf8"
   well: "#09090b"
   card: "#0e0e10"
@@ -25,6 +26,13 @@ colors:
   sky-deep: "#0c1f2a"
   sky-dim: "#1e3a4a"
   sky-pale: "#cbeeff"
+  print-ink: "#16161a"
+  print-muted: "#5b6068"
+  print-rule: "#d9d9de"
+  print-paper: "#ffffff"
+  print-green: "#047857"
+  print-amber: "#b45309"
+  print-coral: "#d4323a"
 typography:
   display:
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, sans-serif"
@@ -176,7 +184,7 @@ A warm-neutral near-black system with one green signal and one sky marker.
 
 ### Tertiary
 - **Enterprise Illustration Greens** (`green-deep` / `green-dim` / `green-pale`): bubble fill, border and text inside enterprise Work card illustrations. Illustration-only.
-- **Danger Coral** (`danger`): form validation only (invalid field border, error text).
+- **Danger Coral** (`danger`): form validation (invalid field border, error text) and the FIRE / DO NOT BUILD verdict.
 
 ### Neutral
 - **Abyss Black** (`navy`): page canvas, scrollbar track, text on solid green buttons, the inner fill of career dots.
@@ -208,7 +216,8 @@ Source of truth: `src/lib/palette.mjs`, read by `tailwind.config.mjs` (and impor
 | `white-text` | `#ffffff` | Bold terms in a finished console run |
 | `green-accent` | `#00d992` | The signal: emphasis, links, active, primary action, focus |
 | `green-tint` | `green-accent` at 10% (Tailwind config) | Outline button and logo hover fill |
-| `danger` | `#fb565b` | Form errors only |
+| `danger` | `#fb565b` | Form errors and the FIRE / DO NOT BUILD verdict |
+| `amber` | `#f5a524` | The TRAIN verdict only |
 | `sky` | `#38bdf8` | Open-source work only (labels, glow, illustrations) |
 | `well` | `#09090b` | Recessed panels: hero console, Work illustration frame |
 | `card` | `#0e0e10` | Card surface, drawer, inputs; chips and nodes in illustrations |
@@ -218,6 +227,8 @@ Source of truth: `src/lib/palette.mjs`, read by `tailwind.config.mjs` (and impor
 | `edge-strong` | `#2e2e33` | Illustration outlines and text placeholders |
 | `green-deep` / `green-dim` / `green-pale` | `#0f2a20` / `#1d4d3a` / `#c9f5e4` | Enterprise illustration bubble fill / border / text |
 | `sky-deep` / `sky-dim` / `sky-pale` | `#0c1f2a` / `#1e3a4a` / `#cbeeff` | Open-source illustration bubble fill / border / text |
+| `print-ink` / `print-muted` / `print-rule` / `print-paper` | `#16161a` / `#5b6068` / `#d9d9de` / `#ffffff` | HIRE check PDF only (light, for print): text, secondary text, hairlines, paper |
+| `print-green` / `print-amber` / `print-coral` | `#047857` / `#b45309` / `#d4323a` | HIRE check PDF verdict inks (HIRE / TRAIN / DO NOT BUILD or FIRE), darkened to read on white |
 
 **Shadows** (`boxShadow` in `tailwind.config.mjs`, built from the palette):
 

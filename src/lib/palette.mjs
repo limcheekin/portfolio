@@ -11,7 +11,8 @@ export const COLORS = {
   'lightest-slate': '#f2f2f2',
   'white-text': '#ffffff',
   'green-accent': '#00d992',
-  danger: '#fb565b', // Danger Coral: form errors
+  danger: '#fb565b', // Danger Coral: form errors and the FIRE / DO NOT BUILD verdict
+  amber: '#f5a524', // the TRAIN verdict only
   // Redesign additions: sky marks open-source work only
   sky: '#38bdf8',
   // Home surfaces, darkest to lightest
@@ -28,6 +29,14 @@ export const COLORS = {
   'sky-deep': '#0c1f2a',
   'sky-dim': '#1e3a4a',
   'sky-pale': '#cbeeff',
+  // Print set: the HIRE check PDF report, on white paper (verdict inks are darkened to read on white)
+  'print-ink': '#16161a',
+  'print-muted': '#5b6068',
+  'print-rule': '#d9d9de',
+  'print-paper': '#ffffff',
+  'print-green': '#047857',
+  'print-amber': '#b45309',
+  'print-coral': '#d4323a',
 };
 
 /**
