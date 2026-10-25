@@ -5,6 +5,7 @@ import { TEXT_CAPS } from '../../../lib/hire/validate';
 import Reading from '../Reading';
 import type { Dispatch } from '../useHireState';
 import { BTN_TEXT, FIELD, HINT, LABEL, verdictStyle } from '../styles';
+import { set } from '../steps/common';
 import { Block } from './Findings';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -70,7 +71,7 @@ function Capped({ label, value, cap, onChange, rows, testId, describedBy }: {
 export default function Documentation({ answers, assessment, dispatch }: { answers: HireAnswers; assessment: Assessment; dispatch: Dispatch }) {
   const id = useId();
   const doc = answers.doc ?? {};
-  const set = (path: string, value: unknown) => dispatch({ type: 'set', path: `doc.${path}`, value });
+  const put = (path: string) => set(dispatch, `doc.${path}`);
   const generated = generatedRationale(assessment);
   const edited = doc.rationale !== undefined;
   const reviewDate = doc.reviewDate ?? defaultReviewDate(answers);
@@ -99,7 +100,7 @@ export default function Documentation({ answers, assessment, dispatch }: { answe
             value={doc.rationale ?? generated}
             cap={TEXT_CAPS.rationale}
             rows={5}
-            onChange={(v) => set('rationale', v)}
+            onChange={put('rationale')}
             testId="doc-rationale"
             describedBy={`${id}-rat`}
           />
@@ -108,14 +109,14 @@ export default function Documentation({ answers, assessment, dispatch }: { answe
               {edited ? 'Your text.' : 'Generated from the reasons above; edit it freely.'}
             </p>
             {edited && (
-              <button type="button" className={BTN_TEXT} onClick={() => set('rationale', undefined)} data-testid="doc-rationale-reset">
+              <button type="button" className={BTN_TEXT} onClick={() => put('rationale')(undefined)} data-testid="doc-rationale-reset">
                 Reset to generated
               </button>
             )}
           </div>
         </div>
 
-        <Capped label="Next steps" value={doc.nextSteps ?? ''} cap={TEXT_CAPS.nextSteps} rows={3} onChange={(v) => set('nextSteps', v || undefined)} testId="doc-next" />
+        <Capped label="Next steps" value={doc.nextSteps ?? ''} cap={TEXT_CAPS.nextSteps} rows={3} onChange={(v) => put('nextSteps')(v || undefined)} testId="doc-next" />
 
         <div className="sm:max-w-[16rem]">
           <label htmlFor={`${id}-review`} className={LABEL}>Review date</label>
@@ -125,7 +126,7 @@ export default function Documentation({ answers, assessment, dispatch }: { answe
             className={FIELD}
             value={reviewDate}
             min={answers.assessmentDate}
-            onChange={(e) => set('reviewDate', e.target.value || undefined)}
+            onChange={(e) => put('reviewDate')(e.target.value || undefined)}
             aria-describedby={`${id}-review-hint`}
             data-testid="doc-review-date"
           />
@@ -144,7 +145,7 @@ export default function Documentation({ answers, assessment, dispatch }: { answe
                 label={r.label}
                 value={doc.signOff?.[r.key] ?? ''}
                 cap={TEXT_CAPS.signOffName}
-                onChange={(v) => set(`signOff.${r.key}`, v || undefined)}
+                onChange={(v) => put(`signOff.${r.key}`)(v || undefined)}
                 testId={`doc-sign-${r.key}`}
               />
             ))}

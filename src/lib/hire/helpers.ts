@@ -1,6 +1,10 @@
 /** A number rounded to at most two decimals, without trailing zeros ("2", "1.25"). */
 export const fmtNum = (n: number): string => String(Math.round(n * 100) / 100);
 
+/** Money as the tool shows it: whole units with thousands separators, after the optional currency label. */
+export const fmtMoney = (n: number, currency?: string): string =>
+  `${currency ? `${currency} ` : ''}${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+
 export interface TimeSaved {
   savedPerProcess: number;
   savedPct: number;

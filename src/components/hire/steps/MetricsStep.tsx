@@ -1,5 +1,6 @@
 import { useContext, useId } from 'react';
 import { METRIC_DEFS, METRIC_KEYS, METRIC_SHORT as SHORT } from '../../../lib/hire/checklist';
+import { fmtMoney } from '../../../lib/hire/helpers';
 import { blankReview, CRITICAL, monthsBetween } from '../../../lib/hire/live';
 import type { HireAnswers, MetricKey } from '../../../lib/hire/types';
 import MetricMeter from '../MetricMeter';
@@ -8,7 +9,7 @@ import NumberField from '../NumberField';
 import { ChoiceGroup } from '../Question';
 import Reading from '../Reading';
 import { BTN_TEXT, FIELD, HINT, LABEL, NOTE, PANEL } from '../styles';
-import { Group, ScoreHidden, Suggestion, YES_NO, type StepProps } from './common';
+import { Group, ScoreHidden, set, Suggestion, YES_NO, type StepProps } from './common';
 
 type Review = NonNullable<HireAnswers['review']>;
 
@@ -19,7 +20,7 @@ function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch:
   const def = METRIC_DEFS[k];
   const m = review.metrics[k];
   const base = `review.metrics.${k}`;
-  const put = (field: 'previous' | 'sample' | 'limit') => (v: number | undefined) => dispatch({ type: 'set', path: `${base}.${field}`, value: v });
+  const put = (field: 'previous' | 'sample' | 'limit') => set(dispatch, `${base}.${field}`);
   const unit = unitOf(k);
   const measured = m.value !== null && m.value !== undefined;
   const sampleNoun = def.denominator.split(' (')[0];
@@ -42,7 +43,7 @@ function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch:
         <NumberField
           label="This period"
           value={m.value}
-          onChange={(v) => dispatch({ type: 'set', path: `${base}.value`, value: v ?? null })}
+          onChange={(v) => set(dispatch, `${base}.value`)(v ?? null)}
           suffix={unit}
           check={(n) => valueError(k, n)}
           hint={measured ? undefined : 'Blank means not measured (never 0).'}
@@ -53,7 +54,7 @@ function Rate({ k, review, dispatch }: { k: MetricKey; review: Review; dispatch:
       </div>
 
       {measured && (
-        <button type="button" className={`${BTN_TEXT} -my-2`} onClick={() => dispatch({ type: 'set', path: `${base}.value`, value: null })}>
+        <button type="button" className={`${BTN_TEXT} -my-2`} onClick={() => set(dispatch, `${base}.value`)(null)}>
           Mark {SHORT[k]} as not measured
         </button>
       )}
@@ -99,8 +100,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
   const months = review.launchDate ? monthsBetween(review.launchDate, answers.assessmentDate) : null;
   const f = answers.i.figures;
   const costly = f?.annualMaintenanceCost !== undefined && f?.expectedAnnualSavings !== undefined && f.annualMaintenanceCost > f.expectedAnnualSavings;
-  const cur = f?.currency ? `${f.currency} ` : '';
-  const money = (n: number) => `${cur}${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  const money = (n: number) => fmtMoney(n, f?.currency);
   const hidden = useContext(ScoreHidden);
 
   return (
@@ -115,7 +115,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
               className={FIELD}
               value={review.launchDate ?? ''}
               max={answers.assessmentDate}
-              onChange={(e) => dispatch({ type: 'set', path: 'review.launchDate', value: e.target.value || null })}
+              onChange={(e) => set(dispatch, 'review.launchDate')(e.target.value || null)}
               aria-describedby={`${id}-launch-hint`}
               data-testid="metric-launch"
             />
@@ -152,7 +152,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
           <Suggestion
             testId="hire-maintenance-suggestion"
             applied={review.maintenanceExceedsValue === true}
-            onUse={() => dispatch({ type: 'set', path: 'review.maintenanceExceedsValue', value: true })}
+            onUse={() => set(dispatch, 'review.maintenanceExceedsValue')(true)}
           >
             Your ROI figures put maintenance ({money(f!.annualMaintenanceCost!)}/year) above the expected savings
             ({money(f!.expectedAnnualSavings!)}/year). Suggests <strong className="text-lightest-slate">Yes</strong>.
@@ -164,7 +164,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
           choices={YES_NO('Yes', 'No')}
           columns
           value={review.maintenanceExceedsValue}
-          onChange={(v) => dispatch({ type: 'set', path: 'review.maintenanceExceedsValue', value: v })}
+          onChange={set(dispatch, 'review.maintenanceExceedsValue')}
         />
         <ChoiceGroup
           testId="metric-better"
@@ -172,7 +172,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
           choices={YES_NO('Yes', 'No')}
           columns
           value={review.betterSolution}
-          onChange={(v) => dispatch({ type: 'set', path: 'review.betterSolution', value: v })}
+          onChange={set(dispatch, 'review.betterSolution')}
         />
       </Group>
 

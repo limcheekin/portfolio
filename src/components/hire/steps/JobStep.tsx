@@ -32,7 +32,7 @@ export function IntentCheck({ answers, dispatch }: StepProps) {
             className={`${FIELD} resize-y`}
             maxLength={TEXT_CAPS.businessProblem}
             value={p1.businessProblem ?? ''}
-            onChange={(e) => dispatch({ type: 'set', path: 'part1.businessProblem', value: e.target.value })}
+            onChange={(e) => set(dispatch, 'part1.businessProblem')(e.target.value)}
           />
         </div>
       )}
@@ -45,7 +45,7 @@ export function JobExercise({ answers, dispatch }: StepProps) {
   const id = useId();
   const p1 = answers.part1;
   const rows: Kpi[] = p1.kpis ?? Array.from({ length: BLANK_ROWS }, blank);
-  const setRows = (next: Kpi[]) => dispatch({ type: 'set', path: 'part1.kpis', value: next });
+  const setRows: (next: Kpi[]) => void = set(dispatch, 'part1.kpis');
   const named = rows.some((r) => r.name.trim() !== '');
   const used = new Set(rows.map((r) => r.name.trim()));
 
@@ -82,7 +82,7 @@ export function JobExercise({ answers, dispatch }: StepProps) {
                 className={FIELD}
                 maxLength={TEXT_CAPS.jobTitle}
                 value={p1.job?.title ?? ''}
-                onChange={(e) => dispatch({ type: 'set', path: 'part1.job.title', value: e.target.value })}
+                onChange={(e) => set(dispatch, 'part1.job.title')(e.target.value)}
               />
             </div>
             <div>
@@ -93,7 +93,7 @@ export function JobExercise({ answers, dispatch }: StepProps) {
                 className={`${FIELD} resize-y`}
                 maxLength={TEXT_CAPS.responsibilities}
                 value={p1.job?.responsibilities ?? ''}
-                onChange={(e) => dispatch({ type: 'set', path: 'part1.job.responsibilities', value: e.target.value })}
+                onChange={(e) => set(dispatch, 'part1.job.responsibilities')(e.target.value)}
               />
             </div>
             <div>
@@ -104,7 +104,7 @@ export function JobExercise({ answers, dispatch }: StepProps) {
                 className={`${FIELD} resize-y`}
                 maxLength={TEXT_CAPS.boundaries}
                 value={p1.job?.boundaries ?? ''}
-                onChange={(e) => dispatch({ type: 'set', path: 'part1.job.boundaries', value: e.target.value })}
+                onChange={(e) => set(dispatch, 'part1.job.boundaries')(e.target.value)}
               />
             </div>
           </div>

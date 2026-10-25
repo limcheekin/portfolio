@@ -5,7 +5,7 @@ import { TEXT_CAPS } from '../../../lib/hire/validate';
 import { ChoiceGroup } from '../Question';
 import Reading from '../Reading';
 import { BTN_SECONDARY, BTN_TEXT, ERROR, FIELD, HINT, LABEL } from '../styles';
-import { YES_NO, type StepProps } from './common';
+import { set, YES_NO, type StepProps } from './common';
 
 /** The `#a=` code from a pasted report link, or the paste itself when it is only the code. */
 function linkCode(paste: string): string {
@@ -53,7 +53,7 @@ export default function StartStep({ answers, dispatch, go }: StepProps) {
           className={FIELD}
           maxLength={TEXT_CAPS.name}
           value={answers.name}
-          onChange={(e) => dispatch({ type: 'set', path: 'name', value: e.target.value })}
+          onChange={(e) => set(dispatch, 'name')(e.target.value)}
           placeholder="e.g. Invoice triage agent"
           autoComplete="off"
           data-testid="hire-name"
@@ -71,8 +71,8 @@ export default function StartStep({ answers, dispatch, go }: StepProps) {
           if (live === answers.isLive) return;
           if (live) dispatch({ type: 'startReview' });
           else {
-            dispatch({ type: 'set', path: 'isLive', value: false });
-            dispatch({ type: 'set', path: 'review', value: undefined });
+            set(dispatch, 'isLive')(false);
+            set(dispatch, 'review')(undefined);
           }
         }}
       />

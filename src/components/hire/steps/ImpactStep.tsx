@@ -1,11 +1,11 @@
 import { useId } from 'react';
 import { I_ITEMS } from '../../../lib/hire/checklist';
-import { roi, timeSaved } from '../../../lib/hire/helpers';
+import { fmtMoney, roi, timeSaved } from '../../../lib/hire/helpers';
 import type { HireAnswers } from '../../../lib/hire/types';
 import NumberField from '../NumberField';
 import Reading from '../Reading';
-import { FIELD, HINT, LABEL } from '../styles';
-import { Group, ItemQuestion, Suggestion, type StepProps } from './common';
+import { FIELD, HINT, LABEL, points } from '../styles';
+import { Group, ItemQuestion, set, Suggestion, type StepProps } from './common';
 
 type Figures = NonNullable<HireAnswers['i']['figures']>;
 type FigureKey = 'current' | 'expected' | 'buildCost' | 'annualMaintenanceCost' | 'expectedAnnualSavings';
@@ -14,7 +14,7 @@ const item = (key: string) => I_ITEMS.find((x) => x.key === key)!;
 const optionLabel = (key: string, v: number) => item(key).options.find((o) => o.value === v)?.label ?? String(v);
 const fmt = (n: number, digits = 1) => n.toLocaleString('en-US', { maximumFractionDigits: digits });
 
-const fig = (dispatch: StepProps['dispatch'], k: FigureKey) => (v: number | undefined) => dispatch({ type: 'set', path: `i.figures.${k}`, value: v });
+const fig = (dispatch: StepProps['dispatch'], k: FigureKey) => set(dispatch, `i.figures.${k}`);
 
 /** I · Time savings: the two times (with the unit), the computed suggestion and the scored item. */
 export function TimeSavings({ answers, dispatch }: StepProps) {
@@ -32,7 +32,7 @@ export function TimeSavings({ answers, dispatch }: StepProps) {
             id={`${id}-unit`}
             className={FIELD}
             value={unit}
-            onChange={(e) => dispatch({ type: 'set', path: 'i.figures.unit', value: e.target.value })}
+            onChange={(e) => set(dispatch, 'i.figures.unit')(e.target.value)}
           >
             <option value="minutes">minutes</option>
             <option value="hours">hours</option>
@@ -42,7 +42,7 @@ export function TimeSavings({ answers, dispatch }: StepProps) {
         <NumberField label="Expected time with agent" value={f.expected} onChange={fig(dispatch, 'expected')} suffix={unit} />
       </div>
       {ts ? (
-        <Suggestion testId="hire-time-suggestion" applied={i.timeSavings === ts.suggestion} onUse={() => dispatch({ type: 'set', path: 'i.timeSavings', value: ts.suggestion })}>
+        <Suggestion testId="hire-time-suggestion" applied={i.timeSavings === ts.suggestion} onUse={() => set(dispatch, 'i.timeSavings')(ts.suggestion)}>
           Time saved per process: <strong className="text-lightest-slate">{fmt(ts.savedPerProcess, 2)} {unit}</strong> ({fmt(ts.savedPct)}%).
           {' '}Suggests <strong className="text-lightest-slate">{ts.suggestion}: {optionLabel('timeSavings', ts.suggestion)}</strong>.{' '}
           <Reading k="timeBands" />
@@ -60,7 +60,6 @@ export function Roi({ answers, dispatch }: StepProps) {
   const id = useId();
   const i = answers.i;
   const f: Figures = i.figures ?? {};
-  const cur = f.currency ? `${f.currency} ` : '';
   const ro = roi(f.buildCost, f.annualMaintenanceCost, f.expectedAnnualSavings);
   return (
     <Group title="ROI">
@@ -77,13 +76,13 @@ export function Roi({ answers, dispatch }: StepProps) {
             maxLength={8}
             value={f.currency ?? ''}
             placeholder="e.g. USD"
-            onChange={(e) => dispatch({ type: 'set', path: 'i.figures.currency', value: e.target.value || undefined })}
+            onChange={(e) => set(dispatch, 'i.figures.currency')(e.target.value || undefined)}
             data-testid="hire-currency"
           />
         </div>
       </div>
       {ro ? (
-        <Suggestion testId="hire-roi-suggestion" applied={i.roi === ro.suggestion} onUse={() => dispatch({ type: 'set', path: 'i.roi', value: ro.suggestion })}>
+        <Suggestion testId="hire-roi-suggestion" applied={i.roi === ro.suggestion} onUse={() => set(dispatch, 'i.roi')(ro.suggestion)}>
           <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span>Year-1 ROI: <strong className="text-lightest-slate">{fmt(ro.year1RoiPct)}%</strong></span>
             <span aria-hidden="true">·</span>
@@ -94,8 +93,8 @@ export function Roi({ answers, dispatch }: StepProps) {
             <Reading k="roiHorizon" />
           </span>
           <span className="mt-1 block">
-            Net savings {cur}{fmt(ro.netAnnualSavings, 0)}/year. Suggests{' '}
-            <strong className="text-lightest-slate">{ro.suggestion > 0 ? '+5' : ro.suggestion < 0 ? '−5' : '0'}: {optionLabel('roi', ro.suggestion)}</strong>.
+            Net savings {fmtMoney(ro.netAnnualSavings, f.currency)}/year. Suggests{' '}
+            <strong className="text-lightest-slate">{points(ro.suggestion)}: {optionLabel('roi', ro.suggestion)}</strong>.
           </span>
         </Suggestion>
       ) : (

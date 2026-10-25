@@ -57,7 +57,7 @@ export function Traits({ answers, dispatch }: StepProps) {
               type="checkbox"
               className={OPTION_INPUT}
               checked={r.traits[t.key]}
-              onChange={(e) => dispatch({ type: 'set', path: `r.traits.${t.key}`, value: e.target.checked })}
+              onChange={(e) => set(dispatch, `r.traits.${t.key}`)(e.target.checked)}
             />
             <KeyHint n={n + 1} />
             <span>{t.label}</span>
@@ -110,7 +110,7 @@ export function CompareTable({ answers, dispatch }: StepProps) {
                   maxLength={TEXT_CAPS.tableCell}
                   placeholder={row[col]}
                   value={r.table?.[row.key]?.[col] ?? ''}
-                  onChange={(e) => dispatch({ type: 'set', path: `r.table.${row.key}.${col}`, value: e.target.value })}
+                  onChange={(e) => set(dispatch, `r.table.${row.key}.${col}`)(e.target.value)}
                 />
               </div>
             ))}
