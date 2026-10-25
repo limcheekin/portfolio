@@ -74,6 +74,7 @@ const projectDate = (slug) => gitDate(`${projectDir}/${slug}.md`);
 const PAGE_SOURCES = {
   '/': ['src/pages/index.astro', 'src/data', 'src/components/home', 'src/content'],
   '/about/': ['src/pages/about.astro', 'src/content/experience', 'src/data/site.ts', 'src/data/faq.ts'],
+  '/hire/': ['src/pages/hire', 'src/components/hire', 'src/lib/hire'],
   '/contact/': ['src/pages/contact.astro', 'src/components/ContactForm.astro'],
   '/projects/': ['src/pages/projects/index.astro', projectDir],
   '/insights/': ['src/pages/insights/index.astro', 'src/content/articles'],

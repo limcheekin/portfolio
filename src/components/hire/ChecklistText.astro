@@ -1,0 +1,22 @@
+---
+import { CHECKLIST_SECTIONS } from '../../lib/hire/copy';
+import { MEASURE } from '../../lib/text-styles';
+---
+
+<div data-testid="hire-checklist" class="space-y-14">
+  {CHECKLIST_SECTIONS.map((s) => (
+    <section aria-labelledby={`hire-${s.id}`}>
+      <h3 id={`hire-${s.id}`} class="mb-6 text-xl font-semibold tracking-[-0.02em] text-lightest-slate">{s.heading}</h3>
+      <div class="space-y-6">
+        {s.entries.map((e) => (
+          <div>
+            <h4 class="mb-2 font-semibold text-lightest-slate">{e.title}</h4>
+            <ul class={`m-0 list-disc space-y-1 pl-5 text-slate-text ${MEASURE}`}>
+              {e.lines.map((l) => <li>{l}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+</div>

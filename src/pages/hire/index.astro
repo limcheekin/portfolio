@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Link from '../../components/Link.astro';
+import ChecklistText from '../../components/hire/ChecklistText.astro';
+import HireTool from '../../components/hire/HireTool';
+import { ENGINEER_NAME, SITE_URL } from '../../data/site';
+import { PAGE_MAIN } from '../../lib/layout';
+import { MEASURE, PAGE_TITLE } from '../../lib/text-styles';
+import { PERSON_REF, webPageJsonLd } from '../../lib/jsonld';
+import { markdownPath } from '../../lib/paths';
+import { CHECKLIST_SOURCE } from '../../lib/hire/checklist';
+import { HIRE_DESCRIPTION, HIRE_INTRO, HIRE_NOSCRIPT, HIRE_PRIVACY_STATEMENT, HIRE_TITLE } from '../../lib/hire/copy';
+
+const jsonLd = [
+  webPageJsonLd('/hire/', 'WebPage', { name: 'HIRE check' }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'HIRE check',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any (browser)',
+    url: `${SITE_URL}/hire/`,
+    author: PERSON_REF,
+    isBasedOn: CHECKLIST_SOURCE.repo,
+    license: 'https://opensource.org/license/mit',
+  },
+];
+---
+
+<BaseLayout
+  title={`HIRE check: should you build that AI agent? | ${ENGINEER_NAME}`}
+  description={HIRE_DESCRIPTION}
+  markdownUrl={markdownPath('/hire/')}
+  jsonLd={jsonLd}
+>
+  <Header />
+  <main id="main-content" class={PAGE_MAIN}>
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'HIRE check' }]} />
+    <h1 class={`${PAGE_TITLE} mb-8`}>{HIRE_TITLE}</h1>
+    {HIRE_INTRO.map((p) => <p class={`mb-4 text-lg leading-relaxed text-slate-text ${MEASURE}`}>{p}</p>)}
+    <p class={`mb-10 leading-relaxed text-slate-text ${MEASURE}`} data-testid="hire-privacy">{HIRE_PRIVACY_STATEMENT}</p>
+
+    <section aria-labelledby="hire-tool" class="mb-20">
+      <h2 id="hire-tool" class="sr-only">The check</h2>
+      <HireTool client:load />
+      <noscript><p class={`text-slate-text ${MEASURE}`}>{HIRE_NOSCRIPT}</p></noscript>
+    </section>
+
+    <section aria-labelledby="hire-checklist-heading" class="mb-20">
+      <h2 id="hire-checklist-heading" class="mb-8 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">The checklist</h2>
+      <ChecklistText />
+    </section>
+
+    <section aria-labelledby="hire-credit">
+      <h2 id="hire-credit" class="mb-4 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">Credit and licence</h2>
+      <p class={`mb-4 leading-relaxed text-slate-text ${MEASURE}`}>
+        Built on the H.I.R.E. framework by Inês Bolaños, {CHECKLIST_SOURCE.licence} licensed ({CHECKLIST_SOURCE.copyright}).
+        Checklist wording is from <code>{CHECKLIST_SOURCE.file}</code> at commit <code>{CHECKLIST_SOURCE.commit}</code> of
+        <Link href={CHECKLIST_SOURCE.repo} class="text-green-accent hover:underline">the framework repository</Link>.
+      </p>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

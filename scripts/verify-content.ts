@@ -3,6 +3,7 @@ import { extname, join } from 'node:path';
 import matter from 'gray-matter';
 import { PROJECT_KINDS } from '../src/lib/project-kind';
 import { PortfolioSchema } from '../src/lib/portfolio-schema';
+import { CHECKLIST_SOURCE } from '../src/lib/hire/checklist';
 import { MCP_TOOLS } from '../src/lib/portfolio-tools';
 
 const args = new Set(process.argv.slice(2));
@@ -238,6 +239,12 @@ check('openapi Project matches generated fields', () => {
   if (JSON.stringify(schema.kind?.enum) !== JSON.stringify(PROJECT_KINDS)) out.push(`openapi kind enum ${JSON.stringify(schema.kind?.enum)} != ${JSON.stringify(PROJECT_KINDS)}`);
   return out;
 });
+
+// ---------- HIRE check page ----------
+
+check('dist: hire page SSR', () => missing(htmlText(readText('dist/hire/index.html')), ['Should you build that AI agent?', 'Inês Bolaños', 'MIT', 'Trust assessment', 'Catastrophic failure would cause irreversible harm', 'If you checked 3+ boxes above, you likely need an']), { dist: true });
+check('dist: hire Markdown', () => existsSync('dist/hire/index.md') ? missing(readText('dist/hire/index.md'), ['# HIRE check', CHECKLIST_SOURCE.commit]) : ['dist/hire/index.md missing'], { dist: true });
+check('dist: hire JSON-LD', () => missing(readText('dist/hire/index.html'), ['"@type":"WebApplication"', `"isBasedOn":"${CHECKLIST_SOURCE.repo}"`]), { dist: true });
 
 // ---------- site chrome ----------
 

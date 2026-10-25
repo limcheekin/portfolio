@@ -9,6 +9,7 @@ import { FAQ } from '../src/data/faq';
 import type { Portfolio } from '../src/lib/portfolio-schema';
 import { mcpManifest } from '../src/lib/portfolio-tools';
 import { hireManifest } from '../src/lib/hire-tools';
+import { HIRE_CREDIT, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_PRIVACY_STATEMENT, checklistMarkdown } from '../src/lib/hire/copy';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -235,7 +236,28 @@ writeMarkdown('/about/', [
   '',
   ...FAQ.flatMap((f) => [`### ${f.question}`, '', f.answer, '']),
 ]);
-console.log('Generated: dist/{projects,insights}/<slug>/index.md, dist/about/index.md');
+writeMarkdown('/hire/', [
+  '# HIRE check: should you build that AI agent?',
+  '',
+  `> ${HIRE_DESCRIPTION}`,
+  '',
+  `- Page: ${SITE_URL}/hire/`,
+  `- MCP server: ${SITE_URL}/mcp/hire`,
+  '',
+  ...HIRE_INTRO.flatMap((para) => [para, '']),
+  '## Privacy',
+  '',
+  HIRE_PRIVACY_STATEMENT,
+  '',
+  '## Credit and licence',
+  '',
+  HIRE_CREDIT,
+  '',
+  '## The checklist',
+  '',
+  ...checklistMarkdown(),
+]);
+console.log('Generated: dist/{projects,insights}/<slug>/index.md, dist/about/index.md, dist/hire/index.md');
 
 // GET search index for agents without MCP: one flat list of every project, article and role with its page URL
 // and the words worth matching. (search_portfolio on the MCP server answers the same questions server-side.)
