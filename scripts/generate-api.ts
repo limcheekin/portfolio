@@ -9,7 +9,7 @@ import { FAQ } from '../src/data/faq';
 import type { Portfolio } from '../src/lib/portfolio-schema';
 import { mcpManifest } from '../src/lib/portfolio-tools';
 import { hireManifest } from '../src/lib/hire-tools';
-import { HIRE_CREDIT, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_PRIVACY_STATEMENT, checklistMarkdown } from '../src/lib/hire/copy';
+import { HIRE_CREDIT_MARKDOWN, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_PRIVACY_STATEMENT, checklistMarkdown } from '../src/lib/hire/copy';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -251,7 +251,7 @@ writeMarkdown('/hire/', [
   '',
   '## Credit and licence',
   '',
-  HIRE_CREDIT,
+  HIRE_CREDIT_MARKDOWN,
   '',
   '## The checklist',
   '',
