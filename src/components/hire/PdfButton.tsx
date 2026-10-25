@@ -36,6 +36,8 @@ export default function PdfButton({ answers, assessment }: { answers: HireAnswer
     setBusy(true);
     setError('');
     setStatus('Building the PDF report');
+    // Loading (modules and fonts over the network) and building fail for different reasons: say which.
+    let phase: 'load' | 'build' = 'load';
     try {
       const [report, PDFLib, fontkitModule, [regular, bold]] = await Promise.all([
         import('../../lib/hire/pdf'), // the report layout, so the island doesn't carry it either
@@ -43,6 +45,7 @@ export default function PdfButton({ answers, assessment }: { answers: HireAnswer
         import('@pdf-lib/fontkit'),
         loadFonts(),
       ]);
+      phase = 'build';
       const fontkit = (fontkitModule as { default?: unknown }).default ?? fontkitModule;
       const bytes = await report.buildReportPdf({ PDFLib, fontkit, regular, bold }, answers, assessment);
       const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/pdf' }));
@@ -56,7 +59,11 @@ export default function PdfButton({ answers, assessment }: { answers: HireAnswer
       setStatus('PDF report ready');
     } catch {
       setStatus('');
-      setError("The PDF couldn't be built. Check your connection (the fonts load on first use) and try again.");
+      setError(
+        phase === 'load'
+          ? "The PDF couldn't be built: its files didn't load. Check your connection (they load on first use) and try again."
+          : "The PDF couldn't be built from these answers. Try again; if it still fails, share the report link instead.",
+      );
     } finally {
       setBusy(false);
     }
