@@ -38,7 +38,7 @@ export const HERO_CONTENT = {
 };
 
 export const CONTACT_CTA = {
-  eyebrow: '04 · Contact',
+  eyebrow: '05 · Contact',
   headline: { before: 'Have a workflow that should ', accent: 'run itself?' },
   paragraph: 'I design and ship AI agents that plug into the systems you already run. Tell me about yours.',
   button: { label: 'Get in touch', href: '/contact/' },
