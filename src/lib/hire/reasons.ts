@@ -1,7 +1,7 @@
 import type { HireAnswers, PathStep } from './types.ts';
-import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, WORST_CASE_OPTIONS } from './checklist.ts';
+import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, THRESHOLDS, WORST_CASE_OPTIONS } from './checklist.ts';
 import type { ChecklistItem } from './checklist.ts';
-import { eItemScore, isNA } from './score.ts';
+import { eItemScore, isNA, SECTION_RANGE } from './score.ts';
 import type { RedFlag, SectionScores } from './score.ts';
 import type { LiveReading } from './live.ts';
 
@@ -82,7 +82,7 @@ export function pathToHire(a: HireAnswers, total: number): PathStep[] {
   const steps: PathStep[] = [];
   let t = total;
   for (const l of sorted) {
-    if (t > 50) break;
+    if (t > THRESHOLDS.trainMax) break;
     t += l.gain;
     steps.push({ key: l.key, label: l.label, gain: l.gain, totalAfter: t, actionable: l.actionable, proposed: true });
   }
@@ -97,15 +97,15 @@ export function buildReasons(
   stop?: { message: string } | null,
 ): string[] {
   const out: string[] = [];
-  if (stop) out.push(`Stopped at a gate: ${live ? stop.message.replace('DO NOT BUILD', 'FIRE') : stop.message}`);
+  if (stop) out.push(`Stopped at a gate: ${stop.message}`);
   else {
     const gates = [a.part1.canStateBusinessProblem, a.part1.canDefineJobAndKpis, a.r.ruleBased === null ? null : !a.r.ruleBased, a.r.informational === null ? null : !a.r.informational];
     if (gates.every((g) => g === true) && a.e.worstCase !== null) out.push('All gates passed: the problem and job are defined, an agent is the right kind of tool and the worst case is not catastrophic.');
   }
-  const ranges = { H: [7, 21], I: [-2, 17], E: [-60, 39] } as const;
   const rel = (k: 'H' | 'I' | 'E') => {
-    const [lo, hi] = ranges[k];
-    return (scores[k.toLowerCase() as 'h' | 'i' | 'e'] - lo) / (hi - lo);
+    const s = k.toLowerCase() as 'h' | 'i' | 'e';
+    const [lo, hi] = SECTION_RANGE[s];
+    return (scores[s] - lo) / (hi - lo);
   };
   const done = (['H', 'I', 'E'] as const).filter((k) => scores.complete[k.toLowerCase() as 'h' | 'i' | 'e']);
   if (done.length >= 2) {

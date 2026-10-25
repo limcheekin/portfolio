@@ -3,9 +3,11 @@ import { gsap } from '../../lib/gsap';
 import { MQ } from '../../lib/motion';
 import { useMatchMedia } from '../../lib/use-match-media';
 import { THRESHOLDS } from '../../lib/hire/checklist';
+import { SCORE_FLOOR } from '../../lib/hire/score';
 import type { Verdict } from '../../lib/hire/types';
+import { points } from './styles';
 
-export const FLOOR = -55;
+export const FLOOR = SCORE_FLOOR;
 const CEIL = THRESHOLDS.ceiling;
 const SPAN = CEIL - FLOOR;
 const CX = 100;
@@ -98,7 +100,7 @@ export default function ScoreGauge({ total, verdict, label, className = '', from
         const t = tick(v);
         return <line key={v} {...t} className="stroke-light-slate" strokeWidth={1.5} />;
       })}
-      <text x={CX - R} y={CY + 11} textAnchor="middle" className="fill-slate-text font-mono text-[9px]">{'−'}55</text>
+      <text x={CX - R} y={CY + 11} textAnchor="middle" className="fill-slate-text font-mono text-[9px]">{points(FLOOR)}</text>
       <text x={CX + R} y={CY + 11} textAnchor="middle" className="fill-slate-text font-mono text-[9px]">{CEIL}</text>
       <g ref={needle} className={tone}>
         <line x1={CX} y1={CY} x2={CX} y2={CY - R + 14} strokeWidth={2.5} strokeLinecap="round" />

@@ -4,11 +4,11 @@ import type * as PdfLibTypes from 'pdf-lib';
 import { COLORS } from '../palette.mjs';
 import {
   ALTERNATIVES, CHECKLIST_SOURCE, E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, METRIC_DEFS, METRIC_KEYS, METRIC_SHORT,
-  MIT_LICENCE_TEXT, R_QUESTIONS, R_TRAITS, SIGN_OFF_ROLES, WORST_CASE_OPTIONS,
+  MIT_LICENCE_TEXT, R_QUESTIONS, R_TRAITS, SIGN_OFF_ROLES, THRESHOLDS, WORST_CASE_OPTIONS,
 } from './checklist.ts';
 import type { ChecklistItem } from './checklist.ts';
 import { fmtNum } from './helpers.ts';
-import { isNA } from './score.ts';
+import { isNA, SCORE_FLOOR, SECTION_RANGE } from './score.ts';
 import type { Assessment, HireAnswers, MetricKey, Verdict } from './types.ts';
 
 export interface PdfDeps {
@@ -18,8 +18,9 @@ export interface PdfDeps {
   bold: ArrayBuffer;
 }
 
-const SCORE_MIN = -55;
-const SCORE_MAX = 77;
+const SCORE_MIN = SCORE_FLOOR;
+const SCORE_MAX = THRESHOLDS.ceiling;
+const { doNotBuildMax: DNB, trainMax: TRAIN_MAX } = THRESHOLDS;
 
 /** Degrees across the 180° dial arc (0 = far left, 180 = far right) for a total, clamped to the score range. */
 export function dialAngle(total: number): number {
@@ -199,7 +200,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     const [x2, y2] = pt(d2, R);
     return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${R} ${R} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
   };
-  const bands: Array<[number, number, Token]> = [[SCORE_MIN, 30, 'print-coral'], [30, 50, 'print-amber'], [50, SCORE_MAX, 'print-green']];
+  const bands: Array<[number, number, Token]> = [[SCORE_MIN, DNB, 'print-coral'], [DNB, TRAIN_MAX, 'print-amber'], [TRAIN_MAX, SCORE_MAX, 'print-green']];
   for (const [from, to, token] of bands) {
     page.drawSvgPath(arc(dialAngle(from) + 0.6, dialAngle(to) - 0.6), { x: cx, y: cy, borderColor: col(token), borderWidth: 16 });
   }
@@ -212,7 +213,7 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     const w = regular.widthOfTextAtSize(label, 8);
     page.drawText(label, { x: cx + tx - w / 2, y: cy - ty - 3, size: 8, font: regular, color: col('print-muted') });
   };
-  tick(SCORE_MIN, String(SCORE_MIN)); tick(30, '30'); tick(50, '50'); tick(SCORE_MAX, String(SCORE_MAX));
+  for (const v of [SCORE_MIN, DNB, TRAIN_MAX, SCORE_MAX]) tick(v, String(v));
   const totalText = String(total);
   page.drawText(totalText, { x: cx - bold.widthOfTextAtSize(totalText, 44) / 2, y: cy - 62, size: 44, font: bold, color: col('print-ink') });
   const sub = `of ${SCORE_MAX} points${r.notAssessed.length ? ', partly assessed' : ''}`;
@@ -261,11 +262,11 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     page.drawText(t, { x: M.x + 372, y, size: 9, font: regular, color: col('print-muted') });
     y -= 4;
   };
-  secRow('Human & Habits', r.scores.h, 7, 21, r.scores.complete.h);
-  secRow('Impact & Intent', r.scores.i, -2, 17, r.scores.complete.i);
-  secRow('Exposure & Execution', r.scores.e, -60, 39, r.scores.complete.e);
+  secRow('Human & Habits', r.scores.h, ...SECTION_RANGE.h, r.scores.complete.h);
+  secRow('Impact & Intent', r.scores.i, ...SECTION_RANGE.i, r.scores.complete.i);
+  secRow('Exposure & Execution', r.scores.e, ...SECTION_RANGE.e, r.scores.complete.e);
   y -= 4;
-  bullet(`Total: ${total} of ${SCORE_MAX}. Bands: 30 or less DO NOT BUILD (FIRE when live), 31 to 50 TRAIN, above 50 HIRE.`, { font: bold });
+  bullet(`Total: ${total} of ${SCORE_MAX}. Bands: ${DNB} or less DO NOT BUILD (FIRE when live), ${DNB + 1} to ${TRAIN_MAX} TRAIN, above ${TRAIN_MAX} HIRE.`, { font: bold });
   if (r.stop) {
     h3('Stopped at a gate', 'print-coral');
     para(r.stop.message, { gap: 4 });

@@ -1,5 +1,5 @@
 import type { HireAnswers, NA } from './types.ts';
-import { E_BOUNDARIES, E_GUARDRAILS, RED_FLAGS, THRESHOLDS, WORST_CASE_OPTIONS } from './checklist.ts';
+import { E_BOUNDARIES, E_GUARDRAILS, H_ITEMS, I_ITEMS, RED_FLAGS, THRESHOLDS, WORST_CASE_OPTIONS, type ChecklistItem } from './checklist.ts';
 
 export type StopGate = 'problem' | 'job' | 'ruleBased' | 'informational' | 'catastrophic';
 export interface Stop { gate: StopGate; message: string }
@@ -26,6 +26,22 @@ const WORST_POINTS: Record<string, number | null> = Object.fromEntries(
   WORST_CASE_OPTIONS.map((o) => [o.value, o.points]),
 );
 
+// Each section's floor and ceiling, from the checklist's option values (E includes the scored worst cases).
+const span = (items: ChecklistItem[], extra: number[] = [0]): readonly [number, number] => {
+  const lows = items.map((it) => Math.min(...it.options.map((o) => Number(o.value))));
+  const highs = items.map((it) => Math.max(...it.options.map((o) => Number(o.value))));
+  const add = (xs: number[]) => xs.reduce((t, x) => t + x, 0);
+  return [add(lows) + Math.min(...extra), add(highs) + Math.max(...extra)];
+};
+const WORST_SCORED = WORST_CASE_OPTIONS.flatMap((o) => (o.points === null ? [] : [o.points]));
+export const SECTION_RANGE = {
+  h: span(H_ITEMS),
+  i: span(I_ITEMS),
+  e: span([...E_GUARDRAILS, ...E_BOUNDARIES], WORST_SCORED),
+} as const;
+/** The lowest possible total (every item at its worst, the worst case severe); the ceiling is THRESHOLDS.ceiling. */
+export const SCORE_FLOOR = SECTION_RANGE.h[0] + SECTION_RANGE.i[0] + SECTION_RANGE.e[0];
+
 export function eItemScore(key: EKey, v: EValue | undefined): number | null {
   if (key === 'worstCase') return v == null ? null : (WORST_POINTS[v as string] ?? 0);
   if (isNA(v)) return E_BEST[key];
@@ -43,12 +59,15 @@ export function sectionScores(a: HireAnswers): SectionScores {
   return { h, i, e, total: h + i + e, complete: { h: done(hv), i: done(iv), e: done(ev) } };
 }
 
+/** A Part 1 stop's verdict: DO NOT BUILD before building, FIRE once the agent is live. */
+export const stopVerdict = (a: HireAnswers): 'DO NOT BUILD' | 'FIRE' => (a.isLive ? 'FIRE' : 'DO NOT BUILD');
+
 export function firstStop(a: HireAnswers): Stop | null {
   if (a.part1.canStateBusinessProblem === false) return { gate: 'problem', message: "STOP: the business problem can't be stated." };
   if (a.part1.canDefineJobAndKpis === false) return { gate: 'job', message: "STOP: the job description and KPIs can't be defined." };
   if (a.r.ruleBased === true) return { gate: 'ruleBased', message: "Don't build an agent: use automation" };
   if (a.r.informational === true) return { gate: 'informational', message: "Don't build an agent: use a chatbot" };
-  if (a.e.worstCase === 'catastrophic') return { gate: 'catastrophic', message: 'Catastrophic failure would cause irreversible harm: DO NOT BUILD.' };
+  if (a.e.worstCase === 'catastrophic') return { gate: 'catastrophic', message: `Catastrophic failure would cause irreversible harm: ${stopVerdict(a)}.` };
   return null;
 }
 

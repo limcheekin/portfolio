@@ -1,6 +1,6 @@
 import type { Assessment, HireAnswers, Verdict } from './types.ts';
-import { ALTERNATIVES, CHECKLIST_SOURCE, METRIC_SHORT } from './checklist.ts';
-import { band, firstStop, naItems, redFlags, sectionScores, traitsNote } from './score.ts';
+import { ALTERNATIVES, CHECKLIST_SOURCE, METRIC_SHORT, THRESHOLDS } from './checklist.ts';
+import { band, firstStop, naItems, redFlags, sectionScores, stopVerdict, traitsNote } from './score.ts';
 import { readLive } from './live.ts';
 import { buildReasons, pathToHire, READINGS } from './reasons.ts';
 
@@ -10,6 +10,9 @@ const MEANING: Record<Verdict, string> = {
   'DO NOT BUILD': "Don't build this agent: evaluate the alternatives.",
   FIRE: 'Discontinue or downgrade this agent: evaluate the alternatives.',
 };
+
+/** The Documentation field offers only HIRE, TRAIN or FIRE, so a pre-build DO NOT BUILD is recorded as FIRE. */
+const DECISION: Record<Verdict, NonNullable<Assessment['decision']>> = { HIRE: 'HIRE', TRAIN: 'TRAIN', 'DO NOT BUILD': 'FIRE', FIRE: 'FIRE' };
 
 const BLANK_REVIEW: NonNullable<HireAnswers['review']> = {
   launchDate: null,
@@ -22,8 +25,7 @@ export function assess(a: HireAnswers): Assessment {
   const live = a.isLive;
   const mode = live ? 'live' : 'pre-build';
   const scores = sectionScores(a);
-  const rawStop = firstStop(a);
-  const stop = rawStop && live ? { ...rawStop, message: rawStop.message.replace('DO NOT BUILD', 'FIRE') } : rawStop;
+  const stop = firstStop(a);
   const flags = redFlags(a);
   const reading = live ? readLive(a.review ?? BLANK_REVIEW, a.assessmentDate) : null;
   const na = naItems(a);
@@ -33,13 +35,13 @@ export function assess(a: HireAnswers): Assessment {
   // A met FIRE criterion decides a live review at once, like a Part 1 stop: the open sections can't undo it.
   const fired = live && reading!.fire.length > 0;
   let verdict: Verdict | null;
-  if (stop) verdict = live ? 'FIRE' : 'DO NOT BUILD';
+  if (stop) verdict = stopVerdict(a);
   else if (fired) verdict = 'FIRE';
   else if (incomplete.length) verdict = null;
-  else if (live) verdict = scores.total <= 30 ? 'FIRE' : band(scores.total);
+  else if (live) verdict = scores.total <= THRESHOLDS.doNotBuildMax ? 'FIRE' : band(scores.total);
   else verdict = band(scores.total);
 
-  const decision = verdict === null ? null : verdict === 'DO NOT BUILD' ? 'FIRE' : verdict;
+  const decision = verdict === null ? null : DECISION[verdict];
 
   const notAssessed: Assessment['notAssessed'] = [];
   if (stop || fired) for (const k of ['h', 'i', 'e'] as const) if (!scores.complete[k]) notAssessed.push(k.toUpperCase() as 'H' | 'I' | 'E');
@@ -64,7 +66,7 @@ export function assess(a: HireAnswers): Assessment {
   if (live) {
     if (stop) readings.push(READINGS.liveStop);
     if (reading!.watch.length) readings.push(READINGS.watch);
-    if (!stop && verdict === 'FIRE' && scores.total <= 30 && incomplete.length === 0) readings.push(READINGS.liveLowScore);
+    if (!stop && verdict === 'FIRE' && scores.total <= THRESHOLDS.doNotBuildMax && incomplete.length === 0) readings.push(READINGS.liveLowScore);
     const rv = a.review ?? BLANK_REVIEW;
     const mt = rv.metrics;
     if (reading!.bands.diy === 'Critical' || (mt.diy.value != null && reading!.fire.every((f) => f.key !== 'diy') && reading!.watch.some((w) => w.startsWith('DIY')))) readings.push(READINGS.diyMonths);

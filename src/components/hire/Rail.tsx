@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { THRESHOLDS, type FlowStep } from '../../lib/hire/checklist';
+import { SECTION_RANGE } from '../../lib/hire/score';
 import type { Assessment } from '../../lib/hire/types';
 import ScoreGauge from './ScoreGauge';
 import { points, verdictBorder, verdictText } from './styles';
@@ -36,9 +37,9 @@ function VerdictLine({ assessment, className = '' }: { assessment: Assessment; c
 export default function Rail({ steps, current, done, assessment, onGo }: RailProps) {
   const s = assessment.scores;
   const sections = [
-    { k: 'H', v: s.h, max: 21, ok: s.complete.h },
-    { k: 'I', v: s.i, max: 17, ok: s.complete.i },
-    { k: 'E', v: s.e, max: 39, ok: s.complete.e },
+    { k: 'H', v: s.h, max: SECTION_RANGE.h[1], ok: s.complete.h },
+    { k: 'I', v: s.i, max: SECTION_RANGE.i[1], ok: s.complete.i },
+    { k: 'E', v: s.e, max: SECTION_RANGE.e[1], ok: s.complete.e },
   ];
   let lastPart = 0;
   return (

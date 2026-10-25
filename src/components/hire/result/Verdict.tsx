@@ -1,11 +1,10 @@
 import { THRESHOLDS } from '../../../lib/hire/checklist';
+import { SECTION_RANGE } from '../../../lib/hire/score';
 import type { Assessment, Verdict as V } from '../../../lib/hire/types';
 import { signed } from '../Rail';
 import { HINT, PANEL, verdictBorder, verdictText } from '../styles';
 
 const NAMES = { h: 'Human & Habits', i: 'Impact & Intent', e: 'Exposure & Execution' } as const;
-// Each section's floor and ceiling, from the checklist's option values (E includes the worst case).
-const RANGE = { h: [7, 21], i: [-2, 17], e: [-60, 39] } as const;
 
 const PILL_TINT: Record<V, string> = {
   HIRE: 'bg-green-tint',
@@ -18,7 +17,7 @@ export const INCOMPLETE_PREFIX = 'FIRE check incomplete:';
 
 /** A section's score on a bar from its floor to its ceiling, with a zero line when the floor is negative. */
 function SectionBar({ k, value, complete }: { k: 'h' | 'i' | 'e'; value: number; complete: boolean }) {
-  const [lo, hi] = RANGE[k];
+  const [lo, hi] = SECTION_RANGE[k];
   const at = (n: number) => ((Math.min(hi, Math.max(lo, n)) - lo) / (hi - lo)) * 100;
   const zero = lo < 0 ? at(0) : 0;
   const left = Math.min(zero, at(value));

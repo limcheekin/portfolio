@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { band, eItemScore, firstStop, naItems, redFlags, sectionScores, traitsNote } from '../../src/lib/hire/score.ts';
+import { band, eItemScore, firstStop, naItems, redFlags, SCORE_FLOOR, SECTION_RANGE, sectionScores, traitsNote } from '../../src/lib/hire/score.ts';
+import { THRESHOLDS } from '../../src/lib/hire/checklist.ts';
 import { allWorst, blankAnswers, fraud } from './helpers.ts';
 import type { HireAnswers } from '../../src/lib/hire/types.ts';
 
@@ -66,4 +67,14 @@ test('traits note, not a red flag', () => {
   assert.ok(!redFlags(two).some((f) => f.key === 'r3'));
   assert.equal(traitsNote(fraud), null);
   assert.equal(traitsNote({ ...two, r: { ...two.r, ruleBased: true } }), null);
+});
+test('section ranges and the floor come from the checklist options', () => {
+  assert.deepEqual(SECTION_RANGE, { h: [7, 21], i: [-2, 17], e: [-60, 39] });
+  assert.equal(SCORE_FLOOR, -55);
+  assert.equal(SECTION_RANGE.h[1] + SECTION_RANGE.i[1] + SECTION_RANGE.e[1], THRESHOLDS.ceiling);
+});
+test('a stop carries its own verdict word: DO NOT BUILD before building, FIRE when live', () => {
+  const cat = { ...fraud, e: { ...fraud.e, worstCase: 'catastrophic' as const } };
+  assert.equal(firstStop(cat)?.message, 'Catastrophic failure would cause irreversible harm: DO NOT BUILD.');
+  assert.equal(firstStop({ ...cat, isLive: true })?.message, 'Catastrophic failure would cause irreversible harm: FIRE.');
 });
