@@ -166,15 +166,31 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
     page.drawCircle({ x: M.x + 3, y: y - size * 1.45 + size * 0.28 + size * 0.35, size: 1.4, color: col(o.color ?? 'print-muted') });
     para(text, { ...o, x: M.x + 14, gap: o.gap ?? 3 });
   };
-  const kv = (label: string, value: string, o: { color?: Token } = {}) => {
-    const lines = wrap(value || 'Not answered', regular, 10, CONTENT_W - 150);
-    ensure(14.5 * Math.min(lines.length, 2));
+  /**
+   * Two columns from the same top: a label kept on one page (room for it is ensured first) and a value that may run
+   * onto later pages. A value that moved to a new page ends below everything there, so its y stands; on the same page
+   * the lower of the two columns does.
+   */
+  const columns = (labelH: number, minValueH: number, label: () => void, value: () => void, pad: number) => {
+    ensure(Math.max(labelH, minValueH));
     const top = y;
-    para(label, { size: 9, color: 'print-muted', width: 140 });
-    const after = y;
+    const start = page;
+    label();
+    const afterLabel = y;
     y = top;
-    para(value || 'Not answered', { x: M.x + 150, width: CONTENT_W - 150, color: value ? o.color : 'print-muted' });
-    y = Math.min(y, after) - 3;
+    value();
+    y = (page === start ? Math.min(y, afterLabel) : y) - pad;
+  };
+  const kv = (label: string, value: string, o: { color?: Token } = {}) => {
+    const text = value || 'Not answered';
+    const lines = wrap(text, regular, 10, CONTENT_W - 150).length;
+    columns(
+      wrap(label, regular, 9, 140).length * 9 * 1.45,
+      14.5 * Math.min(lines, 2),
+      () => para(label, { size: 9, color: 'print-muted', width: 140 }),
+      () => para(text, { x: M.x + 150, width: CONTENT_W - 150, color: value ? o.color : 'print-muted' }),
+      3,
+    );
   };
 
   const verdict = r.verdict;
@@ -297,18 +313,14 @@ export async function buildReportPdf(deps: PdfDeps, a: HireAnswers, r: Assessmen
       const def = METRIC_DEFS[k];
       const v = rev?.metrics[k]?.value ?? null;
       const band = r.live.bands[k];
-      ensure(18);
-      const top = y;
-      para(def.name, { size: 9.5, width: 230 });
-      const after = y;
-      y = top;
-      if (v === null || !band) para('Not measured', { x: M.x + 240, size: 9.5, color: 'print-muted' });
-      else {
-        const unit = def.unit === '%' ? '%' : ' turns';
-        meter(M.x + 240, y - 11, 90, 8, 0, METER_MAX[k], v, BAND_TOKEN[band]);
-        para(`${fmtNum(v)}${unit}  ${band}`, { x: M.x + 340, size: 9.5, font: bold, color: BAND_TOKEN[band] });
-      }
-      y = Math.min(y, after) - 2;
+      columns(wrap(def.name, regular, 9.5, 230).length * 9.5 * 1.45, 18, () => para(def.name, { size: 9.5, width: 230 }), () => {
+        if (v === null || !band) para('Not measured', { x: M.x + 240, size: 9.5, color: 'print-muted' });
+        else {
+          const unit = def.unit === '%' ? '%' : ' turns';
+          meter(M.x + 240, y - 11, 90, 8, 0, METER_MAX[k], v, BAND_TOKEN[band]);
+          para(`${fmtNum(v)}${unit}  ${band}`, { x: M.x + 340, size: 9.5, font: bold, color: BAND_TOKEN[band] });
+        }
+      }, 2);
     }
     if (r.live.fire.length) { h3('FIRE criteria met', 'print-coral'); for (const f of r.live.fire) bullet(f.text, { color: 'print-coral' }); }
     if (r.live.watch.length) { h3('Watch items'); for (const t of r.live.watch) bullet(t); }

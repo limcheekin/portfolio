@@ -49,6 +49,38 @@ test('long text with emoji, symbols and no spaces paginates without throwing', a
   assert.ok(big.getPageCount() >= (await fraudPdf).getPageCount());
 });
 
+/** Every text draw in build order, with its page and baseline: a probe on pdf-lib's drawText. */
+async function textDraws(a: Parameters<typeof assess>[0]) {
+  const draws: Array<{ page: object; y: number; text: string }> = [];
+  const proto = PDFLib.PDFPage.prototype;
+  const orig = proto.drawText;
+  proto.drawText = function (this: PDFLib.PDFPage, text: string, o?: PDFLib.PDFPageDrawTextOptions) {
+    draws.push({ page: this, y: o?.y ?? 0, text });
+    return orig.call(this, text, o);
+  };
+  try {
+    await buildReportPdf(deps, a, assess(a));
+  } finally {
+    proto.drawText = orig;
+  }
+  return draws;
+}
+
+test('a value that runs onto a new page leaves no gap before the next row', async () => {
+  // Long enough to cross a page wherever it starts.
+  const rationale = 'The agent resolves most disputes on the first turn but still needs a human for refunds. '.repeat(60);
+  const draws = await textDraws({ ...FRAUD_CASE, doc: { rationale, nextSteps: 'Pilot with one team.' } });
+  const at = (t: string) => draws.findIndex((d) => d.text === t);
+  const rat = at('Rationale');
+  const next = at('Next steps');
+  assert.ok(rat > 0 && next > rat);
+  const last = draws[next - 1]; // the rationale's last line
+  assert.notEqual(draws[rat].page, last.page, 'the probe rationale should cross a page');
+  assert.equal(draws[next].page, last.page);
+  const gap = last.y - draws[next].y;
+  assert.ok(gap > 0 && gap < 30, `gap of ${gap.toFixed(1)} pt before "Next steps"`);
+});
+
 test('dial clamps', () => {
   assert.equal(dialAngle(-100), dialAngle(-55));
   assert.equal(dialAngle(-55), 0);
