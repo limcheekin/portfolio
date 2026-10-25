@@ -62,7 +62,7 @@ export default function RightToolStep({ answers, dispatch }: StepProps) {
             {R_QUESTIONS.verdict} <span className="font-mono text-xs text-light-slate">({count} of 5 checked)</span>
           </p>
           {note && (
-            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-amber" data-testid="hire-traits-note">
+            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-light-slate" data-testid="hire-traits-note">
               Note: {note}. Scoring goes on. <Reading k="traits" />
             </p>
           )}
@@ -82,7 +82,7 @@ export default function RightToolStep({ answers, dispatch }: StepProps) {
           <fieldset key={row.key} className="min-w-0" data-testid={`r-table-${row.key}`}>
             <legend className="mb-2 font-semibold text-lightest-slate">
               {row.name}
-              {row.key === 'rule' && ruleBlank && <span className="ml-2 font-mono text-xs font-normal text-amber">blank: raises a red flag</span>}
+              {row.key === 'rule' && ruleBlank && <span className="ml-2 font-mono text-xs font-normal text-danger">blank: raises a red flag</span>}
             </legend>
             <div className="grid gap-3 md:grid-cols-2">
               {(['does', 'why'] as const).map((col) => (

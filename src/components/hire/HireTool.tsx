@@ -99,38 +99,44 @@ export default function HireTool() {
   const heading = useRef<HTMLHeadingElement>(null);
   const navigated = useRef(false);
   const writes = useRef(0);
+  const lastCode = useRef(''); // the #a= code last read or written, so our own link is never reloaded
 
   const go = (id: string) => {
     navigated.current = true;
     setStepId(id);
   };
 
-  // Read #a= on load (and when the hash is changed by hand). A link that fails to decode loads nothing.
+  // Read #a= on load, and again when the user changes the hash by hand (pastes another link, or goes Back to one).
+  // A link that fails to decode loads nothing. Only the first read picks the step; a later one keeps the user's.
   useEffect(() => {
     let alive = true;
-    const read = async () => {
+    const read = async (first: boolean) => {
       const m = /^#a=(.*)$/.exec(window.location.hash);
       if (!m) {
-        setLink((l) => (l === 'reading' ? 'ready' : l));
+        // Other fragments (a footnote opened without JS, say) are not answers.
+        if (first) setLink('ready');
         return;
       }
+      if (!first && m[1] === lastCode.current) return; // our own link: nothing new to load
       const res = await decodeAnswers(m[1]);
       if (!alive) return;
       if (res.ok) {
+        lastCode.current = m[1];
         dispatch({ type: 'load', answers: res.answers });
-        setStepId(openingStep(res.answers));
+        if (first) setStepId(openingStep(res.answers));
         setLink('ready');
       } else {
         dispatch({ type: 'reset' });
-        setStepId('start');
+        if (first) setStepId('start');
         setLink('bad');
       }
     };
-    read();
-    window.addEventListener('hashchange', read);
+    const onHash = () => read(false);
+    read(true);
+    window.addEventListener('hashchange', onHash);
     return () => {
       alive = false;
-      window.removeEventListener('hashchange', read);
+      window.removeEventListener('hashchange', onHash);
     };
   }, [dispatch]);
 
@@ -141,11 +147,14 @@ export default function HireTool() {
     const t = window.setTimeout(async () => {
       const { pathname, search, hash } = window.location;
       if (isFresh(scored)) {
+        lastCode.current = '';
         if (hash) history.replaceState(history.state, '', pathname + search);
         return;
       }
       const code = await encodeAnswers(scored);
-      if (n === writes.current) history.replaceState(history.state, '', `${pathname}${search}#a=${code}`);
+      if (n !== writes.current) return;
+      lastCode.current = code;
+      history.replaceState(history.state, '', `${pathname}${search}#a=${code}`);
     }, 300);
     return () => window.clearTimeout(t);
   }, [scored, link]);

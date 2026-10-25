@@ -58,7 +58,7 @@ const jsonLd = [
       <h2 id="hire-readings-heading" class="mb-4 text-[clamp(24px,3vw,32px)] font-semibold tracking-[-0.03em] text-lightest-slate">This tool's readings</h2>
       <p class={`mb-6 leading-relaxed text-slate-text ${MEASURE}`}>{HIRE_READINGS_INTRO}</p>
       <ol class={`m-0 list-decimal space-y-3 pl-5 text-slate-text ${MEASURE}`}>
-        {HIRE_READINGS.map((r) => <li id={`reading-${r.key}`} class="scroll-mt-28 leading-relaxed">{r.text}</li>)}
+        {HIRE_READINGS.map((r) => <li id={`reading-${r.key}`} tabindex="-1" class="scroll-mt-28 leading-relaxed">{r.text}</li>)}
       </ol>
     </section>
 
