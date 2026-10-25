@@ -10,7 +10,13 @@ import type { ToolName } from './portfolio-query';
  * writes /.well-known/mcp.json from them (with JSON Schemas), which the WebMCP island reads in the browser.
  * The handlers are TOOL_HANDLERS in portfolio-query.ts. Build time and server only (imports zod).
  */
-export const MCP_SERVER = { name: 'kin-portfolio', title: `${ENGINEER_NAME} Portfolio`, version: '1.0.0', url: `${SITE_URL}/mcp` };
+export const MCP_SERVER = {
+  name: 'kin-portfolio',
+  title: `${ENGINEER_NAME} Portfolio`,
+  version: '1.0.0',
+  url: `${SITE_URL}/mcp`,
+  manifest: '/.well-known/mcp.json', // site path
+};
 /** nginx enforces this on /mcp (nginx.conf `limit_req_zone ... rate=60r/m`, `burst=30`). */
 export const MCP_RATE_LIMIT = { requests: 60, windowSeconds: 60, burst: 30 };
 

@@ -1,4 +1,4 @@
-import { HIRE_SERVER } from '../lib/hire-tools';
+import { HIRE_SERVER, HIRE_TOOLS } from '../lib/hire-tools';
 import { MCP_SERVER, MCP_TOOLS } from '../lib/portfolio-tools';
 
 /**
@@ -31,11 +31,11 @@ export const MCP_SERVERS: McpServerCard[] = [
     id: 'hire',
     name: 'HIRE check',
     endpoint: HIRE_SERVER.url,
-    manifest: '/.well-known/mcp-hire.json',
+    manifest: HIRE_SERVER.manifest,
     connect: HIRE_CONNECT,
     transcript: [
       { who: '$', text: HIRE_CONNECT },
-      { who: 'ok', text: 'connected · 2 tools' },
+      { who: 'ok', text: `connected · ${Object.keys(HIRE_TOOLS).length} tools` },
       { who: 'you', text: 'Should we build a fraud triage agent?' },
       { who: 'agent', text: 'calls get_hire_checklist, interviews you…' },
       { who: 'agent', text: 'calls assess_agent → TRAIN · 42/77' },
@@ -46,7 +46,7 @@ export const MCP_SERVERS: McpServerCard[] = [
     id: 'portfolio',
     name: 'Portfolio',
     endpoint: MCP_SERVER.url,
-    manifest: '/.well-known/mcp.json',
+    manifest: MCP_SERVER.manifest,
     connect: PORTFOLIO_CONNECT,
     transcript: [
       { who: '$', text: PORTFOLIO_CONNECT },

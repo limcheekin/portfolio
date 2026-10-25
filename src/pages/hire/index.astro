@@ -13,6 +13,7 @@ import { MEASURE, PAGE_TITLE } from '../../lib/text-styles';
 import { PERSON_REF, webPageJsonLd } from '../../lib/jsonld';
 import { markdownPath } from '../../lib/paths';
 import { CHECKLIST_SOURCE } from '../../lib/hire/checklist';
+import { HIRE_SERVER } from '../../lib/hire-tools';
 import { HIRE_CREDIT_PARTS as C, HIRE_DESCRIPTION, HIRE_INTRO, HIRE_NOSCRIPT, HIRE_PRIVACY_STATEMENT, HIRE_READINGS, HIRE_READINGS_INTRO, HIRE_TITLE } from '../../lib/hire/copy';
 
 const jsonLd = [
@@ -47,7 +48,7 @@ const jsonLd = [
     <section aria-labelledby="hire-tool" class="mb-20">
       <h2 id="hire-tool" class="sr-only">The check</h2>
       <HireTool client:load />
-      <HireWebMCP client:idle manifestUrl="/.well-known/mcp-hire.json" />
+      <HireWebMCP client:idle manifestUrl={HIRE_SERVER.manifest} />
       <noscript><p class={`text-slate-text ${MEASURE}`}>{HIRE_NOSCRIPT}</p></noscript>
     </section>
 

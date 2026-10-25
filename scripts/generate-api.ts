@@ -307,11 +307,8 @@ writeFileSync(join(distDir, 'api', 'index.json'), JSON.stringify({
   version: API_VERSION,
   description: 'Static, read-only JSON. No auth. Described by openapi.json; the same data is served by the MCP server.',
   endpoints: HTTP_RESOURCES.filter((r) => r.uri.startsWith(`${SITE_URL}/api/`)).map(({ uri, description }) => ({ url: uri, description })),
-  mcp: `${SITE_URL}/mcp`,
-  mcpServers: [
-    { name: HIRE_SERVER.name, url: HIRE_SERVER.url, manifest: `${SITE_URL}/.well-known/mcp-hire.json` },
-    { name: MCP_SERVER.name, url: `${SITE_URL}/mcp`, manifest: `${SITE_URL}/.well-known/mcp.json` },
-  ],
+  mcp: MCP_SERVER.url,
+  mcpServers: [HIRE_SERVER, MCP_SERVER].map((s) => ({ name: s.name, url: s.url, manifest: `${SITE_URL}${s.manifest}` })),
   llms: `${SITE_URL}/llms.txt`,
 }, null, 2));
 console.log('Generated: dist/api/index.json');
@@ -323,9 +320,9 @@ const wellKnown = (name: string) => join(distDir, '.well-known', name);
 copyFileSync(wellKnown('agent.json'), wellKnown('agent-card.json'));
 copyFileSync(join(distDir, 'ai-plugin.json'), wellKnown('ai-plugin.json'));
 
-writeFileSync(wellKnown('mcp.json'), JSON.stringify(mcpManifest(HTTP_RESOURCES), null, 2));
+writeFileSync(join(distDir, MCP_SERVER.manifest), JSON.stringify(mcpManifest(HTTP_RESOURCES), null, 2));
 // The HIRE check server at /mcp/hire has its own manifest (tools only, no resources).
-writeFileSync(wellKnown('mcp-hire.json'), JSON.stringify(hireManifest(), null, 2));
+writeFileSync(join(distDir, HIRE_SERVER.manifest), JSON.stringify(hireManifest(), null, 2));
 
 // RFC 9116 requires Expires, at most a year ahead; each deploy moves it forward.
 const expires = new Date(Date.now() + 330 * 24 * 60 * 60 * 1000).toISOString();

@@ -33,8 +33,9 @@ export default function McpConsole({ servers, prompts }: { servers: McpServerCar
   // Set by the motion branch: finishes the tab being left and plays the one being shown (if in view).
   const showRef = useRef<((next: number, prev: number) => void) | null>(null);
 
-  const [copied, setCopied] = useState<string | null>(null);
-  const [status, setStatus] = useState('');
+  // What the copy button last did: the live-region message, and which server's button shows "Copied" (if any).
+  const [note, setNote] = useState<{ message: string; copied: string | null } | null>(null);
+  const copied = note?.copied ?? null;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
 
@@ -86,13 +87,9 @@ export default function McpConsole({ servers, prompts }: { servers: McpServerCar
   };
 
   const announce = (message: string, id: string | null) => {
-    setStatus(message);
-    setCopied(id);
+    setNote({ message, copied: id });
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setStatus('');
-      setCopied(null);
-    }, 2000);
+    timer.current = setTimeout(() => setNote(null), 2000);
   };
 
   const copy = async (server: McpServerCard) => {
@@ -191,7 +188,7 @@ export default function McpConsole({ servers, prompts }: { servers: McpServerCar
       ))}
 
       <p aria-live="polite" className="sr-only">
-        {status}
+        {note?.message}
       </p>
     </div>
   );

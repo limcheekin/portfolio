@@ -30,7 +30,13 @@ import type { MetricKey } from './hire/types.ts';
  * validateAnswers (src/lib/hire/validate.ts), which runs before the SDK sees the call; the schema here is never
  * stricter than the validator, so an input the validator accepts always reaches the tool.
  */
-export const HIRE_SERVER = { name: 'kin-hire', title: 'HIRE check', version: '1.0.0', url: `${SITE_URL}/mcp/hire` };
+export const HIRE_SERVER = {
+  name: 'kin-hire',
+  title: 'HIRE check',
+  version: '1.0.0',
+  url: `${SITE_URL}/mcp/hire`,
+  manifest: '/.well-known/mcp-hire.json', // site path
+};
 
 /** The privacy statement the spec requires the manifest to carry (verify checks for "never stores or logs"). */
 export const HIRE_PRIVACY =
