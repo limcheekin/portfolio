@@ -86,3 +86,9 @@ test('no launch date: a Critical DIY warns with the launch date unknown', () => 
   assert.ok(!r.live!.watch.some((w) => w.includes('under 3 months')));
   assert.ok(r.readingKeys.includes('diyMonths'));
 });
+
+test('path labels keep acronyms: "raise ROI to positive ROI"', () => {
+  const labels = pathToHire(allWorst(), sectionScores(allWorst()).total).map((s) => s.label);
+  assert.ok(labels.includes('raise ROI to positive ROI'), JSON.stringify(labels));
+  assert.ok(labels.includes('raise human-in-the-loop to ensured'), JSON.stringify(labels));
+});

@@ -39,6 +39,9 @@ const KEYED: Array<{ item: ChecklistItem; section: 'H' | 'I' | 'E' }> = [
 const ACTIONABLE_I = new Set(['timeSavings', 'roi']);
 const INTRINSIC = new Set(['worstCase', 'frequency', 'strategicValue']);
 
+/** A checklist label inside a sentence: words go lower case, acronyms (ROI, AI) keep theirs. */
+const inSentence = (label: string) => label.split(' ').map((w) => (/^[A-Z0-9]{2,}$/.test(w) ? w : w.toLowerCase())).join(' ');
+
 interface Lever { key: string; label: string; gain: number; actionable: boolean; order: number }
 
 function current(a: HireAnswers, section: 'H' | 'I' | 'E', key: string): number | null {
@@ -67,7 +70,7 @@ function levers(a: HireAnswers): Lever[] {
     if (gain <= 0) continue;
     const actionable = section === 'E' || section === 'H' || (section === 'I' && ACTIONABLE_I.has(item.key));
     if (!actionable && !INTRINSIC.has(item.key)) continue;
-    const label = item.key === 'access' ? 'make it suggest-only' : `raise ${item.label.toLowerCase()} to ${String(best.label).toLowerCase()}`;
+    const label = item.key === 'access' ? 'make it suggest-only' : `raise ${inSentence(item.label)} to ${inSentence(String(best.label))}`;
     out.push({ key: item.key, label, gain, actionable, order });
   }
   return out;
