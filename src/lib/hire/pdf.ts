@@ -57,7 +57,8 @@ const hexToRgb = (hex: string): [number, number, number] => {
   return [(n >> 16) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
 };
 
-const BAND_TOKEN = { Good: 'print-green', Warning: 'print-amber', Critical: 'print-coral' } as const;
+// Amber is the TRAIN verdict's ink only, so a Warning band prints neutral; the band is also written out as text.
+const BAND_TOKEN = { Good: 'print-green', Warning: 'print-muted', Critical: 'print-coral' } as const;
 const METER_MAX: Record<MetricKey, number> = { ucr: 100, ppr: 5, diy: 100, irr: 100, rlr: 5 };
 const fmtNum = (n: number) => String(Math.round(n * 100) / 100);
 

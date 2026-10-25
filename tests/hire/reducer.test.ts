@@ -84,3 +84,24 @@ test('the blank state is valid and pending', () => {
   assert.equal(x.verdict, null);
   assert.equal(x.scores.total, 0);
 });
+
+test('a live link without a review gets a blank one, so metric writes never build a partial review', () => {
+  const v = validateAnswers({ isLive: true, name: 'x' });
+  assert.ok(v.ok);
+  assert.equal(v.answers.review, undefined); // the validator allows it
+  const loaded = hireReducer(blankHireAnswers(), { type: 'load', answers: v.answers });
+  assert.deepEqual(Object.keys(loaded.review!.metrics), ['ucr', 'ppr', 'diy', 'irr', 'rlr']);
+  // Straight into the gap (no load): the write starts from a blank review.
+  const s = hireReducer(v.answers, { type: 'set', path: 'review.metrics.ucr.value', value: 5 });
+  assert.equal(s.review!.metrics.ucr.value, 5);
+  assert.equal(s.review!.metrics.rlr.value, null);
+  assert.equal(s.review!.launchDate, null);
+  const x = assess(s);
+  assert.equal(x.live!.bands.ucr, 'Good');
+  assert.deepEqual(x.live!.unmeasured, ['ppr', 'diy', 'irr', 'rlr']);
+  assert.ok(validateAnswers(s).ok);
+  // Any write to a live assessment that lacks a review also fills it in.
+  assert.ok(hireReducer(v.answers, { type: 'set', path: 'name', value: 'y' }).review);
+  // Not live: other writes leave review absent.
+  assert.equal(hireReducer(blankHireAnswers(), { type: 'set', path: 'name', value: 'y' }).review, undefined);
+});

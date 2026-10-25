@@ -31,16 +31,19 @@ export function assess(a: HireAnswers): Assessment {
   const note = traitsNote(a);
 
   const incomplete = (['h', 'i', 'e'] as const).filter((k) => !scores.complete[k]);
+  // A met FIRE criterion decides a live review at once, like a Part 1 stop: the open sections can't undo it.
+  const fired = live && reading!.fire.length > 0;
   let verdict: Verdict | null;
   if (stop) verdict = live ? 'FIRE' : 'DO NOT BUILD';
+  else if (fired) verdict = 'FIRE';
   else if (incomplete.length) verdict = null;
-  else if (live) verdict = reading!.fire.length > 0 || scores.total <= 30 ? 'FIRE' : band(scores.total);
+  else if (live) verdict = scores.total <= 30 ? 'FIRE' : band(scores.total);
   else verdict = band(scores.total);
 
   const decision = verdict === null ? null : verdict === 'DO NOT BUILD' ? 'FIRE' : verdict;
 
   const notAssessed: Assessment['notAssessed'] = [];
-  if (stop) for (const k of ['h', 'i', 'e'] as const) if (!scores.complete[k]) notAssessed.push(k.toUpperCase() as 'H' | 'I' | 'E');
+  if (stop || fired) for (const k of ['h', 'i', 'e'] as const) if (!scores.complete[k]) notAssessed.push(k.toUpperCase() as 'H' | 'I' | 'E');
   if (reading && reading.unmeasured.length === 5) notAssessed.push('metrics');
 
   const notes: string[] = [];

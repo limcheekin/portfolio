@@ -183,7 +183,7 @@ export default function MetricsStep({ answers, dispatch, assessment }: StepProps
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-lightest-slate">
                 {live.fire.map((x) => <li key={x.key}>{x.text}</li>)}
               </ul>
-              <p className={`mt-2 ${HINT}`}>Any one of these makes the verdict FIRE once the checklist is answered.</p>
+              <p className={`mt-2 ${HINT}`}>Any one of these makes the verdict FIRE, whatever the rest of the checklist scores.</p>
             </>
           ) : (
             <p className={HINT}>No FIRE criterion is met by what you have entered so far.</p>

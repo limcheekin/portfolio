@@ -59,13 +59,25 @@ function setIn(node: unknown, keys: string[], value: unknown): unknown {
   return base;
 }
 
+/**
+ * A live assessment always has a whole review. A link (or MCP call) may say `isLive: true` and leave `review` out, which
+ * the validator allows; a field write into that gap would otherwise build a partial review that `assess` can't read.
+ */
+function withReview(s: HireAnswers): HireAnswers {
+  return s.isLive && !s.review ? { ...s, review: blankReview() } : s;
+}
+
 export function hireReducer(s: HireAnswers, a: Action): HireAnswers {
   switch (a.type) {
-    case 'set':
+    case 'set': {
+      const keys = a.path.split('.');
+      // A write into a missing review starts from a blank one, live or not, so it is never partial.
+      const base = keys[0] === 'review' && keys.length > 1 && !s.review ? { ...s, review: blankReview() } : s;
       // Writing a number over an N/A object replaces it, so its reason goes with it.
-      return setIn(s, a.path.split('.'), a.value) as HireAnswers;
+      return withReview(setIn(base, keys, a.value) as HireAnswers);
+    }
     case 'load':
-      return a.answers;
+      return withReview(a.answers);
     case 'reset':
       return blankHireAnswers();
     case 'startReview': {

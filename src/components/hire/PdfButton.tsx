@@ -2,7 +2,6 @@ import { useState } from 'react';
 // Only the URLs are bundled here; the font bytes are fetched on click.
 import regularUrl from '@fontsource/inter/files/inter-latin-400-normal.woff?url';
 import boldUrl from '@fontsource/inter/files/inter-latin-700-normal.woff?url';
-import { buildReportPdf, reportFileName } from '../../lib/hire/pdf';
 import type { Assessment, HireAnswers } from '../../lib/hire/types';
 import { BTN_PRIMARY, ERROR } from './styles';
 
@@ -12,7 +11,7 @@ async function fontBytes(res: Response): Promise<ArrayBuffer> {
 }
 
 /**
- * Builds the report in the browser: pdf-lib, fontkit and the two Inter files load only on the first click. Nothing
+ * Builds the report in the browser: the report module, pdf-lib, fontkit and the two Inter files load only on the first click. Nothing
  * about the answers leaves the page; the font fetches carry no data.
  */
 export default function PdfButton({ answers, assessment }: { answers: HireAnswers; assessment: Assessment }) {
@@ -25,7 +24,8 @@ export default function PdfButton({ answers, assessment }: { answers: HireAnswer
     setError('');
     setStatus('Building the PDF report');
     try {
-      const [PDFLib, fontkitModule, regularRes, boldRes] = await Promise.all([
+      const [report, PDFLib, fontkitModule, regularRes, boldRes] = await Promise.all([
+        import('../../lib/hire/pdf'), // the report layout, so the island doesn't carry it either
         import('pdf-lib'),
         import('@pdf-lib/fontkit'),
         fetch(regularUrl),
@@ -33,11 +33,11 @@ export default function PdfButton({ answers, assessment }: { answers: HireAnswer
       ]);
       const [regular, bold] = await Promise.all([fontBytes(regularRes), fontBytes(boldRes)]);
       const fontkit = (fontkitModule as { default?: unknown }).default ?? fontkitModule;
-      const bytes = await buildReportPdf({ PDFLib, fontkit, regular, bold }, answers, assessment);
+      const bytes = await report.buildReportPdf({ PDFLib, fontkit, regular, bold }, answers, assessment);
       const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/pdf' }));
       const a = document.createElement('a');
       a.href = url;
-      a.download = reportFileName(answers.name, answers.assessmentDate);
+      a.download = report.reportFileName(answers.name, answers.assessmentDate);
       document.body.append(a);
       a.click();
       a.remove();

@@ -50,3 +50,19 @@ test('watch items add the watch reading', () => {
   assert.ok(r.live!.watch.length > 0);
   assert.ok(r.readings.some((t) => t.includes('watch items')));
 });
+
+test('live: a met FIRE criterion gives FIRE at once, with sections still open', () => {
+  const open = liveFraud({ rlr: 0.3 });
+  const r = assess({ ...open, h: { ...open.h, trust: null }, e: { ...open.e, hitl: null } });
+  assert.equal(r.verdict, 'FIRE');
+  assert.equal(r.decision, 'FIRE');
+  assert.equal(r.meaning, 'Discontinue or downgrade this agent: evaluate the alternatives.');
+  assert.equal(r.alternatives!.length, 4);
+  assert.equal(r.pathToHire, null);
+  assert.deepEqual(r.notAssessed, ['H', 'E']);
+  // Nothing fires and sections are open: still pending.
+  const calm = liveFraud({ rlr: 0 });
+  assert.equal(assess({ ...calm, h: { ...calm.h, trust: null } }).verdict, null);
+  // A blank live review (every rate unmeasured) never fires on its own.
+  assert.equal(assess({ ...blankAnswers(), isLive: true }).verdict, null);
+});
