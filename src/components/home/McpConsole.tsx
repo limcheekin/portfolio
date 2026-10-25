@@ -30,7 +30,7 @@ export default function McpConsole({ servers, prompts }: { servers: McpServerCar
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
   const [active, setActive] = useState(0);
   const activeRef = useRef(0);
-  // Set by the motion branch: finishes the tab being left and plays the one being shown (if in view).
+  // Set by the motion branch: finishes the tab being left and plays the one being shown (finishes it when out of view).
   const showRef = useRef<((next: number, prev: number) => void) | null>(null);
 
   // What the copy button last did: the live-region message, and which server's button shows "Copied" (if any).
@@ -56,7 +56,9 @@ export default function McpConsole({ servers, prompts }: { servers: McpServerCar
       showRef.current = contextSafe((next: number, prev: number) => {
         const left = tls[prev];
         if (left && left.progress() > 0) left.progress(1);
+        // Out of the trigger's range there is no reveal to watch: show the new tab complete instead of blank.
         if (st.isActive) tls[next]?.play();
+        else tls[next]?.progress(1);
       });
       return () => {
         showRef.current = null;
