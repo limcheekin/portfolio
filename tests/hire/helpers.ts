@@ -65,3 +65,12 @@ export function m(
     betterSolution: null,
   };
 }
+
+// Fraud with hitl and rollback at -5: E 2 instead of 12, total 22 (<= 30, no stop).
+export const lowScore: HireAnswers = { ...fraud, e: { ...fraud.e, hitl: -5, rollback: -5 } };
+
+export const withNA: HireAnswers = { ...fraud, e: { ...fraud.e, tenant: { na: 'single-tenant internal tool' } } };
+
+export function liveFraud(values: Parameters<typeof m>[0]): HireAnswers {
+  return { ...fraud, isLive: true, assessmentDate: '2026-10-25', review: m(values, { launch: '2026-01-01' }) };
+}

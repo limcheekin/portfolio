@@ -79,3 +79,27 @@ export interface HireAnswers {
     signOff?: Partial<Record<SignOffRole, string>>;
   };
 }
+
+import type { ALTERNATIVES, CHECKLIST_SOURCE } from './checklist.ts';
+import type { LiveReading } from './live.ts';
+import type { RedFlag, SectionScores, Stop } from './score.ts';
+
+export interface PathStep { key: string; label: string; gain: number; totalAfter: number; actionable: boolean; proposed: true }
+export interface Assessment {
+  mode: 'pre-build' | 'live';
+  verdict: Verdict | null; // null = pending (answers incomplete and no stop)
+  decision: 'HIRE' | 'TRAIN' | 'FIRE' | null; // the Documentation field
+  meaning: string | null; // one line for the cover
+  stop: Stop | null;
+  notAssessed: Array<'H' | 'I' | 'E' | 'metrics'>;
+  scores: SectionScores;
+  redFlags: RedFlag[];
+  notes: string[]; // traits note, N/A notes, live notes
+  reasons: string[];
+  pathToHire: PathStep[] | null;
+  alternatives: typeof ALTERNATIVES | null;
+  live: LiveReading | null;
+  naItems: Array<{ key: string; reason: string; score: number }>;
+  readings: string[]; // every "this tool's reading" that applies to this result
+  framework: { source: typeof CHECKLIST_SOURCE };
+}
