@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react';
 import { E_BOUNDARIES, E_GUARDRAILS, THRESHOLDS } from '../../../lib/hire/checklist';
+import { fireCheckIncomplete } from '../../../lib/hire/assess';
 import { READINGS, type ReadingKey } from '../../../lib/hire/reasons';
 import type { Assessment } from '../../../lib/hire/types';
 import Reading from '../Reading';
 import { points } from '../styles';
-import { INCOMPLETE_PREFIX } from './Verdict';
 
 const E_LABEL = Object.fromEntries([...E_GUARDRAILS, ...E_BOUNDARIES].map((x) => [x.key, x.label]));
-const READING_KEY = Object.fromEntries(Object.entries(READINGS).map(([k, t]) => [t, k as ReadingKey]));
 
 const LIST = 'm-0 list-disc space-y-2 pl-5 text-sm leading-relaxed text-light-slate marker:text-slate-text';
 
@@ -25,7 +24,9 @@ export function Block({ title, reading, testId, children }: { title: string; rea
 
 /** Why the verdict is what it is: reasons, red flags, notes, N/A items, the path to HIRE, the alternatives, the readings. */
 export default function Findings({ assessment: a }: { assessment: Assessment }) {
-  const notes = a.notes.filter((n) => !n.startsWith(INCOMPLETE_PREFIX));
+  // The FIRE-check gap shows under the verdict instead.
+  const incomplete = a.live?.unmeasured.length ? fireCheckIncomplete(a.live.unmeasured) : null;
+  const notes = a.notes.filter((n) => n !== incomplete);
   const ceil = THRESHOLDS.ceiling;
   return (
     <div className="space-y-10">
@@ -97,12 +98,12 @@ export default function Findings({ assessment: a }: { assessment: Assessment }) 
         </Block>
       )}
 
-      {a.readings.length > 0 && (
+      {a.readingKeys.length > 0 && (
         <Block title="This tool's readings in this result" testId="result-readings">
           <ul className={LIST}>
-            {a.readings.map((t) => (
-              <li key={t}>
-                {t} {READING_KEY[t] && <Reading k={READING_KEY[t]} />}
+            {a.readingKeys.map((k) => (
+              <li key={k}>
+                {READINGS[k]} <Reading k={k} />
               </li>
             ))}
           </ul>

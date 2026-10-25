@@ -284,6 +284,7 @@ const ASSESSMENT_OUTPUT = {
     })
     .nullable(),
   naItems: z.array(z.object({ key: z.string(), reason: z.string(), score: z.number() })),
+  readingKeys: z.array(z.string()).describe("Keys of the \"this tool's reading\" statements that apply to this result (the anchors #reading-<key> on the web page)"),
   readings: z.array(z.string()).describe("The \"this tool's reading\" statements that apply to this result"),
   framework: z.object({ source: SourceSchema }),
   reportUrl: z.string().describe(`The full report at ${REPORT_BASE}; the answers ride in the #a= fragment and never reach a server`),

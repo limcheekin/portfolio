@@ -1,4 +1,4 @@
-import type { Assessment, HireAnswers, Verdict } from './types.ts';
+import type { Assessment, HireAnswers, MetricKey, Verdict } from './types.ts';
 import { ALTERNATIVES, CHECKLIST_SOURCE, METRIC_SHORT, THRESHOLDS } from './checklist.ts';
 import { band, firstStop, naItems, redFlags, sectionScores, stopVerdict, traitsNote } from './score.ts';
 import { readLive } from './live.ts';
@@ -20,6 +20,10 @@ const BLANK_REVIEW: NonNullable<HireAnswers['review']> = {
   maintenanceExceedsValue: null,
   betterSolution: null,
 };
+
+/** The note a live review carries while any metric is unmeasured; the result shows it under the verdict. */
+export const fireCheckIncomplete = (unmeasured: MetricKey[]): string =>
+  `FIRE check incomplete: ${unmeasured.map((k) => METRIC_SHORT[k]).join(', ')} not measured`;
 
 export function assess(a: HireAnswers): Assessment {
   const live = a.isLive;
@@ -51,32 +55,32 @@ export function assess(a: HireAnswers): Assessment {
   if (note) notes.push(note);
   if (reading) {
     notes.push(...reading.notes);
-    if (reading.unmeasured.length) notes.push(`FIRE check incomplete: ${reading.unmeasured.map((k) => METRIC_SHORT[k]).join(', ')} not measured`);
+    if (reading.unmeasured.length) notes.push(fireCheckIncomplete(reading.unmeasured));
   }
 
   const showPath = !stop && (verdict === 'TRAIN' || (!live && verdict === 'DO NOT BUILD'));
   const showAlt = verdict === 'FIRE' || verdict === 'DO NOT BUILD';
 
-  const readings: string[] = [];
-  if (flags.length) readings.push(READINGS.redFlags);
-  if (na.length) readings.push(READINGS.notApplicable);
-  if (note) readings.push(READINGS.traits);
-  if (a.i.figures?.buildCost !== undefined) readings.push(READINGS.roiHorizon);
-  if (!live && verdict === 'DO NOT BUILD') readings.push(READINGS.preBuildFire);
+  const readingKeys: Array<keyof typeof READINGS> = [];
+  if (flags.length) readingKeys.push('redFlags');
+  if (na.length) readingKeys.push('notApplicable');
+  if (note) readingKeys.push('traits');
+  if (a.i.figures?.buildCost !== undefined) readingKeys.push('roiHorizon');
+  if (!live && verdict === 'DO NOT BUILD') readingKeys.push('preBuildFire');
   if (live) {
-    if (stop) readings.push(READINGS.liveStop);
-    if (reading!.watch.length) readings.push(READINGS.watch);
-    if (!stop && verdict === 'FIRE' && scores.total <= THRESHOLDS.doNotBuildMax && incomplete.length === 0) readings.push(READINGS.liveLowScore);
+    if (stop) readingKeys.push('liveStop');
+    if (reading!.watch.length) readingKeys.push('watch');
+    if (!stop && verdict === 'FIRE' && scores.total <= THRESHOLDS.doNotBuildMax && incomplete.length === 0) readingKeys.push('liveLowScore');
     const rv = a.review ?? BLANK_REVIEW;
     const mt = rv.metrics;
-    if (reading!.bands.diy === 'Critical' || (mt.diy.value != null && reading!.fire.every((f) => f.key !== 'diy') && reading!.watch.some((w) => w.startsWith('DIY')))) readings.push(READINGS.diyMonths);
-    if (mt.ppr.value != null && reading!.bands.ppr === 'Critical') readings.push(READINGS.pprTrend);
-    if (mt.rlr.value != null && mt.rlr.value > 0 && mt.rlr.value <= 1) readings.push(READINGS.rlrBand);
-    if (reading!.pairs.length) readings.push(READINGS.pairs);
-    if (Object.values(mt).some((x) => x.sample != null)) readings.push(READINGS.sampleSize);
+    if (reading!.bands.diy === 'Critical' || (mt.diy.value != null && reading!.fire.every((f) => f.key !== 'diy') && reading!.watch.some((w) => w.startsWith('DIY')))) readingKeys.push('diyMonths');
+    if (mt.ppr.value != null && reading!.bands.ppr === 'Critical') readingKeys.push('pprTrend');
+    if (mt.rlr.value != null && mt.rlr.value > 0 && mt.rlr.value <= 1) readingKeys.push('rlrBand');
+    if (reading!.pairs.length) readingKeys.push('pairs');
+    if (Object.values(mt).some((x) => x.sample != null)) readingKeys.push('sampleSize');
   }
   const path = showPath ? pathToHire(a, scores.total) : null;
-  if (path && path.length) readings.push(READINGS.path);
+  if (path && path.length) readingKeys.push('path');
 
   return {
     mode,
@@ -93,7 +97,8 @@ export function assess(a: HireAnswers): Assessment {
     alternatives: showAlt ? ALTERNATIVES : null,
     live: reading,
     naItems: na,
-    readings,
+    readingKeys,
+    readings: readingKeys.map((k) => READINGS[k]),
     framework: { source: CHECKLIST_SOURCE },
   };
 }

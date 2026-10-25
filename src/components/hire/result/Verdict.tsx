@@ -1,4 +1,5 @@
 import { THRESHOLDS } from '../../../lib/hire/checklist';
+import { fireCheckIncomplete } from '../../../lib/hire/assess';
 import { SECTION_RANGE } from '../../../lib/hire/score';
 import type { Assessment, Verdict as V } from '../../../lib/hire/types';
 import { signed } from '../Rail';
@@ -12,8 +13,6 @@ const PILL_TINT: Record<V, string> = {
   'DO NOT BUILD': 'bg-danger/10',
   FIRE: 'bg-danger/10',
 };
-
-export const INCOMPLETE_PREFIX = 'FIRE check incomplete:';
 
 /** A section's score on a bar from its floor to its ceiling, with a zero line when the floor is negative. */
 function SectionBar({ k, value, complete }: { k: 'h' | 'i' | 'e'; value: number; complete: boolean }) {
@@ -49,7 +48,7 @@ function SectionBar({ k, value, complete }: { k: 'h' | 'i' | 'e'; value: number;
 export default function Verdict({ assessment: a, isLive }: { assessment: Assessment; isLive: boolean }) {
   const s = a.scores;
   const v = a.verdict;
-  const incomplete = a.notes.find((n) => n.startsWith(INCOMPLETE_PREFIX));
+  const incomplete = a.live?.unmeasured.length ? fireCheckIncomplete(a.live.unmeasured) : null;
   const open = (['h', 'i', 'e'] as const).filter((k) => !s.complete[k]).map((k) => NAMES[k]);
   return (
     <div className={`${PANEL} ${verdictBorder(v)}`}>

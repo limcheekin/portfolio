@@ -82,6 +82,7 @@ export interface HireAnswers {
 
 import type { ALTERNATIVES, CHECKLIST_SOURCE } from './checklist.ts';
 import type { LiveReading } from './live.ts';
+import type { READINGS } from './reasons.ts';
 import type { RedFlag, SectionScores, Stop } from './score.ts';
 
 export interface PathStep { key: string; label: string; gain: number; totalAfter: number; actionable: boolean; proposed: true }
@@ -100,6 +101,7 @@ export interface Assessment {
   alternatives: typeof ALTERNATIVES | null;
   live: LiveReading | null;
   naItems: Array<{ key: string; reason: string; score: number }>;
-  readings: string[]; // every "this tool's reading" that applies to this result
+  readingKeys: Array<keyof typeof READINGS>; // every "this tool's reading" that applies to this result
+  readings: string[]; // their text, in the same order
   framework: { source: typeof CHECKLIST_SOURCE };
 }
