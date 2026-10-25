@@ -1,4 +1,5 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
 
 export type Handler = (request: any, extra: any) => Promise<unknown>;
 
@@ -12,4 +13,16 @@ export function wrapRequestHandler(server: McpServer, method: string, fn: (inner
   const inner = handlers.get(method);
   if (!inner) throw new Error(`mcp: no ${method} handler to wrap`);
   handlers.set(method, fn(inner));
+}
+
+/**
+ * An unknown tool is a JSON-RPC -32602 error (the spec), where McpServer answers with an isError tool result. Wrap
+ * this last, so it runs before any other tools/call wrapper.
+ */
+export function rejectUnknownTools(server: McpServer, toolNames: Set<string>) {
+  wrapRequestHandler(server, 'tools/call', (inner) => async (request, extra) => {
+    const name = request.params?.name;
+    if (!toolNames.has(name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
+    return inner(request, extra);
+  });
 }

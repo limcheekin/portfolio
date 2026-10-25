@@ -18,7 +18,7 @@ import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mc
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
 import { buildHireServer } from './hire-server';
-import { wrapRequestHandler } from './request-handlers';
+import { rejectUnknownTools, wrapRequestHandler } from './request-handlers';
 import { SITE_URL } from '../src/data/site';
 import { getProject, listArticles, runTool } from '../src/lib/portfolio-query';
 import type { Portfolio } from '../src/lib/portfolio-schema';
@@ -65,13 +65,8 @@ const resourceNotFound = (uri: string) => new McpError(-32002, `Resource not fou
  * for either, so this wraps the handlers it registered; mcp:smoke checks both codes, so an SDK change shows up there.
  */
 function useSpecErrorCodes(server: McpServer, toolNames: Set<string>) {
-  const wrap = (method: string, fn: Parameters<typeof wrapRequestHandler>[2]) => wrapRequestHandler(server, method, fn);
-  wrap('tools/call', (inner) => async (request, extra) => {
-    const name = request.params?.name;
-    if (!toolNames.has(name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
-    return inner(request, extra);
-  });
-  wrap('resources/read', (inner) => async (request, extra) => {
+  rejectUnknownTools(server, toolNames);
+  wrapRequestHandler(server, 'resources/read', (inner) => async (request, extra) => {
     try {
       return await inner(request, extra);
     } catch (err) {

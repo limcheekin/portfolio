@@ -11,7 +11,7 @@ import { HIRE_CAPABILITIES, HIRE_INSTRUCTIONS, HIRE_SERVER, hireToolEntries } fr
 import { REPORT_BASE } from '../src/lib/hire/link.ts';
 import { HireInputError, runHireTool, type HireToolName } from '../src/lib/hire/tools-runtime.ts';
 import { TOOL_ANNOTATIONS } from '../src/lib/portfolio-tools';
-import { wrapRequestHandler } from './request-handlers';
+import { rejectUnknownTools, wrapRequestHandler } from './request-handlers';
 
 const TOOL_NAMES = new Set<string>(hireToolEntries().map(([name]) => name));
 
@@ -41,18 +41,18 @@ export function buildHireServer(): McpServer {
   server.server.registerCapabilities(HIRE_CAPABILITIES);
 
   // validateAnswers (inside runHireTool) is the one rule source. Running it here, before the SDK's handler, makes
-  // bad or incomplete answers a -32602 error (the SDK would turn any throw into an isError result), and an unknown
-  // tool -32602 as in the portfolio server.
+  // bad or incomplete answers a -32602 error: the SDK (1.32) turns anything a tool callback throws, McpError
+  // included, into an isError result, and its own zod input check the same way. mcp:smoke checks the -32602.
   wrapRequestHandler(server, 'tools/call', (inner) => async (request, extra) => {
-    const name = request.params?.name;
-    if (!TOOL_NAMES.has(name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
     try {
-      results.set(extra, await runHireTool(name as HireToolName, request.params?.arguments ?? {}));
+      results.set(extra, await runHireTool(request.params?.name as HireToolName, request.params?.arguments ?? {}));
     } catch (err) {
       if (err instanceof HireInputError) throw new McpError(ErrorCode.InvalidParams, err.issues.join('; '));
       throw err;
     }
     return inner(request, extra);
   });
+  // Wrapped last, so it runs first: an unknown tool is -32602 as in the portfolio server, before any tool runs.
+  rejectUnknownTools(server, TOOL_NAMES);
   return server;
 }
