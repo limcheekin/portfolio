@@ -147,6 +147,9 @@ dist
 # Claude Code local settings (per-developer)
 .claude/
 
+# Playwright MCP snapshots and local browser artifacts
+.playwright-mcp/
+
 # Audit artifacts (working documents, not product)
 *-audit-findings.json
 *-audit.json
