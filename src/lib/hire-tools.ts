@@ -15,6 +15,7 @@ import {
   type ChecklistItem,
 } from './hire/checklist.ts';
 import { RATE_RANGE } from './hire/live.ts';
+import { INTERVIEW_INSTRUCTIONS } from './hire/interview.ts';
 import { REPORT_BASE } from './hire/link.ts';
 import { MAX_KPIS, TEXT_CAPS } from './hire/validate.ts';
 import type { HireToolName } from './hire/tools-runtime.ts';
@@ -33,7 +34,7 @@ import type { MetricKey } from './hire/types.ts';
 export const HIRE_SERVER = {
   name: 'kin-hire',
   title: 'HIRE check',
-  version: '1.0.0',
+  version: '1.0.1',
   url: `${SITE_URL}/mcp/hire`,
   manifest: '/.well-known/mcp-hire.json', // site path
 };
@@ -48,10 +49,7 @@ const FRAMEWORK = `the H.I.R.E. checklist by Inês Bolaños (MIT, ${CHECKLIST_SO
 export const HIRE_INSTRUCTIONS =
   `Decides whether an AI agent should be built (HIRE, TRAIN or DO NOT BUILD) or, once live, kept (HIRE, TRAIN or FIRE), ` +
   `with ${FRAMEWORK}. Pure computation, no LLM: the same answers give the same verdict as the web tool at ${REPORT_BASE}. ` +
-  'Call get_hire_checklist first and interview your user in its flow order (Part 1 gates, then live metrics for a ' +
-  'live agent, then H, I and E). Then call assess_agent with the answers: every scored item is required unless a ' +
-  'Part 1 gate stops the assessment, in which case only the answers up to that gate are. Show the user the verdict, ' +
-  "the reasons and the reportUrl, and say which parts are this tool's reading. " +
+  `${INTERVIEW_INSTRUCTIONS}\n\n` +
   HIRE_PRIVACY;
 
 interface ToolDef {
@@ -75,7 +73,8 @@ const scoreOf = (item: ChecklistItem) =>
     .literal(values(item))
     .nullable()
     .optional()
-    .describe(`${item.label}: ${item.question} (${item.options.map((o) => `${o.value} = ${o.label}`).join('; ')})`);
+    .describe(`${item.label}: ${item.question} (${item.options.map((o) => `${o.value} = ${o.label}`).join('; ')}). ` +
+      'Use an answer established with the user; do not infer a score from the job description.');
 const naOr = (item: ChecklistItem) =>
   z
     .union([
@@ -86,7 +85,11 @@ const naOr = (item: ChecklistItem) =>
     .optional()
     .describe(
       `${item.label}: ${item.question} (${item.options.map((o) => `${o.value} = ${o.label}`).join('; ')}; ` +
-        'or {"na": "<reason>"} when it does not apply)',
+        'or {"na": "<reason>"} when the user confirms it does not apply). ' +
+        (item.key === 'access'
+          ? 'Creating or updating persisted drafts is write access, even with human approval before payout. '
+          : '') +
+        'Use a user-confirmed answer, not a proposed improvement or an assumed control.',
     );
 const shapeOf = <T>(items: ChecklistItem[], f: (item: ChecklistItem) => T) => Object.fromEntries(items.map((x) => [x.key, f(x)]));
 
@@ -112,7 +115,7 @@ const ANSWERS_INPUT = {
     .object({
       canStateBusinessProblem: yesNo('Can you state the business problem? false stops the assessment'),
       businessProblem: text(TEXT_CAPS.businessProblem),
-      canDefineJobAndKpis: yesNo('Can you write a job description with KPIs? false stops the assessment'),
+      canDefineJobAndKpis: yesNo('Has the user confirmed they can define both the job and success KPIs? false stops; do not invent KPIs'),
       job: z
         .object({
           title: text(TEXT_CAPS.jobTitle),
@@ -134,7 +137,7 @@ const ANSWERS_INPUT = {
       traits: z
         .object(Object.fromEntries(R_TRAITS.map((t) => [t.key, z.boolean().optional()])))
         .optional()
-        .describe('Reasoning traits the task needs (3 or more suggests an agent)'),
+        .describe('User-established reasoning traits (3 or more suggests an agent; fewer warns and continues, not a STOP gate)'),
       table: z
         .object(
           Object.fromEntries(
@@ -174,7 +177,8 @@ const ANSWERS_INPUT = {
         .enum(WORST_CASE_OPTIONS.map((o) => o.value) as [string, ...string[]])
         .nullable()
         .optional()
-        .describe(`Worst case if the agent fails (${WORST_CASE_OPTIONS.map((o) => `${o.value} = ${o.label}`).join('; ')}); catastrophic stops`),
+        .describe(`User-confirmed worst case if the agent fails (${WORST_CASE_OPTIONS.map((o) => `${o.value} = ${o.label}`).join('; ')}); ` +
+          'catastrophic stops. Preserve the stated outcome; do not downgrade impact just because a human reviews suggestions.'),
       ...shapeOf([...E_GUARDRAILS, ...E_BOUNDARIES], naOr),
     })
     .optional()
@@ -218,6 +222,7 @@ const RQuestion = z.object({ question: z.string(), yes: z.string(), no: z.string
 
 const Gate = z.object({ label: z.string(), question: z.string() });
 const CHECKLIST_OUTPUT = {
+  interviewInstructions: z.string().min(1).describe('Instructions for the interviewing client, separate from the framework text and scoring rules'),
   source: SourceSchema,
   flow: z.array(z.object({ id: z.string(), letter: z.string(), title: z.string(), part: z.number(), liveOnly: z.boolean().optional() })),
   gates: z
@@ -329,7 +334,8 @@ export const HIRE_TOOLS: Record<HireToolName, ToolDef> = {
       'its allowed scores and "Consider" hints, the time and ROI fill-in lines, the R comparison table, red flags, ' +
       'live metric definitions, verdict thresholds, the FIRE criteria, alternatives, the documentation and sign-off ' +
       "block, free-text caps and the places where this tool's reading fills a gap. Use it to interview the user before " +
-      'calling assess_agent.',
+      'calling assess_agent. Follow interviewInstructions in the result: ask exactly one question per message, wait for the answer, ' +
+      'and never invent missing answers or scores.',
     input: {},
     output: CHECKLIST_OUTPUT,
   },
@@ -340,7 +346,10 @@ export const HIRE_TOOLS: Record<HireToolName, ToolDef> = {
       'HIRE, TRAIN or FIRE for a live agent), total and section scores, the Part 1 gate outcome, reasons, red flags, ' +
       "the path to HIRE or the alternatives, live metric readings, which parts are this tool's reading, and a reportUrl " +
       'that opens the full report. Every scored item is required unless a Part 1 gate stops the assessment; invalid ' +
-      `or incomplete answers are a -32602 error listing the problems. ${HIRE_PRIVACY}`,
+      'or incomplete answers are a -32602 error listing the problems. Submit only answers established with the user; ' +
+      'never fill missing scores with assumptions. Creating or updating persisted drafts is write access even if payout needs human approval. ' +
+      'Relay the returned verdict, scores, reasons, redFlags, notes, readings and clickable reportUrl; ' +
+      `do not replace them with your own assessment. ${HIRE_PRIVACY}`,
     input: ANSWERS_INPUT,
     output: ASSESSMENT_OUTPUT,
   },
@@ -359,6 +368,7 @@ export function hireManifest() {
       `MCP server that runs the HIRE check: whether to build an AI agent, or keep a live one, scored with ${FRAMEWORK}. ` +
       `Pure computation, no LLM; same answers, same verdict as ${REPORT_BASE}. Privacy: ${HIRE_PRIVACY}`,
     url: HIRE_SERVER.url,
+    instructions: HIRE_INSTRUCTIONS,
     transport: { type: 'streamable-http', url: HIRE_SERVER.url, stateless: true, methods: ['POST'] },
     protocolVersion: LATEST_PROTOCOL_VERSION,
     serverInfo: { name: HIRE_SERVER.name, version: HIRE_SERVER.version },

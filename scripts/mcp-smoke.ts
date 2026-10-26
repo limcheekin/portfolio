@@ -92,6 +92,7 @@ async function commonChecks(c: Client) {
       fail(`capabilities ${JSON.stringify(r.capabilities)} vs manifest ${JSON.stringify(c.manifest.capabilities)}`);
     }
     if (!r.instructions) fail('no instructions');
+    if (c.manifest.instructions && r.instructions !== c.manifest.instructions) fail('instructions differ from the published manifest');
   });
 
   await check('tools/list matches the manifest', async (fail) => {
@@ -222,6 +223,7 @@ await server('HIRE check server', hireEndpoint, async () => {
     if (!r.source?.commit) fail('no framework source');
     if (r.gates?.intent?.label !== 'Need vs. Hype') fail('no Part 1 gates');
     if (r.fire?.criteria?.length !== 7) fail(`${r.fire?.criteria?.length} FIRE criteria, expected 7`);
+    if (typeof r.interviewInstructions !== 'string' || !r.interviewInstructions.trim()) fail('no interview instructions in the checklist result');
   });
 
   await check('assess_agent: the fraud example', async (fail) => {

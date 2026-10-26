@@ -1,0 +1,328 @@
+{
+  "verifiedAt": "2026-10-26T12:40:00.046968+00:00",
+  "source": "https://github.com/inesbolanos/HIRE-AI-framework/blob/319b20e6fb7dc0452ae25677e7cefd9309151d1d/case-studies/fraud-support-agent.md",
+  "results": {
+    "updatedLocal": {
+      "endpoint": "http://127.0.0.1:3001/mcp/hire",
+      "serverVersion": "1.0.1",
+      "updatedInterviewGuidance": true,
+      "assessment": {
+        "mode": "pre-build",
+        "verdict": "TRAIN",
+        "decision": "TRAIN",
+        "meaning": "Promising: improve the weaknesses before full deployment.",
+        "stop": null,
+        "notAssessed": [],
+        "scores": {
+          "h": 17,
+          "i": 15,
+          "e": 10,
+          "total": 42,
+          "complete": {
+            "h": true,
+            "i": true,
+            "e": true
+          }
+        },
+        "redFlags": [],
+        "notes": [],
+        "reasons": [
+          "All gates passed: the problem and job are defined, an agent is the right kind of tool and the worst case is not catastrophic.",
+          "Strongest section: Impact & Intent. Weakest section: Exposure & Execution (each measured against its own range)."
+        ],
+        "pathToHire": [
+          {
+            "key": "access",
+            "label": "make it suggest-only",
+            "gain": 20,
+            "totalAfter": 62,
+            "actionable": true,
+            "proposed": true
+          }
+        ],
+        "alternatives": null,
+        "live": null,
+        "naItems": [],
+        "readingKeys": [
+          "path"
+        ],
+        "readings": [
+          "The path to HIRE ranks controllable levers (guardrails and boundaries, readiness, time savings and ROI) ahead of intrinsic properties of the problem; each step is a proposed change, so re-score once it is built and verified."
+        ],
+        "framework": {
+          "source": {
+            "repo": "https://github.com/inesbolanos/HIRE-AI-framework",
+            "commit": "319b20e6fb7dc0452ae25677e7cefd9309151d1d",
+            "file": "framework/hire-checklist.md",
+            "licence": "MIT",
+            "copyright": "Copyright (c) 2026 Inês Bolaños"
+          }
+        },
+        "reportUrl": "https://kin.rag.wtf/hire/#a=fVZtbxvHEf4rgwUM28iRteTYSc9pAUWqGzVOoVBOAqMt6uHu8G7Lvd3rziwlxiDQTwX6NchP6C_zLwlmj6SkFu0n8u523p555pn9YDamPWlMxIFMa15nLA6uyzimLHDWURTTGM9v_IZMu8LA1BhkJuaBolygqNXps9OXs2efz05_bRozYpYT034wFuO1oNCXhX0k5qucloEG00ou1OjnC1r5SH9Iy7Povh49Hz4t_9PCvO0JmATSCqT3sWOQnmCJcQ0WI7gEuExFYFXz9ww8YAiA0QFLLlZKJveqGu3d3OCWwRaWNFBmQF7DKmU9Mah9TDI3jflbWmop4iVM8KQos-AjwYTU2-yxI7geyXoMnhWtTDymyH7pgxdPbFrzlc_kQBIIrqlmsfKZBUZkhhSBNpS34OMylej2RdgUBa204B1F8atttfNRKEpz54hxRfdqBLTiU4Qny5DsugHneSxCDTDZkqmBTKsS3VNIGTqUnjLc9CiA0JcBI0Qix5opWmkqflGTgzGnwTMBRkhFbBpoDtfFWmKG30AmTmHjYwc5FVF4LDLV0u6KpVvbY-yoep3OdfVzJhYNWTNguPHSw6qEUCGg29qIigzmCc5zjDEJdAUzRiHaF3XIjOFJ2lCeTTlrFM-AIBntmhwoStrCFt7rsX1lfz16e__0z3EfoaKMEdDaVKIcwE1F2Ls9_v8FPZMcHfQYXSCIKc6mriplK07090IsmmqpfGSbRoKP__wJ3idty_v633m2muT2Lid9zBodj_R9zAd_lcP7XppdY9Z1qv704TDfl5EFo8BCG1ZqugsUgieXi8VT0xjB3JGY1vz25bNHZtccDV_7SA1cJLgUeJdKZgqrvenF5bsHpl-cvHhguiAHb5QT0_HFm4eRHsb5jinDecqZ7L3svjtf_N8QVwrpVYrd_vzV1cPzH__175P5KUjJke_bXZBQHnz0LN5CRRo7um_JgstAOi15opJkis7s_rJrTFZpyCXQl8jkjvLo4yrlATV9DMe3ktELqwUOS98VL9uD3A0liL8WGheEnKKP3eGLTnseyHkUqlp6lMhMkrf15EGUHY5y92KnNSxVtKYU9delOj3fUCzwCSyLSIoMnxw0QrkzmMbc9FvTmh9SXjOMlFdkJWzh4z9-PggkPP98_vKRkrZotwZixo5UklVIcvYbHY2cStcrSVOUnMIcFtTRbaVvdSLbkRy8PJl_-kjnsyvECnCj0gsWhbqU_Y8-dnMlsu1RlknulfH67NsZyzbogPJN1fB7K2BMwdvtsZpzjEC3Y0AfG61ct8ZjgVwmgaodmLHQCDIp-pOj6k6KW6dxL5iOBH3g-uqow9PwP63JYt2bd6meB2RWX6tMBCppkKJug6Ogg-BtimnYNocgg69wHII1YPuU-H9ozrHOhe96gUAbCi0ciQbBb6oaBy2nuggYu4IdvbqXPPCIVr3ranT3R2NudrtdY_q6C3NhMe1pY2wJUjKG115M-7wxyobzqdv1eZL7bzBiR0NF5LQxDgW_LRgq_583hrcsNFxGoS7XmalvK_H3tbUnu8Z4Db2qKhft1rQvGiN-oGvUrcPVJidf37NkZY-332MoZNrTXWMq_29SZjlH1skfkiM9ZhrTewmToa7ImtcL9RbCEu26PmBxWqMGpYhx-ot1-5l2dvKsMSs8Ht81xiVbB28vArS_wehSBJbito9ZBT8TN8AJvECmMSdXLDF8evqrzz6Dt4uzyz_O4Uyb7a0eQKd8qDcgAtuTXeuFA25SCQ5CuqEMv2vhK5X-mY8z6Wn2JqVRrzb72dQGMeA45rQhsNmLtxj23WdY0iplArolW1fDtP_f1orhklOo5dzzV6mjXN_fmDSAqyphc-K76xUEwqy6NgeF4eLyHUwCCyrkalyHkLRSVQLv6DHDD5MNWPLBx-4VeGGY5HgswvD7lBygwBcvHik_fwE"
+      },
+      "suggestOnlyAssessment": {
+        "mode": "pre-build",
+        "verdict": "HIRE",
+        "decision": "HIRE",
+        "meaning": "An AI agent is the right solution.",
+        "stop": null,
+        "notAssessed": [],
+        "scores": {
+          "h": 17,
+          "i": 15,
+          "e": 30,
+          "total": 62,
+          "complete": {
+            "h": true,
+            "i": true,
+            "e": true
+          }
+        },
+        "redFlags": [],
+        "notes": [],
+        "reasons": [
+          "All gates passed: the problem and job are defined, an agent is the right kind of tool and the worst case is not catastrophic.",
+          "Strongest section: Exposure & Execution. Weakest section: Human & Habits (each measured against its own range)."
+        ],
+        "pathToHire": null,
+        "alternatives": null,
+        "live": null,
+        "naItems": [],
+        "readingKeys": [],
+        "readings": [],
+        "framework": {
+          "source": {
+            "repo": "https://github.com/inesbolanos/HIRE-AI-framework",
+            "commit": "319b20e6fb7dc0452ae25677e7cefd9309151d1d",
+            "file": "framework/hire-checklist.md",
+            "licence": "MIT",
+            "copyright": "Copyright (c) 2026 Inês Bolaños"
+          }
+        },
+        "reportUrl": "https://kin.rag.wtf/hire/#a=fVZtbxvHEf4rgwUM28iRteTYSc9pAUWqGzVOoVBOAqMt6uHu8G7Lvd3rziwlxiDQTwX6NchP6C_zLwlmj6SkFu0n8u523p555pn9YDamPWlMxIFMa15nLA6uyzimLHDWURTTGM9v_IZMu8LA1BhkJuaBolygqNXps9OXs2efz05_bRozYpYT034wFuO1oNCXhX0k5qucloEG00ou1OjnC1r5SH9Iy7Povh49Hz4t_9PCvO0JmATSCqT3sWOQnmCJcQ0WI7gEuExFYFXz9ww8YAiA0QFLLlZKJveqGu3d3OCWwRaWNFBmQF7DKmU9Mah9TDI3jflbWmop4iVM8KQos-AjwYTU2-yxI7geyXoMnhWtTDymyH7pgxdPbFrzlc_kQBIIrqlmsfKZBUZkhhSBNpS34OMylej2RdgUBa204B1F8atttfNRKEpz54hxRfdqBLTiU4Qny5DsugHneSxCDTDZkqmBTKsS3VNIGTqUnjLc9CiA0JcBI0Qix5opWmkqflGTgzGnwTMBRkhFbBpoDtfFWmKG30AmTmHjYwc5FVF4LDLV0u6KpVvbY-yoep3OdfVzJhYNWTNguPHSw6qEUCGg29qIigzmCc5zjDEJdAUzRiHaF3XIjOFJ2lCeTTlrFM-AIBntmhwoStrCFt7rsX1lfz16e__0z3EfoaKMEdDaVKIcwE1F2Ls9_v8FPZMcHfQYXSCIKc6mriplK07090IsmmqpfGSbRoKP__wJ3idty_v633m2muT2Lid9zBodj_R9zAd_lcP7XppdY9Z1qv704TDfl5EFo8BCG1ZqugsUgieXi8VT0xjB3JGY1vz25bNHZtccDV_7SA1cJLgUeJdKZgqrvenF5bsHpl-cvHhguiAHb5QT0_HFm4eRHsb5jinDecqZ7L3svjtf_N8QVwrpVYrd_vzV1cPzH__175P5KUjJke_bXZBQHnz0LN5CRRo7um_JgstAOi15opJkis7s_rJrTFZpyCXQl8jkjvLo4yrlATV9DMe3ktELqwUOS98VL9uD3A0liL8WGheEnKKP3eGLTnseyHkUqlp6lMhMkrf15EGUHY5y92KnNSxVtKYU9delOj3fUCzwCSyLSIoMnxw0QrkzmMbc9FvTmh9SXjOMlFdkJWzh4z9-PggkPP98_vKRkrZotwZixo5UklVIcvYbHY2cStcrSVOUnMIcFtTRbaVvdSLbkRy8PJl_-kjnsyvECnCj0gsWhbqU_Y8-dnMlsu1RlknulfH67NsZyzbogPJN1fB7K2BMwdvtsZpzjEC3Y0AfG61ct8ZjgVwmgaodmLHQCDIp-pOj6k6KW6dxL5iOBH3g-uqow9PwP63JYt2bd6meB2RWX6tMBCppkKJug6Ogg-BtimnYNocgg69wHII1YPuU-H9ozrHOhe96gUAbCi0ciQbBb6oaBy2nuggYu4IdvbqXPPCIVr3ranT3R2NudrtdY_q6C3NhMe1pY2wJUjKG115M-7wxyobzqdv1eZL7bzBiR0NF5LQxDgW_LRgq_583hrcsNFxGoS7XmalvK_H3tbUnu8Z4Db2qKhft1rQvGiN-oGvUrcPVJidf37NkZY-332MoZNrTXWMq_29SZjlH1skfkiM9ZhrTewmToa7ImtcL9RbCEu26PmBxWqMGpYhx-ot1-5n25FljVng8vWuMS7bO3V4DaH-B0Z0ILMVtH7PqfSZugBN4gUxjTq5YYvj09FeffQZvF2eXf5zDmfbaWz2ATulQL0AEtie71vsG3KQSHIR0Qxl-18JXqvwzH2fS0-xNSqPebPajqf1hwHHMaUNgsxdvMeybz7CkVcoEdEu2boZp_b-tBcMlp1DLueevMkepvr8waQBXRcLmxHe3KwiEWWVtDgrDxeU7mPQVVMfVuM4gaaUqBN7RY4YfJhuw5IOP3SvwwjCp8ViE4fcpOUCBL148Unr-Ag"
+      },
+      "reportRoundTripMatches": true,
+      "missingAnswerError": {
+        "code": -32602,
+        "message": "MCP error -32602: h.trust: required"
+      },
+      "omittedRuleFlags": [
+        {
+          "section": "R",
+          "key": "r3",
+          "text": "No clear distinction between what's automated vs. what requires reasoning"
+        }
+      ]
+    },
+    "public": {
+      "endpoint": "https://kin.rag.wtf/mcp/hire",
+      "serverVersion": "1.0.0",
+      "updatedInterviewGuidance": false,
+      "assessment": {
+        "mode": "pre-build",
+        "verdict": "TRAIN",
+        "decision": "TRAIN",
+        "meaning": "Promising: improve the weaknesses before full deployment.",
+        "stop": null,
+        "notAssessed": [],
+        "scores": {
+          "h": 17,
+          "i": 15,
+          "e": 10,
+          "total": 42,
+          "complete": {
+            "h": true,
+            "i": true,
+            "e": true
+          }
+        },
+        "redFlags": [],
+        "notes": [],
+        "reasons": [
+          "All gates passed: the problem and job are defined, an agent is the right kind of tool and the worst case is not catastrophic.",
+          "Strongest section: Impact & Intent. Weakest section: Exposure & Execution (each measured against its own range)."
+        ],
+        "pathToHire": [
+          {
+            "key": "access",
+            "label": "make it suggest-only",
+            "gain": 20,
+            "totalAfter": 62,
+            "actionable": true,
+            "proposed": true
+          }
+        ],
+        "alternatives": null,
+        "live": null,
+        "naItems": [],
+        "readingKeys": [
+          "path"
+        ],
+        "readings": [
+          "The path to HIRE ranks controllable levers (guardrails and boundaries, readiness, time savings and ROI) ahead of intrinsic properties of the problem; each step is a proposed change, so re-score once it is built and verified."
+        ],
+        "framework": {
+          "source": {
+            "repo": "https://github.com/inesbolanos/HIRE-AI-framework",
+            "commit": "319b20e6fb7dc0452ae25677e7cefd9309151d1d",
+            "file": "framework/hire-checklist.md",
+            "licence": "MIT",
+            "copyright": "Copyright (c) 2026 Inês Bolaños"
+          }
+        },
+        "reportUrl": "https://kin.rag.wtf/hire/#a=fVbtbhtFFH2Vq5WiJmJtkrRJiwtIaUKoIUWpk1JVgOh4drwePDuzzEcSE0XiFxJ_EY_Ak_VJOHd27Tgg-JN4d-Z-nXvuuXtbXBWjvbKwolHFqDj1IlV0kdrW-UhHtbKxKAsdzvQVjmfCBFUWIgQVQoOzExHZan93_3Cw-2yw_wkut8LHvWJ0W0hhLyIuvEhBWxicezc1qilG0Sd4wfGJmuHkKzc9stXXrQ6ro-k_LYrLuaKgIrkZxbm2dcA_RVNhFwQ_VDkSU5cizXL-OlBohDEkbEUBPmVMXlXPs1Hv5losA8kUomuUDyTCgmbO842G7a2LQxTzk5tyKVFH08HjbBwYJEcdUpdei1rRRaukFkYHRsur0Dob9FQbHbVCVcVLjfAUHUWxUDmLmfYhUgsoyVlSV8ovSVvUgIy7IiRCCRlHpCsgrWfLbKdtxFN57yiImdqokWCi4XF7apxclFTp0KaoSpQtcV6SVzPE2CHUWgs48HQ9F5EEzVMDJK1SVeBM4afM-FlOjlrvGh0U3hBwlgBtCJpIiS7RZ3AanLlCX8jjlOGRAhzh0u6LVTdyLmytstfuXp2PYR05ZM4g0LWOc5oltI8hUDe5ERkZ4Ts4j4VFf6hOwgvcUH1Rq8wCbTvkPOhy5ihoqKDohVwAIUaJWzii93ytr-zHtbf3O9_bPkJGGSULKRE_rsBFnICudPj_C3oQbO0ABVdGgU120HWVKZtxUj8nlM2ppszHIF2r6MNvfyArbsv7_Bvtk5zk8j4nfvQcXazp-yis_GUO970s7spikafqu9vVfI9tiCiSJtywlNOdYERpezyZ7ADmKHytIi5-fri7BQdrw1MAVtKJo3Gkdy75oMysNz0Zv3tg-unewQPTCaA5Y0501ydnDyM9jPMmgGzHznslN7J7czz53xDnDOm5w5_u_vn5w_sffv9rb7hPaJMNm3YnKirfaIvB1ZIy0hjnTUvABQniafEdlaJXtirufgC4nqXBJ6NegOzVWh61RRMawekLs34L9ukY2EI0U10nHZcruWuSifoiqnaiRHAWUVYnPO2-UZVGVVlL1xLpVfTLfHMlypVo4_2LO65hyqLVpcj_K5en55WyiT6iaYoRMoVfvUYwdxrUfj1HZsVb5xeBWuVn6IRZ0odf_1wJJD1-NjzcYtIm7hYGLgA1lmQWEpDzikcDE17PmaQYYu_MEJyr1U2mb3YSly2Icbg3fLLF81mDvgxwydIL-Yiqdl7_gjdDJjKkI05d3Cjj9Oj1IMSl4QEN11nDN1ZA64yWy3U1mB3oT2uEtiVXzlvjUSSfOoHKHYA31aK_WdG316rbKW6exl4wKxWFNiG_WutwN_w7OVmR9-Z9qscGOs--Zh5ixZIGZeRtsBZ0-Llx1jXLchUEmpT51gcrSc6dC_-hOes6J7qeRzKQbDOiNdEgd1dZjQ2Xk10YKHFCns83kqfQCsneeTVWm6OBqu5Q1zzvQg_VKUb76AlQS16YU43nx2XBbDjuup2fO7l_JSziNBkRGFUiitcJu5L5j0thCdibMVCofZ6Z_DYTv69ttIfQmkPPsspZ9HV0AH7rRl0I3joh23in83ugw-zR8lthEoi_D_PM_2uHNXSMWQVQjasUXwNycyz3zpBXZM7rgL0ZM8XCyA9gFNfIQZUVtvsp8vYrRoO93bLA0K2uI1zlZB68XgRU_wXDSxHwpmoJxYawY_FhMTvSYKLCHqoSPNKT_Y-fPqXLydH4myEdcbO15AuiYj7kLyC4miu54A8OunbJYKE5jAB9MaKXLP0DbQe4NThzruVPm342uUEYkxahMKIStWopTN_9QFOFAVeYE-DAb7r9f5krpjEWRi5nw1-mDnO9_2LiAFVWCelduP-8AiGFZ10bEsOAhUGdwBILORvnIVRcKSsBZg8Ave1sSCp8SNn6OWDCxSzHkKtAXzoH_sPHwRbz828"
+      },
+      "suggestOnlyAssessment": {
+        "mode": "pre-build",
+        "verdict": "HIRE",
+        "decision": "HIRE",
+        "meaning": "An AI agent is the right solution.",
+        "stop": null,
+        "notAssessed": [],
+        "scores": {
+          "h": 17,
+          "i": 15,
+          "e": 30,
+          "total": 62,
+          "complete": {
+            "h": true,
+            "i": true,
+            "e": true
+          }
+        },
+        "redFlags": [],
+        "notes": [],
+        "reasons": [
+          "All gates passed: the problem and job are defined, an agent is the right kind of tool and the worst case is not catastrophic.",
+          "Strongest section: Exposure & Execution. Weakest section: Human & Habits (each measured against its own range)."
+        ],
+        "pathToHire": null,
+        "alternatives": null,
+        "live": null,
+        "naItems": [],
+        "readingKeys": [],
+        "readings": [],
+        "framework": {
+          "source": {
+            "repo": "https://github.com/inesbolanos/HIRE-AI-framework",
+            "commit": "319b20e6fb7dc0452ae25677e7cefd9309151d1d",
+            "file": "framework/hire-checklist.md",
+            "licence": "MIT",
+            "copyright": "Copyright (c) 2026 Inês Bolaños"
+          }
+        },
+        "reportUrl": "https://kin.rag.wtf/hire/#a=fVbtbhtFFH2Vq5WiJmJtkrRJiwtIaUKoIUWpk1JVgOh4drwePDuzzEcSE0XiFxJ_EY_Ak_VJOHd27Tgg-JN4d-Z-nXvuuXtbXBWjvbKwolHFqDj1IlV0kdrW-UhHtbKxKAsdzvQVjmfCBFUWIgQVQoOzExHZan93_3Cw-2yw_wkut8LHvWJ0W0hhLyIuvEhBWxicezc1qilG0Sd4wfGJmuHkKzc9stXXrQ6ro-k_LYrLuaKgIrkZxbm2dcA_RVNhFwQ_VDkSU5cizXL-OlBohDEkbEUBPmVMXlXPs1Hv5losA8kUomuUDyTCgmbO842G7a2LQxTzk5tyKVFH08HjbBwYJEcdUpdei1rRRaukFkYHRsur0Dob9FQbHbVCVcVLjfAUHUWxUDmLmfYhUgsoyVlSV8ovSVvUgIy7IiRCCRlHpCsgrWfLbKdtxFN57yiImdqokWCi4XF7apxclFTp0KaoSpQtcV6SVzPE2CHUWgs48HQ9F5EEzVMDJK1SVeBM4afM-FlOjlrvGh0U3hBwlgBtCJpIiS7RZ3AanLlCX8jjlOGRAhzh0u6LVTdyLmytstfuXp2PYR05ZM4g0LWOc5oltI8hUDe5ERkZ4Ts4j4VFf6hOwgvcUH1Rq8wCbTvkPOhy5ihoqKDohVwAIUaJWzii93ytr-zHtbf3O9_bPkJGGSULKRE_rsBFnICudPj_C3oQbO0ABVdGgU120HWVKZtxUj8nlM2ppszHIF2r6MNvfyArbsv7_Bvtk5zk8j4nfvQcXazp-yis_GUO970s7spikafqu9vVfI9tiCiSJtywlNOdYERpezyZ7ADmKHytIi5-fri7BQdrw1MAVtKJo3Gkdy75oMysNz0Zv3tg-unewQPTCaA5Y0501ydnDyM9jPMmgGzHznslN7J7czz53xDnDOm5w5_u_vn5w_sffv9rb7hPaJMNm3YnKirfaIvB1ZIy0hjnTUvABQniafEdlaJXtirufgC4nqXBJ6NegOzVWh61RRMawekLs34L9ukY2EI0U10nHZcruWuSifoiqnaiRHAWUVYnPO2-UZVGVVlL1xLpVfTLfHMlypVo4_2LO65hyqLVpcj_K5en55WyiT6iaYoRMoVfvUYwdxrUfj1HZsVb5xeBWuVn6IRZ0odf_1wJJD1-NjzcYtIm7hYGLgA1lmQWEpDzikcDE17PmaQYYu_MEJyr1U2mb3YSly2Icbg3fLLF81mDvgxwydIL-Yiqdl7_gjdDJjKkI05d3Cjj9Oj1IMSl4QEN11nDN1ZA64yWy3U1mB3oT2uEtiVXzlvjUSSfOoHKHYA31aK_WdG316rbKW6exl4wKxWFNiG_WutwN_w7OVmR9-Z9qscGOs--Zh5ixZIGZeRtsBZ0-Llx1jXLchUEmpT51gcrSc6dC_-hOes6J7qeRzKQbDOiNdEgd1dZjQ2Xk10YKHFCns83kqfQCsneeTVWm6OBqu5Q1zzvQg_VKUb76AlQS16YU43nx2XBbDjuup2fO7l_JSziNBkRGFUiitcJu5L5j0thCdibMVCofZ6Z_DYTv69ttIfQmkPPsspZ9HV0AH7rRl0I3joh23in83ugw-zR8lthEoi_D_PM_2uHNXSMWQVQjasUXwNycyz3zpBXZM7rgL0ZM8XCyA9gFNfIQZUVtvsp8vZDertlgZlb3Ua0ysk8d70GqP4Dhnci0E3VEoINXcfew152pEFEhTVUJTikJ_sfP31Kl5Oj8TdDOuJea8kXRMV0yB9AcDVXcsHfG3TtksE-c5gA-mJEL1n5B9oOcGtw5lzLXzb9aHJ_MCUtQmFCJUrVUpi--YGmCvOtMCaAgd906_8yF0xj7Itczoa_zBymev_BxAGqLBLSu3D_dQU-Cs-yNiSGAfuCOn0l1nE2zjOouFIWAoweAHrb2ZBU-I6y9XPAhItZjaFWgb50DvSHj4Mtpuff"
+      },
+      "reportRoundTripMatches": true,
+      "missingAnswerError": {
+        "code": -32602,
+        "message": "MCP error -32602: h.trust: required"
+      },
+      "omittedRuleFlags": [
+        {
+          "section": "R",
+          "key": "r3",
+          "text": "No clear distinction between what's automated vs. what requires reasoning"
+        }
+      ]
+    }
+  },
+  "input": {
+    "v": 1,
+    "name": "Fraud Support Agent",
+    "isLive": false,
+    "assessmentDate": "2026-08-29",
+    "part1": {
+      "canStateBusinessProblem": true,
+      "businessProblem": "The set of things the bank can do about fraud is small and structured; the set of ways customers ask for them is not.",
+      "canDefineJobAndKpis": true,
+      "job": {
+        "title": "Front-line Fraud Triage Specialist",
+        "responsibilities": "Hired to take the first pass on every inbound fraud contact: identify the intent, take the safe structured action (block, dispute, secure, refund) or gather what a human needs to act, and never promise an outcome. Success = resolving routine cases on the first exchange and routing the rest to humans with full context.",
+        "boundaries": "Cannot guarantee refund outcomes (over-promising is a tracked red line: `overpromise_guarantee`)\nCannot take an account action outside the structured action set\nCannot handle non-fraud banking requests (out of scope → `other` → discovery)\nCannot override a customer's request for a human"
+      },
+      "kpis": [
+        {
+          "name": "Instant Resolution Rate (IRR)",
+          "target": ">60%"
+        },
+        {
+          "name": "Fine, Do It Yourself Rate (DIY)",
+          "target": "<15%"
+        },
+        {
+          "name": "Red Line Rate (RLR)",
+          "target": "0%"
+        },
+        {
+          "name": "User Correction Rate (UCR)",
+          "target": "<15%"
+        },
+        {
+          "name": "Ping Pong Rate (PPR)",
+          "target": "≤1.2 turns"
+        },
+        {
+          "name": "Deterministic coverage",
+          "target": "stable or rising trend"
+        }
+      ]
+    },
+    "r": {
+      "ruleBased": false,
+      "informational": false,
+      "traits": {
+        "ambiguity": true,
+        "multiStepReasoning": true,
+        "intermediateStates": true,
+        "retrying": false,
+        "adapting": false
+      },
+      "table": {
+        "rule": {
+          "does": "Menu + buttons + dispute form",
+          "why": "Works perfectly — for the 38.6% of user messages that arrive through a control. Regex over the typed 61.4% is guessing, not categorizing."
+        },
+        "chatbot": {
+          "does": "FAQ-style answers about fraud policy",
+          "why": "Can explain, but can't run the multi-step triage (identify intent → gather details → take the action)."
+        },
+        "agent": {
+          "does": "Classify free text onto the intent taxonomy, gather missing details, choose the structured action",
+          "why": "Right level: ambiguity lives only in the language; the action space stays deterministic."
+        }
+      }
+    },
+    "h": {
+      "trust": 2,
+      "culturalFit": 3,
+      "userControl": 3,
+      "changeManagement": 2,
+      "dataQuality": 3,
+      "systemIntegration": 3,
+      "interaction": 1
+    },
+    "i": {
+      "frequency": 5,
+      "timeSavings": 3,
+      "roi": 5,
+      "strategicValue": 2
+    },
+    "e": {
+      "worstCase": "moderate",
+      "hitl": 5,
+      "security": 5,
+      "rollback": 5,
+      "audit": 5,
+      "tenant": 5,
+      "access": -10,
+      "fallback": 5
+    },
+    "doc": {
+      "rationale": "The case study's scores, so it reproduces 42/77 TRAIN. A strict reading of the checklist would lower E: Human-in-the-Loop asks that users approve critical actions before execution, and Tenant Isolation asks that the agent is not used for cross customer learning. The DIY target <15% is the metrics guide's Warning ceiling; its table puts Good at <5%."
+    }
+  },
+  "caseStudyScoresVerifiedAgainstPinnedSource": true,
+  "scope": "Pre-build reproduction using the published case-study scores; isLive=false. The fixture rationale preserves the HITL, tenant-isolation and DIY-target caveats. Reasoning-trait choices are fixture interpretations, not scored case-study rows.",
+  "limits": "Verifies scoring, validation, report round-trip and delivery of interview instructions; does not test an external AI client obeying one-question-per-turn instructions."
+}

@@ -1,0 +1,39 @@
+- main [ref=f1e4]:
+  - generic [ref=f1e14]:
+    - generic [ref=f1e18]:
+      - heading "Expense Agent Evaluation" [level=1] [ref=f1e19]
+      - generic [ref=f1e20]:
+        - link "https://share.gemini.google/tiK8NjyMOZIf" [ref=f1e21] [cursor=pointer]:
+          - /url: https://share.gemini.google/tiK8NjyMOZIf
+        - generic [ref=f1e22]:
+          - button [ref=f1e23] [cursor=pointer]:
+            - img [aria-hidden] [ref=f1e24]: content_copy
+          - button [ref=f1e27] [cursor=pointer]:
+            - img [aria-hidden] [ref=f1e28]: flag
+      - generic [ref=f1e31]:
+        - generic [ref=f1e32]:
+          - generic [ref=f1e33]:
+            - text: Created with
+            - strong [ref=f1e34]: 3.8 Flash
+          - text: October 26, 2026 at 12:30 PM
+        - generic [ref=f1e35]: • Published October 26, 2026 at 08:18 PM
+    - generic:
+      - button "Continue this chat" [ref=f1e39]
+      - generic [ref=f1e43]:
+        - paragraph [ref=f1e44]: Gemini may display inaccurate info, including about people, so double-check its responses.
+        - generic [ref=f1e45]:
+          - link "Google Privacy Policy Opens in a new window ·" [ref=f1e46] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy
+            - text: Google Privacy Policy
+            - generic [ref=f1e47]: Opens in a new window
+            - text: ·
+          - link "Google Terms of Service Opens in a new window ·" [ref=f1e48] [cursor=pointer]:
+            - /url: https://policies.google.com/terms
+            - text: Google Terms of Service
+            - generic [ref=f1e49]: Opens in a new window
+            - text: ·
+          - link "Your privacy & Gemini Apps Opens in a new window" [ref=f1e50] [cursor=pointer]:
+            - /url: https://support.google.com/gemini?p=privacy_notice
+            - text: Your privacy & Gemini Apps
+            - generic [ref=f1e51]: Opens in a new window
+  - generic [ref=f1e52]: play_arrow

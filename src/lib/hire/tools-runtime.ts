@@ -30,6 +30,7 @@ import {
   WORST_CASE_OPTIONS,
 } from './checklist.ts';
 import { reportUrl } from './link.ts';
+import { INTERVIEW_INSTRUCTIONS } from './interview.ts';
 import { READINGS } from './reasons.ts';
 import { TEXT_CAPS, validateAnswers } from './validate.ts';
 
@@ -47,6 +48,7 @@ export class HireInputError extends Error {
 
 /** The whole checklist as data, so an agent can interview its user (the same for every call). */
 const CHECKLIST = Object.freeze({
+  interviewInstructions: INTERVIEW_INSTRUCTIONS,
   source: CHECKLIST_SOURCE,
   flow: FLOW,
   // Part 1: the I gates and E's worst-case STOP (R's two stops are sections.r.questions).

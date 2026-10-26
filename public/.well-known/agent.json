@@ -83,7 +83,7 @@
     {
       "id": "hire-check",
       "name": "HIRE Check",
-      "description": "MCP server at https://kin.rag.wtf/mcp/hire (Streamable HTTP, stateless, POST only, no auth; manifest /.well-known/mcp-hire.json) that decides whether an AI agent should be built (HIRE, TRAIN or DO NOT BUILD) or, once live, kept (HIRE, TRAIN or FIRE): tools get_hire_checklist, assess_agent. Pure computation; the answers are never stored or logged. Same check as the web tool at https://kin.rag.wtf/hire/. Example calls: tools/call get_hire_checklist {}; tools/call assess_agent {\"isLive\": false, ...answers in the checklist's flow order}.",
+      "description": "MCP server at https://kin.rag.wtf/mcp/hire (Streamable HTTP, stateless, POST only, no auth; manifest /.well-known/mcp-hire.json) that decides whether an AI agent should be built (HIRE, TRAIN or DO NOT BUILD) or, once live, kept (HIRE, TRAIN or FIRE): tools get_hire_checklist, assess_agent. Interview one question at a time, waiting for each answer; follow interviewInstructions returned by get_hire_checklist. Never invent missing answers or scores. Relay the assess_agent result with its red flags, interpretations and reportUrl. Pure computation; the answers are never stored or logged. Same check as the web tool at https://kin.rag.wtf/hire/. Example calls: tools/call get_hire_checklist {}; tools/call assess_agent {\"isLive\": false, ...answers in the checklist's flow order}.",
       "tags": [
         "mcp",
         "tools",
