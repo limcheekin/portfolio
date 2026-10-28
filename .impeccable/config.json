@@ -14,6 +14,24 @@
         "value": "theme('fontfamily.mono')",
         "createdAt": "2026-10-19T04:10:21.143Z",
         "reason": "Claude triage: Tailwind theme() call resolving to the SFMono/Menlo/Consolas mono stack documented in DESIGN.md; detector cannot evaluate theme()"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "slides/showcase/index.html"
+        ],
+        "createdAt": "2026-10-28T03:20:23.222Z",
+        "reason": "Claude triage: glows are DESIGN.md shadow tokens (shadow-scan, shadow-halo, shadow-magnet, shadow-console) reused by this showcase"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "slides/showcase/index.html"
+        ],
+        "createdAt": "2026-10-28T03:20:23.424Z",
+        "reason": "Claude triage: static scan cannot resolve clamp() section padding; rendered scan at 1280 and 390 reports none"
       }
     ]
   }

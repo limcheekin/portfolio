@@ -184,7 +184,7 @@ A warm-neutral near-black system with one green signal and one sky marker.
 
 ### Tertiary
 - **Enterprise Illustration Greens** (`green-deep` / `green-dim` / `green-pale`): bubble fill, border and text inside enterprise Work card illustrations. Illustration-only.
-- **Danger Coral** (`danger`): form validation (invalid field border, error text) and the FIRE / DO NOT BUILD verdict.
+- **Danger Coral** (`danger`): form validation (invalid field border, error text) and the FIRE / DO NOT BUILD verdict; in slide decks, a failed step (see Slide Decks).
 
 ### Neutral
 - **Abyss Black** (`navy`): page canvas, scrollbar track, text on solid green buttons, the inner fill of career dots.
@@ -216,8 +216,8 @@ Source of truth: `src/lib/palette.mjs`, read by `tailwind.config.mjs` (and impor
 | `white-text` | `#ffffff` | Bold terms in a finished console run |
 | `green-accent` | `#00d992` | The signal: emphasis, links, active, primary action, focus |
 | `green-tint` | `green-accent` at 10% (Tailwind config) | Outline button and logo hover fill |
-| `danger` | `#fb565b` | Form errors and the FIRE / DO NOT BUILD verdict |
-| `amber` | `#f5a524` | The TRAIN verdict only |
+| `danger` | `#fb565b` | Form errors and the FIRE / DO NOT BUILD verdict; a failed step in slide decks |
+| `amber` | `#f5a524` | The TRAIN verdict; a retried step in slide decks |
 | `sky` | `#38bdf8` | Open-source work only (labels, glow, illustrations) |
 | `well` | `#09090b` | Recessed panels: hero console, Work illustration frame |
 | `card` | `#0e0e10` | Card surface, drawer, inputs; chips and nodes in illustrations |
@@ -351,6 +351,13 @@ A list row: mono date, 18px title, two mono tags, an arrow. On hover the `bg-row
 
 ### Timeline
 Career (home) and Experience (About) share one rail: a 2px `light-graphite` line with 14px dots (2px green border, `navy` fill, `shadow-halo`), mono green dates, 20px titles, `slate-text` detail and chips. On home the rail fills with a green gradient on scroll and dots start as pending (`lightest-navy` border, no halo).
+
+### Slide Decks
+Presentation decks (`.pptx`, e.g. `slides/AI-Agents-Case-Studies.pptx`) carry the same carbon canvas, green signal and two voices, adjusted for projectors and for apps without the web fonts:
+- Card borders are `slate-text` at 0.75pt, not `edge`: projectors crush the near-black steps, and `edge` (1.35:1) or `lightest-navy` (1.8:1) vanish against `navy`; `slate-text` clears 3:1. Card fills stay `card`; the one live card keeps its green border and glow.
+- Agent-run status: `green-accent` for a done step, `amber` for a retried step, `danger` for a failed step, always paired with an icon (check, retry arrows, cross) and alt text, never colour alone.
+- Labels use Courier New (the portable end of the mono stack) and body text Arial, since Inter and SF Mono do not ship with Office, Keynote or Google Slides. Nothing that carries meaning is set below 12pt; the footer is 10pt.
+- No eyebrow above a heading: the case name sits in the footer beside the slide number.
 
 ### Motion
 Motion follows the "Animation rules" in `CLAUDE.md`; in summary:
