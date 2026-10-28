@@ -11,8 +11,8 @@ export const COLORS = {
   'lightest-slate': '#f2f2f2',
   'white-text': '#ffffff',
   'green-accent': '#00d992',
-  danger: '#fb565b', // Danger Coral: form errors and the FIRE / DO NOT BUILD verdict
-  amber: '#f5a524', // the TRAIN verdict only
+  danger: '#fb565b', // Danger Coral: form errors and the FIRE / DO NOT BUILD verdict; a failed step in slide decks
+  amber: '#f5a524', // the TRAIN verdict; a retried step in slide decks
   // Redesign additions: sky marks open-source work only
   sky: '#38bdf8',
   // Home surfaces, darkest to lightest
