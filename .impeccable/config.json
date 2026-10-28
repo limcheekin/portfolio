@@ -19,7 +19,7 @@
         "rule": "dark-glow",
         "value": "*",
         "files": [
-          "slide/index.html"
+          "public/slide/index.html"
         ],
         "createdAt": "2026-10-28T03:20:23.222Z",
         "reason": "Claude triage: glows are DESIGN.md shadow tokens (shadow-scan, shadow-halo, shadow-magnet, shadow-console) reused by this showcase"
@@ -28,7 +28,7 @@
         "rule": "cramped-padding",
         "value": "*",
         "files": [
-          "slide/index.html"
+          "public/slide/index.html"
         ],
         "createdAt": "2026-10-28T03:20:23.424Z",
         "reason": "Claude triage: static scan cannot resolve clamp() section padding; rendered scan at 1280 and 390 reports none"
