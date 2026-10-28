@@ -1,0 +1,1200 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agents at Work</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Four AI agents by Lim Chee Kin that turn everyday messages into approved business records: Claim Pilot, Trade Pilot, Agentic AI Layer and WareBot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one scroll story. Hero, four numbered case bands (story column + live instrument panel), the shared pattern, contact.
+   Tokens are the portfolio's own (DESIGN.md / palette.mjs): carbon canvas, stepped surfaces, one emerald signal. Dark only. */
+:root {
+  color-scheme: dark;
+  --navy: #050507;
+  --well: #09090b;
+  --card: #0e0e10;
+  --graphite: #141417;
+  --hair: #1c1c20;
+  --edge: #26262a;
+  --edge-strong: #2e2e33;
+  --charcoal: #3d3a39;
+  --slate: #8b949e;
+  --parch: #b8b3b0;
+  --snow: #f2f2f2;
+  --white: #ffffff;
+  --green: #00d992;
+  --green-tint: rgba(0, 217, 146, 0.1);
+  --green-wash: rgba(0, 217, 146, 0.06);
+  --green-halo: rgba(0, 217, 146, 0.12);
+  --green-line: rgba(0, 217, 146, 0.4);
+  --green-hover: rgba(0, 217, 146, 0.55);
+  --green-focus: rgba(0, 217, 146, 0.7);
+  --green-deep: #0f2a20;
+  --green-dim: #1d4d3a;
+  --green-pale: #c9f5e4;
+  --coral: #fb565b;
+  --coral-tint: rgba(251, 86, 91, 0.12);
+  --coral-line: rgba(251, 86, 91, 0.55);
+  --amber: #f5a524;
+  --amber-tint: rgba(245, 165, 36, 0.12);
+  --amber-halo: rgba(245, 165, 36, 0.14);
+  --amber-line: rgba(245, 165, 36, 0.45);
+  --navy-glass: rgba(5, 5, 7, 0.82);
+  --navy-veil: rgba(5, 5, 7, 0.35);
+  --shadow-console: 0 0 0 1px var(--green-wash), 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 80px var(--green-wash);
+  --shadow-magnet: 0 10px 40px rgba(0, 217, 146, 0.25);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --ease: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--navy); scrollbar-color: var(--charcoal) var(--navy); scrollbar-width: thin; }
+::selection { background: var(--green-dim); color: var(--white); }
+body {
+  background: var(--navy);
+  color: var(--snow);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.625;
+  font-feature-settings: "calt", "rlig";
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--navy); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p, li { text-wrap: pretty; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+a { color: var(--green); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--green-focus); outline-offset: 2px; border-radius: 4px; }
+.mono { font-family: var(--font-mono); }
+.wrap { max-width: 1160px; margin-inline: auto; padding-inline: clamp(0px, 3vw, 40px); }
+
+/* Header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--navy-glass);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--graphite);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--snow); }
+.brand:hover { text-decoration: none; }
+.mark {
+  width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+  border: 2px solid var(--green); border-radius: 4px; color: var(--green);
+  font-weight: 700; font-size: 22px; line-height: 1; transition: background-color 250ms var(--ease);
+}
+.brand:hover .mark { background: var(--green-tint); }
+.brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+.brand-text b { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+.brand-text span { font-family: var(--font-mono); font-size: 11px; color: var(--slate); }
+.nav { display: flex; gap: 2px; }
+.nav a {
+  font-family: var(--font-mono); font-size: 13px; color: var(--parch);
+  padding: 10px 10px; border-radius: 4px; transition: color 250ms var(--ease);
+}
+.nav a span { color: var(--green); font-size: 11px; margin-right: 4px; }
+.nav a:hover, .nav a[aria-current="true"] { color: var(--green); text-decoration: none; }
+.progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--green); transform-origin: 0 50%; transform: scaleX(0); }
+@media (max-width: 860px) { .nav { display: none; } }
+
+/* Hero */
+/* overflow-x: clip keeps the glow's side bleed from widening the layout viewport on phones; the top bleed stays. */
+.hero { position: relative; overflow-x: clip; padding-block: clamp(56px, 10vw, 112px) clamp(48px, 7vw, 88px); }
+.hero::before {
+  content: ""; position: absolute; inset: -80px -20% auto; height: 520px; pointer-events: none;
+  background: radial-gradient(ellipse at 30% 30%, var(--green-tint), transparent 60%);
+}
+.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--parch); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+.hero h1 {
+  position: relative; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(36px, 5.6vw, 64px); line-height: 1.04; letter-spacing: -0.02em;
+  margin-top: 22px; max-width: 17ch;
+}
+.accent { color: var(--green); font-style: normal; }
+.hero-sub { position: relative; margin-top: 22px; font-size: 18px; color: var(--slate); max-width: 56ch; }
+.hero-sub strong { color: var(--snow); font-weight: 500; }
+.index {
+  position: relative; margin-top: clamp(40px, 6vw, 64px);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+}
+@media (max-width: 980px) { .index { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 540px) { .index { grid-template-columns: minmax(0, 1fr); } }
+.index a {
+  display: flex; flex-direction: column; gap: 10px; padding: 20px; min-width: 0;
+  background: var(--card); border: 1px solid var(--edge); border-radius: 16px; color: var(--snow);
+  transition: border-color 300ms ease-out;
+}
+.index a:hover { text-decoration: none; border-color: var(--green-hover); }
+.index a:hover .go { color: var(--green); }
+.index .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
+.index .nm { display: block; font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; }
+.index p { font-size: 14px; color: var(--parch); line-height: 1.5; }
+.index .route { margin-top: auto; padding-top: 6px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); }
+.index .go { font-family: var(--font-mono); font-size: 12px; color: var(--parch); transition: color 250ms var(--ease); }
+
+/* Case bands */
+.case { border-top: 1px solid var(--graphite); padding-block: clamp(64px, 9vw, 120px); scroll-margin-top: 64px; }
+.case-head { display: grid; gap: 14px; max-width: 760px; }
+.case-num { font-family: var(--font-mono); color: var(--green); font-size: clamp(15px, 2.1vw, 24px); font-weight: 500; margin-right: 0.4em; vertical-align: 0.35em; letter-spacing: 0; }
+.case h2 { font-size: clamp(30px, 4.2vw, 48px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; }
+.case .lead { font-size: 18px; color: var(--slate); max-width: 58ch; }
+.case .lead strong { color: var(--snow); font-weight: 500; }
+.case-grid { margin-top: clamp(36px, 5vw, 56px); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
+.case-grid.phones { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
+@media (max-width: 960px) { .case-grid, .case-grid.phones { grid-template-columns: minmax(0, 1fr); } }
+.story { display: grid; gap: 28px; min-width: 0; }
+.compare { display: grid; gap: 12px; }
+.compare > div { padding: 16px 18px; border-radius: 12px; border: 1px solid var(--edge); background: var(--card); }
+.compare > div.after { border-color: var(--green-dim); background: linear-gradient(180deg, var(--green-wash), transparent 70%), var(--card); }
+.compare .lab { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); }
+.compare .after .lab { color: var(--green); }
+.compare p { margin-top: 6px; color: var(--parch); font-size: 15px; line-height: 1.55; }
+.gains h3, .tech h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); font-weight: 400; margin-bottom: 12px; }
+.gains ul { display: grid; gap: 12px; }
+.gains li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; color: var(--parch); font-size: 15px; line-height: 1.55; }
+.gains li::before { content: ""; width: 8px; height: 8px; margin-top: 8px; border-radius: 2px; background: var(--green); transform: rotate(45deg); }
+.gains li b { color: var(--snow); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--font-mono); font-size: 11px; color: var(--parch); border: 1px solid var(--edge); border-radius: 5px; padding: 4px 8px; }
+.quote { border-left: 2px solid var(--green); padding: 2px 0 2px 16px; color: var(--snow); font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
+
+/* Instrument panel */
+.panel {
+  position: relative; min-width: 0;
+  background: var(--well); border: 1px solid var(--edge); border-radius: 12px; overflow: hidden;
+  box-shadow: var(--shadow-console);
+}
+.panel-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--hair); }
+.panel-bar .lights { display: flex; gap: 6px; }
+.panel-bar .lights i { width: 10px; height: 10px; border-radius: 50%; background: var(--edge); display: block; }
+.panel-bar .ttl { font-family: var(--font-mono); font-size: 12px; color: var(--slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.panel-bar .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); border: 1px solid var(--amber-line); border-radius: 5px; padding: 2px 6px; white-space: nowrap; }
+.panel-body { padding: clamp(14px, 2.4vw, 22px); background-image: radial-gradient(var(--hair) 1px, transparent 1px); background-size: 14px 14px; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--hair); background: var(--card); }
+.controls .sp { flex: 1; }
+.btn {
+  font-family: var(--font-mono); font-size: 12px; line-height: 1; cursor: pointer;
+  padding: 10px 14px; border-radius: 4px; border: 1px solid var(--green); color: var(--green); background: transparent;
+  transition: background-color 250ms var(--ease), color 250ms var(--ease), border-color 250ms var(--ease), opacity 250ms var(--ease);
+}
+.btn:hover { background: var(--green-tint); }
+.btn.solid { background: var(--green); color: var(--navy); font-weight: 600; }
+.btn.solid:hover { opacity: 0.9; background: var(--green); }
+.btn.quiet { border-color: var(--charcoal); color: var(--parch); }
+.btn.quiet:hover { border-color: var(--parch); background: transparent; color: var(--snow); }
+.btn.danger { border-color: var(--coral-line); color: var(--coral); }
+.btn.danger:hover { background: var(--coral-tint); }
+.btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.btn[disabled]:hover { background: transparent; }
+.btn.solid[disabled]:hover { background: var(--green); }
+.counter { font-family: var(--font-mono); font-size: 12px; color: var(--slate); font-variant-numeric: tabular-nums; }
+.switch { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; color: var(--parch); cursor: pointer; background: none; border: 0; padding: 6px 4px; }
+.switch .track { width: 30px; height: 16px; border-radius: 9999px; background: var(--edge); position: relative; transition: background-color 250ms var(--ease); flex: none; }
+.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--parch); transition: transform 250ms var(--ease); }
+.switch[aria-checked="true"] .track { background: var(--coral); }
+.switch[aria-checked="true"] .track::after { transform: translateX(14px); background: var(--white); }
+/* Touch screens: every control gets a 44px target. */
+@media (pointer: coarse) {
+  .btn, .switch, .tabs button, .suggest button, .email button { min-height: 44px; }
+}
+
+/* Step rail (Claim Pilot, Trade Pilot) */
+.rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.rail button {
+  display: grid; gap: 6px; text-align: left; cursor: pointer; padding: 10px 10px 12px; min-width: 0;
+  background: var(--card); border: 1px solid var(--edge); border-radius: 8px;
+  transition: border-color 250ms var(--ease), background-color 250ms var(--ease);
+}
+.rail button:hover { border-color: var(--edge-strong); }
+.rail .n { font-family: var(--font-mono); font-size: 11px; color: var(--slate); display: flex; align-items: center; gap: 6px; }
+.rail .n::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--charcoal); box-sizing: border-box; flex: none; }
+.rail .t { font-size: 13px; font-weight: 600; line-height: 1.25; color: var(--parch); overflow-wrap: anywhere; }
+.rail button.done .n::before { background: var(--green); border-color: var(--green); }
+.rail button.done .t { color: var(--snow); }
+.rail button[aria-current="step"] { border-color: var(--green-hover); background: linear-gradient(180deg, var(--green-tint), transparent), var(--card); }
+.rail button[aria-current="step"] .n { color: var(--green); }
+.rail button[aria-current="step"] .n::before { border-color: var(--green); background: var(--navy); box-shadow: 0 0 0 3px var(--green-halo); }
+@media (max-width: 620px) {
+  .rail { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.step-note { margin-top: 16px; display: grid; gap: 6px; min-height: 92px; }
+.step-note .who { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
+.step-note h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+.step-note p { color: var(--parch); font-size: 15px; line-height: 1.55; }
+
+/* Claim Pilot document */
+.claim { margin-top: 18px; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 16px; padding: 16px; background: var(--card); border: 1px solid var(--edge); border-radius: 10px; }
+.receipts { display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 520px) { .claim { grid-template-columns: minmax(0, 1fr); } .receipts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.receipt {
+  position: relative; height: 56px; flex: 1; border-radius: 6px; background: var(--graphite); border: 1px solid var(--edge-strong);
+  padding: 8px 9px; overflow: hidden;
+}
+.receipt b { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--slate); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.receipt i { display: block; height: 3px; margin-top: 6px; border-radius: 2px; background: var(--edge-strong); width: 80%; }
+.receipt i + i { width: 55%; }
+.receipt .scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--green); box-shadow: 0 0 12px var(--green); opacity: 0; }
+.claim.scanning .scan { animation: scan 1.6s var(--ease) 1 forwards; }
+.claim.scanning .receipt:nth-child(2) .scan { animation-delay: 0.2s; }
+.claim.scanning .receipt:nth-child(3) .scan { animation-delay: 0.4s; }
+.claim.scanning .receipt:nth-child(4) .scan { animation-delay: 0.6s; }
+@keyframes scan { 0% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; transform: translateY(54px); } 100% { opacity: 0; transform: translateY(54px); } }
+.claim-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.claim-head .id { font-family: var(--font-mono); font-size: 12px; color: var(--slate); }
+.status { font-family: var(--font-mono); font-size: 11px; padding: 3px 8px; border-radius: 9999px; border: 1px solid var(--edge); color: var(--parch); white-space: nowrap; }
+.status.good { color: var(--green); border-color: var(--green-line); background: var(--green-tint); }
+.lines { margin-top: 10px; display: grid; }
+.line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 8px 0; border-bottom: 1px solid var(--hair); font-size: 14px; }
+.line .what { color: var(--snow); min-width: 0; }
+.line .src { grid-column: 1 / -1; font-family: var(--font-mono); font-size: 12px; color: var(--slate); }
+.line .amt { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--snow); text-align: right; }
+.line .fix { color: var(--amber); }
+.total { display: flex; justify-content: space-between; padding-top: 10px; font-weight: 600; }
+.total span:last-child { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.signs { margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sign { border: 1px dashed var(--edge-strong); border-radius: 6px; padding: 7px 8px; min-width: 0; transition: border-color 300ms ease-out; }
+.sign b { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--slate); font-weight: 400; overflow-wrap: anywhere; }
+.sign span { display: block; font-size: 12px; color: var(--slate); overflow-wrap: anywhere; }
+.sign.on { border-style: solid; border-color: var(--green-dim); }
+.sign.on span { color: var(--green-pale); }
+.erp { margin-top: 12px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--edge); font-family: var(--font-mono); font-size: 12px; color: var(--slate); transition: border-color 300ms ease-out, color 300ms ease-out; }
+.erp::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--charcoal); flex: none; }
+.erp.on { border-color: var(--green-line); color: var(--green-pale); }
+.erp.on::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+
+/* Trade Pilot */
+.tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--edge); border-radius: 8px; background: var(--card); margin-bottom: 16px; max-width: 100%; flex-wrap: wrap; }
+.tabs button { cursor: pointer; border: 0; background: transparent; font-family: var(--font-mono); font-size: 12px; color: var(--parch); padding: 8px 12px; border-radius: 5px; transition: background-color 250ms var(--ease), color 250ms var(--ease); }
+.tabs button[aria-selected="true"] { background: var(--green-tint); color: var(--green); }
+.scene { margin-top: 16px; min-height: 236px; padding: 16px; border-radius: 10px; background: var(--card); border: 1px solid var(--edge); display: grid; gap: 12px; align-content: start; }
+.scene .cap { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); }
+.wa { justify-self: end; max-width: 300px; padding: 10px 12px; border-radius: 12px 12px 4px 12px; background: var(--green-deep); border: 1px solid var(--green-dim); color: var(--green-pale); font-size: 14px; }
+.wa .att { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding: 8px; border-radius: 6px; background: var(--navy-veil); font-family: var(--font-mono); font-size: 12px; }
+.wa .att i { width: 26px; height: 32px; border-radius: 3px; background: var(--graphite); border: 1px solid var(--edge-strong); flex: none; box-shadow: inset 0 9px 0 -7px var(--edge-strong), inset 0 15px 0 -13px var(--edge-strong); }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; font-size: 14px; }
+.kv dt { font-family: var(--font-mono); font-size: 12px; color: var(--slate); padding-top: 2px; }
+.kv dd { margin: 0; color: var(--snow); min-width: 0; overflow-wrap: anywhere; }
+.tbl-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { font-family: var(--font-mono); font-size: 11px; font-weight: 400; color: var(--slate); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--edge); white-space: nowrap; }
+.tbl td { padding: 8px; border-bottom: 1px solid var(--hair); color: var(--snow); }
+.tbl td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.tbl tr.warn td { color: var(--amber); }
+.flag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; padding: 3px 8px; border-radius: 5px; }
+.flag.ok { color: var(--green); background: var(--green-tint); }
+.flag.warn { color: var(--amber); background: var(--amber-tint); }
+.flag.bad { color: var(--coral); background: var(--coral-tint); }
+.checks { display: grid; gap: 8px; }
+.checks li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--parch); }
+.checks li::before { content: "✓"; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; background: var(--green-tint); color: var(--green); font-size: 11px; flex: none; }
+.record { display: grid; gap: 4px; padding: 14px; border-radius: 8px; border: 1px solid var(--green-line); background: linear-gradient(180deg, var(--green-wash), transparent); }
+.record b { font-family: var(--font-mono); font-size: 13px; color: var(--green); font-weight: 500; }
+.record span { font-size: 14px; color: var(--parch); }
+.layers { display: grid; gap: 0; }
+.layers li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--hair); }
+.layers li:last-child { border-bottom: 0; }
+.layers .ln { font-family: var(--font-mono); font-size: 12px; color: var(--green); padding-top: 2px; }
+.layers b { display: block; font-weight: 600; font-size: 15px; }
+.layers span { display: block; font-size: 14px; color: var(--slate); line-height: 1.5; }
+
+/* Phones (Agentic AI Layer, WareBot) */
+.stage { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: clamp(16px, 2.5vw, 24px); align-items: start; }
+@media (max-width: 700px) { .stage { grid-template-columns: minmax(0, 1fr); } .phone { margin-inline: auto; } }
+.phone { width: 100%; max-width: 300px; border-radius: 30px; padding: 9px; background: var(--graphite); border: 1px solid var(--edge-strong); }
+.screen { border-radius: 22px; overflow: hidden; background: var(--navy); display: flex; flex-direction: column; height: 520px; }
+.screen-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--card); border-bottom: 1px solid var(--hair); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-deep); border: 1px solid var(--green-dim); color: var(--green); display: grid; place-items: center; font-weight: 700; font-size: 14px; flex: none; }
+.screen-head b { display: block; font-size: 14px; font-weight: 600; line-height: 1.2; }
+.screen-head div span { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--green); }
+.thread { flex: 1; overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 8px; scroll-behavior: auto; }
+.thread .day { align-self: center; font-family: var(--font-mono); font-size: 11px; color: var(--slate); background: var(--card); border: 1px solid var(--hair); padding: 2px 8px; border-radius: 5px; }
+.msg { max-width: 86%; padding: 8px 10px 6px; font-size: 13px; line-height: 1.45; border-radius: 12px; animation: rise 360ms ease-out; overflow-wrap: anywhere; }
+.msg .time { display: block; text-align: right; font-family: var(--font-mono); font-size: 11px; margin-top: 3px; opacity: 0.6; }
+.msg.me { align-self: flex-end; background: var(--green-deep); border: 1px solid var(--green-dim); color: var(--green-pale); border-bottom-right-radius: 4px; }
+.msg.bot { align-self: flex-start; background: var(--hair); border: 1px solid var(--edge); color: var(--snow); border-bottom-left-radius: 4px; }
+.msg .prod { margin: 2px 0 6px; padding: 8px 10px; border-radius: 8px; background: var(--well); border: 1px solid var(--edge); }
+.msg .prod small { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); }
+.msg .prod.alt small { color: var(--amber); }
+.msg .prod b { display: block; font-size: 13px; }
+.msg .prod span { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--slate); }
+.typing { align-self: flex-start; display: flex; gap: 4px; padding: 10px 12px; border-radius: 12px; background: var(--hair); border: 1px solid var(--edge); }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--slate); animation: blink 1s infinite; }
+.typing i:nth-child(2) { animation-delay: 0.15s; }
+.typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes blink { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.screen-foot { padding: 10px 12px; border-top: 1px solid var(--hair); background: var(--card); font-family: var(--font-mono); font-size: 11px; color: var(--slate); display: flex; align-items: center; gap: 8px; }
+.screen-foot .field { flex: 1; padding: 8px 12px; border-radius: 9999px; background: var(--well); border: 1px solid var(--edge); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Agentic AI Layer stations */
+.side { display: grid; gap: 14px; min-width: 0; }
+.side-cap { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); }
+.stations { display: grid; gap: 8px; }
+.station {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 4px 12px;
+  padding: 10px 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--edge);
+  transition: border-color 300ms ease-out, background-color 300ms ease-out;
+}
+.station .g { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-size: 12px; font-weight: 700; border: 2px solid var(--edge-strong); color: var(--slate); transition: background-color 300ms ease-out, border-color 300ms ease-out, color 300ms ease-out; }
+.station b { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; }
+.station span { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--slate); }
+.station .out { grid-column: 2; font-family: var(--font-mono); font-size: 11px; color: var(--slate); line-height: 1.35; }
+.station.ok .g { background: var(--green); border-color: var(--green); color: var(--navy); }
+.station.fail .g { background: var(--coral); border-color: var(--coral); color: var(--navy); }
+.station.retry .g { background: var(--amber); border-color: var(--amber); color: var(--navy); }
+.station.ok .out { color: var(--green-pale); }
+.station.fail .out { color: var(--coral); }
+.station.retry .out { color: var(--amber); }
+.station.active { border-color: var(--green-hover); }
+.station.active.fail { border-color: var(--coral-line); }
+.station.active.retry { border-color: var(--amber-line); }
+.log { margin: 0; padding: 12px 14px; border-radius: 8px; background: var(--card); border: 1px solid var(--edge); font-family: var(--font-mono); font-size: 12px; line-height: 1.7; color: var(--parch); min-height: 118px; display: grid; align-content: start; gap: 2px; }
+.log div { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 8px; animation: rise 300ms ease-out; }
+.log .lt { color: var(--slate); }
+.log .ok { color: var(--green); }
+.log .bad { color: var(--coral); }
+.log .re { color: var(--amber); }
+.log .empty { color: var(--slate); display: block; }
+
+/* WareBot */
+.suggest { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px 0; background: var(--navy); }
+.suggest button { cursor: pointer; font-family: var(--font-mono); font-size: 11px; color: var(--green); border: 1px solid var(--green-line); background: transparent; border-radius: 9999px; padding: 6px 10px; transition: background-color 250ms var(--ease), opacity 250ms var(--ease); }
+.suggest button:hover { background: var(--green-tint); }
+.suggest button[disabled] { opacity: 0.35; cursor: not-allowed; }
+.suggest button[disabled]:hover { background: transparent; }
+.confirm { align-self: stretch; padding: 10px; border-radius: 10px; background: var(--well); border: 1px solid var(--amber-line); animation: rise 360ms ease-out; font-size: 12px; }
+.confirm .ch { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.confirm .ch b { font-size: 13px; }
+.confirm .ttl { font-family: var(--font-mono); font-size: 11px; color: var(--amber); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.confirm .kv { font-size: 12px; gap: 3px 12px; }
+.confirm .kv dt { font-size: 11px; padding-top: 0; }
+.confirm .acts { display: flex; gap: 6px; margin-top: 10px; }
+.confirm .acts .btn { flex: 1; padding: 9px 8px; }
+.confirm.done { border-color: var(--green-line); }
+.confirm.done .ttl { color: var(--green); }
+.confirm.off { border-color: var(--edge); }
+.confirm.off .ttl { color: var(--slate); }
+.tool { align-self: flex-start; font-family: var(--font-mono); font-size: 11px; color: var(--slate); padding: 2px 0 0 4px; }
+.tool.write { color: var(--amber); }
+.safety { display: grid; gap: 10px; }
+.safety li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--edge); transition: border-color 300ms ease-out; }
+.safety li.lit { border-color: var(--green-hover); }
+.safety .ic { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; background: var(--green-deep); border: 1px solid var(--green-dim); color: var(--green); font-family: var(--font-mono); font-size: 12px; font-weight: 700; }
+.safety b { display: block; font-size: 14px; font-weight: 600; line-height: 1.35; }
+.safety span { display: block; font-size: 13px; color: var(--slate); line-height: 1.5; margin-top: 2px; }
+
+/* Pattern + contact */
+.pattern { border-top: 1px solid var(--graphite); padding-block: clamp(64px, 9vw, 120px); }
+.pattern h2 { font-size: clamp(30px, 4.2vw, 48px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; max-width: 20ch; }
+.pattern .lead { margin-top: 14px; font-size: 18px; color: var(--slate); max-width: 58ch; }
+.flow { margin-top: 40px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+.flow li { position: relative; padding: 18px 18px 18px 0; border-top: 2px solid var(--hair); }
+.flow li::before { content: ""; position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--green); background: var(--navy); box-shadow: 0 0 0 4px var(--green-halo); }
+.flow li.human::before { border-color: var(--amber); box-shadow: 0 0 0 4px var(--amber-halo); }
+.flow .s { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-top: 10px; display: block; }
+.flow li.human .s { color: var(--amber); }
+.flow b { display: block; margin-top: 4px; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+.flow p { margin-top: 6px; font-size: 14px; color: var(--slate); line-height: 1.55; }
+@media (max-width: 860px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; } }
+@media (max-width: 480px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+.matrix-wrap { margin-top: 48px; overflow-x: auto; border: 1px solid var(--edge); border-radius: 12px; background: var(--card); }
+.matrix { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px; }
+.matrix th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); font-weight: 400; padding: 14px 16px; border-bottom: 1px solid var(--edge); }
+.matrix td { padding: 14px 16px; border-bottom: 1px solid var(--hair); color: var(--parch); vertical-align: top; line-height: 1.5; }
+.matrix tr:last-child td { border-bottom: 0; }
+.matrix td:first-child { color: var(--snow); font-weight: 600; white-space: nowrap; }
+.matrix td:first-child span { font-family: var(--font-mono); color: var(--green); font-weight: 400; font-size: 12px; margin-right: 8px; }
+.contact { position: relative; border-top: 1px solid var(--graphite); padding-block: clamp(80px, 12vw, 160px); text-align: left; }
+.contact::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 20% 40%, var(--green-tint), transparent 60%); }
+.contact h2 { position: relative; font-size: clamp(36px, 6vw, 76px); font-weight: 600; line-height: 1.04; letter-spacing: -0.035em; max-width: 14ch; }
+.contact p { position: relative; margin-top: 20px; font-size: 18px; color: var(--slate); max-width: 52ch; }
+.contact .row { position: relative; margin-top: 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.pill { display: inline-flex; align-items: center; gap: 10px; padding: 18px 30px; border-radius: 9999px; background: var(--green); color: var(--navy); font-family: var(--font-mono); font-size: 16px; font-weight: 600; box-shadow: var(--shadow-magnet); transition: opacity 250ms var(--ease); }
+.pill:hover { text-decoration: none; opacity: 0.9; }
+.contact .links { display: flex; flex-wrap: wrap; gap: 4px 18px; font-family: var(--font-mono); font-size: 13px; }
+.contact .links a { color: var(--parch); padding: 12px 0; }
+.contact .links a:hover { color: var(--green); }
+.email { font-family: var(--font-mono); font-size: 13px; color: var(--parch); display: inline-flex; align-items: center; gap: 8px; }
+.email button { cursor: pointer; font-family: var(--font-mono); font-size: 11px; color: var(--green); border: 1px solid var(--green-line); background: transparent; border-radius: 4px; padding: 4px 8px; }
+.email button:hover { background: var(--green-tint); }
+footer { border-top: 1px solid var(--graphite); padding-block: 28px 40px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .claim.scanning .scan { opacity: 0; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="https://kin.rag.wtf/" target="_blank" rel="noopener">
+      <span class="mark" aria-hidden="true">L</span>
+      <span class="brand-text"><b>Lim Chee Kin</b><span>AI Solutions Architect</span></span>
+      <span class="sr">(opens in a new tab)</span>
+    </a>
+    <nav class="nav" aria-label="Case studies">
+      <a href="#claim-pilot"><span>01.</span>Claim Pilot</a>
+      <a href="#trade-pilot"><span>02.</span>Trade Pilot</a>
+      <a href="#agentic-ai-layer"><span>03.</span>Agentic AI Layer</a>
+      <a href="#warebot"><span>04.</span>WareBot</a>
+    </nav>
+  </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Four AI agents for everyday business work</p>
+      <h1>Your team sends a message. <em class="accent">The record is done.</em></h1>
+      <p class="hero-sub">Start in <strong>Teams</strong> or <strong>WhatsApp</strong>. End with an approved record. A person signs off on every change.</p>
+      <div class="index">
+        <a href="#claim-pilot">
+          <span class="k">01 · Finance</span>
+          <span class="nm">Claim Pilot</span>
+          <p>Receipt photo → approved claim → ledger.</p>
+          <span class="route">Teams → Dynamics 365</span>
+          <span class="go">Try it ↓</span>
+        </a>
+        <a href="#trade-pilot">
+          <span class="k">02 · Trade &amp; accounts</span>
+          <span class="nm">Trade Pilot</span>
+          <p>Delivery photo or invoice → AutoCount.</p>
+          <span class="route">WhatsApp → AutoCount</span>
+          <span class="go">Try it ↓</span>
+        </a>
+        <a href="#agentic-ai-layer">
+          <span class="k">03 · Sales</span>
+          <span class="nm">Agentic AI Layer</span>
+          <p>WhatsApp enquiry → quotation.</p>
+          <span class="route">WhatsApp → quote &amp; booking</span>
+          <span class="go">Try it ↓</span>
+        </a>
+        <a href="#warebot">
+          <span class="k">04 · Warehouse</span>
+          <span class="nm">WareBot</span>
+          <p>Ask in plain words. Confirm every change.</p>
+          <span class="route">Warehouse app → AutoCount</span>
+          <span class="go">Try it ↓</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 Claim Pilot -->
+  <section class="case" id="claim-pilot" aria-labelledby="h-claim">
+    <div class="wrap">
+      <div class="case-head">
+        <p class="eyebrow">Finance · Expense claims</p>
+        <h2 id="h-claim"><span class="case-num">01</span>Claim Pilot</h2>
+        <p class="lead">Snap a receipt in <strong>Teams</strong>. AI reads it, two people approve, the ledger updates.</p>
+      </div>
+      <div class="case-grid">
+        <div class="story">
+          <div class="compare">
+            <div><p class="lab">The usual way</p><p>Paper receipts, retyping, chasing approvals.</p></div>
+            <div class="after"><p class="lab">With Claim Pilot</p><p>One photo. Every figure checked against its source.</p></div>
+          </div>
+          <div class="gains">
+            <h3>Business value</h3>
+            <ul>
+              <li><span><b>No retyping.</b> Posts straight to Dynamics 365.</span></li>
+              <li><span><b>Two signatures.</b> Verifier and approver, routed automatically.</span></li>
+              <li><span><b>Reads real documents.</b> Receipts, Touch ’n Go, Google Maps mileage.</span></li>
+              <li><span><b>Foreign currency.</b> Bank Negara Malaysia rates.</span></li>
+              <li><span><b>Same logins.</b> Synced with Microsoft Entra ID.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel" id="claim-demo">
+          <div class="panel-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="ttl">Follow one claim from photo to ledger</span>
+            <span class="tag">Sample claim</span>
+          </div>
+          <div class="panel-body">
+            <!-- Opening frame (step 1) is in the HTML; the script rebuilds the same markup and takes over. -->
+            <div class="rail" data-rail><button type="button" data-k="0" aria-current="step"><span class="n">01</span><span class="t">Submit</span></button><button type="button" data-k="1"><span class="n">02</span><span class="t">Review</span></button><button type="button" data-k="2"><span class="n">03</span><span class="t">Verify</span></button><button type="button" data-k="3"><span class="n">04</span><span class="t">Approve</span></button><button type="button" data-k="4"><span class="n">05</span><span class="t">Print</span></button><button type="button" data-k="5"><span class="n">06</span><span class="t">Post</span></button></div>
+            <div class="step-note" aria-live="polite">
+              <span class="who" data-who>Claimant · in Teams</span>
+              <h3 data-title>Snap receipts in Teams</h3>
+              <p data-body>Parking, tolls, mileage, hotel. A claim opens instantly.</p>
+            </div>
+            <div class="claim" data-claim>
+              <div class="receipts" aria-hidden="true">
+                <div class="receipt"><b>Parking</b><i></i><i></i><span class="scan"></span></div>
+                <div class="receipt"><b>Touch ’n Go</b><i></i><i></i><span class="scan"></span></div>
+                <div class="receipt"><b>Maps route</b><i></i><i></i><span class="scan"></span></div>
+                <div class="receipt"><b>Hotel · SGD</b><i></i><i></i><span class="scan"></span></div>
+              </div>
+              <div>
+                <div class="claim-head"><span class="id">Claim CL-0418 · October expenses</span><span class="status" data-status>Draft</span></div>
+                <div class="lines">
+                  <div class="line"><span class="what">Parking, KL Sentral</span><span class="amt">RM 8.00</span><span class="src">Read from receipt photo</span></div>
+                  <div class="line"><span class="what">Highway tolls</span><span class="amt">RM 12.60</span><span class="src">Read from Touch ’n Go statement</span></div>
+                  <div class="line"><span class="what">Mileage <span data-km>32 km</span></span><span class="amt" data-mile>RM 19.20</span><span class="src" data-milesrc>Distance read from Google Maps route · RM 0.60/km</span></div>
+                  <div class="line"><span class="what">Hotel, 1 night</span><span class="amt">RM 612.00</span><span class="src">SGD 180.00 at Bank Negara rate 3.4000 (sample rate)</span></div>
+                </div>
+                <div class="total"><span>Total</span><span data-total>RM 651.80</span></div>
+                <div class="signs">
+                  <div class="sign" data-sign="0" data-done="Submitted"><b>Claimant</b><span>Pending</span></div>
+                  <div class="sign" data-sign="1" data-done="Approved"><b>Verifier</b><span>Pending</span></div>
+                  <div class="sign" data-sign="2" data-done="Approved"><b>Approver</b><span>Pending</span></div>
+                </div>
+                <div class="erp" data-erp>Dynamics 365 F&amp;O · waiting for approval</div>
+              </div>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn quiet" type="button" data-prev disabled>← Back</button>
+            <button class="btn solid" type="button" data-next>Next step →</button>
+            <span class="sp"></span>
+            <span class="counter" data-count>Step 1 of 6</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Trade Pilot -->
+  <section class="case" id="trade-pilot" aria-labelledby="h-trade">
+    <div class="wrap">
+      <div class="case-head">
+        <p class="eyebrow">Trade &amp; accounts · AutoCount</p>
+        <h2 id="h-trade"><span class="case-num">02</span>Trade Pilot</h2>
+        <p class="lead">Send a photo on <strong>WhatsApp</strong>. A person approves. AutoCount updates.</p>
+      </div>
+      <div class="case-grid">
+        <div class="story">
+          <div class="compare">
+            <div><p class="lab">The usual way</p><p>Key every line by hand. Chase payments.</p></div>
+            <div class="after"><p class="lab">With Trade Pilot</p><p>Send a photo. Approve. Done.</p></div>
+          </div>
+          <div class="tech">
+            <h3>From message to books</h3>
+            <ol class="layers">
+              <li><span class="ln">1</span><div><b>WhatsApp</b><span>Text, voice, photos, files</span></div></li>
+              <li><span class="ln">2</span><div><b>AI agent</b><span>Understands the request</span></div></li>
+              <li><span class="ln">3</span><div><b>Workflow</b><span>Applies your rules</span></div></li>
+              <li><span class="ln">4</span><div><b>API gateway</b><span>Checks permissions</span></div></li>
+              <li><span class="ln">5</span><div><b>AutoCount</b><span>System of record</span></div></li>
+            </ol>
+          </div>
+          <p class="quote">What counts: the completed, traceable action.</p>
+        </div>
+
+        <div class="panel" id="trade-demo">
+          <div class="panel-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="ttl">Walk a workflow end to end</span>
+            <span class="tag">Sample data</span>
+          </div>
+          <div class="panel-body">
+            <div class="tabs" role="tablist" aria-label="Workflow">
+              <button type="button" role="tab" id="tab-grn" aria-selected="true" aria-controls="trade-flow" data-flow="grn">Receive goods</button>
+              <button type="button" role="tab" id="tab-pay" aria-selected="false" aria-controls="trade-flow" data-flow="pay" tabindex="-1">Collect payment</button>
+            </div>
+            <div id="trade-flow" role="tabpanel" aria-labelledby="tab-grn">
+              <div class="rail" data-rail><button type="button" data-k="0" aria-current="step"><span class="n">01</span><span class="t">Send</span></button><button type="button" data-k="1"><span class="n">02</span><span class="t">Extract</span></button><button type="button" data-k="2"><span class="n">03</span><span class="t">Verify</span></button><button type="button" data-k="3"><span class="n">04</span><span class="t">Connect</span></button><button type="button" data-k="4"><span class="n">05</span><span class="t">Update</span></button></div>
+              <div class="step-note" aria-live="polite">
+                <span class="who" data-who>Storekeeper · WhatsApp</span>
+                <h3 data-title>Send delivery order photo</h3>
+                <p data-body>Storekeeper sends it on WhatsApp.</p>
+              </div>
+              <div class="scene" data-scene><p class="cap">WhatsApp</p><div class="wa"><div class="att"><i></i><span>DO-55821.jpg</span></div>Delivery from Mega Fittings for PO-1042</div></div>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn quiet" type="button" data-prev disabled>← Back</button>
+            <button class="btn solid" type="button" data-next>Next step →</button>
+            <span class="sp"></span>
+            <span class="counter" data-count>Step 1 of 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Agentic AI Layer -->
+  <section class="case" id="agentic-ai-layer" aria-labelledby="h-frontier">
+    <div class="wrap">
+      <div class="case-head">
+        <p class="eyebrow">Sales · Air-conditioner dealer</p>
+        <h2 id="h-frontier"><span class="case-num">03</span>Agentic AI Layer</h2>
+        <p class="lead">Customer asks on <strong>WhatsApp</strong>. Four AI agents size, pick, check stock, book and quote.</p>
+      </div>
+      <div class="case-grid phones">
+        <div class="story">
+          <div class="compare">
+            <div><p class="lab">The usual way</p><p>Wait for a salesperson. Phone branches. Type a quote.</p></div>
+            <div class="after"><p class="lab">With Agentic AI Layer</p><p>Recommendation, stock, slot and quote in one chat.</p></div>
+          </div>
+          <div class="gains">
+            <h3>Four agents, one conversation</h3>
+            <ul>
+              <li><span><b>Sales</b> talks and quotes.</span></li>
+              <li><span><b>Catalogue</b> sizes the room, picks the model.</span></li>
+              <li><span><b>Stock</b> checks every branch.</span></li>
+              <li><span><b>Service</b> books installation.</span></li>
+            </ul>
+          </div>
+          <p class="quote">Out of stock? It offers the next best unit in stock.</p>
+        </div>
+
+        <div class="panel" id="frontier-demo">
+          <div class="panel-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="ttl">Replay a customer chat</span>
+            <span class="tag">Sample chat</span>
+          </div>
+          <div class="panel-body">
+            <div class="stage">
+              <div class="phone">
+                <div class="screen">
+                  <div class="screen-head"><span class="avatar" aria-hidden="true">A</span><div><b>Agentic AI Layer</b><span>online</span></div></div>
+                  <div class="thread" data-thread role="log" aria-label="Conversation" aria-live="polite"><span class="day">Today</span><div class="msg me">Eh, recommend AC for my 250 sqft office lah.<span class="time">10:02</span></div><div class="msg bot"><div class="prod"><small>Recommended</small><b>Hisense AI25TUGS1</b><span>2.5 HP · inverter wall-split</span></div>For a 250 sq ft office: Hisense AI25TUGS1, 2.5 HP inverter. Proceed?<span class="time">10:02</span></div></div>
+                  <div class="screen-foot" aria-hidden="true"><span class="field">Message</span><span>➤</span></div>
+                </div>
+              </div>
+              <div class="side">
+                <p class="side-cap">Behind the scenes</p>
+                <div class="stations" data-stations><div class="station ok"><span class="g" aria-hidden="true">✓</span><div><b>Understand the request</b><span>Sales agent</span></div><span class="out">Office · 250 sq ft</span></div><div class="station ok active"><span class="g" aria-hidden="true">✓</span><div><b>Recommend the model</b><span>Catalogue agent</span></div><span class="out">AI25TUGS1</span></div><div class="station "><span class="g" aria-hidden="true">3</span><div><b>Check stock</b><span>Stock agent</span></div><span class="out">waiting</span></div><div class="station "><span class="g" aria-hidden="true">4</span><div><b>Schedule the install</b><span>Service agent</span></div><span class="out">waiting</span></div><div class="station "><span class="g" aria-hidden="true">5</span><div><b>Close with a quote</b><span>Sales agent</span></div><span class="out">waiting</span></div></div>
+                <div class="log" data-log aria-live="polite"><div><span class="lt">10:02</span><span class="ok">Office, 250 sq ft, needs cooling</span></div><div><span class="lt">10:02</span><span class="ok">250 × 90 = 22,500 BTU → 2.5 HP → AI25TUGS1</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn solid" type="button" data-next>Next message →</button>
+            <button class="btn quiet" type="button" data-play aria-pressed="false">▶ Auto-play</button>
+            <button class="btn quiet" type="button" data-reset>↺ Restart</button>
+            <span class="sp"></span>
+            <button class="switch" type="button" role="switch" aria-checked="true" data-oos><span class="track" aria-hidden="true"></span>First choice out of stock</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 WareBot -->
+  <section class="case" id="warebot" aria-labelledby="h-warebot">
+    <div class="wrap">
+      <div class="case-head">
+        <p class="eyebrow">Warehouse · Mobile WMS</p>
+        <h2 id="h-warebot"><span class="case-num">04</span>WareBot</h2>
+        <p class="lead">Ask the warehouse in plain words. <strong>Every change waits for Confirm.</strong></p>
+      </div>
+      <div class="case-grid phones">
+        <div class="story">
+          <div class="compare">
+            <div><p class="lab">The usual way</p><p>Menus, screens, mistakes found later.</p></div>
+            <div class="after"><p class="lab">With WareBot</p><p>Say it. Check it. Confirm it.</p></div>
+          </div>
+          <div class="gains">
+            <h3>Built for the floor</h3>
+            <ul>
+              <li><span><b>35+ actions.</b> Stock, orders, transfers, receiving.</span></li>
+              <li><span><b>Type, scan or talk.</b></span></li>
+              <li><span><b>Data stays in-house.</b> AI can run on your own server.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel" id="ware-demo">
+          <div class="panel-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="ttl">Try a request</span>
+            <span class="tag">Sample stock</span>
+          </div>
+          <div class="panel-body">
+            <div class="stage">
+              <div class="phone">
+                <div class="screen">
+                  <div class="screen-head"><span class="avatar" aria-hidden="true">W</span><div><b>WareBot</b><span>Main Store · signed in</span></div></div>
+                  <div class="thread" data-thread role="log" aria-label="Conversation" aria-live="polite"><span class="day">Today</span><div class="msg bot">Hello. Ask me about stock, or tell me what to move or receive.</div></div>
+                  <div class="suggest" data-suggest role="group" aria-label="Example requests"></div>
+                  <div class="screen-foot" aria-hidden="true"><span class="field">Type, scan or hold to talk</span><span>🎙</span></div>
+                </div>
+              </div>
+              <div class="side">
+                <p class="side-cap">Safety rules, live</p>
+                <ul class="safety" data-safety>
+                  <li data-rule="read"><span class="ic" aria-hidden="true">R</span><div><b>Questions answered instantly</b><span>Read-only. No confirmation.</span></div></li>
+                  <li data-rule="write"><span class="ic" aria-hidden="true">W</span><div><b>Changes wait for Confirm</b><span>See exactly what will post.</span></div></li>
+                  <li data-rule="ttl"><span class="ic" aria-hidden="true">5m</span><div><b>Pending changes expire</b><span>After 5 minutes.</span></div></li>
+                  <li data-rule="session"><span class="ic" aria-hidden="true">30</span><div><b>Chats forget</b><span>After 30 idle minutes.</span></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn quiet" type="button" data-reset>↺ Start over</button>
+            <span class="sp"></span>
+            <span class="counter" data-stock>PVC elbow 20mm · Main 340 · Shah Alam 45</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The pattern -->
+  <section class="pattern" aria-labelledby="h-pattern">
+    <div class="wrap">
+      <p class="eyebrow">The pattern behind all four</p>
+      <h2 id="h-pattern" style="margin-top:14px">AI does the reading and typing. <em class="accent">People make the calls.</em></h2>
+      <p class="lead">Agents sit between your team’s apps and your records.</p>
+      <ol class="flow">
+        <li><span class="s">Start</span><b>Where people already are</b><p>Teams, WhatsApp, warehouse app.</p></li>
+        <li><span class="s">Understand</span><b>AI reads and prepares</b><p>Photos, files, voice → data.</p></li>
+        <li class="human"><span class="s">Check</span><b>A person approves</b><p>Before money or stock moves.</p></li>
+        <li><span class="s">Finish</span><b>Your system is updated</b><p>Dynamics 365 or AutoCount.</p></li>
+      </ol>
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead><tr><th scope="col">Agent</th><th scope="col">Starts in</th><th scope="col">AI does</th><th scope="col">Person decides</th><th scope="col">Ends in</th></tr></thead>
+          <tbody>
+            <tr><td><span>01</span>Claim Pilot</td><td>Teams</td><td>Reads receipts</td><td>Two signatures</td><td>Dynamics 365</td></tr>
+            <tr><td><span>02</span>Trade Pilot</td><td>WhatsApp</td><td>Reads orders, sends payment links</td><td>Approves data</td><td>AutoCount</td></tr>
+            <tr><td><span>03</span>Agentic AI Layer</td><td>WhatsApp</td><td>Sizes, checks stock, books, quotes</td><td>Customer accepts</td><td>Quotation</td></tr>
+            <tr><td><span>04</span>WareBot</td><td>Mobile app</td><td>Looks up, prepares</td><td>Confirms changes</td><td>AutoCount</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" aria-labelledby="h-contact">
+    <div class="wrap">
+      <p class="eyebrow" style="position:relative">Lim Chee Kin · AI Solutions Architect</p>
+      <h2 id="h-contact" style="margin-top:18px">Have a workflow that should <em class="accent">run itself?</em></h2>
+      <p>I build AI agents for the systems you already run.</p>
+      <div class="row">
+        <a class="pill" href="https://kin.rag.wtf/contact/" target="_blank" rel="noopener">Get in touch <span aria-hidden="true">→</span><span class="sr">(opens in a new tab)</span></a>
+        <span class="email"><span id="email-text">limcheekin@vobject.com</span><button type="button" id="copy-email">Copy</button><span class="sr" aria-live="polite" id="copy-status"></span></span>
+      </div>
+      <div class="row links" style="margin-top:16px">
+        <a href="https://kin.rag.wtf/" target="_blank" rel="noopener">kin.rag.wtf ↗</a>
+        <a href="https://linkedin.com/in/limcheekin" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://github.com/limcheekin" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="https://medium.com/@limcheekin" target="_blank" rel="noopener">Medium ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 Lim Chee Kin · Kuala Lumpur, Malaysia</span><span>Sample data in the demos is illustrative.</span></div>
+</footer>
+
+<script>
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (root, sel) => root.querySelector(sel);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* Header: scroll progress and current section */
+  // Scroll range is measured on resize only; scroll events just paint, once per frame.
+  const bar = document.getElementById('progress');
+  let range = 0, queued = false;
+  const paint = () => { queued = false; bar.style.transform = `scaleX(${range > 0 ? Math.min(1, scrollY / range) : 0})`; };
+  const measure = () => { range = document.documentElement.scrollHeight - innerHeight; paint(); };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(paint); } }, { passive: true });
+  addEventListener('resize', measure);
+  new ResizeObserver(measure).observe(document.body);
+  const navLinks = [...document.querySelectorAll('.nav a')];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      navLinks.forEach((a) => a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false'));
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('.case').forEach((s) => io.observe(s));
+
+  /* Shared stepper: rail buttons + back/next + counter */
+  function stepper(root, getSteps, render) {
+    const rail = $(root, '[data-rail]');
+    const prev = $(root, '[data-prev]');
+    const next = $(root, '[data-next]');
+    const count = $(root, '[data-count]');
+    let i = 0;
+    const build = () => {
+      const steps = getSteps();
+      rail.innerHTML = steps.map((s, k) => `<button type="button" data-k="${k}"><span class="n">${String(k + 1).padStart(2, '0')}</span><span class="t">${esc(s.short || s.title)}</span></button>`).join('');
+      rail.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => go(+b.dataset.k)));
+    };
+    const go = (k) => {
+      const steps = getSteps();
+      i = Math.max(0, Math.min(steps.length - 1, k));
+      rail.querySelectorAll('button').forEach((b, k2) => {
+        b.classList.toggle('done', k2 < i);
+        if (k2 === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      });
+      const s = steps[i];
+      $(root, '[data-who]').textContent = s.who;
+      $(root, '[data-title]').textContent = s.title;
+      $(root, '[data-body]').textContent = s.body;
+      // Disabling a focused button drops focus to <body>; hand it to Next instead.
+      const prevHadFocus = document.activeElement === prev;
+      prev.disabled = i === 0;
+      if (prev.disabled && prevHadFocus) next.focus();
+      next.textContent = i === steps.length - 1 ? '↺ Start again' : 'Next step →';
+      count.textContent = `Step ${i + 1} of ${steps.length}`;
+      render(i, s);
+    };
+    prev.addEventListener('click', () => go(i - 1));
+    next.addEventListener('click', () => go(i === getSteps().length - 1 ? 0 : i + 1));
+    return { build, go };
+  }
+
+  /* 01 Claim Pilot */
+  {
+    const root = document.getElementById('claim-demo');
+    const claim = $(root, '[data-claim]');
+    const STEPS = [
+      { short: 'Submit', who: 'Claimant · in Teams', title: 'Snap receipts in Teams', body: 'Parking, tolls, mileage, hotel. A claim opens instantly.', status: 'Draft' },
+      { short: 'Review', who: 'Claimant · in the portal', title: 'Check the AI’s figures', body: 'Claimant fixes mileage 32 → 34 km and submits.', status: 'Submitted' },
+      { short: 'Verify', who: 'Verifier · routed automatically', title: 'First signature', body: 'Verifier approves or rejects.', status: 'Verified' },
+      { short: 'Approve', who: 'Approver · routed automatically', title: 'Second signature', body: 'Approver signs. Payment file created.', status: 'Approved' },
+      { short: 'Print', who: 'Approver', title: 'Print the journal', body: 'One A4 page with all approvals.', status: 'Approved · printed' },
+      { short: 'Post', who: 'Automatic', title: 'Posted to Dynamics 365', body: 'GL journal created. No retyping.', status: 'Posted' },
+    ];
+    const s = stepper(root, () => STEPS, (i, st) => {
+      claim.classList.remove('scanning');
+      if (i === 0 && !reduce) { void claim.offsetWidth; claim.classList.add('scanning'); }
+      const corrected = i >= 1;
+      $(claim, '[data-km]').innerHTML = corrected ? '<span class="fix">34 km</span>' : '32 km';
+      $(claim, '[data-mile]').innerHTML = corrected ? '<span class="fix">RM 20.40</span>' : 'RM 19.20';
+      $(claim, '[data-milesrc]').textContent = corrected ? 'Corrected by claimant from 32 km · RM 0.60/km' : 'Distance read from Google Maps route · RM 0.60/km';
+      $(claim, '[data-total]').textContent = corrected ? 'RM 653.00' : 'RM 651.80';
+      const status = $(claim, '[data-status]');
+      status.textContent = st.status;
+      status.classList.toggle('good', i >= 3);
+      claim.querySelectorAll('[data-sign]').forEach((el) => {
+        const signed = i >= +el.dataset.sign + 1;
+        el.classList.toggle('on', signed);
+        el.querySelector('span').textContent = signed ? el.dataset.done : 'Pending';
+      });
+      const erp = $(claim, '[data-erp]');
+      erp.classList.toggle('on', i >= 5);
+      erp.textContent = i >= 5 ? 'Dynamics 365 F&O · GL journal posted, RM 653.00' : i >= 3 ? 'Dynamics 365 F&O · ready to post' : 'Dynamics 365 F&O · waiting for approval';
+    });
+    s.build();
+    s.go(0);
+  }
+
+  /* 02 Trade Pilot */
+  {
+    const root = document.getElementById('trade-demo');
+    const scene = $(root, '[data-scene]');
+    const FLOWS = {
+      grn: [
+        { short: 'Send', who: 'Storekeeper · WhatsApp', title: 'Send delivery order photo', body: 'Storekeeper sends it on WhatsApp.',
+          html: `<p class="cap">WhatsApp</p><div class="wa"><div class="att"><i></i><span>DO-55821.jpg</span></div>Delivery from Mega Fittings for PO-1042</div>` },
+        { short: 'Extract', who: 'AI agent', title: 'AI reads it', body: 'Supplier, items, quantities matched to the PO.',
+          html: `<p class="cap">Read from the photo</p><dl class="kv"><dt>Supplier</dt><dd>Mega Fittings Sdn Bhd</dd><dt>Purchase order</dt><dd>PO-1042</dd><dt>Delivery order</dt><dd>DO-55821</dd></dl><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Delivered</th></tr></thead><tbody><tr><td>PVC elbow 20mm</td><td class="num">120</td></tr><tr><td>PVC pipe 20mm × 3m</td><td class="num">96</td></tr><tr><td>Ball valve 20mm</td><td class="num">40</td></tr></tbody></table></div>` },
+        { short: 'Verify', who: 'Purchasing · review hub', title: 'Person approves', body: 'Mismatches flagged. Pipes short by 4.',
+          html: `<p class="cap">Review hub</p><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Ordered</th><th>Delivered</th><th>Match</th></tr></thead><tbody><tr><td>PVC elbow 20mm</td><td class="num">120</td><td class="num">120</td><td><span class="flag ok">Match</span></td></tr><tr class="warn"><td>PVC pipe 20mm × 3m</td><td class="num">100</td><td class="num">96</td><td><span class="flag warn">Short 4</span></td></tr><tr><td>Ball valve 20mm</td><td class="num">40</td><td class="num">40</td><td><span class="flag ok">Match</span></td></tr></tbody></table></div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="flag ok">Approved: 96 received, 4 short</span></div>` },
+        { short: 'Connect', who: 'API gateway', title: 'Gateway checks', body: 'Permissions, data, no duplicates.',
+          html: `<p class="cap">AutoCount API gateway</p><ul class="checks"><li>Approved by an authorised user</li><li>Supplier and items exist in AutoCount</li><li>Quantities do not exceed the purchase order</li><li>Not already received (no duplicates)</li></ul>` },
+        { short: 'Update', who: 'AutoCount', title: 'GRN posted', body: 'AutoCount updated from one photo.',
+          html: `<p class="cap">AutoCount</p><div class="record"><b>GRN-00231 posted</b><span>3 lines · 256 units received against PO-1042 · 4 pipes short</span></div>` },
+      ],
+      pay: [
+        { short: 'Invoice', who: 'Accounts · WhatsApp', title: 'Start from invoice', body: 'Ask for a payment link on WhatsApp.',
+          html: `<p class="cap">WhatsApp</p><div class="wa">Send payment link for INV-10293 to Seri Maju Trading</div><dl class="kv"><dt>Invoice</dt><dd>INV-10293</dd><dt>Customer</dt><dd>Seri Maju Trading</dd><dt>Amount</dt><dd>RM 4,280.00</dd></dl>` },
+        { short: 'Request', who: 'Workflow', title: 'Details checked', body: 'Invoice open, amount matches.',
+          html: `<p class="cap">Validation</p><ul class="checks"><li>Invoice is open in AutoCount</li><li>Amount matches the outstanding balance</li><li>No other active link for this invoice</li></ul>` },
+        { short: 'Link', who: 'Fiuu payment gateway', title: 'Payment link sent', body: 'Fiuu creates a secure link.',
+          html: `<p class="cap">Fiuu</p><div class="record"><b>Payment request created</b><span>RM 4,280.00 · INV-10293 · sent to the customer on WhatsApp</span></div>` },
+        { short: 'Confirm', who: 'Fiuu → workflow', title: 'Payment confirmed', body: 'Duplicates and failures caught.',
+          html: `<p class="cap">Gateway events</p><div style="display:grid;gap:8px"><span class="flag ok">Paid · RM 4,280.00</span><span class="flag warn">Duplicate notice ignored</span><span class="flag bad">Failed attempts are reported, never applied</span></div>` },
+        { short: 'Settle', who: 'AutoCount', title: 'Invoice settled', body: 'Payment applied in AutoCount.',
+          html: `<p class="cap">AutoCount</p><div class="record"><b>OR-00877 · payment applied</b><span>INV-10293 balance now RM 0.00</span></div>` },
+      ],
+    };
+    let flow = 'grn';
+    const panel = $(root, '[role="tabpanel"]');
+    const s = stepper(root, () => FLOWS[flow], (i, st) => { scene.innerHTML = st.html; });
+    const tabs = [...root.querySelectorAll('[role="tab"]')];
+    const select = (t) => {
+      flow = t.dataset.flow;
+      tabs.forEach((b) => { const on = b === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+      panel.setAttribute('aria-labelledby', t.id);
+      s.build();
+      s.go(0);
+    };
+    tabs.forEach((t, k) => {
+      t.addEventListener('click', () => select(t));
+      t.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        const n = tabs[(k + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+        n.focus();
+        select(n);
+      });
+    });
+    s.build();
+    s.go(0);
+  }
+
+  /* 03 Agentic AI Layer */
+  {
+    const root = document.getElementById('frontier-demo');
+    const thread = $(root, '[data-thread]');
+    const stationsEl = $(root, '[data-stations]');
+    const logEl = $(root, '[data-log]');
+    const nextBtn = $(root, '[data-next]');
+    const playBtn = $(root, '[data-play]');
+    const oosBtn = $(root, '[data-oos]');
+    const STATIONS = [
+      { name: 'Understand the request', agent: 'Sales agent' },
+      { name: 'Recommend the model', agent: 'Catalogue agent' },
+      { name: 'Check stock', agent: 'Stock agent' },
+      { name: 'Schedule the install', agent: 'Service agent' },
+      { name: 'Close with a quote', agent: 'Sales agent' },
+    ];
+    const PRIMARY = { kick: 'Recommended', name: 'Hisense AI25TUGS1', spec: '2.5 HP · inverter wall-split' };
+    const FALLBACK = { kick: 'In stock alternative', name: 'Hisense AN25DKG', spec: '2.5 HP · 22,000 BTU · non-inverter', alt: true };
+    const script = (oos) => [
+      { me: 'Eh, recommend AC for my 250 sqft office lah.', t: '10:02' },
+      { bot: 'For a 250 sq ft office: Hisense AI25TUGS1, 2.5 HP inverter. Proceed?', prod: PRIMARY, t: '10:02',
+        ev: [[0, 'ok', 'Office · 250 sq ft', 'Office, 250 sq ft, needs cooling'], [1, 'ok', 'AI25TUGS1', '250 × 90 = 22,500 BTU → 2.5 HP → AI25TUGS1']] },
+      { me: 'Ok lah, take that one can.', t: '10:03' },
+      ...(oos ? [
+        { bot: 'AI25TUGS1 is out of stock. Closest match in stock: AN25DKG, 2.5 HP. Take this instead?', prod: FALLBACK, t: '10:03',
+          ev: [[2, 'fail', '0 units', 'AI25TUGS1: 0 units at every branch'], [1, 'retry', 'Next best: AN25DKG', 'Exclude AI25TUGS1, find next best fit (retry 1 of 2)'], [2, 'ok', '6 units', 'AN25DKG: 6 units in stock, sale continues']] },
+        { me: 'Ok, the AN25DKG then.', t: '10:04' },
+        { bot: 'Great choice. Need installation? Which date?', t: '10:04' },
+      ] : [
+        { bot: 'In stock, 6 units. Need installation? Which date?', t: '10:03',
+          ev: [[2, 'ok', '6 units', 'AI25TUGS1: 6 units in stock']] },
+      ]),
+      { me: 'Can install on 23 July?', t: '10:05' },
+      { bot: '23 July is full. 24 July is open: 9–11, 11–1, 1–3 or 3–5. Which one?', t: '10:05',
+        ev: [[3, 'ok', '24 July open', '23 July full, next open day 24 July']] },
+      { me: '24 July, 9 AM ok.', t: '10:06' },
+      { bot: 'Noted: 24 July, 9 AM. Email for the quotation?', t: '10:06' },
+      { me: 'Lim Chee Kin, limcheekin@vobject.com', t: '10:07' },
+      { bot: 'Quotation sent. Unit reserved until we receive your PO.', t: '10:07',
+        ev: [[4, 'ok', 'Quote sent', 'Quotation emailed, unit reserved pending PO']] },
+    ];
+    let oos = true, beats = script(true), pos = 0, timer = null, typingTimer = null;
+    const state = () => STATIONS.map(() => ({ k: null, out: '' }));
+    let st = state(), active = -1, logLines = [];
+
+    const drawStations = () => {
+      stationsEl.innerHTML = STATIONS.map((s, k) => {
+        const x = st[k];
+        const glyph = x.k === 'ok' ? '✓' : x.k === 'fail' ? '✕' : x.k === 'retry' ? '↻' : String(k + 1);
+        return `<div class="station ${x.k || ''} ${k === active ? 'active' : ''}"><span class="g" aria-hidden="true">${glyph}</span><div><b>${esc(s.name)}</b><span>${esc(s.agent)}</span></div><span class="out">${esc(x.out || 'waiting')}</span></div>`;
+      }).join('');
+    };
+    const drawLog = () => {
+      logEl.innerHTML = logLines.length
+        ? logLines.slice(-5).map((l) => `<div><span class="lt">${l.t}</span><span class="${l.c}">${esc(l.text)}</span></div>`).join('')
+        : '<span class="empty">Press “Next message”.</span>';
+    };
+    const bubble = (b) => {
+      const el = document.createElement('div');
+      el.className = 'msg ' + (b.me ? 'me' : 'bot');
+      const prod = b.prod ? `<div class="prod ${b.prod.alt ? 'alt' : ''}"><small>${esc(b.prod.kick)}</small><b>${esc(b.prod.name)}</b><span>${esc(b.prod.spec)}</span></div>` : '';
+      el.innerHTML = prod + esc(b.me || b.bot) + `<span class="time">${b.t}</span>`;
+      thread.appendChild(el);
+      thread.scrollTop = thread.scrollHeight;
+    };
+    const apply = (b) => {
+      (b.ev || []).forEach(([k, kind, out, text]) => {
+        st[k] = { k: kind, out };
+        active = k;
+        logLines.push({ t: b.t, c: kind === 'ok' ? 'ok' : kind === 'fail' ? 'bad' : 're', text });
+      });
+      if (b.ev && b === beats[beats.length - 1]) active = -1;
+      drawStations();
+      drawLog();
+    };
+    const resetBtn = $(root, '[data-reset]');
+    // Next stays enabled while the agent types (step() ignores presses then), so it keeps focus;
+    // when the chat ends and Next disables, focus moves to Restart instead of dropping to <body>.
+    const syncButtons = () => {
+      const done = pos >= beats.length;
+      const nextHadFocus = document.activeElement === nextBtn;
+      nextBtn.disabled = done;
+      if (done && nextHadFocus) resetBtn.focus();
+      nextBtn.textContent = done ? 'Conversation complete' : 'Next message →';
+      if (done) stopPlay();
+    };
+    const step = () => {
+      if (pos >= beats.length || typingTimer) return;
+      const b = beats[pos++];
+      if (b.bot && !reduce) {
+        const t = document.createElement('div');
+        t.className = 'typing';
+        t.setAttribute('aria-label', 'Agentic AI Layer is typing');
+        t.innerHTML = '<i></i><i></i><i></i>';
+        thread.appendChild(t);
+        thread.scrollTop = thread.scrollHeight;
+        typingTimer = setTimeout(() => { t.remove(); typingTimer = null; apply(b); bubble(b); syncButtons(); }, 700);
+        syncButtons();
+      } else {
+        apply(b); bubble(b); syncButtons();
+      }
+    };
+    const stopPlay = () => { clearInterval(timer); timer = null; playBtn.setAttribute('aria-pressed', 'false'); playBtn.textContent = '▶ Auto-play'; };
+    const reset = () => {
+      stopPlay();
+      clearTimeout(typingTimer); typingTimer = null;
+      beats = script(oos); pos = 0; st = state(); active = -1; logLines = [];
+      thread.innerHTML = '<span class="day">Today</span>';
+      drawStations(); drawLog(); syncButtons();
+    };
+    nextBtn.addEventListener('click', () => { stopPlay(); step(); });
+    playBtn.addEventListener('click', () => {
+      if (timer) return stopPlay();
+      if (pos >= beats.length) reset();
+      playBtn.setAttribute('aria-pressed', 'true'); playBtn.textContent = '❚❚ Pause';
+      step();
+      timer = setInterval(step, 1900);
+    });
+    resetBtn.addEventListener('click', reset);
+    oosBtn.addEventListener('click', () => { oos = !oos; oosBtn.setAttribute('aria-checked', oos); reset(); });
+    reset();
+    // Open on a meaningful frame: the first exchange already shown.
+    [0, 1].forEach(() => { const b = beats[pos++]; apply(b); bubble(b); });
+    syncButtons();
+  }
+
+  /* 04 WareBot */
+  {
+    const root = document.getElementById('ware-demo');
+    const thread = $(root, '[data-thread]');
+    const suggest = $(root, '[data-suggest]');
+    const stockEl = $(root, '[data-stock]');
+    const rules = Object.fromEntries([...root.querySelectorAll('[data-rule]')].map((el) => [el.dataset.rule, el]));
+    let stock, pending, countdown, trNo, grnNo;
+    const fresh = () => { stock = { main: 340, shah: 45 }; pending = null; trNo = 101; grnNo = 240; };
+    const light = (...keys) => Object.entries(rules).forEach(([k, el]) => el.classList.toggle('lit', keys.includes(k)));
+    const time = () => { const d = new Date(); return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0'); };
+    const add = (cls, html) => {
+      const el = document.createElement('div');
+      el.className = cls;
+      el.innerHTML = html;
+      thread.appendChild(el);
+      thread.scrollTop = thread.scrollHeight;
+      return el;
+    };
+    const say = (who, text) => add('msg ' + who, esc(text) + `<span class="time">${time()}</span>`);
+    const showStock = () => { stockEl.textContent = `PVC elbow 20mm · Main ${stock.main} · Shah Alam ${stock.shah}`; };
+    const REQUESTS = [
+      { id: 'check', label: 'How many PVC elbows?', ask: 'How many PVC elbow 20mm do we have?' },
+      { id: 'move', label: 'Transfer 50 to Shah Alam', ask: 'Transfer 50 PVC elbow 20mm from Main Store to Shah Alam.' },
+      { id: 'grn', label: 'Receive PO-1057', ask: 'Receive goods for PO-1057, 120 PVC elbow 20mm.' },
+    ];
+    // Re-rendering the chips must not drop keyboard focus: put it back on the same chip when it is still usable.
+    const drawChips = () => {
+      const focused = suggest.contains(document.activeElement) ? document.activeElement.dataset.r : null;
+      suggest.innerHTML = REQUESTS.map((r) => `<button type="button" data-r="${r.id}" ${pending ? 'disabled' : ''}>${esc(r.label)}</button>`).join('');
+      suggest.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => run(b.dataset.r)));
+      const again = focused && suggest.querySelector(`[data-r="${focused}"]:not([disabled])`);
+      if (again) again.focus({ preventScroll: true });
+    };
+    const settle = (card, ok, note, after) => {
+      clearInterval(countdown);
+      const hadFocus = card.contains(document.activeElement);
+      card.classList.add(ok ? 'done' : 'off');
+      card.querySelector('.ttl').textContent = note;
+      card.querySelector('.ttl-sr').textContent = note + '.';
+      card.querySelector('.acts').remove();
+      pending = null;
+      after();
+      showStock();
+      drawChips();
+      // Confirm/Cancel just vanished; continue from the first request rather than from <body>.
+      if (hadFocus) suggest.querySelector('button').focus({ preventScroll: true });
+    };
+    // The visible countdown is hidden from screen readers (it would be read every second inside the log);
+    // they hear the expiry once when the card appears, and the outcome once when it settles.
+    const confirmCard = (title, rows, onYes) => {
+      const card = add('confirm', `<div class="ch"><b>${esc(title)}</b><span class="ttl" aria-hidden="true">Waiting · 5:00</span><span class="sr ttl-sr">Expires in 5 minutes.</span></div><dl class="kv">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl><div class="acts"><button type="button" class="btn danger" data-no>Cancel</button><button type="button" class="btn solid" data-yes>Confirm</button></div>`);
+      pending = card;
+      let left = 300;
+      countdown = setInterval(() => {
+        left -= 1;
+        const ttl = card.querySelector('.ttl');
+        if (ttl) ttl.textContent = `Waiting · ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+        if (left <= 0) settle(card, false, 'Expired', () => { light('ttl'); say('bot', 'That request expired after 5 minutes. Nothing was changed.'); });
+      }, 1000);
+      card.querySelector('[data-yes]').addEventListener('click', () => settle(card, true, 'Confirmed', onYes));
+      card.querySelector('[data-no]').addEventListener('click', () => settle(card, false, 'Cancelled', () => { light('write'); say('bot', 'Cancelled. Nothing was changed.'); }));
+      card.querySelector('[data-yes]').focus({ preventScroll: true });
+    };
+    const run = (id) => {
+      if (pending) return;
+      const r = REQUESTS.find((x) => x.id === id);
+      say('me', r.ask);
+      if (id === 'check') {
+        light('read');
+        add('tool', 'Looked up stock balance · read-only');
+        say('bot', `PVC elbow 20mm (PE-20): ${stock.main} at Main Store and ${stock.shah} at Shah Alam.`);
+      } else if (id === 'move' && stock.main < 50) {
+        light('read');
+        add('tool', 'Looked up stock balance · read-only');
+        say('bot', `Only ${stock.main} at Main Store, not enough to transfer 50. Nothing was changed.`);
+      } else if (id === 'move') {
+        light('write', 'ttl');
+        add('tool write', 'Stock transfer prepared · needs your confirmation');
+        say('bot', 'Here is the transfer. Please confirm before I post it.');
+        confirmCard('Stock transfer', [['Item', 'PVC elbow 20mm (PE-20)'], ['Quantity', '50'], ['From', `Main Store (${stock.main} on hand)`], ['To', 'Shah Alam']], () => {
+          stock.main -= 50; stock.shah += 50;
+          light('write');
+          say('bot', `Done. Transfer TR-0${trNo++} posted to AutoCount. Main Store now ${stock.main}, Shah Alam ${stock.shah}.`);
+        });
+      } else {
+        light('write', 'ttl');
+        add('tool write', 'Goods received note prepared · needs your confirmation');
+        say('bot', 'Here is the goods received note for PO-1057. Please confirm before I post it.');
+        confirmCard('Goods received', [['Purchase order', 'PO-1057'], ['Supplier', 'Mega Fittings Sdn Bhd'], ['Item', 'PVC elbow 20mm × 120'], ['Into', 'Main Store']], () => {
+          stock.main += 120;
+          light('write');
+          say('bot', `Done. GRN-00${grnNo++} posted to AutoCount. Main Store now ${stock.main}.`);
+        });
+      }
+      drawChips();
+    };
+    const reset = () => {
+      clearInterval(countdown);
+      fresh();
+      thread.innerHTML = '<span class="day">Today</span>';
+      say('bot', 'Hello. Ask me about stock, or tell me what to move or receive.');
+      light();
+      showStock();
+      drawChips();
+    };
+    $(root, '[data-reset]').addEventListener('click', reset);
+    reset();
+  }
+
+  /* Copy email */
+  const copyBtn = document.getElementById('copy-email');
+  const copyStatus = document.getElementById('copy-status');
+  copyBtn.addEventListener('click', () => {
+    const text = document.getElementById('email-text').textContent;
+    const done = () => { copyBtn.textContent = 'Copied'; copyStatus.textContent = 'Email address copied'; setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1800); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(document.getElementById('email-text')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); copyStatus.textContent = 'Address selected, press Ctrl+C to copy'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+})();
+</script>
